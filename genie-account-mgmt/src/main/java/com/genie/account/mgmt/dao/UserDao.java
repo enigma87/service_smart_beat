@@ -7,6 +7,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import com.genie.account.mgmt.beans.User;
 
