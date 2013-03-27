@@ -11,30 +11,30 @@ import java.util.Calendar;
  */
 public class User 
 {
-	private long userid;
+	private Long userid;
 	private String firstName;
 	private String middleName;
 	private String lastName;
 	private String email;
 	private String password;
-	private boolean facebookLogin = false;
-	private boolean googleLogin = false;
-	private boolean twitterLogin = false;
+	private Boolean facebookLogin = false;
+	private Boolean googleLogin = false;
+	private Boolean twitterLogin = false;
 	private String imageUrl;
 	private Integer age=0;
 	private Integer height=0;
 	private Double weight=0.0;
-	private boolean active = true;
+	private Boolean active = true;
 	private Calendar createdTs;
 	private Calendar lastUpdatedTs;
 	private Calendar lastloginTs;
 	
-	public long getUserid()
+	public Long getUserid()
 	{
 		return this.userid;
 	}
 	
-	public void setUserid(long userid)
+	public void setUserid(Long userid)
 	{
 		this.userid = userid;
 	}
@@ -89,32 +89,32 @@ public class User
 		this.password = password;
 	}
 	
-	public boolean getFacebookLogin()
+	public Boolean getFacebookLogin()
 	{
 		return this.facebookLogin;
 	}
 	
-	public void setFacebookLogin(boolean facebookLogin)
+	public void setFacebookLogin(Boolean facebookLogin)
 	{
 		this.facebookLogin = facebookLogin;
 	}
 	
-	public boolean getGoogleLogin()
+	public Boolean getGoogleLogin()
 	{
 		return this.googleLogin;
 	}
 	
-	public void setGoogleLogin(boolean googleLogin)
+	public void setGoogleLogin(Boolean googleLogin)
 	{
 		this.googleLogin = googleLogin;
 	}
 	
-	public boolean getTwitterLogin()
+	public Boolean getTwitterLogin()
 	{
 		return this.twitterLogin;
 	}
 	
-	public void setTwitterLogin(boolean twitterLogin)
+	public void setTwitterLogin(Boolean twitterLogin)
 	{
 		this.twitterLogin = twitterLogin;
 	}
@@ -159,12 +159,12 @@ public class User
 		this.weight = weight;
 	}
 	
-	public boolean getActive()
+	public Boolean getActive()
 	{
 		return this.active;
 	}
 	
-	public void setActive(boolean active)
+	public void setActive(Boolean active)
 	{
 		this.active = active;
 	}
