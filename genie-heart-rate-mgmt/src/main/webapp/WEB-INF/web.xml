@@ -3,5 +3,47 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Archetype Created Web Application</display-name>
+
+	<context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>HeartRateMgmt</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>webappName</param-name>
+	    <param-value>SmartBeat Genie Heart Rate Management WebApp</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<!--<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath*:META-INF/spring/spring-apr-be-data-proc.xml
+		</param-value>
+	</context-param>-->
+		
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<servlet>
+		<servlet-name>Genie Heart Rate Management Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		
+		<init-param>
+		<param-name>com.sun.jersey.config.property.packages</param-name>
+		<param-value>com.genie.heartrate.mgmt.resources</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Genie Heart Rate Management Service</servlet-name>
+		<url-pattern>/rest/v1.0/*</url-pattern>
+	</servlet-mapping>
+
 </web-app>
