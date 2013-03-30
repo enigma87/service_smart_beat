@@ -34,7 +34,7 @@ public class UserDao
 		User user = null;
 		try
 		{
-			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM common.user WHERE email=?", 
+			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM user WHERE email=?", 
 				ParameterizedBeanPropertyRowMapper.newInstance(User.class), email);
 		}
 		catch(EmptyResultDataAccessException ex)

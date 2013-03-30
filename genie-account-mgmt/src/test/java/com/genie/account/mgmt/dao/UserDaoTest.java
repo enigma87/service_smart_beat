@@ -28,8 +28,8 @@ public class UserDaoTest
 	public static void setUpBeforeClass() throws Exception 
 	{
 		dataSource = new BasicDataSource();
-		dataSource.setDriverClassName("org.postgresql.Driver");
-		dataSource.setUrl("jdbc:postgresql://localhost:5432/genie");
+		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/genie");
 		dataSource.setUsername("genie");
 		dataSource.setPassword("genie");
 	}
