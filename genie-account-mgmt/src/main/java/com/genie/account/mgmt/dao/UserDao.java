@@ -44,6 +44,21 @@ public class UserDao
 		return user;
 	}
 	
+	public User getUserInfo(Long userid)
+	{
+		User user = null;
+		try
+		{
+			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM user WHERE userid=?", 
+				ParameterizedBeanPropertyRowMapper.newInstance(User.class), userid);
+		}
+		catch(EmptyResultDataAccessException ex)
+		{
+			
+		}
+		return user;
+	}
+	
 	public void createUser(User user)
 	{
 		
