@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
-import com.genie.heartrate.mgmt.beans.HeartRate;
+import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 
 
 
@@ -17,7 +17,7 @@ import com.genie.heartrate.mgmt.beans.HeartRate;
  * @author manojkumar
  *
  */
-public class HeartRateDao 
+public class UserHeartRateTestDao 
 {
 	private BasicDataSource dataSource;
 	
@@ -31,33 +31,18 @@ public class HeartRateDao
 		this.dataSource = dataSource;
 	}
 	
-//	public User getUserInfo(String email)
-//	{
-//		User user = null;
-//		try
-//		{
-//			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM common.user WHERE email=?", 
-//				ParameterizedBeanPropertyRowMapper.newInstance(User.class), email);
-//		}
-//		catch(EmptyResultDataAccessException ex)
-//		{
-//			
-//		}
-//		return user;
-//	}
 	
-	
-	public HeartRate getHeartRate(Integer userid)
+	public UserHeartRateTest getHeartRateTestResults(Long userid)
 	{
-		return new HeartRate();
+		return new UserHeartRateTest();
 	}
 	
-	public void createHeartRate(HeartRate heartRate)
+	public void createHeartRateTestResults(UserHeartRateTest heartRate)
 	{
 		
 	}
 	
-	public void updateHeartRate(HeartRate heartRate)
+	public void updateHeartRateTestResults(UserHeartRateTest heartRate)
 	{
 		
 	}

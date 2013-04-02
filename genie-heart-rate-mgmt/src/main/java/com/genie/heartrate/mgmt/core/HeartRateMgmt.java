@@ -3,7 +3,8 @@
  */
 package com.genie.heartrate.mgmt.core;
 
-import com.genie.heartrate.mgmt.beans.HeartRate;
+import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
+import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 
 /**
  * @author manojkumar
@@ -11,7 +12,9 @@ import com.genie.heartrate.mgmt.beans.HeartRate;
  */
 public interface HeartRateMgmt 
 {
-	public HeartRate getHeartRateForUser(Long userid);
-	public void createHeartRateForUser(HeartRate heartRate);
-	public void updateHeartRateForUser(HeartRate heartRate);
+	public UserHeartRateTest getHeartRateTestResultsForUser(Long userid);
+	public void saveHeartRateTestResultsForUser(Long userid, String json);
+	
+	public UserHeartRateZone getHeartRateZonesForUser(Long userid);
+	public void saveHeartRateZonesForUser(Long userid, String json);
 }
