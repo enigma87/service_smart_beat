@@ -20,21 +20,21 @@ import com.genie.heartrate.mgmt.util.HeartRateUtil;
 public class HeartRateMgmtMySQLImpl implements HeartRateMgmt 
 {
 
-	private UserHeartRateTestDao heartRateDao;
+	private UserHeartRateTestDao userHeartRateTestDao;
 	
 	public UserHeartRateTestDao getHeartRateDao()
 	{
-		return this.heartRateDao;
+		return this.userHeartRateTestDao;
 	}
 	
-	public void setHeartRateDao(UserHeartRateTestDao heartRateDao)
+	public void setHeartRateDao(UserHeartRateTestDao userHeartRateTestDao)
 	{
-		this.heartRateDao = heartRateDao;
+		this.userHeartRateTestDao = userHeartRateTestDao;
 	}
 	
 	public UserHeartRateTest getHeartRateTestResultsForUser(Long userid) 
 	{
-		return heartRateDao.getHeartRateTestResults(userid);
+		return userHeartRateTestDao.getHeartRateTestResults(userid);
 	}
 
 	public void saveHeartRateTestResultsForUser(Long userid, String json) 
@@ -70,9 +70,9 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 			//TODO Trigger HRZ calculation
 			
 			if (create)
-				heartRateDao.createHeartRateTestResults(heartRateTest);
+				userHeartRateTestDao.createHeartRateTestResults(heartRateTest);
 			else
-				heartRateDao.updateHeartRateTestResults(heartRateTest);
+				userHeartRateTestDao.updateHeartRateTestResults(heartRateTest);
 		}
 	}
 

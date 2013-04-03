@@ -22,7 +22,6 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
 import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 import com.genie.heartrate.mgmt.util.Formatter;
-import com.sun.jersey.server.impl.container.servlet.JerseyServletContainerInitializer;
 
 /**
  * @author manojkumar

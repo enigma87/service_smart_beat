@@ -21,6 +21,8 @@ public class UserHeartRateZone
 	private Double hrz5End;
 	private Double hrz6Start;
 	private Double hrz6End;
+	private Calendar createdTs;
+	private Calendar updatedTs;
 	
 	public Long getUserid()
 	{
@@ -150,5 +152,25 @@ public class UserHeartRateZone
 	public void setHrz6End(Double hrz6End)
 	{
 		this.hrz6End = hrz6End;
+	}
+	
+	public Calendar getCreatedTs()
+	{
+		return this.createdTs;
+	}
+	
+	public void setCreatedTs(Calendar createdTs)
+	{
+		this.createdTs = createdTs;
+	}
+	
+	public Calendar getUpdatedTs()
+	{
+		return this.updatedTs;
+	}
+	
+	public void setUpdatedTs(Calendar updatedTs)
+	{
+		this.updatedTs = updatedTs;
 	}
 }
