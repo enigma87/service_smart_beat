@@ -4,10 +4,13 @@
 package com.genie.heartrate.mgmt.dao;
 
 import static org.junit.Assert.*;
+import junit.framework.Assert;
 
-import org.apache.commons.dbcp.BasicDataSource;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 
 /**
  * @author manojkumar
@@ -16,12 +19,15 @@ import org.junit.Test;
 public class UserHeartRateTestDaoTest 
 {
 
+	private ApplicationContext appContext;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception 
+	@Before
+	public void setUpBeforeClass() throws Exception 
 	{
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 	}
 
 	/**
@@ -30,7 +36,7 @@ public class UserHeartRateTestDaoTest
 	@Test
 	public void testGetHeartRateTestResults() 
 	{
-		fail("Not yet implemented");
+		
 	}
 
 	/**

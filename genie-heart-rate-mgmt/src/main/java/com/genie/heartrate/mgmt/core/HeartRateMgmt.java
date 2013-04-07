@@ -16,5 +16,5 @@ public interface HeartRateMgmt
 	public void saveHeartRateTestResultsForUser(Long userid, String json);
 	
 	public UserHeartRateZone getHeartRateZonesForUser(Long userid);
-	public void saveHeartRateZonesForUser(Long userid, String json);
+	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone);
 }

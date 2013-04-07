@@ -33,7 +33,7 @@ public class UserHeartRateTestDao
 		return this.dataSource;
 	}
 	
-	public void setDataDource(BasicDataSource dataSource)
+	public void setDataSource(BasicDataSource dataSource)
 	{
 		this.dataSource = dataSource;
 	}

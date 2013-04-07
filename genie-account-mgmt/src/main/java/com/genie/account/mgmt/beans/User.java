@@ -3,6 +3,7 @@
  */
 package com.genie.account.mgmt.beans;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
@@ -25,9 +26,9 @@ public class User
 	private Integer height=0;
 	private Double weight=0.0;
 	private Boolean active = true;
-	private Calendar createdTs;
-	private Calendar lastUpdatedTs;
-	private Calendar lastloginTs;
+	private Timestamp createdTs;
+	private Timestamp lastUpdatedTs;
+	private Timestamp lastloginTs;
 	
 	public Long getUserid()
 	{
@@ -169,32 +170,32 @@ public class User
 		this.active = active;
 	}
 	
-	public Calendar getCreatedTs()
+	public Timestamp getCreatedTs()
 	{
 		return this.createdTs;
 	}
 	
-	public void setCreatedTs(Calendar createdTs)
+	public void setCreatedTs(Timestamp createdTs)
 	{
 		this.createdTs = createdTs;
 	}
 	
-	public Calendar getLastUpdatedTs()
+	public Timestamp getLastUpdatedTs()
 	{
 		return this.lastUpdatedTs;
 	}
 	
-	public void setLastUpdatedTs(Calendar lastUpdatedTs)
+	public void setLastUpdatedTs(Timestamp lastUpdatedTs)
 	{
 		this.lastUpdatedTs = lastUpdatedTs;
 	}
 	
-	public Calendar getLastLoginTs()
+	public Timestamp getLastLoginTs()
 	{
 		return this.lastloginTs;
 	}
 	
-	public void setLastLoginTs(Calendar lastLoginTs)
+	public void setLastLoginTs(Timestamp lastLoginTs)
 	{
 		this.lastloginTs = lastLoginTs;
 	}

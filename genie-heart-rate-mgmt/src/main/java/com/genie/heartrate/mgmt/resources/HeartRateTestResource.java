@@ -16,11 +16,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.genie.heartrate.mgmt.GoodResponseObject;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
-import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 import com.genie.heartrate.mgmt.util.Formatter;
 
 /**
@@ -29,8 +31,24 @@ import com.genie.heartrate.mgmt.util.Formatter;
  */
 
 @Path("/HeartRateTests")
+@Component
 public class HeartRateTestResource 
 {
+	
+	@Autowired
+	@Qualifier("heartRateMgmtMySQLImpl")
+	private HeartRateMgmt heartRateMgmt;
+	
+	public HeartRateMgmt getHeartRateMgmt()
+	{
+		return this.heartRateMgmt;
+	}
+	
+	public void setHeartRateMgmt(HeartRateMgmt heartRateMgmt)
+	{
+		this.heartRateMgmt = heartRateMgmt;
+	}
+	
 
 	@GET
 	@Path("{userid}/results")
@@ -40,7 +58,6 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			HeartRateMgmt heartRateMgmt = new HeartRateMgmtMySQLImpl();
 			UserHeartRateTest heartRateTest = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong(userid));
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateTest);
 			return Formatter.getAsJson(gro, true);
@@ -59,7 +76,6 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			HeartRateMgmt heartRateMgmt = new HeartRateMgmtMySQLImpl();
 			heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 			return Formatter.getAsJson(gro, false);

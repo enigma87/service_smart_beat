@@ -15,10 +15,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import com.genie.heartrate.mgmt.GoodResponseObject;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
-import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 import com.genie.heartrate.mgmt.util.Formatter;
 
 /**
@@ -27,8 +30,23 @@ import com.genie.heartrate.mgmt.util.Formatter;
  */
 
 @Path("/HeartRateZones")
+@Component
 public class HeartRateZoneResource 
 {
+	@Autowired
+	@Qualifier("heartRateMgmtMySQLImpl")
+	private HeartRateMgmt heartRateMgmt;
+	
+	public HeartRateMgmt getHeartRateMgmt()
+	{
+		return this.heartRateMgmt;
+	}
+	
+	public void setHeartRateMgmt(HeartRateMgmt heartRateMgmt)
+	{
+		this.heartRateMgmt = heartRateMgmt;
+	}
+
 	
 	@GET
 	@Path("{userid}")
@@ -38,8 +56,9 @@ public class HeartRateZoneResource
 	{
 		try
 		{
-			HeartRateMgmt heartRateMgmt = new HeartRateMgmtMySQLImpl();
 			UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong(userid));
+			if (heartRateZone == null)
+				throw new Exception("Heart Rate Zones are not available for the user: " + userid);
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateZone);
 			return Formatter.getAsJson(gro, true);
 		}

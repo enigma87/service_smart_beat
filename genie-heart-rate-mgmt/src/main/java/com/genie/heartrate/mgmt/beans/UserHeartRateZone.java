@@ -1,5 +1,6 @@
 package com.genie.heartrate.mgmt.beans;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
@@ -21,8 +22,8 @@ public class UserHeartRateZone
 	private Double hrz5End;
 	private Double hrz6Start;
 	private Double hrz6End;
-	private Calendar createdTs;
-	private Calendar updatedTs;
+	private Timestamp createdTs;
+	private Timestamp updatedTs;
 	
 	public Long getUserid()
 	{
@@ -154,22 +155,22 @@ public class UserHeartRateZone
 		this.hrz6End = hrz6End;
 	}
 	
-	public Calendar getCreatedTs()
+	public Timestamp getCreatedTs()
 	{
 		return this.createdTs;
 	}
 	
-	public void setCreatedTs(Calendar createdTs)
+	public void setCreatedTs(Timestamp createdTs)
 	{
 		this.createdTs = createdTs;
 	}
 	
-	public Calendar getUpdatedTs()
+	public Timestamp getUpdatedTs()
 	{
 		return this.updatedTs;
 	}
 	
-	public void setUpdatedTs(Calendar updatedTs)
+	public void setUpdatedTs(Timestamp updatedTs)
 	{
 		this.updatedTs = updatedTs;
 	}
