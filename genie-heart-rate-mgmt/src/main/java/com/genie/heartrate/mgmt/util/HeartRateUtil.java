@@ -3,6 +3,7 @@
  */
 package com.genie.heartrate.mgmt.util;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,10 @@ public class HeartRateUtil
 		userHeartRateZone.setHrz6End((double)maximalHr);
 		userHeartRateZone.setHrz5Start(userHeartRateZone.getHrz4End()+0.01);
 		userHeartRateZone.setHrz5End(userHeartRateZone.getHrz6Start()-0.01);
-		userHeartRateZone.setCreatedTs(Calendar.getInstance());
-		userHeartRateZone.setUpdatedTs(Calendar.getInstance());
+		
+		Timestamp timestamp = new Timestamp((Calendar.getInstance().getTime().getTime()));
+		userHeartRateZone.setCreatedTs(timestamp);
+		userHeartRateZone.setUpdatedTs(timestamp);
 		
 		return userHeartRateZone;
 	}
