@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Welcome to Genie Heart Rate Management WebApp</h2>
+<h2>Genie REST API</h2>
 </body>
 </html>

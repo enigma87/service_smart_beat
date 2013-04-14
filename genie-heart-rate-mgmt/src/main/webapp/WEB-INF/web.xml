@@ -35,19 +35,35 @@
 	</listener>
 	
 	<servlet>
-		<servlet-name>Genie Heart Rate Management Service</servlet-name>
+		<servlet-name>Genie Account Management Service</servlet-name>
 		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		
 		<init-param>
 		<param-name>com.sun.jersey.config.property.packages</param-name>
-		<param-value>com.genie.heartrate.mgmt</param-value>
+		<param-value>com.genie.account.mgmt.resources</param-value>		
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>Genie Heart Rate Management Service</servlet-name>
-		<url-pattern>/rest/v1.0/*</url-pattern>
+		<servlet-name>Genie Account Management Service</servlet-name>
+		<url-pattern>/rest/account/v1.0/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>Genie Smart Heart Rate Service</servlet-name>
+		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+		
+		<init-param>
+		<param-name>com.sun.jersey.config.property.packages</param-name>
+		<param-value>com.genie.heartrate.mgmt.resources</param-value>		
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>Genie Smart Heart Rate Service</servlet-name>
+		<url-pattern>/rest/shrs/v1.0/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

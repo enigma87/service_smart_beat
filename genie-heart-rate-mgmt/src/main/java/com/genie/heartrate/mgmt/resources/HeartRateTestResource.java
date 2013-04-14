@@ -20,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.genie.heartrate.mgmt.GoodResponseObject;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
 import com.genie.heartrate.mgmt.util.Formatter;
+import com.genie.mgmt.GoodResponseObject;
 
 /**
  * @author manojkumar

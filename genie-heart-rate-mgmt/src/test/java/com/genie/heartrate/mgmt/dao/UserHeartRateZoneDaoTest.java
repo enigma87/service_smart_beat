@@ -44,8 +44,9 @@ public class UserHeartRateZoneDaoTest
 		HeartRateMgmt heartRateMgmt = (HeartRateMgmtMySQLImpl) appContext.getBean("heartRateMgmtMySQLImpl");
 		Assert.assertNotNull(heartRateMgmt);
 		
-		UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong("1"));
+		UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong("1000"));
 		Assert.assertNotNull(heartRateZone);
+		System.out.println(heartRateZone.getHrz1Start());
 	}
 
 	/**
