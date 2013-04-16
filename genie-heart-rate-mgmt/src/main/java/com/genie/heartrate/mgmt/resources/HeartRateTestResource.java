@@ -78,8 +78,8 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			uhrt.setUserid(Long.valueOf(userid));
-			uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());
+			uhrt.setUserid(Long.valueOf(userid));			
+			uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());			
 			/*heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");*/
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 			return Formatter.getAsJson(gro, false);

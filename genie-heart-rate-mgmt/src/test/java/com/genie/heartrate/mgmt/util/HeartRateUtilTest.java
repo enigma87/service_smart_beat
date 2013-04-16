@@ -16,7 +16,7 @@ public class HeartRateUtilTest {
 		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
 		
 		userHeartRateTest.setUserid(1238990008L);
-		userHeartRateTest.setRestingHr(50);
+		userHeartRateTest.setRestingHeartRate(50);
 		userHeartRateTest.setThresholdHr(130);
 		userHeartRateTest.setMaximalHr(200);
 		
