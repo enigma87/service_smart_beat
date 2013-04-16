@@ -78,8 +78,20 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			uhrt.setUserid(Long.valueOf(userid));			
-			uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());			
+			uhrt.setUserid(Long.valueOf(userid));
+			
+			if(null != uhrt.getRestingHeartRate()){
+				uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());	
+			}
+			
+			if(null != uhrt.getMaximalHeartRate()){
+				uhrt.setMaximalHeartRateTimestamp(Calendar.getInstance());	
+			}
+			
+			if(null != uhrt.getThresholdHeartRate()){
+				uhrt.setThresholdHeartRateTimestamp(Calendar.getInstance());
+			}
+			
 			/*heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");*/
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 			return Formatter.getAsJson(gro, false);

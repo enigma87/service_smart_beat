@@ -10,11 +10,11 @@ public class UserHeartRateTest
 {
 	private Long userid;
 	private Integer restingHeartRate;
-	private Integer maximalHr;
-	private Integer thresholdHr;
+	private Integer maximalHeartRate;
+	private Integer thresholdHeartRate;
 	private Calendar restingHeartRateTimestamp;
-	private Calendar maximalHrTs;
-	private Calendar thresholdHrTs;
+	private Calendar maximalHeartRateTimestamp;
+	private Calendar thresholdHeartRateTimestamp;
 	
 	public Long getUserid()
 	{
@@ -34,24 +34,21 @@ public class UserHeartRateTest
 		this.restingHeartRate = restingHeartRate;
 	}
 	
-	public Integer getMaximalHr()
-	{
-		return this.maximalHr;
+	
+	public void setMaximalHeartRate(Integer maximalHeartRate) {
+		this.maximalHeartRate = maximalHeartRate;
 	}
 	
-	public void setMaximalHr(Integer maximalHr)
-	{
-		this.maximalHr = maximalHr;
+	public Integer getMaximalHeartRate() {
+		return maximalHeartRate;
 	}
 	
-	public Integer getThresholdHr()
-	{
-		return this.thresholdHr;
+    public void setThresholdHeartRate(Integer thresholdHeartRate) {
+		this.thresholdHeartRate = thresholdHeartRate;
 	}
-	
-	public void setThresholdHr(Integer thresholdHr)
-	{
-		this.thresholdHr = thresholdHr;
+    
+    public Integer getThresholdHeartRate() {
+		return thresholdHeartRate;
 	}
 	
 	public Calendar getRestingHeartRateTimestamp()
@@ -64,23 +61,21 @@ public class UserHeartRateTest
 		this.restingHeartRateTimestamp = restingHeartRateTimestamp;
 	}
 	
-	public Calendar getMaximalHrTs()
-	{
-		return this.maximalHrTs;
+    public Calendar getMaximalHeartRateTimestamp() {
+		return maximalHeartRateTimestamp;
 	}
 	
-	public void setMaximalHrTs(Calendar maximalHrTs)
-	{
-		this.maximalHrTs = maximalHrTs;
+    public void setMaximalHeartRateTimestamp(Calendar maximalHeartRateTimestamp) {
+		this.maximalHeartRateTimestamp = maximalHeartRateTimestamp;
 	}
-	
-	public Calendar getThresholdHrTs()
-	{
-		return this.thresholdHrTs;
+    
+    
+    public Calendar getThresholdHeartRateTimestamp() {
+		return thresholdHeartRateTimestamp;
 	}
-	
-	public void setThresholdHrTs(Calendar thresholdHrTs)
-	{
-		this.thresholdHrTs = thresholdHrTs;
+    
+    public void setThresholdHeartRateTimestamp(
+			Calendar thresholdHeartRateTimestamp) {
+		this.thresholdHeartRateTimestamp = thresholdHeartRateTimestamp;
 	}
 }
