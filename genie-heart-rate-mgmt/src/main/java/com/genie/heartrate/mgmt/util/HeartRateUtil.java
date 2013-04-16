@@ -27,7 +27,7 @@ public class HeartRateUtil
 	{
 		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
 		
-		final Integer restingHr   = userheartRateTest.getRestingHr();
+		final Integer restingHr   = userheartRateTest.getRestingHeartRate();
 		final Integer thresholdHr = userheartRateTest.getThresholdHr();
 		final Integer maximalHr   = userheartRateTest.getMaximalHr();
 		final Integer hrReserve   = maximalHr-restingHr;

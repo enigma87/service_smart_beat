@@ -53,7 +53,7 @@ public class HeartRateZoneResource
 	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getHeartRateZones(@PathParam("userid") String userid, @Context UriInfo uriInfo)
-	{
+	{		
 		try
 		{
 			UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong(userid));

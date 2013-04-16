@@ -67,8 +67,8 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 			
 			if (heartRates.containsKey(HeartRateConts.RESTING_HEART_RATE))
 			{
-				heartRateTest.setRestingHr(Integer.parseInt(heartRates.get(HeartRateConts.RESTING_HEART_RATE).toString()));
-				heartRateTest.setRestingHrTs(Calendar.getInstance());
+				heartRateTest.setRestingHeartRate(Integer.parseInt(heartRates.get(HeartRateConts.RESTING_HEART_RATE).toString()));
+				heartRateTest.setRestingHeartRateTimestamp(Calendar.getInstance());
 			}
 			if (heartRates.containsKey(HeartRateConts.MAXIMAL_HEART_RATE))
 			{

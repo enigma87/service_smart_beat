@@ -9,10 +9,10 @@ import java.util.Calendar;
 public class UserHeartRateTest 
 {
 	private Long userid;
-	private Integer restingHr;
+	private Integer restingHeartRate;
 	private Integer maximalHr;
 	private Integer thresholdHr;
-	private Calendar restingHrTs;
+	private Calendar restingHeartRateTimestamp;
 	private Calendar maximalHrTs;
 	private Calendar thresholdHrTs;
 	
@@ -26,14 +26,12 @@ public class UserHeartRateTest
 		this.userid = userid;
 	}
 	
-	public Integer getRestingHr()
-	{
-		return this.restingHr;
+	public Integer getRestingHeartRate() {
+		return restingHeartRate;
 	}
 	
-	public void setRestingHr(Integer restingHr)
-	{
-		this.restingHr = restingHr;
+	public void setRestingHeartRate(Integer restingHeartRate) {
+		this.restingHeartRate = restingHeartRate;
 	}
 	
 	public Integer getMaximalHr()
@@ -56,14 +54,14 @@ public class UserHeartRateTest
 		this.thresholdHr = thresholdHr;
 	}
 	
-	public Calendar getRestingHrTs()
+	public Calendar getRestingHeartRateTimestamp()
 	{
-		return this.restingHrTs;
+		return this.restingHeartRateTimestamp;
 	}
 	
-	public void setRestingHrTs(Calendar restingHrTs)
+	public void setRestingHeartRateTimestamp(Calendar restingHeartRateTimestamp)
 	{
-		this.restingHrTs = restingHrTs;
+		this.restingHeartRateTimestamp = restingHeartRateTimestamp;
 	}
 	
 	public Calendar getMaximalHrTs()

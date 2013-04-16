@@ -3,6 +3,8 @@
  */
 package com.genie.heartrate.mgmt.resources;
 
+import java.util.Calendar;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -70,13 +72,15 @@ public class HeartRateTestResource
 	
 	@POST
 	@Path("{userid}/save")
-	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String saveHeartRateTests(@PathParam("userid") String userid, @Context UriInfo uriInfo)
+	public String saveHeartRateTests(@PathParam("userid") String userid, UserHeartRateTest uhrt)
 	{
 		try
 		{
-			heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");
+			uhrt.setUserid(Long.valueOf(userid));
+			uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());
+			/*heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");*/
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 			return Formatter.getAsJson(gro, false);
 		}
