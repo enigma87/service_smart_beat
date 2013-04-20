@@ -31,14 +31,5 @@
 	<bean id="heartRateMgmtMySQLImpl" class="com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl">
 		<property name="userHeartRateTestDao" ref="userHeartRateTestDao"/>
 		<property name="userHeartRateZoneDao" ref="userHeartRateZoneDao" />
-	</bean>
-	
-	<bean id="userAccountDao" class="com.genie.account.mgmt.dao.UserAccountDao">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="userAccountManagerMySQLImpl" class="com.genie.account.mgmt.impl.UserAccountManagerMySQLImpl">
-		<property name="userAccountDao" ref="userAccountDao"/>		
-	</bean>
-		
+	</bean>			
 </beans>

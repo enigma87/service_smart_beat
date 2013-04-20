@@ -51,43 +51,16 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		return userHeartRateTestDao.getHeartRateTestResults(userid);
 	}
 
-	public void saveHeartRateTestResultsForUser(Long userid, String json) 
+	public void saveHeartRateTestResultsForUser(UserHeartRateTest uhrt) 
 	{
-		Map<String, Object> heartRates = HeartRateUtil.parseHeartRates(json);
-		if (heartRates != null && heartRates.size() > 0)
-		{
-			boolean create = false;
-			UserHeartRateTest heartRateTest = getHeartRateTestResultsForUser(userid);
-			if (heartRateTest == null)
-			{
-				heartRateTest = new UserHeartRateTest();
-				heartRateTest.setUserid(userid);
-				create = true;
-			}
-			
-			if (heartRates.containsKey(HeartRateConts.RESTING_HEART_RATE))
-			{
-				heartRateTest.setRestingHeartRate(Integer.parseInt(heartRates.get(HeartRateConts.RESTING_HEART_RATE).toString()));
-				heartRateTest.setRestingHeartRateTimestamp(Calendar.getInstance());
-			}
-			if (heartRates.containsKey(HeartRateConts.MAXIMAL_HEART_RATE))
-			{
-				heartRateTest.setMaximalHr(Integer.parseInt(heartRates.get(HeartRateConts.MAXIMAL_HEART_RATE).toString()));
-				heartRateTest.setMaximalHrTs(Calendar.getInstance());
-			}
-			if (heartRates.containsKey(HeartRateConts.THRESHOLD_HEART_RATE))
-			{
-				heartRateTest.setThresholdHr(Integer.parseInt(heartRates.get(HeartRateConts.THRESHOLD_HEART_RATE).toString()));
-				heartRateTest.setThresholdHrTs(Calendar.getInstance());
-			}
-			
-			//TODO Trigger HRZ calculation
-			
-			if (create)
-				userHeartRateTestDao.createHeartRateTestResults(heartRateTest);
-			else
-				userHeartRateTestDao.updateHeartRateTestResults(heartRateTest);
-		}
+			UserHeartRateTest heartRateTest = getHeartRateTestResultsForUser(uhrt.getUserid());			
+			if(null == heartRateTest){
+				userHeartRateTestDao.createHeartRateTestResults(uhrt);
+			}else{			
+				uhrt.fillInTheBlanks(heartRateTest);			
+				userHeartRateTestDao.updateHeartRateTestResults(uhrt);
+			}				
+			//TODO Trigger HRZ calculation			
 	}
 
 	public UserHeartRateZone getHeartRateZonesForUser(Long userid) 

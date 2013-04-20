@@ -3,6 +3,7 @@
  */
 package com.genie.heartrate.mgmt.resources;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import javax.ws.rs.Consumes;
@@ -80,19 +81,19 @@ public class HeartRateTestResource
 		{
 			uhrt.setUserid(Long.valueOf(userid));
 			
-			if(null != uhrt.getRestingHeartRate()){
-				uhrt.setRestingHeartRateTimestamp(Calendar.getInstance());	
+			if(null != uhrt.getRestingHeartRate()){				
+				uhrt.setRestingHeartRateTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));	
 			}
 			
 			if(null != uhrt.getMaximalHeartRate()){
-				uhrt.setMaximalHeartRateTimestamp(Calendar.getInstance());	
+				uhrt.setMaximalHeartRateTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));	
 			}
 			
 			if(null != uhrt.getThresholdHeartRate()){
-				uhrt.setThresholdHeartRateTimestamp(Calendar.getInstance());
+				uhrt.setThresholdHeartRateTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));
 			}
 			
-			/*heartRateMgmt.saveHeartRateTestResultsForUser(Long.parseLong(userid), "");*/
+			heartRateMgmt.saveHeartRateTestResultsForUser(uhrt);
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 			return Formatter.getAsJson(gro, false);
 		}

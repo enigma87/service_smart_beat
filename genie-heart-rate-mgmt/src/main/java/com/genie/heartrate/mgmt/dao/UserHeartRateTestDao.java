@@ -22,9 +22,9 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
  */
 public class UserHeartRateTestDao 
 {
-	private static final String UPDATE = "UPDATE user_heart_rate_test SET resting_hr=:restingHr, resting_hr_ts=:restingHrTs, " +
-			"maximal_hr=:maximalHr, maximal_hr_ts=:maximalHrTs, threshold_hr=:thresholdHr, threshold_hr_ts=:thresholdHrTs " +
-			"WHERE userid=:userid;";
+	private static final String UPDATE = "UPDATE genie.user_heart_rate_test SET resting_heart_rate=:restingHeartRate, resting_heart_rate_timestamp=:restingHeartRateTimestamp, " +
+			"maximal_heart_rate=:maximalHeartRate, maximal_heart_rate_timestamp=:maximalHeartRateTimestamp, threshold_heart_rate=:thresholdHeartRate, threshold_heart_rate_timestamp=:thresholdHeartRateTimestamp " +
+			"WHERE userid=:userid;";	
 	
 	private BasicDataSource dataSource;
 	
@@ -57,14 +57,14 @@ public class UserHeartRateTestDao
 	public int createHeartRateTestResults(UserHeartRateTest userHeartRateTest)
 	{
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName("")
-		.usingColumns("userid", "resting_hr", "resting_hr_ts", "maximal_hr", "maximal_hr_ts", "threshold_hr", "threshold_hr_ts")
+		return simpleJdbcInsert.withTableName("genie.user_heart_rate_test")
+		.usingColumns("userid", "resting_heart_rate", "resting_heart_rate_timestamp", "maximal_heart_rate", "maximal_heart_rate_timestamp", "threshold_heart_rate", "threshold_heart_rate_timestamp")
 		.execute(new BeanPropertySqlParameterSource(userHeartRateTest));
 	}
 	
 	public int updateHeartRateTestResults(UserHeartRateTest heartRateTest)
 	{
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(heartRateTest));
-	}
+		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(heartRateTest));			
+	}	
 }

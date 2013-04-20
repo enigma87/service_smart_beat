@@ -1,6 +1,6 @@
 package com.genie.heartrate.mgmt.beans;
 
-import java.util.Calendar;
+import java.sql.Timestamp;
 
 /**
  * @author manojkumar
@@ -10,11 +10,11 @@ public class UserHeartRateTest
 {
 	private Long userid;
 	private Integer restingHeartRate;
+	private Timestamp restingHeartRateTimestamp;
 	private Integer maximalHeartRate;
-	private Integer thresholdHeartRate;
-	private Calendar restingHeartRateTimestamp;
-	private Calendar maximalHeartRateTimestamp;
-	private Calendar thresholdHeartRateTimestamp;
+	private Timestamp maximalHeartRateTimestamp;
+	private Integer thresholdHeartRate;		
+	private Timestamp thresholdHeartRateTimestamp;
 	
 	public Long getUserid()
 	{
@@ -51,31 +51,52 @@ public class UserHeartRateTest
 		return thresholdHeartRate;
 	}
 	
-	public Calendar getRestingHeartRateTimestamp()
+	public Timestamp getRestingHeartRateTimestamp()
 	{
 		return this.restingHeartRateTimestamp;
 	}
 	
-	public void setRestingHeartRateTimestamp(Calendar restingHeartRateTimestamp)
+	public void setRestingHeartRateTimestamp(Timestamp restingHeartRateTimestamp)
 	{
 		this.restingHeartRateTimestamp = restingHeartRateTimestamp;
 	}
 	
-    public Calendar getMaximalHeartRateTimestamp() {
+    public Timestamp getMaximalHeartRateTimestamp() {
 		return maximalHeartRateTimestamp;
 	}
 	
-    public void setMaximalHeartRateTimestamp(Calendar maximalHeartRateTimestamp) {
+    public void setMaximalHeartRateTimestamp(Timestamp maximalHeartRateTimestamp) {
 		this.maximalHeartRateTimestamp = maximalHeartRateTimestamp;
 	}
     
     
-    public Calendar getThresholdHeartRateTimestamp() {
+    public Timestamp getThresholdHeartRateTimestamp() {
 		return thresholdHeartRateTimestamp;
 	}
     
-    public void setThresholdHeartRateTimestamp(
-			Calendar thresholdHeartRateTimestamp) {
+    public void setThresholdHeartRateTimestamp(Timestamp thresholdHeartRateTimestamp) {
 		this.thresholdHeartRateTimestamp = thresholdHeartRateTimestamp;
 	}
+    
+    public boolean hasNewUpdates(){
+    	return (null != getRestingHeartRate()) && (null != getMaximalHeartRate()) && (null != getThresholdHeartRate());
+    }
+    
+    public void fillInTheBlanks(UserHeartRateTest uhrtToFillFrom){
+    	
+    	if(null == getRestingHeartRate()){
+    		setRestingHeartRate(uhrtToFillFrom.getRestingHeartRate());
+    		setRestingHeartRateTimestamp(uhrtToFillFrom.getMaximalHeartRateTimestamp());
+    	}
+    	
+    	if(null == getMaximalHeartRate()){
+    		setMaximalHeartRate(uhrtToFillFrom.getMaximalHeartRate());
+    		setMaximalHeartRateTimestamp(uhrtToFillFrom.getMaximalHeartRateTimestamp());
+    	}
+    	
+    	if(null == getThresholdHeartRate()){
+    		setThresholdHeartRate(uhrtToFillFrom.getThresholdHeartRate());
+    		setThresholdHeartRateTimestamp(thresholdHeartRateTimestamp = uhrtToFillFrom.getMaximalHeartRateTimestamp());
+    	}    	        	
+    }
 }
