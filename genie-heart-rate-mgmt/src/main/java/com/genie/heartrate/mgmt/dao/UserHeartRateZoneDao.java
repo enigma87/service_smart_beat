@@ -68,4 +68,9 @@ public class UserHeartRateZoneDao
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(heartRateZone));
 	}
+	
+	public void deleteHeartRateZone(Long userid)
+	{
+		
+	}
 }

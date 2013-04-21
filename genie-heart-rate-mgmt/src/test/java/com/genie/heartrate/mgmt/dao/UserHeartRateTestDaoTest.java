@@ -12,9 +12,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
-import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 
 
 /**
@@ -24,6 +21,7 @@ import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 public class UserHeartRateTestDaoTest 
 {
 	private ApplicationContext appContext;
+	private UserHeartRateTestDao userHeartRateTestDao;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -32,52 +30,123 @@ public class UserHeartRateTestDaoTest
 	public void setUpBeforeClass() throws Exception 
 	{
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		userHeartRateTestDao = (UserHeartRateTestDao) appContext.getBean("userHeartRateTestDao");
 	}
 
+	
+	
 	/**
 	 * Test method for {@link com.genie.heartrate.mgmt.dao.UserHeartRateTestDao#getHeartRateTestResults(java.lang.Long)}.
 	 */
-	//@Test
+	
+	@Test
 	public void testGetHeartRateTestResults() 
 	{
-		HeartRateMgmt heartRateMgmt = (HeartRateMgmtMySQLImpl) appContext.getBean("heartRateMgmtMySQLImpl");
-		Assert.assertNotNull(heartRateMgmt);
+		/* Creating User Heart Rate Test Results */
+		UserHeartRateTest uhrt1 = new UserHeartRateTest();
+		uhrt1.setUserid(1002L);
+		uhrt1.setRestingHeartRate(50);
+		uhrt1.setThresholdHeartRate(100);
+		uhrt1.setMaximalHeartRate(170);
+		userHeartRateTestDao.createHeartRateTestResults(uhrt1);
+		Assert.assertNotNull(userHeartRateTestDao);
+	
+		/* The test starts here */ 
+		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		Assert.assertNotNull(uhrt2);
 		
-		UserHeartRateTest uhrt = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong("1000"));
-		Assert.assertNotNull(uhrt);
-		System.out.println(uhrt.getRestingHeartRate());
+		/*Cleanup*/
+		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+				
 	}
-
+	
+    
+	
 	/**
 	 * Test method for {@link com.genie.heartrate.mgmt.dao.UserHeartRateTestDao#createHeartRateTestResults(com.genie.heartrate.mgmt.beans.UserHeartRateTest)}.
 	 */
-	//@Test
+	@Test
 	public void testCreateHeartRateTestResults() {
-		HeartRateMgmt heartRateMgmt = (HeartRateMgmtMySQLImpl) appContext.getBean("heartRateMgmtMySQLImpl");
-		Assert.assertNotNull(heartRateMgmt);
 		
-		UserHeartRateTest uhrt = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong("1001"));
-		Assert.assertNull(uhrt);
-		uhrt = new UserHeartRateTest();
-		uhrt.setUserid(1001L);
+		Assert.assertNotNull(userHeartRateTestDao);
+		
+		/*The test starts here*/
+		UserHeartRateTest uhrt = new UserHeartRateTest();
+		uhrt.setUserid(1002L);
 		uhrt.setRestingHeartRate(50);
-		heartRateMgmt.saveHeartRateTestResultsForUser(uhrt);
-		uhrt = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong("1001"));
-		Assert.assertNotNull(uhrt);
+		uhrt.setThresholdHeartRate(100);
+		uhrt.setMaximalHeartRate(170);
+		userHeartRateTestDao.createHeartRateTestResults(uhrt);
+		
+		UserHeartRateTest uhrt1 = new UserHeartRateTest();
+		uhrt1 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		Assert.assertEquals( new Integer(50), uhrt1.getRestingHeartRate());
+		Assert.assertEquals( new Integer(170), uhrt1.getMaximalHeartRate());
+		Assert.assertEquals( new Integer(100), uhrt1.getThresholdHeartRate());
+		
+		
+		/*Cleanup*/
+		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+	
 	}
-
+    
+  
 	/**
 	 * Test method for {@link com.genie.heartrate.mgmt.dao.UserHeartRateTestDao#updateHeartRateTestResults(com.genie.heartrate.mgmt.beans.UserHeartRateTest)}.
-	 */
+	*/
 	@Test
 	public void testUpdateHeartRateTestResults() {
-		HeartRateMgmt heartRateMgmt = (HeartRateMgmtMySQLImpl) appContext.getBean("heartRateMgmtMySQLImpl");
-		Assert.assertNotNull(heartRateMgmt);
 		
-		UserHeartRateTest uhrt = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong("1000"));
-		Assert.assertNotNull(uhrt);
-		uhrt.setRestingHeartRate(51);
-		heartRateMgmt.saveHeartRateTestResultsForUser(uhrt);
+		Assert.assertNotNull(userHeartRateTestDao);
+		
+		/* Create User Heart Rate Results*/
+		UserHeartRateTest uhrt1 = new UserHeartRateTest();
+		uhrt1.setUserid(1002L);
+		uhrt1.setRestingHeartRate(50);
+		uhrt1.setThresholdHeartRate(100);
+		uhrt1.setMaximalHeartRate(170);
+		userHeartRateTestDao.createHeartRateTestResults(uhrt1);
+		
+		/* Update User Heart Rate Results test starts here*/
+		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		Assert.assertNotNull(uhrt2);
+		uhrt2.setRestingHeartRate(61);
+		uhrt2.setMaximalHeartRate(175);
+		uhrt2.setThresholdHeartRate(107);
+		userHeartRateTestDao.updateHeartRateTestResults(uhrt2);
+		
+		UserHeartRateTest uhrt3 = new UserHeartRateTest();
+		uhrt3 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		Assert.assertEquals( new Integer(61), uhrt3.getRestingHeartRate());
+		Assert.assertEquals( new Integer(175), uhrt3.getMaximalHeartRate());
+		Assert.assertEquals( new Integer(107), uhrt3.getThresholdHeartRate());
+		
+		/*Cleanup*/
+		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+	
 	}
+	
+    @Test
+    public void testDeleteHeartRateTestResults(){
+    	
+    	Assert.assertNotNull(userHeartRateTestDao);
+    	
+		/* Create User Heart Rate Results*/
+		UserHeartRateTest uhrt1 = new UserHeartRateTest();
+		uhrt1.setUserid(1002L);
+		uhrt1.setRestingHeartRate(50);
+		uhrt1.setThresholdHeartRate(100);
+		uhrt1.setMaximalHeartRate(170);
+		userHeartRateTestDao.createHeartRateTestResults(uhrt1);
+    	
+		/* Delete User Heart Rate Results Test starts here*/
+    	userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+    	
+    	UserHeartRateTest uhrt2 = new UserHeartRateTest();
+		uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		Assert.assertNull(uhrt2);
+    	
+		    	
+    }
 
 }

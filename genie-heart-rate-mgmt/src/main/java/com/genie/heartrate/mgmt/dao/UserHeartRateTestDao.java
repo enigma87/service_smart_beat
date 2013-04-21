@@ -22,10 +22,11 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
  */
 public class UserHeartRateTestDao 
 {
-	private static final String UPDATE = "UPDATE genie.user_heart_rate_test SET resting_heart_rate=:restingHeartRate, resting_heart_rate_timestamp=:restingHeartRateTimestamp, " +
+	private static final String UPDATE = "UPDATE user_heart_rate_test SET resting_heart_rate=:restingHeartRate, resting_heart_rate_timestamp=:restingHeartRateTimestamp, " +
 			"maximal_heart_rate=:maximalHeartRate, maximal_heart_rate_timestamp=:maximalHeartRateTimestamp, threshold_heart_rate=:thresholdHeartRate, threshold_heart_rate_timestamp=:thresholdHeartRateTimestamp " +
 			"WHERE userid=:userid;";	
 	
+		
 	private BasicDataSource dataSource;
 	
 	public BasicDataSource getDataSource()
@@ -66,5 +67,25 @@ public class UserHeartRateTestDao
 	{
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(heartRateTest));			
-	}	
+	}
+	
+	public void deleteHeartRateTestResults(Long userid)
+	{
+		
+		UserHeartRateTest userHeartRateTest = null;
+		try
+		{
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			userHeartRateTest = jdbcTemplate.queryForObject("SELECT * FROM user_heart_rate_test WHERE userid=?", 
+				ParameterizedBeanPropertyRowMapper.newInstance(UserHeartRateTest.class), userid);
+			
+			if (null != userHeartRateTest ){
+				jdbcTemplate.update("DELETE FROM user_heart_rate_test where userid = ?", userid);
+			}
+		}
+		catch(EmptyResultDataAccessException ex)
+		{
+			
+		}
+	}
 }

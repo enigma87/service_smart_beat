@@ -24,7 +24,7 @@ public class UserHeartRateZoneDaoTest
 {
 
 	private ApplicationContext appContext;
-	
+	private UserHeartRateZoneDao userHeartRateZoneDao;
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -32,6 +32,7 @@ public class UserHeartRateZoneDaoTest
 	public void setUp() throws Exception 
 	{
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		userHeartRateZoneDao = (UserHeartRateZoneDao) appContext.getBean("userHeartRateZoneDao");
 	}
 
 	/**
@@ -41,12 +42,12 @@ public class UserHeartRateZoneDaoTest
 	public void testGetHeartRateZone() 
 	{
 		
-		HeartRateMgmt heartRateMgmt = (HeartRateMgmtMySQLImpl) appContext.getBean("heartRateMgmtMySQLImpl");
-		Assert.assertNotNull(heartRateMgmt);
 		
-		UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong("1000"));
+		Assert.assertNotNull(userHeartRateZoneDao);
+		
+		UserHeartRateZone heartRateZone = userHeartRateZoneDao.getHeartRateZone(Long.parseLong("1000"));
 		Assert.assertNotNull(heartRateZone);
-		System.out.println(heartRateZone.getHrz1Start());
+		
 	}
 
 	/**
@@ -54,7 +55,43 @@ public class UserHeartRateZoneDaoTest
 	 */
 	@Test
 	public void testCreateHeartRateZone() {
-		fail("Not yet implemented");
+		
+		Assert.assertNotNull(userHeartRateZoneDao);
+		
+		UserHeartRateZone uhrz = new UserHeartRateZone();
+		uhrz.setUserid(1002L);
+		uhrz.setHrz1Start(50.0);
+		uhrz.setHrz1End(90.0);
+		uhrz.setHrz2Start(90.1);
+		uhrz.setHrz2End(113.0);
+		uhrz.setHrz3Start(113.1);
+		uhrz.setHrz3End(124.0);
+		uhrz.setHrz4Start(124.1);
+		uhrz.setHrz4End(132.0);
+		uhrz.setHrz5Start(132.1);
+		uhrz.setHrz5End(150.0);
+		uhrz.setHrz6Start(150.1);
+		uhrz.setHrz6End(190.0);
+        
+        userHeartRateZoneDao.createHeartRateZone(uhrz);
+        
+        UserHeartRateZone uhrz1 = new UserHeartRateZone();
+        uhrz1 = userHeartRateZoneDao.getHeartRateZone(1002L);
+        Assert.assertEquals(new Double(50.0), uhrz1.getHrz1Start());
+        Assert.assertEquals(new Double(90.0), uhrz1.getHrz1End());
+        Assert.assertEquals(new Double(90.1), uhrz1.getHrz2Start());
+        Assert.assertEquals(new Double(113.0), uhrz1.getHrz2End());
+        Assert.assertEquals(new Double(113.1), uhrz1.getHrz3Start());
+        Assert.assertEquals(new Double(124.0), uhrz1.getHrz3End());
+        Assert.assertEquals(new Double(124.1), uhrz1.getHrz4Start());
+        Assert.assertEquals(new Double(132.0), uhrz1.getHrz4End());
+        Assert.assertEquals(new Double(132.1), uhrz1.getHrz5Start());
+        
+		
+		
+		
+		
+		
 	}
 
 	/**
