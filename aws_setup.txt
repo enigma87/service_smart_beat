@@ -1,0 +1,21 @@
+sudo yum install tomcat 7
+
+MySQL
+-----
+sudo yum install mysql mysql-server mysql-libs
+sudo chgrp -R mysql /var/lib/mysql
+sudo chmod -R 770 /var/lib/mysql
+sudo service mysqld start
+/usr/bin/mysqladmin -u root password yourpasswordhere
+sudo service mysqld restart
+Login to local console- mysql -u root -p
+Set access to client GRANT ALL PRIVILEGES ON *.* TO root@'c83-254-71-240.bredband.comhem.se' IDENTIFIED BY 'abc#123';
+
+WinSCP
+------
+On server
+Edit /etc/sudoers/ - sudo visudo
+After line  “Defaults reguiretty” and add “Defaults:ec2-user !requiretty”
+
+In WinSCP
+Advanced options tab to connect and choose SCP shell as sudo -su
