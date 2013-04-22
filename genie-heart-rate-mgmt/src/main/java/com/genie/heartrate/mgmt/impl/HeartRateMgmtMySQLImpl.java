@@ -65,7 +65,12 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 
 	public UserHeartRateZone getHeartRateZonesForUser(Long userid) 
 	{
-		return userHeartRateZoneDao.getHeartRateZone(userid);
+		UserHeartRateTest userHeartRateTest = new UserHeartRateTest();
+		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
+		userHeartRateTest = userHeartRateTestDao.getHeartRateTestResults(userid);
+		userHeartRateZone = HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
+		return userHeartRateZone;
+		
 	}
 
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone) 
