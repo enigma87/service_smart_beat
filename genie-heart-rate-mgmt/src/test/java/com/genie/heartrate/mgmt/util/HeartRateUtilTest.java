@@ -29,8 +29,7 @@ public class HeartRateUtilTest {
 		System.out.print("The Zone 4 Range is "+userHeartRateZone.getHrz4Start()+" - "+userHeartRateZone.getHrz4End()+"\n");
 		System.out.print("The Zone 5 Range is "+userHeartRateZone.getHrz5Start()+" - "+userHeartRateZone.getHrz5End()+"\n");
 		System.out.print("The Zone 6 Range is "+userHeartRateZone.getHrz6Start()+" - "+userHeartRateZone.getHrz6End()+"\n");
-		System.out.print("The Zones were created at "+userHeartRateZone.getCreatedTs()+"\n");
-		System.out.print("The Zones were updated at "+userHeartRateZone.getUpdatedTs()+"\n");
+
 		
 	}
 

@@ -78,7 +78,6 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 			userHeartRateZoneDao.createHeartRateZone(userHeartRateZone);
 		else
 		{
-			userHeartRateZone.setCreatedTs(fromDb.getCreatedTs());
 			userHeartRateZoneDao.updateHeartRateZone(userHeartRateZone);
 		}
 	}

@@ -22,8 +22,7 @@ public class UserHeartRateZone
 	private Double hrz5End;
 	private Double hrz6Start;
 	private Double hrz6End;
-	private Timestamp createdTs;
-	private Timestamp updatedTs;
+
 	
 	public Long getUserid()
 	{
@@ -155,23 +154,4 @@ public class UserHeartRateZone
 		this.hrz6End = hrz6End;
 	}
 	
-	public Timestamp getCreatedTs()
-	{
-		return this.createdTs;
-	}
-	
-	public void setCreatedTs(Timestamp createdTs)
-	{
-		this.createdTs = createdTs;
-	}
-	
-	public Timestamp getUpdatedTs()
-	{
-		return this.updatedTs;
-	}
-	
-	public void setUpdatedTs(Timestamp updatedTs)
-	{
-		this.updatedTs = updatedTs;
-	}
 }
