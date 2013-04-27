@@ -15,10 +15,10 @@ public class HeartRateUtilTest {
 		UserHeartRateTest userHeartRateTest = new UserHeartRateTest();
 		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
 		
-		userHeartRateTest.setUserid(1238990008L);
-		userHeartRateTest.setRestingHeartRate(50);
-		userHeartRateTest.setThresholdHeartRate(130);
-		userHeartRateTest.setMaximalHeartRate(200);
+		userHeartRateTest.setUserid(1003L);
+		userHeartRateTest.setRestingHeartRate(56);
+		userHeartRateTest.setThresholdHeartRate(108);
+		userHeartRateTest.setMaximalHeartRate(168);
 		
 		userHeartRateZone = HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
 		

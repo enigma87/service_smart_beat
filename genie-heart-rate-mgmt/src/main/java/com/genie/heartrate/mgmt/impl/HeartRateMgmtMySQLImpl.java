@@ -53,21 +53,22 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 
 	public void saveHeartRateTestResultsForUser(UserHeartRateTest uhrt) 
 	{
-			UserHeartRateTest heartRateTest = getHeartRateTestResultsForUser(uhrt.getUserid());			
-			if(null == heartRateTest){
-				userHeartRateTestDao.createHeartRateTestResults(uhrt);
-			}else{			
-				uhrt.fillInTheBlanks(heartRateTest);			
-				userHeartRateTestDao.updateHeartRateTestResults(uhrt);
-			}				
-			//TODO Trigger HRZ calculation			
+		UserHeartRateTest heartRateTest = getHeartRateTestResultsForUser(uhrt.getUserid());			
+		if(null == heartRateTest){
+			userHeartRateTestDao.createHeartRateTestResults(uhrt);
+		}else{			
+			uhrt.fillInTheBlanks(heartRateTest);			
+			userHeartRateTestDao.updateHeartRateTestResults(uhrt);
+		}
+  
+		//TODO Trigger HRZ calculation
+					
 	}
 
-	public UserHeartRateZone getHeartRateZonesForUser(Long userid) 
-	{		
+	public UserHeartRateZone getHeartRateZonesForUser(Long userid)
+	{
 		UserHeartRateTest userHeartRateTest = userHeartRateTestDao.getHeartRateTestResults(userid);
 		return HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
-			
 	}
 
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone) 
@@ -82,4 +83,7 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		}
 	}
 
+
+
 }
+
