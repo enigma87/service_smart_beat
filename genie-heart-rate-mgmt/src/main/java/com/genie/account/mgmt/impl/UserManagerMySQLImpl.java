@@ -20,9 +20,8 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao;
 	}
 	
-	public void createUser(Long userid) {
-		// TODO Auto-generated method stub
-		
+	public void createUser(User user) {
+		userDao.createUser(user);		
 	}
 
 	public User getUserInformation(Long userid) {
@@ -37,7 +36,6 @@ public class UserManagerMySQLImpl implements UserManager{
 
 	public User getUserInformation(String email) {
 		return userDao.getUserInfo(email);
-	}
-
+	}	
 }
 

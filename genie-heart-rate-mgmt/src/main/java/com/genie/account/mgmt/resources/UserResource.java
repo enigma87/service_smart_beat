@@ -62,10 +62,29 @@ public class UserResource
 	
 	@POST
 	@Path("create")
-	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createUser(@Context UriInfo uriInfo)
+	public String createUser(User user)
 	{
-		return "";
+		GoodResponseObject gro = null;
+		User existingUser = userManager.getUserInformation(user.getEmail());
+		if(null == existingUser){		
+			user.setUserid(5000L);
+			userManager.createUser(user);
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());			
+			try {
+				return Formatter.getAsJson(gro, false);
+			} catch (Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			}
+		}
+		else{
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "User already exists");			
+			try {
+				return Formatter.getAsJson(gro, false);
+			} catch (Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			}
+		}		
 	}		
 }
