@@ -3,15 +3,11 @@
  */
 package com.genie.heartrate.mgmt.impl;
 
-import java.util.Calendar;
-import java.util.Map;
-
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
-import com.genie.heartrate.mgmt.util.HeartRateConts;
 import com.genie.heartrate.mgmt.util.HeartRateUtil;
 
 /**

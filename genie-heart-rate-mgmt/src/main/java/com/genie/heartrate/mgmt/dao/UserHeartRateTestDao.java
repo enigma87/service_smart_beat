@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
 
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 
@@ -58,7 +57,7 @@ public class UserHeartRateTestDao
 	public int createHeartRateTestResults(UserHeartRateTest userHeartRateTest)
 	{
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName("genie.user_heart_rate_test")
+		return simpleJdbcInsert.withTableName("user_heart_rate_test")
 		.usingColumns("userid", "resting_heart_rate", "resting_heart_rate_timestamp", "maximal_heart_rate", "maximal_heart_rate_timestamp", "threshold_heart_rate", "threshold_heart_rate_timestamp")
 		.execute(new BeanPropertySqlParameterSource(userHeartRateTest));
 	}

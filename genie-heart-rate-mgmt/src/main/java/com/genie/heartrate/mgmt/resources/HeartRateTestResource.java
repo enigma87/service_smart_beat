@@ -36,8 +36,7 @@ import com.genie.mgmt.GoodResponseObject;
 @Path("/HeartRateTests")
 @Component
 public class HeartRateTestResource 
-{
-	
+{	
 	@Autowired
 	@Qualifier("heartRateMgmtMySQLImpl")
 	private HeartRateMgmt heartRateMgmt;

@@ -1,7 +1,5 @@
 package com.genie.heartrate.mgmt.beans;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
 
 /**
  * @author manojkumar

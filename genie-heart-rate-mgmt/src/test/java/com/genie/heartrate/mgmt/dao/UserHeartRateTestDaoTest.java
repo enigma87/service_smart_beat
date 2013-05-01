@@ -3,7 +3,6 @@
  */
 package com.genie.heartrate.mgmt.dao;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Before;
