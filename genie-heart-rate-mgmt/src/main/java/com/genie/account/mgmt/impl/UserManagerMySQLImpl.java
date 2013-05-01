@@ -25,12 +25,13 @@ public class UserManagerMySQLImpl implements UserManager{
 	}
 
 	public User getUserInformation(Long userid) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return userDao.getUserInfo(userid);
 	}
 
 	public void saveUserInformation(User user) {
-		// TODO Auto-generated method stub
+		
+		userDao.updateUser(user);
 		
 	}
 

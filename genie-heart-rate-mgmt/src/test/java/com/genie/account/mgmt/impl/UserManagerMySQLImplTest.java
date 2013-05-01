@@ -1,4 +1,6 @@
-package com.genie.account.mgmt.dao;
+package com.genie.account.mgmt.impl;
+
+import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -8,27 +10,23 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.account.mgmt.beans.User;
+import com.genie.account.mgmt.dao.UserDao;
+import com.genie.account.mgmt.core.UserManager;
 
-/**
- * @author dhasarathy
- **/
 
-public class UserDaoTest {
+public class UserManagerMySQLImplTest {
 
 	private static ApplicationContext applicationContext;
 	private static UserDao userDao;
 	private static User user;
 	private static Date Dob = null;
 	private static Timestamp timestamp ;
-
-
 	
 	@BeforeClass
 	public static void setupUserDaoTestCases(){
@@ -64,9 +62,12 @@ public class UserDaoTest {
 	@Test
 	public void testCreateUser() {
 		
-		userDao.createUser(user);
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.createUser(user);
 		
-		User user1 = userDao.getUserInfo(user.getUserid());
+		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals(new Long(1002L), user1.getUserid());
 		Assert.assertEquals("Antony", user1.getFirstName());
 		Assert.assertEquals("Bob", user1.getMiddleName());
@@ -83,39 +84,46 @@ public class UserDaoTest {
 		Assert.assertEquals(new Boolean(true), user1.getActive());
 		userDao.deleteUser(user.getUserid());
 	}
+
+	@Test
+	public void testGetUserInformationLong() {
+		
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.createUser(user);
+		User user1 = usMgr.getUserInformation(user.getUserid());
+		Assert.assertNotNull(user1);
+		userDao.deleteUser(user.getUserid());
+	}
 	
 	@Test
-	public void testUpdateUser() {
+	public void testGetUserInformationString() {
 		
-		userDao.createUser(user);
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.createUser(user);
+		User user1 = usMgr.getUserInformation(user.getEmail());
+		Assert.assertNotNull(user1);
+		userDao.deleteUser(user.getUserid());
+	}
+	
+	@Test
+	public void testSaveUserInformation() {
+		
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.createUser(user);
+		
 		user.setMiddleName("Marley");
 		user.setFacebookLogin(false);
-		userDao.updateUser(user);
+		usMgr.saveUserInformation(user);
 		
-		User user1 = userDao.getUserInfo(user.getUserid());
-		Assert.assertEquals("Marley", user1.getMiddleName());
-		Assert.assertEquals(new Boolean(false), user1.getFacebookLogin());
+		User user1 = usMgr.getUserInformation(user.getUserid());
+		Assert.assertEquals("Marley",user1.getMiddleName());
+		Assert.assertEquals(new Boolean(false),user1.getFacebookLogin());
 		userDao.deleteUser(user.getUserid());
 	}
-	
-	@Test
-	public void testGetUserInfoString() {
-		
-		userDao.createUser(user);
-		User user = userDao.getUserInfo("abc@xyz.com");
-		Assert.assertNotNull(user);
-		userDao.deleteUser(user.getUserid());
-	
-	}
-
-	@Test
-	public void testGetUserInfoLong() {
-		userDao.createUser(user);
-		User user = userDao.getUserInfo(1002L);
-		Assert.assertNotNull(user);
-		userDao.deleteUser(user.getUserid());
-	}
-	
-
 }
-

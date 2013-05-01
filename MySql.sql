@@ -28,26 +28,6 @@ CREATE TABLE genie.`user` (
 
 delimiter $$
 
-delimiter $$
-
-CREATE TABLE genie.`user_heart_rate_zone` (
-  `userid` bigint(20) NOT NULL,
-  `hrz1_start` decimal(9,2) DEFAULT NULL,
-  `hrz1_end` decimal(9,2) DEFAULT NULL,
-  `hrz2_start` decimal(9,2) DEFAULT NULL,
-  `hrz2_end` decimal(9,2) DEFAULT NULL,
-  `hrz3_start` decimal(9,2) DEFAULT NULL,
-  `hrz3_end` decimal(9,2) DEFAULT NULL,
-  `hrz4_start` decimal(9,2) DEFAULT NULL,
-  `hrz4_end` decimal(9,2) DEFAULT NULL,
-  `hrz5_start` decimal(9,2) DEFAULT NULL,
-  `hrz5_end` decimal(9,2) DEFAULT NULL,
-  `hrz6_start` decimal(9,2) DEFAULT NULL,
-  `hrz6_end` decimal(9,2) DEFAULT NULL,
-  `created_ts` timestamp NULL DEFAULT NULL,
-  `updated_ts` timestamp NULL DEFAULT NULL,
-  UNIQUE KEY `hrt_id_UNIQUE` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$
 
