@@ -8,7 +8,7 @@ import java.sql.Timestamp;
  */
 public class UserHeartRateTest 
 {
-	private Long userid;
+	private String userid;
 	private Integer restingHeartRate;
 	private Timestamp restingHeartRateTimestamp;
 	private Integer maximalHeartRate;
@@ -16,12 +16,12 @@ public class UserHeartRateTest
 	private Integer thresholdHeartRate;		
 	private Timestamp thresholdHeartRateTimestamp;
 	
-	public Long getUserid()
+	public String getUserid()
 	{
 		return this.userid;
 	}
 	
-	public void setUserid(Long userid)
+	public void setUserid(String userid)
 	{
 		this.userid = userid;
 	}

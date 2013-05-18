@@ -45,7 +45,7 @@ public class UserHeartRateZoneDaoTest
 		
 		Assert.assertNotNull(userHeartRateZoneDao);
 		
-		UserHeartRateZone heartRateZone = userHeartRateZoneDao.getHeartRateZone(Long.parseLong("1000"));
+		UserHeartRateZone heartRateZone = userHeartRateZoneDao.getHeartRateZone("123456789");
 		Assert.assertNotNull(heartRateZone);
 		
 	}
@@ -59,7 +59,7 @@ public class UserHeartRateZoneDaoTest
 		Assert.assertNotNull(userHeartRateZoneDao);
 		
 		UserHeartRateZone uhrz = new UserHeartRateZone();
-		uhrz.setUserid(1002L);
+		uhrz.setUserid("123456789");
 		uhrz.setHrz1Start(50.0);
 		uhrz.setHrz1End(90.0);
 		uhrz.setHrz2Start(90.1);
@@ -76,7 +76,7 @@ public class UserHeartRateZoneDaoTest
         userHeartRateZoneDao.createHeartRateZone(uhrz);
         
         UserHeartRateZone uhrz1 = new UserHeartRateZone();
-        uhrz1 = userHeartRateZoneDao.getHeartRateZone(1002L);
+        uhrz1 = userHeartRateZoneDao.getHeartRateZone("123456789");
         Assert.assertEquals(new Double(50.0), uhrz1.getHrz1Start());
         Assert.assertEquals(new Double(90.0), uhrz1.getHrz1End());
         Assert.assertEquals(new Double(90.1), uhrz1.getHrz2Start());

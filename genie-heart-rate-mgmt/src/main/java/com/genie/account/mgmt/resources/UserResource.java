@@ -3,6 +3,8 @@
  */
 package com.genie.account.mgmt.resources;
 
+import java.util.UUID;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -22,6 +24,9 @@ import org.springframework.stereotype.Component;
 
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
+import com.genie.account.mgmt.util.RegisterRequestJSON;
+import com.genie.account.mgmt.util.FacebookGraphAPIResponseJSON;
+import com.genie.account.mgmt.util.RegisterResponseJSON;
 import com.genie.heartrate.mgmt.util.Formatter;
 import com.genie.mgmt.GoodResponseObject;
 
@@ -61,17 +66,23 @@ public class UserResource
 	}
 	
 	@POST
-	@Path("create")
+	@Path("register")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String createUser(User user)
+	public String registerUser(RegisterRequestJSON requestJson )
 	{
 		GoodResponseObject gro = null;
-		User existingUser = userManager.getUserInformation(user.getEmail());
+		FacebookGraphAPIResponseJSON responseJson = userManager.authenticateUser(requestJson);
+		User existingUser = userManager.getUserInformation(responseJson.getEmail());
 		if(null == existingUser){		
-			user.setUserid(5000L);
-			userManager.createUser(user);
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());			
+			User newUser = new User();
+			newUser.setUserid(UUID.randomUUID().toString());
+			newUser.setEmail(responseJson.getEmail());
+			newUser.setFirstName(responseJson.getName());
+			userManager.registerUser(newUser);
+			RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
+			regResponseJson.setUserid(newUser.getUserid());
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);			
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {

@@ -6,7 +6,7 @@ CREATE DATABASE `genie` /*!40100 DEFAULT CHARACTER SET utf8 */$$
 delimiter $$
 
 CREATE TABLE genie.`user` (
-  `userid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` varchar(128) NOT NULL,
   `first_name` text NOT NULL,
   `middle_name` text,
   `last_name` text,
@@ -32,7 +32,7 @@ delimiter $$
 delimiter $$
 
 CREATE TABLE genie.`user_heart_rate_test` (
-  `userid` bigint(20) NOT NULL,
+  `userid` varchar(128) NOT NULL,
   `resting_heart_rate` int(11) DEFAULT NULL,
   `resting_heart_rate_timestamp` timestamp NULL DEFAULT NULL,
   `maximal_heart_rate` int(11) DEFAULT NULL,

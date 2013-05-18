@@ -10,7 +10,10 @@ import junit.framework.Assert;
 
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import org.junit.Test;
-
+/**
+ * @author vidhun
+ *
+ */
 
 public class UserHeartRateTestTest {
 
@@ -21,7 +24,7 @@ public class UserHeartRateTestTest {
 		UserHeartRateTest userHeartRateTest = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
-		userHeartRateTest.setUserid(1003L);
+		userHeartRateTest.setUserid("123456789");
 		userHeartRateTest.setRestingHeartRate(59);
 		userHeartRateTest.setRestingHeartRateTimestamp(timestamp);
 		userHeartRateTest.setMaximalHeartRate(164);
@@ -29,7 +32,7 @@ public class UserHeartRateTestTest {
 		userHeartRateTest.setThresholdHeartRate(117);
 		userHeartRateTest.setThresholdHeartRateTimestamp(timestamp);
 		
-		Assert.assertEquals(new Long(1003L),userHeartRateTest.getUserid());
+		Assert.assertEquals("123456789",userHeartRateTest.getUserid());
 		Assert.assertEquals(new Integer(59),userHeartRateTest.getRestingHeartRate());
 		Assert.assertEquals(new Integer(164),userHeartRateTest.getMaximalHeartRate());
 		Assert.assertEquals(new Integer(117),userHeartRateTest.getThresholdHeartRate());

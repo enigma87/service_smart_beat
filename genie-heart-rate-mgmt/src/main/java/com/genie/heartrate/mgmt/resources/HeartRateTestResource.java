@@ -60,7 +60,7 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			UserHeartRateTest heartRateTest = heartRateMgmt.getHeartRateTestResultsForUser(Long.parseLong(userid));
+			UserHeartRateTest heartRateTest = heartRateMgmt.getHeartRateTestResultsForUser(userid);
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateTest);
 			return Formatter.getAsJson(gro, true);
 		}
@@ -78,7 +78,7 @@ public class HeartRateTestResource
 	{
 		try
 		{
-			uhrt.setUserid(Long.valueOf(userid));
+			uhrt.setUserid(userid);
 			
 			if(null != uhrt.getRestingHeartRate()){				
 				uhrt.setRestingHeartRateTimestamp(new Timestamp(Calendar.getInstance().getTime().getTime()));	

@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  */
 public class User 
 {
-	private Long userid;
+	private String userid;
 	private String firstName;
 	private String middleName;
 	private String lastName;
@@ -27,12 +27,12 @@ public class User
 	private Timestamp lastLoginTs;
 	private Boolean active = true;
 	
-	public Long getUserid()
+	public String getUserid()
 	{
 		return this.userid;
 	}
 	
-	public void setUserid(Long userid)
+	public void setUserid(String userid)
 	{
 		this.userid = userid;
 	}

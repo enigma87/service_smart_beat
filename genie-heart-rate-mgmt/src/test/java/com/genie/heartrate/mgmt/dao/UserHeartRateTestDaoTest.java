@@ -43,7 +43,7 @@ public class UserHeartRateTestDaoTest
 	{
 		/* Creating User Heart Rate Test Results */
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		uhrt1.setUserid(1002L);
+		uhrt1.setUserid("123456789");
 		uhrt1.setRestingHeartRate(50);
 		uhrt1.setThresholdHeartRate(100);
 		uhrt1.setMaximalHeartRate(170);
@@ -51,11 +51,11 @@ public class UserHeartRateTestDaoTest
 		Assert.assertNotNull(userHeartRateTestDao);
 	
 		/* The test starts here */ 
-		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults("123456789");
 		Assert.assertNotNull(uhrt2);
 		
 		/*Cleanup*/
-		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 				
 	}
 	
@@ -71,21 +71,21 @@ public class UserHeartRateTestDaoTest
 		
 		/*The test starts here*/
 		UserHeartRateTest uhrt = new UserHeartRateTest();
-		uhrt.setUserid(1002L);
+		uhrt.setUserid("123456789");
 		uhrt.setRestingHeartRate(50);
 		uhrt.setThresholdHeartRate(100);
 		uhrt.setMaximalHeartRate(170);
 		userHeartRateTestDao.createHeartRateTestResults(uhrt);
 		
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		uhrt1 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		uhrt1 = userHeartRateTestDao.getHeartRateTestResults("123456789");
 		Assert.assertEquals( new Integer(50), uhrt1.getRestingHeartRate());
 		Assert.assertEquals( new Integer(170), uhrt1.getMaximalHeartRate());
 		Assert.assertEquals( new Integer(100), uhrt1.getThresholdHeartRate());
 		
 		
 		/*Cleanup*/
-		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 	
 	}
     
@@ -100,14 +100,14 @@ public class UserHeartRateTestDaoTest
 		
 		/* Create User Heart Rate Results*/
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		uhrt1.setUserid(1002L);
+		uhrt1.setUserid("123456789");
 		uhrt1.setRestingHeartRate(50);
 		uhrt1.setThresholdHeartRate(100);
 		uhrt1.setMaximalHeartRate(170);
 		userHeartRateTestDao.createHeartRateTestResults(uhrt1);
 		
 		/* Update User Heart Rate Results test starts here*/
-		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		UserHeartRateTest uhrt2 = userHeartRateTestDao.getHeartRateTestResults("123456789");
 		Assert.assertNotNull(uhrt2);
 		uhrt2.setRestingHeartRate(61);
 		uhrt2.setMaximalHeartRate(175);
@@ -115,13 +115,13 @@ public class UserHeartRateTestDaoTest
 		userHeartRateTestDao.updateHeartRateTestResults(uhrt2);
 		
 		UserHeartRateTest uhrt3 = new UserHeartRateTest();
-		uhrt3 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		uhrt3 = userHeartRateTestDao.getHeartRateTestResults("123456789");
 		Assert.assertEquals( new Integer(61), uhrt3.getRestingHeartRate());
 		Assert.assertEquals( new Integer(175), uhrt3.getMaximalHeartRate());
 		Assert.assertEquals( new Integer(107), uhrt3.getThresholdHeartRate());
 		
 		/*Cleanup*/
-		userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 	
 	}
 	
@@ -132,17 +132,17 @@ public class UserHeartRateTestDaoTest
     	
 		/* Create User Heart Rate Results*/
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		uhrt1.setUserid(1002L);
+		uhrt1.setUserid("123456789");
 		uhrt1.setRestingHeartRate(50);
 		uhrt1.setThresholdHeartRate(100);
 		uhrt1.setMaximalHeartRate(170);
 		userHeartRateTestDao.createHeartRateTestResults(uhrt1);
     	
 		/* Delete User Heart Rate Results Test starts here*/
-    	userHeartRateTestDao.deleteHeartRateTestResults(1002L);
+    	userHeartRateTestDao.deleteHeartRateTestResults("123456789");
     	
     	UserHeartRateTest uhrt2 = new UserHeartRateTest();
-		uhrt2 = userHeartRateTestDao.getHeartRateTestResults(Long.parseLong("1002"));
+		uhrt2 = userHeartRateTestDao.getHeartRateTestResults("123456789");
 		Assert.assertNull(uhrt2);
     	
 		    	

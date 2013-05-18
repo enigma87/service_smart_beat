@@ -49,7 +49,7 @@ public class UserDao
 		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(user));
 	}
 	
-	public void deleteUser(Long userid){
+	public void deleteUser(String userid){
 	
 		User user = null;
 		try
@@ -68,7 +68,7 @@ public class UserDao
 		}
 	}
 	
-	public User getUserInfo(String email)
+	public User getUserInfoByEmail(String email)
 	{
 		User user = null;
 		try
@@ -83,7 +83,7 @@ public class UserDao
 		return user;
 	}
 	
-	public User getUserInfo(Long userid)
+	public User getUserInfo(String userid)
 	{
 		User user = null;
 		try

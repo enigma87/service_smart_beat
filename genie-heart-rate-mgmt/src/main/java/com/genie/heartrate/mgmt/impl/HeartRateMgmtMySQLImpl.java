@@ -42,7 +42,7 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 	
 	
 	
-	public UserHeartRateTest getHeartRateTestResultsForUser(Long userid) 
+	public UserHeartRateTest getHeartRateTestResultsForUser(String userid) 
 	{
 		return userHeartRateTestDao.getHeartRateTestResults(userid);
 	}
@@ -61,7 +61,7 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 					
 	}
 
-	public UserHeartRateZone getHeartRateZonesForUser(Long userid)
+	public UserHeartRateZone getHeartRateZonesForUser(String userid)
 	{
 		UserHeartRateTest userHeartRateTest = userHeartRateTestDao.getHeartRateTestResults(userid);
 		return HeartRateUtil.calculateHeartRateZones(userHeartRateTest);

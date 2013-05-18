@@ -13,6 +13,11 @@ import junit.framework.Assert;
 import com.genie.account.mgmt.beans.User;
 import org.junit.Test;
 
+/**
+ * @author vidhun
+ *
+ */
+
 public class UserTest {
 
 	@Test
@@ -31,7 +36,7 @@ public class UserTest {
 			
 		}
 		
-		user.setUserid(1002L);
+		user.setUserid("123456789");
 		user.setFirstName("Antony");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
@@ -46,7 +51,7 @@ public class UserTest {
 		user.setLastLoginTs(timestamp);
 		user.setActive(true);
 		
-		Assert.assertEquals(new Long(1002L), user.getUserid());
+		Assert.assertEquals("123456789", user.getUserid());
 		Assert.assertEquals("Antony", user.getFirstName());
 		Assert.assertEquals("Bob", user.getMiddleName());
 		Assert.assertEquals("CampBell", user.getLastName());

@@ -7,7 +7,7 @@ package com.genie.heartrate.mgmt.beans;
  */
 public class UserHeartRateZone 
 {
-	private Long userid;
+	private String userid;
 	private Double hrz1Start;
 	private Double hrz1End;
 	private Double hrz2Start;
@@ -22,12 +22,12 @@ public class UserHeartRateZone
 	private Double hrz6End;
 
 	
-	public Long getUserid()
+	public String getUserid()
 	{
 		return this.userid;
 	}
 	
-	public void setUserid(Long userid)
+	public void setUserid(String userid)
 	{
 		this.userid = userid;
 	}

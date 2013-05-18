@@ -10,6 +10,10 @@ import junit.framework.Assert;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import org.junit.Test;
 
+/**
+ * @author vidhun
+ *
+ */
 public class UserHeartRateZoneTest {
 
 	@Test
@@ -17,7 +21,7 @@ public class UserHeartRateZoneTest {
 		
 		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
 			
-		userHeartRateZone.setUserid(1003L);
+		userHeartRateZone.setUserid("123456789");
 		userHeartRateZone.setHrz1Start(55.0);
 		userHeartRateZone.setHrz1End(61.3);
 		userHeartRateZone.setHrz2Start(61.4);
@@ -32,7 +36,7 @@ public class UserHeartRateZoneTest {
 		userHeartRateZone.setHrz6End(134.5);
 
 		
-		Assert.assertEquals(new Long(1003L),userHeartRateZone.getUserid());
+		Assert.assertEquals("123456789",userHeartRateZone.getUserid());
 		Assert.assertEquals(new Double(55.0),userHeartRateZone.getHrz1Start());
 		Assert.assertEquals(new Double(61.3),userHeartRateZone.getHrz1End());
 		Assert.assertEquals(new Double(61.4),userHeartRateZone.getHrz2Start());

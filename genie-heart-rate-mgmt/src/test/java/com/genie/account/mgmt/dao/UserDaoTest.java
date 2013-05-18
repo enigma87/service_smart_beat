@@ -45,8 +45,8 @@ public class UserDaoTest {
 			}
 
 		user = new User();
-		user.setUserid(1002L);
-		user.setFirstName("Antony");
+		user.setUserid("123456789");
+		user.setFirstName("Alice");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
 		user.setDob(Dob);
@@ -67,8 +67,8 @@ public class UserDaoTest {
 		userDao.createUser(user);
 		
 		User user1 = userDao.getUserInfo(user.getUserid());
-		Assert.assertEquals(new Long(1002L), user1.getUserid());
-		Assert.assertEquals("Antony", user1.getFirstName());
+		Assert.assertEquals("123456789", user1.getUserid());
+		Assert.assertEquals("Alice", user1.getFirstName());
 		Assert.assertEquals("Bob", user1.getMiddleName());
 		Assert.assertEquals("CampBell", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
@@ -88,30 +88,30 @@ public class UserDaoTest {
 	public void testUpdateUser() {
 		
 		userDao.createUser(user);
-		user.setMiddleName("Marley");
+		user.setMiddleName("John");
 		user.setFacebookLogin(false);
 		userDao.updateUser(user);
 		
 		User user1 = userDao.getUserInfo(user.getUserid());
-		Assert.assertEquals("Marley", user1.getMiddleName());
+		Assert.assertEquals("John", user1.getMiddleName());
 		Assert.assertEquals(new Boolean(false), user1.getFacebookLogin());
 		userDao.deleteUser(user.getUserid());
 	}
 	
 	@Test
-	public void testGetUserInfoString() {
+	public void testGetUserInfoByEmail() {
 		
 		userDao.createUser(user);
-		User user = userDao.getUserInfo("abc@xyz.com");
+		User user = userDao.getUserInfoByEmail("abc@xyz.com");
 		Assert.assertNotNull(user);
 		userDao.deleteUser(user.getUserid());
 	
 	}
 
 	@Test
-	public void testGetUserInfoLong() {
+	public void testGetUserInfoByUserid() {
 		userDao.createUser(user);
-		User user = userDao.getUserInfo(1002L);
+		User user = userDao.getUserInfo("123456789");
 		Assert.assertNotNull(user);
 		userDao.deleteUser(user.getUserid());
 	}

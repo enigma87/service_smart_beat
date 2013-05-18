@@ -17,7 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+/**
+ * @author vidhun
+ *
+ */
 
 public class HeartRateMgmtMySQLImplTest {
 
@@ -38,7 +41,7 @@ public class HeartRateMgmtMySQLImplTest {
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
-		uhrt1.setUserid(1003L);
+		uhrt1.setUserid("123456789");
 		uhrt1.setRestingHeartRate(56);
 		uhrt1.setMaximalHeartRate(168);
 		uhrt1.setThresholdHeartRate(108);
@@ -49,10 +52,10 @@ public class HeartRateMgmtMySQLImplTest {
 		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
 		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser(1003L);
+		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
 		Assert.assertNotNull(uhrt2);
 		
-	    userHeartRateTestDao.deleteHeartRateTestResults(1003L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 			
 	}
 
@@ -63,8 +66,7 @@ public class HeartRateMgmtMySQLImplTest {
 		HeartRateMgmt hrMgmt = new HeartRateMgmtMySQLImpl();
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-				
-		uhrt1.setUserid(1003L);
+		uhrt1.setUserid("123456789");
 		uhrt1.setRestingHeartRate(56);
 		uhrt1.setMaximalHeartRate(168);
 		uhrt1.setThresholdHeartRate(108);
@@ -75,8 +77,8 @@ public class HeartRateMgmtMySQLImplTest {
 		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
 		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser(1003L);
-		Assert.assertEquals(new Long(1003L), uhrt2.getUserid());
+		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
+		Assert.assertEquals("123456789", uhrt2.getUserid());
 		Assert.assertEquals(new Integer(56), uhrt2.getRestingHeartRate());
 		Assert.assertEquals(new Integer(168), uhrt2.getMaximalHeartRate());
 		Assert.assertEquals(new Integer(108), uhrt2.getThresholdHeartRate());
@@ -84,7 +86,7 @@ public class HeartRateMgmtMySQLImplTest {
 		Assert.assertNotNull(uhrt2.getMaximalHeartRateTimestamp());
 		Assert.assertNotNull(uhrt2.getThresholdHeartRateTimestamp());
 		
-		userHeartRateTestDao.deleteHeartRateTestResults(1003L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 			
 	}
 	
@@ -95,7 +97,7 @@ public class HeartRateMgmtMySQLImplTest {
 		UserHeartRateTest uhrt = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
-		uhrt.setUserid(1003L);
+		uhrt.setUserid("123456789");
 		uhrt.setRestingHeartRate(56);
 		uhrt.setMaximalHeartRate(168);
 		uhrt.setThresholdHeartRate(108);
@@ -106,8 +108,8 @@ public class HeartRateMgmtMySQLImplTest {
 		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt);
 		
-		UserHeartRateZone uhrz = hrMgmt.getHeartRateZonesForUser(1003L);
-		Assert.assertEquals(new Long(1003L), uhrz.getUserid());
+		UserHeartRateZone uhrz = hrMgmt.getHeartRateZonesForUser("123456789");
+		Assert.assertEquals("123456789", uhrz.getUserid());
 		Assert.assertEquals(new Double(56.0), uhrz.getHrz1Start());
 		Assert.assertEquals(new Double(82.0), uhrz.getHrz1End());
 		Assert.assertEquals(new Double(82.001), uhrz.getHrz2Start());
@@ -121,7 +123,7 @@ public class HeartRateMgmtMySQLImplTest {
 		Assert.assertEquals(new Double(161.28), uhrz.getHrz6Start());
 		Assert.assertEquals(new Double(168.0), uhrz.getHrz6End());
    
-	    userHeartRateTestDao.deleteHeartRateTestResults(1003L);
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
 		
 			
 	}

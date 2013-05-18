@@ -56,7 +56,7 @@ public class HeartRateZoneResource
 	{		
 		try
 		{
-			UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(Long.parseLong(userid));
+			UserHeartRateZone heartRateZone = heartRateMgmt.getHeartRateZonesForUser(userid);
 			if (heartRateZone == null)
 				throw new Exception("Heart Rate Zones are not available for the user: " + userid);
 			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateZone);

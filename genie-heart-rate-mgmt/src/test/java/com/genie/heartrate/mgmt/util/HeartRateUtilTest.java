@@ -1,12 +1,13 @@
 package com.genie.heartrate.mgmt.util;
 
-import static org.junit.Assert.*;
-import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-
-
 import org.junit.Test;
 
+import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
+import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
+/**
+ * @author vidhun
+ *
+ */
 public class HeartRateUtilTest {
 
 	@Test
@@ -15,7 +16,7 @@ public class HeartRateUtilTest {
 		UserHeartRateTest userHeartRateTest = new UserHeartRateTest();
 		UserHeartRateZone userHeartRateZone = new UserHeartRateZone();
 		
-		userHeartRateTest.setUserid(1003L);
+		userHeartRateTest.setUserid("123456789");
 		userHeartRateTest.setRestingHeartRate(56);
 		userHeartRateTest.setThresholdHeartRate(108);
 		userHeartRateTest.setMaximalHeartRate(168);

@@ -12,9 +12,9 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
  */
 public interface HeartRateMgmt 
 {
-	public UserHeartRateTest getHeartRateTestResultsForUser(Long userid);
+	public UserHeartRateTest getHeartRateTestResultsForUser(String userid);
 	public void saveHeartRateTestResultsForUser(UserHeartRateTest uhrt);
 	
-	public UserHeartRateZone getHeartRateZonesForUser(Long userid);
+	public UserHeartRateZone getHeartRateZonesForUser(String userid);
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone);
 }

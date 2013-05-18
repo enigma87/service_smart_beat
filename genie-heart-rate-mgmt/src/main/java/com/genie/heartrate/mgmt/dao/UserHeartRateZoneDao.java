@@ -38,7 +38,7 @@ public class UserHeartRateZoneDao
 	}
 	
 	
-	public UserHeartRateZone getHeartRateZone(Long userid)
+	public UserHeartRateZone getHeartRateZone(String userid)
 	{
 		UserHeartRateZone userHeartRateZone = null;
 		try

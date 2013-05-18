@@ -1,7 +1,5 @@
 package com.genie.account.mgmt.impl;
 
-import static org.junit.Assert.*;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -16,9 +14,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.account.mgmt.beans.User;
-import com.genie.account.mgmt.dao.UserDao;
 import com.genie.account.mgmt.core.UserManager;
-
+import com.genie.account.mgmt.dao.UserDao;
+import com.genie.account.mgmt.util.FacebookGraphAPIResponseJSON;
+import com.genie.account.mgmt.util.RegisterRequestJSON;
+/**
+ * @author vidhun
+ *
+ */
 
 public class UserManagerMySQLImplTest {
 
@@ -43,8 +46,8 @@ public class UserManagerMySQLImplTest {
 			}
 
 		user = new User();
-		user.setUserid(1002L);
-		user.setFirstName("Antony");
+		user.setUserid("123456789");
+		user.setFirstName("Alice");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
 		user.setDob(Dob);
@@ -65,11 +68,11 @@ public class UserManagerMySQLImplTest {
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
-		usMgr.createUser(user);
+		usMgr.registerUser(user);
 		
 		User user1 = usMgr.getUserInformation(user.getUserid());
-		Assert.assertEquals(new Long(1002L), user1.getUserid());
-		Assert.assertEquals("Antony", user1.getFirstName());
+		Assert.assertEquals("123456789", user1.getUserid());
+		Assert.assertEquals("Alice", user1.getFirstName());
 		Assert.assertEquals("Bob", user1.getMiddleName());
 		Assert.assertEquals("CampBell", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
@@ -86,25 +89,25 @@ public class UserManagerMySQLImplTest {
 	}
 
 	@Test
-	public void testGetUserInformationLong() {
+	public void testGetUserInformationByUserid() {
 		
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
-		usMgr.createUser(user);
+		usMgr.registerUser(user);
 		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertNotNull(user1);
 		userDao.deleteUser(user.getUserid());
 	}
 	
 	@Test
-	public void testGetUserInformationString() {
+	public void testGetUserInformationByEmail() {
 		
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
-		usMgr.createUser(user);
-		User user1 = usMgr.getUserInformation(user.getEmail());
+		usMgr.registerUser(user);
+		User user1 = usMgr.getUserInformationByEmail(user.getEmail());
 		Assert.assertNotNull(user1);
 		userDao.deleteUser(user.getUserid());
 	}
@@ -115,15 +118,28 @@ public class UserManagerMySQLImplTest {
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
-		usMgr.createUser(user);
+		usMgr.registerUser(user);
 		
-		user.setMiddleName("Marley");
+		user.setMiddleName("John");
 		user.setFacebookLogin(false);
 		usMgr.saveUserInformation(user);
 		
 		User user1 = usMgr.getUserInformation(user.getUserid());
-		Assert.assertEquals("Marley",user1.getMiddleName());
+		Assert.assertEquals("John",user1.getMiddleName());
 		Assert.assertEquals(new Boolean(false),user1.getFacebookLogin());
 		userDao.deleteUser(user.getUserid());
+	}
+	
+	@Test
+	public void testAuthenticateUser(){
+		
+		UserManager usMgr = new UserManagerMySQLImpl();
+		RegisterRequestJSON requestJson = new RegisterRequestJSON();
+		requestJson.setAccessToken("CAACEdEose0cBAEJubAysZCKUmqbjBVVhyyPgRmpUmpxxEZBOtZCa104c5SIFY1o7ItdPB0oZBP9lcsNmAmf1hFZCneFJSs7xF3LX4cKYe5JWeoS2wJJPLpE4ZAWGYeTqlk4uPrYDaew3Umx9ZAgMgBnCKzInHlM8dYhWHZCRuZC6uKAZDZD");
+		requestJson.setAccessTokenType("facebook");
+		FacebookGraphAPIResponseJSON responseJson = usMgr.authenticateUser(requestJson);
+        System.out.print("The ID is "+ responseJson.getId());
+        System.out.print("The Name is "+responseJson.getName());
+		
 	}
 }

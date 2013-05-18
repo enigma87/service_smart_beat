@@ -39,7 +39,7 @@ public class UserHeartRateTestDao
 	}
 	
 	
-	public UserHeartRateTest getHeartRateTestResults(Long userid)
+	public UserHeartRateTest getHeartRateTestResults(String userid)
 	{
 		UserHeartRateTest userHeartRateTest = null;
 		try
@@ -68,7 +68,7 @@ public class UserHeartRateTestDao
 		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(heartRateTest));			
 	}
 	
-	public void deleteHeartRateTestResults(Long userid)
+	public void deleteHeartRateTestResults(String userid)
 	{
 		
 		UserHeartRateTest userHeartRateTest = null;
