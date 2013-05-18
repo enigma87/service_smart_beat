@@ -56,7 +56,7 @@ public class UserResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserInfo(@PathParam("email") String email, @Context UriInfo uriInfo)
 	{
-		User user = userManager.getUserInformation(email);
+		User user = userManager.getUserInformationByEmail(email);
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), user);
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -78,7 +78,9 @@ public class UserResource
 			User newUser = new User();
 			newUser.setUserid(UUID.randomUUID().toString());
 			newUser.setEmail(responseJson.getEmail());
-			newUser.setFirstName(responseJson.getName());
+			newUser.setFirstName(responseJson.getFirstName());
+			newUser.setLastName(responseJson.getLastName());
+			newUser.setFacebookLogin(true);
 			userManager.registerUser(newUser);
 			RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
 			regResponseJson.setUserid(newUser.getUserid());

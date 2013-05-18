@@ -49,6 +49,7 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao.getUserInfoByEmail(email);
 	}	
 	
+	
 	public FacebookGraphAPIResponseJSON authenticateUser(RegisterRequestJSON requestJson){
 		
 		String url = null;
@@ -59,8 +60,11 @@ public class UserManagerMySQLImpl implements UserManager{
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client client = Client.create(clientConfig);
 		WebResource webresource = client.resource(url);
-		return  webresource.get(FacebookGraphAPIResponseJSON.class);
-		
+		FacebookGraphAPIResponseJSON responseJSON =  webresource.get(FacebookGraphAPIResponseJSON.class);
+		String[] names = responseJSON.getName().split(" ");
+		responseJSON.setFirstName(names[0]);
+		responseJSON.setLastName(names[1]);
+		return responseJSON;
 	}
 }
 

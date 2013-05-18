@@ -1,4 +1,5 @@
 sudo yum install tomcat 7
+sudo service tomcat7 start/stop
 
 MySQL
 -----

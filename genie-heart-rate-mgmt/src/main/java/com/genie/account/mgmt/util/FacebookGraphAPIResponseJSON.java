@@ -9,6 +9,8 @@ public class FacebookGraphAPIResponseJSON {
 	private String id;
 	private String name;
 	private String email;
+	private String firstName;
+	private String lastName;
 	
     public void setId(String id) {
 	this.id = id;
@@ -34,4 +36,19 @@ public class FacebookGraphAPIResponseJSON {
 		return email;
 	}
     
+    public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+    
+    public String getFirstName() {
+		return firstName;
+	}
+    
+    public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+    
+    public String getLastName() {
+		return lastName;
+	}    
 }
