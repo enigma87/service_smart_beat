@@ -15,8 +15,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
+import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.RegisterRequestJSON;
-import com.genie.account.mgmt.util.FacebookGraphAPIResponseJSON;
 import com.genie.account.mgmt.util.RegisterResponseJSON;
 import com.genie.heartrate.mgmt.util.Formatter;
 import com.genie.mgmt.GoodResponseObject;
@@ -72,23 +72,28 @@ public class UserResource
 	public String registerUser(RegisterRequestJSON requestJson )
 	{
 		GoodResponseObject gro = null;
-		FacebookGraphAPIResponseJSON responseJson = userManager.authenticateUser(requestJson);
-		User existingUser = userManager.getUserInformation(responseJson.getEmail());
-		if(null == existingUser){		
-			User newUser = new User();
-			newUser.setUserid(UUID.randomUUID().toString());
-			newUser.setEmail(responseJson.getEmail());
-			newUser.setFirstName(responseJson.getFirstName());
-			newUser.setLastName(responseJson.getLastName());
-			newUser.setFacebookLogin(true);
-			userManager.registerUser(newUser);
-			RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
-			regResponseJson.setUserid(newUser.getUserid());
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);			
-			try {
-				return Formatter.getAsJson(gro, false);
-			} catch (Exception e) {
-				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
+		if(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED.equals(authStatus.getAuthenticationStatus())){
+			if(null == authStatus.getAuthenticatedUser()){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
+				try {
+					return Formatter.getAsJson(gro, false);
+				} catch (Exception e) {
+					throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+				}	
+			}
+			else{
+				User newUser = authStatus.getAuthenticatedUser();
+				newUser.setUserid(UUID.randomUUID().toString());
+				userManager.registerUser(authStatus.getAuthenticatedUser());
+				RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
+				regResponseJson.setUserid(newUser.getUserid());
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);			
+				try {
+					return Formatter.getAsJson(gro, false);
+				} catch (Exception e) {
+					throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+				}
 			}
 		}
 		else{
@@ -98,6 +103,6 @@ public class UserResource
 			} catch (Exception e) {
 				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
 			}
-		}		
+		}
 	}		
 }

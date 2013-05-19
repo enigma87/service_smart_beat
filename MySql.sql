@@ -7,14 +7,13 @@ delimiter $$
 
 CREATE TABLE genie.`user` (
   `userid` varchar(128) NOT NULL,
+  `access_token` varchar(200) NOT NULL,
+  `access_token_type` text NOT NULL,
   `first_name` text NOT NULL,
   `middle_name` text,
   `last_name` text,
   `dob` date DEFAULT NULL,
-  `email` varchar(100) NOT NULL,
-  `facebook_login` tinyint(1) DEFAULT '0',
-  `google_login` tinyint(1) DEFAULT '0',
-  `twitter_login` tinyint(1) DEFAULT '0',
+  `email` varchar(100) NOT NULL,  
   `image_url` text,  
   `created_ts` timestamp NULL DEFAULT NULL,
   `last_updated_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,

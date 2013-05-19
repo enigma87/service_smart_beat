@@ -13,19 +13,21 @@ import java.sql.Timestamp;
 public class User 
 {
 	private String userid;
+	private String accessToken;
+	private String accessTokenType;
 	private String firstName;
 	private String middleName;
 	private String lastName;
 	private Date dob;
 	private String email;
-	private Boolean facebookLogin = false;
-	private Boolean googleLogin = false;
-	private Boolean twitterLogin = false;
 	private String imageUrl;		
 	private Timestamp createdTs;
 	private Timestamp lastUpdatedTs;
 	private Timestamp lastLoginTs;
 	private Boolean active = true;
+	
+	public static final String ACCESS_TOKEN_TYPE_CUSTOM = "custom";
+	public static final String ACCESS_TOKEN_TYPE_FACEBOOK = "facebook";
 	
 	public String getUserid()
 	{
@@ -37,8 +39,23 @@ public class User
 		this.userid = userid;
 	}
 	
-	public String getFirstName()
-	{
+	public String getAccessToken() {
+		return accessToken;
+	}
+	
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+	
+	public String getAccessTokenType() {
+		return accessTokenType;
+	}
+	
+	public void setAccessTokenType(String accessTokenType) {
+		this.accessTokenType = accessTokenType;
+	}
+	
+	public String getFirstName(){
 		return this.firstName;
 	}
 	
@@ -84,37 +101,7 @@ public class User
 	{
 		this.email = email;
 	}
-		
-	public Boolean getFacebookLogin()
-	{
-		return this.facebookLogin;
-	}
-	
-	public void setFacebookLogin(Boolean facebookLogin)
-	{
-		this.facebookLogin = facebookLogin;
-	}
-	
-	public Boolean getGoogleLogin()
-	{
-		return this.googleLogin;
-	}
-	
-	public void setGoogleLogin(Boolean googleLogin)
-	{
-		this.googleLogin = googleLogin;
-	}
-	
-	public Boolean getTwitterLogin()
-	{
-		return this.twitterLogin;
-	}
-	
-	public void setTwitterLogin(Boolean twitterLogin)
-	{
-		this.twitterLogin = twitterLogin;
-	}
-	
+			
 	public String getImageUrl()
 	{
 		return this.imageUrl;

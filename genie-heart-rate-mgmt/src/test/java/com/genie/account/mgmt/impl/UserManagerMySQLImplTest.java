@@ -16,7 +16,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
-import com.genie.account.mgmt.util.FacebookGraphAPIResponseJSON;
+import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
+import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.RegisterRequestJSON;
 /**
  * @author vidhun
@@ -27,6 +28,7 @@ public class UserManagerMySQLImplTest {
 
 	private static ApplicationContext applicationContext;
 	private static UserDao userDao;
+	private static UserManager userManagerMySQLImpl;
 	private static User user;
 	private static Date Dob = null;
 	private static Timestamp timestamp ;
@@ -35,6 +37,7 @@ public class UserManagerMySQLImplTest {
 	public static void setupUserDaoTestCases(){
 		applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		userDao = (UserDao)applicationContext.getBean("userDao");
+		userManagerMySQLImpl = (UserManager)applicationContext.getBean("userManagerMySQLImpl");
 		String Dateformat = "MM/dd/yyyy";
 		timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		SimpleDateFormat sdf =  new SimpleDateFormat(Dateformat);
@@ -47,14 +50,13 @@ public class UserManagerMySQLImplTest {
 
 		user = new User();
 		user.setUserid("123456789");
+		user.setAccessToken("access_token_123456789");
+		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
 		user.setFirstName("Alice");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
 		user.setDob(Dob);
-		user.setEmail("abc@xyz.com");
-		user.setFacebookLogin(true);
-		user.setGoogleLogin(false);
-		user.setTwitterLogin(true);
+		user.setEmail("abc@xyz.com");		
 		user.setImageUrl("www.picasa.com/1002");
 		user.setCreatedTs(timestamp);
 		user.setLastUpdatedTs(timestamp);
@@ -72,15 +74,13 @@ public class UserManagerMySQLImplTest {
 		
 		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("123456789", user1.getUserid());
+		user.setAccessToken("access_token_123456789");
+		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
 		Assert.assertEquals("Alice", user1.getFirstName());
 		Assert.assertEquals("Bob", user1.getMiddleName());
 		Assert.assertEquals("CampBell", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
-		Assert.assertEquals("abc@xyz.com", user1.getEmail());
-		Assert.assertEquals(new Boolean(true), user1.getFacebookLogin());
-		Assert.assertEquals(new Boolean(false), user1.getGoogleLogin());
-		Assert.assertEquals(new Boolean(true), user1.getTwitterLogin());
-		Assert.assertEquals("www.picasa.com/1002", user1.getImageUrl());
+		Assert.assertEquals("abc@xyz.com", user1.getEmail());		
 		Assert.assertNotNull(user1.getCreatedTs());
 		Assert.assertNotNull(user1.getLastUpdatedTs());
 		Assert.assertNotNull(user1.getLastLoginTs());
@@ -120,13 +120,11 @@ public class UserManagerMySQLImplTest {
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
 		usMgr.registerUser(user);
 		
-		user.setMiddleName("John");
-		user.setFacebookLogin(false);
+		user.setMiddleName("John");		
 		usMgr.saveUserInformation(user);
 		
 		User user1 = usMgr.getUserInformation(user.getUserid());
-		Assert.assertEquals("John",user1.getMiddleName());
-		Assert.assertEquals(new Boolean(false),user1.getFacebookLogin());
+		Assert.assertEquals("John",user1.getMiddleName());		
 		userDao.deleteUser(user.getUserid());
 	}
 	
@@ -135,11 +133,24 @@ public class UserManagerMySQLImplTest {
 		
 		UserManager usMgr = new UserManagerMySQLImpl();
 		RegisterRequestJSON requestJson = new RegisterRequestJSON();
-		requestJson.setAccessToken("CAACEdEose0cBAEJubAysZCKUmqbjBVVhyyPgRmpUmpxxEZBOtZCa104c5SIFY1o7ItdPB0oZBP9lcsNmAmf1hFZCneFJSs7xF3LX4cKYe5JWeoS2wJJPLpE4ZAWGYeTqlk4uPrYDaew3Umx9ZAgMgBnCKzInHlM8dYhWHZCRuZC6uKAZDZD");
+		requestJson.setAccessToken("CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD");
 		requestJson.setAccessTokenType("facebook");
-		FacebookGraphAPIResponseJSON responseJson = usMgr.authenticateUser(requestJson);
+		GraphAPIResponseJSON responseJson = usMgr.authenticateUser(requestJson);
         System.out.print("The ID is "+ responseJson.getId());
         System.out.print("The Name is "+responseJson.getName());
 		
+	}
+	
+	@Test
+	public void testAuthenticateRequest(){
+		String accessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
+		AuthenticationStatus authStatus = userManagerMySQLImpl.authenticateRequest(accessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED, authStatus.getAuthenticationStatus());
+		Assert.assertNull(authStatus.getAuthenticatedUser());
+		
+		accessToken = "CAACEdEose0cBAB3NukgDCILYVO5p2SUPdcgtL0XVuUgcmZBBGly9t6bSAXFxJ5z5xgfRoQxzdfrx0xZBMeytZC7YtT0uJ27yE4p3ksNRZCl7YNDQUDErTyR6z3r81M5Is1j5odZASWPOZAaUyHUxiDGfGuje7AyDgZD"; 
+		authStatus = userManagerMySQLImpl.authenticateRequest(accessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED, authStatus.getAuthenticationStatus());
+		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 	}
 }

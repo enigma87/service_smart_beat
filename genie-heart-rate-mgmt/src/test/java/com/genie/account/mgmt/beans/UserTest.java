@@ -1,16 +1,13 @@
 package com.genie.account.mgmt.beans;
 
-import static org.junit.Assert.*;
-
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.sql.Date;
 
 import junit.framework.Assert;
 
-import com.genie.account.mgmt.beans.User;
 import org.junit.Test;
 
 /**
@@ -36,15 +33,14 @@ public class UserTest {
 			
 		}
 		
-		user.setUserid("123456789");
+		user.setUserid("123456789");		
+		user.setAccessToken("access_token_123456789");
+		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
 		user.setFirstName("Antony");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
 		user.setDob(Dob);
-		user.setEmail("abc@xyz.com");
-		user.setFacebookLogin(true);
-		user.setGoogleLogin(false);
-		user.setTwitterLogin(true);
+		user.setEmail("abc@xyz.com");		
 		user.setImageUrl("www.picasa.com/1002");
 		user.setCreatedTs(timestamp);
 		user.setLastUpdatedTs(timestamp);
@@ -52,14 +48,13 @@ public class UserTest {
 		user.setActive(true);
 		
 		Assert.assertEquals("123456789", user.getUserid());
+		Assert.assertEquals("access_token_123456789", user.getAccessToken());
+		Assert.assertEquals(User.ACCESS_TOKEN_TYPE_CUSTOM, user.getAccessTokenType());
 		Assert.assertEquals("Antony", user.getFirstName());
 		Assert.assertEquals("Bob", user.getMiddleName());
 		Assert.assertEquals("CampBell", user.getLastName());
 		Assert.assertEquals(Dob, user.getDob());
 		Assert.assertEquals("abc@xyz.com", user.getEmail());
-		Assert.assertEquals(new Boolean(true), user.getFacebookLogin());
-		Assert.assertEquals(new Boolean(false), user.getGoogleLogin());
-		Assert.assertEquals(new Boolean(true), user.getTwitterLogin());
 		Assert.assertEquals("www.picasa.com/1002", user.getImageUrl());
 		Assert.assertTrue(timestamp.equals(user.getCreatedTs()));
 		Assert.assertTrue(timestamp.equals(user.getLastUpdatedTs()));

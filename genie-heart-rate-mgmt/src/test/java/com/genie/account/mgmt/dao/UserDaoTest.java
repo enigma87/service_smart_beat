@@ -8,7 +8,6 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -46,14 +45,13 @@ public class UserDaoTest {
 
 		user = new User();
 		user.setUserid("123456789");
-		user.setFirstName("Alice");
-		user.setMiddleName("Bob");
-		user.setLastName("CampBell");
+		user.setAccessToken("CAACEdEose0cBANFZBcZAyzn7agEZAOzlEKr75c6hSppL969nNNS9wFwxxFHJwp48vi2G884onYxxqZBuwVNsC4BqVUfwZAIUZCrXvNGv2yvjXdBnxZCbfMMDRtDbw2XVhpQGLOEr1wlIJHBGsBwcKY9M72Q4PO9loMZD");
+		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		user.setFirstName("Katoor");
+		user.setMiddleName("Motham");
+		user.setLastName("Dada");
 		user.setDob(Dob);
-		user.setEmail("abc@xyz.com");
-		user.setFacebookLogin(true);
-		user.setGoogleLogin(false);
-		user.setTwitterLogin(true);
+		user.setEmail("abc@xyz.com");		
 		user.setImageUrl("www.picasa.com/1002");
 		user.setCreatedTs(timestamp);
 		user.setLastUpdatedTs(timestamp);
@@ -67,15 +65,12 @@ public class UserDaoTest {
 		userDao.createUser(user);
 		
 		User user1 = userDao.getUserInfo(user.getUserid());
-		Assert.assertEquals("123456789", user1.getUserid());
-		Assert.assertEquals("Alice", user1.getFirstName());
-		Assert.assertEquals("Bob", user1.getMiddleName());
-		Assert.assertEquals("CampBell", user1.getLastName());
+		Assert.assertEquals("123456789", user1.getUserid());		
+		Assert.assertEquals("Katoor", user1.getFirstName());
+		Assert.assertEquals("Motham", user1.getMiddleName());
+		Assert.assertEquals("Dada", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
-		Assert.assertEquals("abc@xyz.com", user1.getEmail());
-		Assert.assertEquals(new Boolean(true), user1.getFacebookLogin());
-		Assert.assertEquals(new Boolean(false), user1.getGoogleLogin());
-		Assert.assertEquals(new Boolean(true), user1.getTwitterLogin());
+		Assert.assertEquals("abc@xyz.com", user1.getEmail());		
 		Assert.assertEquals("www.picasa.com/1002", user1.getImageUrl());
 		Assert.assertNotNull(user1.getCreatedTs());
 		Assert.assertNotNull(user1.getLastUpdatedTs());
@@ -88,13 +83,11 @@ public class UserDaoTest {
 	public void testUpdateUser() {
 		
 		userDao.createUser(user);
-		user.setMiddleName("John");
-		user.setFacebookLogin(false);
+		user.setMiddleName("John");		
 		userDao.updateUser(user);
 		
 		User user1 = userDao.getUserInfo(user.getUserid());
 		Assert.assertEquals("John", user1.getMiddleName());
-		Assert.assertEquals(new Boolean(false), user1.getFacebookLogin());
 		userDao.deleteUser(user.getUserid());
 	}
 	
@@ -114,6 +107,18 @@ public class UserDaoTest {
 		User user = userDao.getUserInfo("123456789");
 		Assert.assertNotNull(user);
 		userDao.deleteUser(user.getUserid());
+	}
+	
+	@Test
+	public void testGetUserInfoByAccessToken(){
+		String accessToken = "CAACEdEose0cBANFZBcZAyzn7agEZAOzlEKr75c6hSppL969nNNS9wFwxxFHJwp48vi2G884onYxxqZBuwVNsC4BqVUfwZAIUZCrXvNGv2yvjXdBnxZCbfMMDRtDbw2XVhpQGLOEr1wlIJHBGsBwcKY9M72Q4PO9loMZD";
+		User testUser = userDao.getUserInfoByAccessToken(accessToken);
+		Assert.assertNull(testUser);
+		userDao.createUser(user);
+		testUser = userDao.getUserInfoByAccessToken(accessToken);
+		Assert.assertEquals(user.getUserid(), testUser.getUserid());
+		Assert.assertEquals(accessToken, testUser.getAccessToken());
+		userDao.deleteUser(testUser.getUserid());
 	}
 	
 
