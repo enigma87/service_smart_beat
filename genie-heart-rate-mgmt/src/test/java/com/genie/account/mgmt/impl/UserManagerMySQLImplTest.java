@@ -133,9 +133,9 @@ public class UserManagerMySQLImplTest {
 		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED, authStatus.getAuthenticationStatus());
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
-		accessToken = "CAACEdEose0cBAB3NukgDCILYVO5p2SUPdcgtL0XVuUgcmZBBGly9t6bSAXFxJ5z5xgfRoQxzdfrx0xZBMeytZC7YtT0uJ27yE4p3ksNRZCl7YNDQUDErTyR6z3r81M5Is1j5odZASWPOZAaUyHUxiDGfGuje7AyDgZD"; 
+		accessToken = "CAACEdEose0cBAO62RBR8UwvLx9nFXyLYuZBFsSFlEOrX31YyYWObBx5Y3lDVhVrEPK1iPZB6uIxXqNWBv6NxfZCWKAoqc6dYZCDI6JWxEMtVPvAula0FGkVGRgOQg6DtBNB3SZBGxBcrNPAUa2TIXrZCOktBvg4DYZD"; 
 		authStatus = userManagerMySQLImpl.authenticateRequest(accessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED, authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED, authStatus.getAuthenticationStatus());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 	}
 }

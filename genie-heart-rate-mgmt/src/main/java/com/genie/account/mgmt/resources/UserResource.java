@@ -11,12 +11,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,10 +23,10 @@ import org.springframework.stereotype.Component;
 
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
-import com.genie.account.mgmt.json.user.UserInfoJSON;
+import com.genie.account.mgmt.json.RegisterRequestJSON;
+import com.genie.account.mgmt.json.RegisterResponseJSON;
+import com.genie.account.mgmt.json.UserInfoJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
-import com.genie.account.mgmt.util.RegisterRequestJSON;
-import com.genie.account.mgmt.util.RegisterResponseJSON;
 import com.genie.heartrate.mgmt.util.Formatter;
 import com.genie.mgmt.GoodResponseObject;
 
@@ -55,16 +54,26 @@ public class UserResource
 	@Path("{email}")
 	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo(@PathParam("email") String email, @Context UriInfo uriInfo)
+	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType)	
 	{
-		User user = userManager.getUserInformationByEmail(email);
-		UserInfoJSON userInfoJSON = new UserInfoJSON();
-		userInfoJSON.copyFromUserBean(user);
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
-		try {
-			return Formatter.getAsJson(gro, true);
-		} catch (Exception e) {
-			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		if(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED.equals(authStatus.getAuthenticationStatus())){
+			User user = userManager.getUserInformationByEmail(email);
+			UserInfoJSON userInfoJSON = new UserInfoJSON();
+			userInfoJSON.copyFromUserBean(user);
+			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
+			try {
+				return Formatter.getAsJson(gro, true);
+			} catch (Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			}
+		}else{
+			GoodResponseObject gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");
+			try {
+				return Formatter.getAsJson(gro, true);
+			} catch (Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			}
 		}
 	}
 	
@@ -72,7 +81,7 @@ public class UserResource
 	@Path("register")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String registerUser(RegisterRequestJSON requestJson )
+	public String registerUser(RegisterRequestJSON requestJson)
 	{
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());

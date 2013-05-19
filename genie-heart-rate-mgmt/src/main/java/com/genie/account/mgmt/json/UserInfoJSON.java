@@ -1,4 +1,4 @@
-package com.genie.account.mgmt.json.user;
+package com.genie.account.mgmt.json;
 
 import java.sql.Date;
 

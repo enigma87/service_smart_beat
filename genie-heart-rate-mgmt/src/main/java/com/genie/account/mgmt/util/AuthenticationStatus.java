@@ -8,8 +8,8 @@ import com.genie.account.mgmt.beans.User;
 
 public class AuthenticationStatus {
 
-	public static final String AUTHENTICATION_STATUS_APPROVED = "auth_approved";
-	public static final String AUTHENTICATION_STATUS_DENIED = "auth_denied";
+	public static final String AUTHENTICATION_STATUS_APPROVED = "authentication_approved";
+	public static final String AUTHENTICATION_STATUS_DENIED = "authentication_denied";
 	
 	private String authenticationStatus;
 	private User authenticatedUser;

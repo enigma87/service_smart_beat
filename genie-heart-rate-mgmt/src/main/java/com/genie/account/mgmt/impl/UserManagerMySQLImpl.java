@@ -6,6 +6,7 @@ import com.genie.account.mgmt.dao.UserDao;
 import com.genie.account.mgmt.json.facebook.GraphAPIErrorJSON;
 import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
+import com.genie.account.mgmt.util.AuthorizationStatus;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
@@ -75,7 +76,7 @@ public class UserManagerMySQLImpl implements UserManager{
 		
 		AuthenticationStatus authStatus = new AuthenticationStatus();
 		
-		User user = userDao.getUserInfoByAccessToken(accessToken);
+		User user = userDao.getUserInfoByAccessToken(accessToken);		
 		if(null == user){/*Token not cached*/			
 			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
 				GraphAPIResponseJSON responseJson = authenticateFacebookUser(accessToken);
@@ -96,17 +97,28 @@ public class UserManagerMySQLImpl implements UserManager{
 						authStatus.setAuthenticatedUser(user);
 					}
 					else{/*Uncached token matches an existing user*/
+						user.setAccessToken(accessToken);
+						userDao.updateUser(user);
 						authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED);
 						authStatus.setAuthenticatedUser(user);
 					}
 				}
 			}
 		}
+		else{/*Token cached*/
+			authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED);
+			authStatus.setAuthenticatedUser(user);
+		}
 		return authStatus;
 	}
 
 	public void saveUserInformation(User user) {
 		userDao.updateUser(user);		
+	}
+
+	public AuthorizationStatus authorizeRequest(User subjectOfRequest, User requestingUser) {
+		
+		return null;
 	}
 		
 }

@@ -1,4 +1,4 @@
-package com.genie.account.mgmt.util;
+package com.genie.account.mgmt.json;
 
 /**
  * @author vidhun
