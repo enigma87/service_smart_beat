@@ -1,22 +1,19 @@
 package com.genie.heartrate.mgmt.impl;
 
-import static org.junit.Assert.*;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
 
 import junit.framework.Assert;
 
-import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
-import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
-import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
+import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
+import com.genie.heartrate.mgmt.core.HeartRateMgmt;
+import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 /**
  * @author vidhun
  *

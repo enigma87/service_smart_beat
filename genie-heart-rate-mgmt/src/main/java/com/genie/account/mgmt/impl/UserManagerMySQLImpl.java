@@ -6,7 +6,6 @@ import com.genie.account.mgmt.dao.UserDao;
 import com.genie.account.mgmt.json.facebook.GraphAPIErrorJSON;
 import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
-import com.genie.account.mgmt.util.RegisterRequestJSON;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
@@ -42,35 +41,12 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao.getUserInfo(userid);
 	}
 
-	public void saveUserInformation(User user) {
-		
-		userDao.updateUser(user);
-		
-	}
 
 	public User getUserInformationByEmail(String email) {
 		return userDao.getUserInfoByEmail(email);
 	}	
-	
-	
-	public GraphAPIResponseJSON authenticateUser(RegisterRequestJSON requestJson){
-		
-		String url = null;
-		if (requestJson.getAccessTokenType().equals("facebook")){
-		   url = "https://graph.facebook.com/me?fields=id,name,email&access_token="+requestJson.getAccessToken();
-		}
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client client = Client.create(clientConfig);
-		WebResource webresource = client.resource(url);
-		GraphAPIResponseJSON responseJSON =  webresource.get(GraphAPIResponseJSON.class);
-		String[] names = responseJSON.getName().split(" ");
-		responseJSON.setFirstName(names[0]);
-		responseJSON.setLastName(names[1]);
-		return responseJSON;
-	}
-	
-public GraphAPIResponseJSON authenticateFacebookUser(String accessToken){
+				
+	public GraphAPIResponseJSON authenticateFacebookUser(String accessToken){
 		
 		String url = "https://graph.facebook.com/me?fields=id,name,email&access_token="+accessToken;		
 		ClientConfig clientConfig = new DefaultClientConfig();
@@ -120,11 +96,17 @@ public GraphAPIResponseJSON authenticateFacebookUser(String accessToken){
 						authStatus.setAuthenticatedUser(user);
 					}
 					else{/*Uncached token matches an existing user*/
+						authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED);
+						authStatus.setAuthenticatedUser(user);
 					}
 				}
 			}
 		}
 		return authStatus;
+	}
+
+	public void saveUserInformation(User user) {
+		userDao.updateUser(user);		
 	}
 		
 }

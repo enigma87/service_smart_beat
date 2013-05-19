@@ -3,18 +3,15 @@
  */
 package com.genie.heartrate.mgmt.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import junit.framework.Assert;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
-import com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl;
 
 /**
  * @author manojkumar

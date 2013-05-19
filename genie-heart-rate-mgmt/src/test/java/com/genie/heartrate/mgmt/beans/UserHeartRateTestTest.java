@@ -1,14 +1,10 @@
 package com.genie.heartrate.mgmt.beans;
 
-import static org.junit.Assert.*;
-
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-
 import junit.framework.Assert;
 
-import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import org.junit.Test;
 /**
  * @author vidhun

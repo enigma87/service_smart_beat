@@ -16,9 +16,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
-import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
-import com.genie.account.mgmt.util.RegisterRequestJSON;
 /**
  * @author vidhun
  *
@@ -126,19 +124,6 @@ public class UserManagerMySQLImplTest {
 		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("John",user1.getMiddleName());		
 		userDao.deleteUser(user.getUserid());
-	}
-	
-	@Test
-	public void testAuthenticateUser(){
-		
-		UserManager usMgr = new UserManagerMySQLImpl();
-		RegisterRequestJSON requestJson = new RegisterRequestJSON();
-		requestJson.setAccessToken("CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD");
-		requestJson.setAccessTokenType("facebook");
-		GraphAPIResponseJSON responseJson = usMgr.authenticateUser(requestJson);
-        System.out.print("The ID is "+ responseJson.getId());
-        System.out.print("The Name is "+responseJson.getName());
-		
 	}
 	
 	@Test

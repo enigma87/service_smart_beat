@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
+import com.genie.account.mgmt.json.user.UserInfoJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.RegisterRequestJSON;
 import com.genie.account.mgmt.util.RegisterResponseJSON;
@@ -57,7 +58,9 @@ public class UserResource
 	public String getUserInfo(@PathParam("email") String email, @Context UriInfo uriInfo)
 	{
 		User user = userManager.getUserInformationByEmail(email);
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), user);
+		UserInfoJSON userInfoJSON = new UserInfoJSON();
+		userInfoJSON.copyFromUserBean(user);
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception e) {
