@@ -10,8 +10,7 @@ public class FitnessTrainingSessionBean {
 	private String userid;
 	private Integer trainingSessionId;
 	private Timestamp startTime;
-	private Timestamp endTime;
-	private Double totalLoadOfExercise;
+	private Timestamp endTime;	
 	private Double hrz1Time;
 	private Double hrz2Time;
 	private Double hrz3Time;
@@ -55,15 +54,7 @@ public class FitnessTrainingSessionBean {
 	
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
-	}
-	
-	public Double getTotalLoadOfExercise() {
-		return totalLoadOfExercise;
-	}
-	
-	public void setTotalLoadOfExercise(Double totalLoadOfExercise) {
-		this.totalLoadOfExercise = totalLoadOfExercise;
-	}
+	}	
 	
 	public Double getHrz1Time() {
 		return hrz1Time;

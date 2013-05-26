@@ -70,13 +70,13 @@ public class ShapeIndexAlgorithm
 	}
 	
 	private static final double TRAINING_IMPACT_BY_ZONE[] = {0,0,1,1.75,3,5,9};	
-	public static void calculateTotalLoadofExercise(FitnessTrainingSessionBean fitnessTrainingSessionBean){
+	public static double calculateTotalLoadofExercise(FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*fitnessTrainingSessionBean.getHrz1Time() +
 				TRAINING_IMPACT_BY_ZONE[2]*fitnessTrainingSessionBean.getHrz2Time() +
 				TRAINING_IMPACT_BY_ZONE[3]*fitnessTrainingSessionBean.getHrz3Time() +
 				TRAINING_IMPACT_BY_ZONE[4]*fitnessTrainingSessionBean.getHrz4Time() +
 				TRAINING_IMPACT_BY_ZONE[5]*fitnessTrainingSessionBean.getHrz5Time() +
 				TRAINING_IMPACT_BY_ZONE[6]*fitnessTrainingSessionBean.getHrz6Time();
-		fitnessTrainingSessionBean.setTotalLoadOfExercise(totalLoadOfExercise);
+		return totalLoadOfExercise;
 	}
 }
