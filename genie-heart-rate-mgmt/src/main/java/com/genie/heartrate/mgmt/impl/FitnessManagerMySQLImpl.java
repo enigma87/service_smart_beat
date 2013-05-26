@@ -3,9 +3,11 @@
  */
 package com.genie.heartrate.mgmt.impl;
 
+import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
+import com.genie.heartrate.mgmt.core.FitnessManager;
+import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
 import com.genie.heartrate.mgmt.util.ShapeIndexAlgorithm;
@@ -14,11 +16,12 @@ import com.genie.heartrate.mgmt.util.ShapeIndexAlgorithm;
  * @author manojkumar
  *
  */
-public class HeartRateMgmtMySQLImpl implements HeartRateMgmt 
+public class FitnessManagerMySQLImpl implements FitnessManager 
 {
 
 	private UserHeartRateTestDao userHeartRateTestDao;
 	private UserHeartRateZoneDao userHeartRateZoneDao;
+	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	
 	public UserHeartRateTestDao getUserHeartRateTestDao()
 	{
@@ -40,7 +43,14 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		this.userHeartRateZoneDao = userHeartRateZoneDao;
 	}
 	
+	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
+		return fitnessTrainingSessionDAO;
+	}
 	
+	public void setFitnessTrainingSessionDAO(
+			FitnessTrainingSessionDAO fitnessTrainingSessionDAO) {
+		this.fitnessTrainingSessionDAO = fitnessTrainingSessionDAO;
+	}
 	
 	public UserHeartRateTest getHeartRateTestResultsForUser(String userid) 
 	{
@@ -78,7 +88,14 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		}
 	}
 
-
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+		ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean);
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);		
+	}
+	
+	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId){
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
+	}
 
 }
 

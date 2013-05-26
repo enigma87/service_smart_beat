@@ -56,11 +56,11 @@ public class FitnessTrainingSessionDAO {
 	}
 	
 	private static final String DELETE_SESSION_USING_TRAINING_SESSION_ID = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
-	public void deleteFitnessTrainingSessionById(Integer trainingSessionId){
-		FitnessTrainingSessionBean fitnessTrainingSessionBean = getFitnessTrainingSessionById(trainingSessionId);
+	public void deleteFitnessTrainingSessionById(Integer fitnessTrainingSessionId){
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = getFitnessTrainingSessionById(fitnessTrainingSessionId);
 		if(null != fitnessTrainingSessionBean){
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			jdbcTemplate.update(DELETE_SESSION_USING_TRAINING_SESSION_ID, trainingSessionId);			
+			jdbcTemplate.update(DELETE_SESSION_USING_TRAINING_SESSION_ID, fitnessTrainingSessionId);			
 		}
 	}
 }

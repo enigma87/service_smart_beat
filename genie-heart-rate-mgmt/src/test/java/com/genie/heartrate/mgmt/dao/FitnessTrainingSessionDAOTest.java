@@ -19,7 +19,7 @@ import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 public class FitnessTrainingSessionDAOTest {
 	
 	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDao");
+	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
