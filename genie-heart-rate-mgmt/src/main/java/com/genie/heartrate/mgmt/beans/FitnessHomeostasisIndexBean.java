@@ -12,6 +12,9 @@ public class FitnessHomeostasisIndexBean {
 	private Double timeToRecover;
 	private Integer lastTrainingSessionId;
 	
+	public FitnessHomeostasisIndexBean() {
+		this.homeostasisIndex = 0.0;
+	}
 	public String getUserid() {
 		return userid;
 	}
