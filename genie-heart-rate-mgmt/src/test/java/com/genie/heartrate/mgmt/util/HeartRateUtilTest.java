@@ -21,7 +21,7 @@ public class HeartRateUtilTest {
 		userHeartRateTest.setThresholdHeartRate(108);
 		userHeartRateTest.setMaximalHeartRate(168);
 		
-		userHeartRateZone = HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
+		userHeartRateZone = ShapeIndexAlgorithm.calculateHeartRateZones(userHeartRateTest);
 		
 		System.out.print("The User ID is "+userHeartRateZone.getUserid()+"\n");
 		System.out.print("The Zone 1 Range is "+userHeartRateZone.getHrz1Start()+" - "+userHeartRateZone.getHrz1End()+"\n");

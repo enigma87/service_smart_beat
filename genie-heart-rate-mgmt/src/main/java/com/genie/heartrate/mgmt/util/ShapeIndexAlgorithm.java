@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 
@@ -14,7 +15,7 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
  * @author manojkumar
  *
  */
-public class HeartRateUtil 
+public class ShapeIndexAlgorithm 
 {
 
 	public static Map<String, Object> parseHeartRates(String json)
@@ -66,5 +67,16 @@ public class HeartRateUtil
 
 		
 		return userHeartRateZone;
+	}
+	
+	private static final double TRAINING_IMPACT_BY_ZONE[] = {0,0,1,1.75,3,5,9};	
+	public static void calculateTotalLoadofExercise(FitnessTrainingSessionBean trainingSessionBean){
+		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*trainingSessionBean.getHrz1Time() +
+				TRAINING_IMPACT_BY_ZONE[2]*trainingSessionBean.getHrz2Time() +
+				TRAINING_IMPACT_BY_ZONE[3]*trainingSessionBean.getHrz3Time() +
+				TRAINING_IMPACT_BY_ZONE[4]*trainingSessionBean.getHrz4Time() +
+				TRAINING_IMPACT_BY_ZONE[5]*trainingSessionBean.getHrz5Time() +
+				TRAINING_IMPACT_BY_ZONE[6]*trainingSessionBean.getHrz6Time();
+		trainingSessionBean.setTotalLoadOfExercise(totalLoadOfExercise);
 	}
 }

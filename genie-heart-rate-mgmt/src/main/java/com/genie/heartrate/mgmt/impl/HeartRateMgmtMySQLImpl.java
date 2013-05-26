@@ -8,7 +8,7 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.HeartRateMgmt;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
-import com.genie.heartrate.mgmt.util.HeartRateUtil;
+import com.genie.heartrate.mgmt.util.ShapeIndexAlgorithm;
 
 /**
  * @author manojkumar
@@ -64,7 +64,7 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 	public UserHeartRateZone getHeartRateZonesForUser(String userid)
 	{
 		UserHeartRateTest userHeartRateTest = userHeartRateTestDao.getHeartRateTestResults(userid);
-		return HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
+		return ShapeIndexAlgorithm.calculateHeartRateZones(userHeartRateTest);
 	}
 
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone) 
