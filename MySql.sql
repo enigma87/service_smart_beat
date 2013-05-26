@@ -48,6 +48,7 @@ CREATE TABLE genie.`fitness_training_session` (
   `training_session_id` MEDIUMINT UNSIGNED NOT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
+  `total_load_of_exercise` DOUBLE DEFAULT NULL,
   `hrz_1_time` DOUBLE DEFAULT NULL,
   `hrz_2_time` DOUBLE DEFAULT NULL,
   `hrz_3_time` DOUBLE DEFAULT NULL,
