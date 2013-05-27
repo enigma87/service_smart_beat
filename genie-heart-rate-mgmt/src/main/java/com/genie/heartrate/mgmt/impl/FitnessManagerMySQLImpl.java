@@ -3,6 +3,7 @@
  */
 package com.genie.heartrate.mgmt.impl;
 
+import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
@@ -88,9 +89,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 	}
 
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean);
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);		
+		
 	}
 	
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId){
