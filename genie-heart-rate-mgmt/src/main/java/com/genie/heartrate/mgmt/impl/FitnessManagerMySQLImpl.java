@@ -3,22 +3,26 @@
  */
 package com.genie.heartrate.mgmt.impl;
 
+import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
+import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
+import com.genie.heartrate.mgmt.core.FitnessManager;
+import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
-import com.genie.heartrate.mgmt.util.HeartRateUtil;
+import com.genie.heartrate.mgmt.util.ShapeIndexAlgorithm;
 
 /**
  * @author manojkumar
  *
  */
-public class HeartRateMgmtMySQLImpl implements HeartRateMgmt 
+public class FitnessManagerMySQLImpl implements FitnessManager 
 {
 
 	private UserHeartRateTestDao userHeartRateTestDao;
 	private UserHeartRateZoneDao userHeartRateZoneDao;
+	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	
 	public UserHeartRateTestDao getUserHeartRateTestDao()
 	{
@@ -40,7 +44,14 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		this.userHeartRateZoneDao = userHeartRateZoneDao;
 	}
 	
+	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
+		return fitnessTrainingSessionDAO;
+	}
 	
+	public void setFitnessTrainingSessionDAO(
+			FitnessTrainingSessionDAO fitnessTrainingSessionDAO) {
+		this.fitnessTrainingSessionDAO = fitnessTrainingSessionDAO;
+	}
 	
 	public UserHeartRateTest getHeartRateTestResultsForUser(String userid) 
 	{
@@ -64,7 +75,7 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 	public UserHeartRateZone getHeartRateZonesForUser(String userid)
 	{
 		UserHeartRateTest userHeartRateTest = userHeartRateTestDao.getHeartRateTestResults(userid);
-		return HeartRateUtil.calculateHeartRateZones(userHeartRateTest);
+		return ShapeIndexAlgorithm.calculateHeartRateZones(userHeartRateTest);
 	}
 
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone) 
@@ -78,7 +89,15 @@ public class HeartRateMgmtMySQLImpl implements HeartRateMgmt
 		}
 	}
 
-
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean);
+		
+	}
+	
+	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId){
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
+	}
 
 }
 

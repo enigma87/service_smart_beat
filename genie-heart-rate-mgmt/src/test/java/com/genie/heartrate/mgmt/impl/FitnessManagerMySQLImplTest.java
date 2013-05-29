@@ -2,6 +2,7 @@ package com.genie.heartrate.mgmt.impl;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.Assert;
 
@@ -10,16 +11,17 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
+import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 /**
  * @author vidhun
  *
  */
 
-public class HeartRateMgmtMySQLImplTest {
+public class FitnessManagerMySQLImplTest {
 
 	private ApplicationContext appContext;
 	private UserHeartRateTestDao userHeartRateTestDao;
@@ -34,7 +36,7 @@ public class HeartRateMgmtMySQLImplTest {
 	@Test
 	public void testgetHeartRateTestResultsForUser() {
 		
-		HeartRateMgmt hrMgmt = new HeartRateMgmtMySQLImpl();
+		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
@@ -45,8 +47,8 @@ public class HeartRateMgmtMySQLImplTest {
 		uhrt1.setRestingHeartRateTimestamp(timestamp);
 		uhrt1.setMaximalHeartRateTimestamp(timestamp);
 		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof HeartRateMgmtMySQLImpl){}
-		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
+		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
+		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
 		
 		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
@@ -60,7 +62,7 @@ public class HeartRateMgmtMySQLImplTest {
 	@Test
 	public void testsaveHeartRateTestResultsForUser() {
 		
-		HeartRateMgmt hrMgmt = new HeartRateMgmtMySQLImpl();
+		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
 		UserHeartRateTest uhrt1 = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		uhrt1.setUserid("123456789");
@@ -70,8 +72,8 @@ public class HeartRateMgmtMySQLImplTest {
 		uhrt1.setRestingHeartRateTimestamp(timestamp);
 		uhrt1.setMaximalHeartRateTimestamp(timestamp);
 		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof HeartRateMgmtMySQLImpl){}
-		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
+		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
+		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
 		
 		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
@@ -90,7 +92,7 @@ public class HeartRateMgmtMySQLImplTest {
 	@Test
 	public void testgetHeartRateZonesForUser() {
 		
-		HeartRateMgmt hrMgmt = new HeartRateMgmtMySQLImpl();
+		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
 		UserHeartRateTest uhrt = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
@@ -101,8 +103,8 @@ public class HeartRateMgmtMySQLImplTest {
 		uhrt.setRestingHeartRateTimestamp(timestamp);
 		uhrt.setMaximalHeartRateTimestamp(timestamp);
 		uhrt.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof HeartRateMgmtMySQLImpl){}
-		((HeartRateMgmtMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
+		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
+		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
 		hrMgmt.saveHeartRateTestResultsForUser(uhrt);
 		
 		UserHeartRateZone uhrz = hrMgmt.getHeartRateZonesForUser("123456789");
@@ -120,8 +122,31 @@ public class HeartRateMgmtMySQLImplTest {
 		Assert.assertEquals(new Double(161.28), uhrz.getHrz6Start());
 		Assert.assertEquals(new Double(168.0), uhrz.getHrz6End());
    
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
+		userHeartRateTestDao.deleteHeartRateTestResults("123456789");					
+	}	
+	
+	@Test
+	public void testSaveFitnessTrainingSession(){
 		
-			
+		long now = new Date().getTime();
+		long nowPastOneHour = now - 3600000;
+		Integer fitnessTrainingSessionId = 20131;
+	
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid("ff2d44bb-8af8-46e3-b88f-0cd777ac188e");
+		fitnessTrainingSessionBean.setTrainingSessionId(fitnessTrainingSessionId);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(now));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));
+		fitnessTrainingSessionBean.setHrz1Time(2.0);
+		fitnessTrainingSessionBean.setHrz2Time(5.0);
+		fitnessTrainingSessionBean.setHrz3Time(5.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(28.0);
+		fitnessTrainingSessionBean.setHrz6Time(10.0);
+
+		FitnessManager fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");
+		
+		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId(fitnessTrainingSessionId);
 	}
 }

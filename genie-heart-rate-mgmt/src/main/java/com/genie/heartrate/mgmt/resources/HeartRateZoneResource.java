@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
-import com.genie.heartrate.mgmt.core.HeartRateMgmt;
+import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.util.Formatter;
 import com.genie.mgmt.GoodResponseObject;
 
@@ -34,15 +34,15 @@ import com.genie.mgmt.GoodResponseObject;
 public class HeartRateZoneResource 
 {
 	@Autowired
-	@Qualifier("heartRateMgmtMySQLImpl")
-	private HeartRateMgmt heartRateMgmt;
+	@Qualifier("fitnessManagerMySQLImpl")
+	private FitnessManager heartRateMgmt;
 	
-	public HeartRateMgmt getHeartRateMgmt()
+	public FitnessManager getHeartRateMgmt()
 	{
 		return this.heartRateMgmt;
 	}
 	
-	public void setHeartRateMgmt(HeartRateMgmt heartRateMgmt)
+	public void setHeartRateMgmt(FitnessManager heartRateMgmt)
 	{
 		this.heartRateMgmt = heartRateMgmt;
 	}

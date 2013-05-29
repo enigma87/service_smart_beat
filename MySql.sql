@@ -41,8 +41,47 @@ CREATE TABLE genie.`user_heart_rate_test` (
   UNIQUE KEY `userid_UNIQUE` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+delimiter $$
 
+CREATE TABLE genie.`fitness_training_session` (
+  `userid` varchar(128) NOT NULL,
+  `training_session_id` MEDIUMINT UNSIGNED NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `hrz_1_time` DOUBLE DEFAULT NULL,
+  `hrz_2_time` DOUBLE DEFAULT NULL,
+  `hrz_3_time` DOUBLE DEFAULT NULL,
+  `hrz_4_time` DOUBLE DEFAULT NULL,
+  `hrz_5_time` DOUBLE DEFAULT NULL,
+  `hrz_6_time` DOUBLE DEFAULT NULL,
+  `hrz_1_distance` DOUBLE DEFAULT NULL,
+  `hrz_2_distance` DOUBLE DEFAULT NULL,
+  `hrz_3_distance` DOUBLE DEFAULT NULL,
+  `hrz_4_distance` DOUBLE DEFAULT NULL,
+  `hrz_5_distance` DOUBLE DEFAULT NULL,
+  `hrz_6_distance` DOUBLE DEFAULT NULL,  
+  PRIMARY KEY(`training_session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+delimiter $$
+
+CREATE TABLE genie.`fitness_shape_index_model` (
+  `userid` varchar(128) NOT NULL,
+  `trainee_classification` varchar(20) DEFAULT NULL,
+  `shape_index` DOUBLE DEFAULT NULL,  
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_homeostasis_index_model` (
+  `userid` varchar(128) NOT NULL,
+  `homeostasis_index` DOUBLE DEFAULT NULL,
+  `total_load_of_exercise` DOUBLE DEFAULT NULL,
+  `time_to_recover` DOUBLE DEFAULT NULL,
+  `last_training_session_id` MEDIUMINT UNSIGNED DEFAULT NULL,  
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 CREATE USER 'genie'@'localhost' IDENTIFIED BY 'genie';
 

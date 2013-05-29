@@ -28,9 +28,14 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="heartRateMgmtMySQLImpl" class="com.genie.heartrate.mgmt.impl.HeartRateMgmtMySQLImpl">
+	<bean id="fitnessTrainingSessionDAO" class="com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="fitnessManagerMySQLImpl" class="com.genie.heartrate.mgmt.impl.FitnessManagerMySQLImpl">
 		<property name="userHeartRateTestDao" ref="userHeartRateTestDao"/>
 		<property name="userHeartRateZoneDao" ref="userHeartRateZoneDao" />
+		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 	</bean>
 	
 	<bean id="userDao" class="com.genie.account.mgmt.dao.UserDao">
