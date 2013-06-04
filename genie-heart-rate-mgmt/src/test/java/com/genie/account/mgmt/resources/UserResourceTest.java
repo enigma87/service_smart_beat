@@ -4,11 +4,15 @@ import java.net.URLEncoder;
 
 import javax.ws.rs.core.MediaType;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
+import com.genie.account.mgmt.json.RegisterRequestJSON;
+import com.genie.account.mgmt.json.RegisterResponseJSON;
+import com.genie.account.mgmt.json.UserInfoJSON;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -59,51 +63,56 @@ public class UserResourceTest extends JerseyTest  {
 		/*Get test user from facebook*/
 		
 		
-		String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=read_stream&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
-		//String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=read_stream&method=post&access_token="+appAccessTokenValue;
+		String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
 		ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
 		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
 		WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
-		//JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
-		//System.out.println(FacebookTestUser);
+		JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
+		System.out.println(FacebookTestUser);
 		
-		String userAccessToken = "333643156765163|QN_P9lIvtcdVT9AsmOLIliq47bs";
-		
+			
 		/*Parsing User Details*/
-		/*String userID = FacebookTestUser.getString("id");
+		String userID = FacebookTestUser.getString("id");
 		String userAccessToken = FacebookTestUser.getString("access_token");
 	    String userLoginUrl = FacebookTestUser.getString("login_url");
 		String userEmail = FacebookTestUser.getString("email");
-		String userPassword = FacebookTestUser.getString("password");*/
+		String userPassword = FacebookTestUser.getString("password");
 		
 		
 		/*Trying to Register the User*/
 	    String registerUserUrl = "http://localhost:9998/Users/register";
-		//URI uriRegister = UriBuilder.fromUri("http://localhost:9998/Users/register").build();
 		JSONObject inputJsonObj = new JSONObject();
 		inputJsonObj.put("accessToken", userAccessToken );
 		inputJsonObj.put("accessTokenType", "facebook" );
+	    RegisterRequestJSON registerJson = new RegisterRequestJSON();
+	    registerJson.setAccessToken(userAccessToken);
+	    registerJson.setAccessTokenType("facebook");
 		ClientConfig clientConfigRegisterUser = new DefaultClientConfig();
 		clientConfigRegisterUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client clientRegisterUser = Client.create(clientConfigRegisterUser);
-		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);
-		String registerResponse = registerUser.type(MediaType.APPLICATION_JSON_TYPE).post(String.class,inputJsonObj.toString());
-		System.out.println(registerResponse);
+		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
+		String registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(String.class,inputJsonObj);
+		System.out.println(registerResJson);
 		
 	
-		//UserInfoJSON userInfo = new ObjectMapper().readValue(response.getString("obj"),UserInfoJSON.class);
+			
 		
-		
-		/*String getUserInfoByEmailUrl = "http://localhost:9998/Users/vidhunkps@yahoo.co.in?accessToken=CAACEdEose0cBALHxgNmVA6tIEwQ5fIJmlYNaOOi8K2hvu7SWuC5AZCnhDwo4aFfY74iuVfCQQPndEffi5pm8qAIQPhXfa4WiXNxGi8ZBd2oizAz6HIsiYLM6Joh5OjyYCcNAe5RR5kp6riekSi9bxXIX65aIfrDVoDrrzAkgZDZD&accessTokenType=facebook";		
+		String getUserInfoByEmailUrl = "http://localhost:9998/Users/"+userEmail+"?accessToken="+userAccessToken+"&accessTokenType=facebook";		
 		ClientConfig clientConfig = new DefaultClientConfig();
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client client = Client.create(clientConfig);
 		WebResource webresource = client.resource(getUserInfoByEmailUrl);
 		JSONObject response = webresource.get(JSONObject.class);
-		UserInfoJSON userInfo = new ObjectMapper().readValue(response.getString("obj"),UserInfoJSON.class);*/
+		System.out.println(response);
 		
-	
+		String DeleteFbTestUserUrl = "https://graph.facebook.com/userID?method=delete&access_token="+userAccessToken;
+		ClientConfig clientConfigDeleteFacebookTestUser = new DefaultClientConfig();
+		clientConfigDeleteFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+		Client clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
+		WebResource deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
+		String testUserDelete = deleteFacebookTestUser.post(String.class);
+		System.out.println(testUserDelete);
        
 	}
 

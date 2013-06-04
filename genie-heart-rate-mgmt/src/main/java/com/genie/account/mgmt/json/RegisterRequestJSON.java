@@ -1,10 +1,12 @@
 package com.genie.account.mgmt.json;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author vidhun
  *
  */
-
+@XmlRootElement(name = "RegisterRequestJSON")
 public class RegisterRequestJSON {
 	
 	private String accessToken;

@@ -34,9 +34,9 @@ import com.genie.mgmt.GoodResponseObject;
  * @author manojkumar
  *
  */
-@Path("/Users")
-@Component
-public class UserResource 
+	@Path("/Users")
+	@Component
+	public class UserResource 
 {
 	@Autowired
 	@Qualifier("userManagerMySQLImpl")

@@ -1,5 +1,10 @@
 package com.genie.account.mgmt.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.ws.rs.core.MediaType;
+
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
