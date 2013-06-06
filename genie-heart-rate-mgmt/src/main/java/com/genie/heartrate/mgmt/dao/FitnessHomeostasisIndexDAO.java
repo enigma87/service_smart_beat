@@ -16,7 +16,7 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 public class FitnessHomeostasisIndexDAO {
 	
 	private static final String TABLE_FITNESS_HOMEOSTASIS_INDEX = "fitness_homeostasis_index_model";
-	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "homeostasis_index", "total_load_of_exercise", "time_to_recover", "last_training_session_id"};
+	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "homeostasis_index", "total_load_of_exercise", "time_at_full_recovery", "last_training_session_id"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;

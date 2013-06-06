@@ -1,5 +1,7 @@
 package com.genie.heartrate.mgmt.beans;
 
+import java.sql.Timestamp;
+
 /**
  * @author dhasarathy
  **/
@@ -9,7 +11,7 @@ public class FitnessHomeostasisIndexBean {
 	private String userid;
 	private Double homeostasisIndex;
 	private Double totalLoadOfExercise;
-	private Double timeToRecover;
+	private Timestamp timeAtFullRecovery;
 	private Integer lastTrainingSessionId;
 	
 	public FitnessHomeostasisIndexBean() {
@@ -37,14 +39,14 @@ public class FitnessHomeostasisIndexBean {
 	
 	public void setTotalLoadOfExercise(Double totalLoadOfExercise) {
 		this.totalLoadOfExercise = totalLoadOfExercise;
+	}		
+	
+	public Timestamp getTimeAtFullRecovery() {
+		return timeAtFullRecovery;
 	}
 	
-	public Double getTimeToRecover() {
-		return timeToRecover;
-	}
-	
-	public void setTimeToRecover(Double timeToRecover) {
-		this.timeToRecover = timeToRecover;
+	public void setTimeAtFullRecovery(Timestamp timeAtFullRecovery) {
+		this.timeAtFullRecovery = timeAtFullRecovery;
 	}
 	
 	public Integer getLastTrainingSessionId() {

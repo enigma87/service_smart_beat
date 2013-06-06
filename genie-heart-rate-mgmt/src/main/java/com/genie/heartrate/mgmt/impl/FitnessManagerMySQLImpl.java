@@ -8,6 +8,7 @@ import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
+import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
@@ -23,6 +24,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private UserHeartRateTestDao userHeartRateTestDao;
 	private UserHeartRateZoneDao userHeartRateZoneDao;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
+	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	
 	public UserHeartRateTestDao getUserHeartRateTestDao()
 	{
@@ -91,7 +93,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-		ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean);
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessTrainingSessionBean.getUserid());
+		fitnessHomeostasisIndexBean.setTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
+		
 		
 	}
 	

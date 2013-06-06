@@ -1,19 +1,15 @@
 package com.genie.heartrate.mgmt.beans;
 
+import com.genie.heartrate.mgmt.util.TraineeClassification;
+
 /**
  * @author dhasarathy
  **/
 
 public class FitnessShapeIndexBean {
-
-	public static final String TRAINEE_CLASSIFICATION_UNTRAINED 			= "untrained";
-	public static final String TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED 		= "lightly_trained";
-	public static final String TRAINEE_CLASSIFICATION_MODERATELY_TRAINED 	= "moderately_trained";
-	public static final String TRAINEE_CLASSIFICATION_WELL_TRAINED 			= "well_trained";
-	public static final String TRAINEE_CLASSIFICATION_ELITE 				= "elite";
 	
 	private String userid;
-	private String traineeClassification;
+	private TraineeClassification traineeClassification;
 	private Double shapeIndex;
 	
 	public String getUserid() {
@@ -24,11 +20,11 @@ public class FitnessShapeIndexBean {
 		this.userid = userid;
 	}
 	
-	public String getTraineeClassification() {
+	public TraineeClassification getTraineeClassification() {
 		return traineeClassification;
 	}
 	
-	public void setTraineeClassification(String traineeClassification) {
+	public void setTraineeClassification(TraineeClassification traineeClassification) {
 		this.traineeClassification = traineeClassification;
 	}
 	
