@@ -78,7 +78,7 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `userid` varchar(128) NOT NULL,
   `homeostasis_index` DOUBLE DEFAULT NULL,
   `total_load_of_exercise` DOUBLE DEFAULT NULL,
-  `time_to_recover` DOUBLE DEFAULT NULL,
+  `time_at_full_recovery` timestamp DEFAULT NULL,
   `last_training_session_id` MEDIUMINT UNSIGNED DEFAULT NULL,  
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

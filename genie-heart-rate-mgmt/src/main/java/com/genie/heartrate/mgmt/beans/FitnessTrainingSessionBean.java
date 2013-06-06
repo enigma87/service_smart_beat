@@ -151,6 +151,18 @@ public class FitnessTrainingSessionBean {
 	public void setHrz6Distance(Double hrz6Distance) {
 		this.hrz6Distance = hrz6Distance;
 	}
+	
+	public double[] getTimeDistributionOfHRZ(){
+		double[] timeDistributionOfHrz = new double[6];
+		timeDistributionOfHrz[0] = getHrz1Time();
+		timeDistributionOfHrz[1] = getHrz2Time();
+		timeDistributionOfHrz[2] = getHrz3Time();
+		timeDistributionOfHrz[3] = getHrz4Time();
+		timeDistributionOfHrz[4] = getHrz5Time();
+		timeDistributionOfHrz[5] = getHrz6Time();
+		
+		return timeDistributionOfHrz;
+	}
 
 }
 

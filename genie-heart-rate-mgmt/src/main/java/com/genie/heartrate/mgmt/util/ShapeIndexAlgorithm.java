@@ -3,11 +3,11 @@
  */
 package com.genie.heartrate.mgmt.util;
 
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 
@@ -70,13 +70,36 @@ public class ShapeIndexAlgorithm
 	}
 	
 	private static final double TRAINING_IMPACT_BY_ZONE[] = {0,0,1,1.75,3,5,9};	
-	public static double calculateTotalLoadofExercise(FitnessTrainingSessionBean fitnessTrainingSessionBean){
-		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*fitnessTrainingSessionBean.getHrz1Time() +
-				TRAINING_IMPACT_BY_ZONE[2]*fitnessTrainingSessionBean.getHrz2Time() +
-				TRAINING_IMPACT_BY_ZONE[3]*fitnessTrainingSessionBean.getHrz3Time() +
-				TRAINING_IMPACT_BY_ZONE[4]*fitnessTrainingSessionBean.getHrz4Time() +
-				TRAINING_IMPACT_BY_ZONE[5]*fitnessTrainingSessionBean.getHrz5Time() +
-				TRAINING_IMPACT_BY_ZONE[6]*fitnessTrainingSessionBean.getHrz6Time();
+	public static double calculateTotalLoadofExercise(double[] timeDistributionOfHeartRateZones){
+		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*timeDistributionOfHeartRateZones[0] +
+				TRAINING_IMPACT_BY_ZONE[2]*timeDistributionOfHeartRateZones[1] +
+				TRAINING_IMPACT_BY_ZONE[3]*timeDistributionOfHeartRateZones[2] +
+				TRAINING_IMPACT_BY_ZONE[4]*timeDistributionOfHeartRateZones[3] +
+				TRAINING_IMPACT_BY_ZONE[5]*timeDistributionOfHeartRateZones[4] +
+				TRAINING_IMPACT_BY_ZONE[6]*timeDistributionOfHeartRateZones[5];
 		return totalLoadOfExercise;
+	}
+	
+	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
+	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
+	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {4.1667, 5.2083, 6.25, 7.2917, 8.3333};	
+	public static Timestamp calculateTimeOfFullRecovery(TraineeClassification traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+		
+		Timestamp timeAtFullRecovery = null;
+		
+		double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification.ordinal()];
+		double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification.ordinal()];
+		double TTR_CONSTANT_C = totalLoadOfExercise;
+		
+		double discriminant = Math.pow(TTR_CONSTANT_B, 2) - 4*TTR_CONSTANT_A*TTR_CONSTANT_C;
+		if(discriminant > 0.0){
+			double d = Math.sqrt(discriminant);
+			double root1 = (-TTR_CONSTANT_B + d)/(2.0*TTR_CONSTANT_A);			
+			double root2 = (-TTR_CONSTANT_B - d)/(2.0*TTR_CONSTANT_A);
+			double minRoot = Math.min(root1, root2);
+			long timeToRecoverInSeconds = new Double(minRoot*60*60).longValue();
+			timeAtFullRecovery = new Timestamp(trainingSessionEndTime.getTime()+timeToRecoverInSeconds);
+		}		
+		return timeAtFullRecovery;
 	}
 }

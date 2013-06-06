@@ -4,10 +4,12 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
+import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 
 /**
  * @author dhasarathy
@@ -16,7 +18,7 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 public class FitnessHomeostasisIndexDAO {
 	
 	private static final String TABLE_FITNESS_HOMEOSTASIS_INDEX = "fitness_homeostasis_index_model";
-	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "homeostasis_index", "total_load_of_exercise", "time_to_recover", "last_training_session_id"};
+	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "homeostasis_index", "total_load_of_exercise", "time_at_full_recovery", "last_training_session_id"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;
@@ -51,6 +53,7 @@ public class FitnessHomeostasisIndexDAO {
 		return fitnessHomeostasisIndexBean;
 		
 	}
+	
 	private static final String DELETE_HOMEOSTASIS_INDEX_MODEL_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_HOMEOSTASIS_INDEX + " WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + " =?";
 	public void deleteHomeostasisIndexModelByUserid(String userid){
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = getHomeostasisIndexModelByUserid(userid);
@@ -60,6 +63,17 @@ public class FitnessHomeostasisIndexDAO {
 		}
 		
 	}
+	
+	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_HOMEOSTASIS_INDEX +" set " 
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[1] + "=:homeostasisIndex, " 
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[2] + "=:totalLoadOfExercise,"
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:timeAtFullRecovery,"
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:lastTrainingSessionId,"
+			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";	
+	public int updateShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
+				NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+				return jdbcTemplate.update(UPDATE_SHAPE_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
+			}
 
 }
 
