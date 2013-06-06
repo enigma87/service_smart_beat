@@ -4,11 +4,13 @@
 package com.genie.heartrate.mgmt.impl;
 
 import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
+import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
+import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
@@ -23,8 +25,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	private UserHeartRateTestDao userHeartRateTestDao;
 	private UserHeartRateZoneDao userHeartRateZoneDao;
-	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
+	
+	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
+	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
+	
 	
 	public UserHeartRateTestDao getUserHeartRateTestDao()
 	{
@@ -93,9 +98,15 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessTrainingSessionBean.getUserid());
-		fitnessHomeostasisIndexBean.setTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
 		
+		String userid = fitnessTrainingSessionBean.getUserid();
+		
+		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByUserId(userid);
+		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
+		fitnessHomeostasisIndexBean.setTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
+		fitnessHomeostasisIndexBean.setTimeAtFullRecovery(ShapeIndexAlgorithm.calculateTimeOfFullRecovery(fitnessShapeIndexBean.getTraineeClassification(), fitnessTrainingSessionBean.getEndTime(), fitnessHomeostasisIndexBean.getTotalLoadOfExercise()));
 		
 	}
 	
