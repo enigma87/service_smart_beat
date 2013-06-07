@@ -3,8 +3,8 @@
  */
 package com.genie.account.mgmt.beans;
 
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Calendar;
 
 /**
  * @author manojkumar
@@ -12,36 +12,50 @@ import java.util.Calendar;
  */
 public class User 
 {
-	private Long userid;
+	private String userid;
+	private String accessToken;
+	private String accessTokenType;
 	private String firstName;
 	private String middleName;
 	private String lastName;
+	private Date dob;
 	private String email;
-	private String password;
-	private Boolean facebookLogin = false;
-	private Boolean googleLogin = false;
-	private Boolean twitterLogin = false;
-	private String imageUrl;
-	private Integer age=0;
-	private Integer height=0;
-	private Double weight=0.0;
-	private Boolean active = true;
+	private String imageUrl;		
 	private Timestamp createdTs;
 	private Timestamp lastUpdatedTs;
-	private Timestamp lastloginTs;
+	private Timestamp lastLoginTs;
+	private Boolean active = true;
 	
-	public Long getUserid()
+	public static final String ACCESS_TOKEN_TYPE_CUSTOM = "custom";
+	public static final String ACCESS_TOKEN_TYPE_FACEBOOK = "facebook";
+	
+	public String getUserid()
 	{
 		return this.userid;
 	}
 	
-	public void setUserid(Long userid)
+	public void setUserid(String userid)
 	{
 		this.userid = userid;
 	}
 	
-	public String getFirstName()
-	{
+	public String getAccessToken() {
+		return accessToken;
+	}
+	
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+	
+	public String getAccessTokenType() {
+		return accessTokenType;
+	}
+	
+	public void setAccessTokenType(String accessTokenType) {
+		this.accessTokenType = accessTokenType;
+	}
+	
+	public String getFirstName(){
 		return this.firstName;
 	}
 	
@@ -70,6 +84,14 @@ public class User
 		this.lastName = lastName;
 	}
 	
+	public Date getDob() {
+		return dob;
+	}
+	
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	
 	public String getEmail()
 	{
 		return this.email;
@@ -79,47 +101,7 @@ public class User
 	{
 		this.email = email;
 	}
-	
-	public String getPassword()
-	{
-		return this.password;
-	}
-	
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
-	
-	public Boolean getFacebookLogin()
-	{
-		return this.facebookLogin;
-	}
-	
-	public void setFacebookLogin(Boolean facebookLogin)
-	{
-		this.facebookLogin = facebookLogin;
-	}
-	
-	public Boolean getGoogleLogin()
-	{
-		return this.googleLogin;
-	}
-	
-	public void setGoogleLogin(Boolean googleLogin)
-	{
-		this.googleLogin = googleLogin;
-	}
-	
-	public Boolean getTwitterLogin()
-	{
-		return this.twitterLogin;
-	}
-	
-	public void setTwitterLogin(Boolean twitterLogin)
-	{
-		this.twitterLogin = twitterLogin;
-	}
-	
+			
 	public String getImageUrl()
 	{
 		return this.imageUrl;
@@ -128,37 +110,7 @@ public class User
 	public void setImageUrl(String imageUrl)
 	{
 		this.imageUrl = imageUrl;
-	}
-	
-	public Integer getAge()
-	{
-		return this.age;
-	}
-	
-	public void setAge(Integer age)
-	{
-		this.age = age;
-	}
-	
-	public Integer getHeight()
-	{
-		return this.height;
-	}
-	
-	public void setHeight(Integer height)
-	{
-		this.height = height;
-	}
-	
-	public Double getWeight()
-	{
-		return this.weight;
-	}
-	
-	public void setWeight(Double weight)
-	{
-		this.weight = weight;
-	}
+	}		
 	
 	public Boolean getActive()
 	{
@@ -192,11 +144,11 @@ public class User
 	
 	public Timestamp getLastLoginTs()
 	{
-		return this.lastloginTs;
+		return this.lastLoginTs;
 	}
 	
 	public void setLastLoginTs(Timestamp lastLoginTs)
 	{
-		this.lastloginTs = lastLoginTs;
+		this.lastLoginTs = lastLoginTs;
 	}
 }

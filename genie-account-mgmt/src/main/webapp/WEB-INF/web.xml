@@ -19,31 +19,39 @@
 		<param-value>true</param-value>
 	</context-param>
 	
-	<!--<context-param>
+	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			classpath*:META-INF/spring/spring-apr-be-data-proc.xml
+			classpath*:META-INF/spring/applicationContext.xml
 		</param-value>
-	</context-param>-->
+	</context-param>
 		
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
 	
+	<listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
 	<servlet>
 		<servlet-name>Genie Account Management Service</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		
 		<init-param>
 		<param-name>com.sun.jersey.config.property.packages</param-name>
 		<param-value>com.genie.account.mgmt.resources</param-value>
+		</init-param>
+		<init-param>
+		<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+		<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>Genie Account Management Service</servlet-name>
-		<url-pattern>/rest/v1.0/*</url-pattern>
+		<url-pattern>/rest/ams/v1.0/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
