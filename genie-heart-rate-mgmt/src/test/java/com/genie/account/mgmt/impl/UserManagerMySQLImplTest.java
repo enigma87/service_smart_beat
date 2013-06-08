@@ -17,11 +17,6 @@ import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
 import com.genie.account.mgmt.util.AuthenticationStatus;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 /**
  * @author vidhun
  *

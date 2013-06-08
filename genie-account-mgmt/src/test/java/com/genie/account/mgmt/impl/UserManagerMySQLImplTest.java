@@ -20,7 +20,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
-import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
