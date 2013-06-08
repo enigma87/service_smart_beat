@@ -103,8 +103,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByUserId(userid);
 		
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);		
 		fitnessHomeostasisIndexBean.setTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
 		fitnessHomeostasisIndexBean.setTimeAtFullRecovery(ShapeIndexAlgorithm.calculateTimeOfFullRecovery(fitnessShapeIndexBean.getTraineeClassification(), fitnessTrainingSessionBean.getEndTime(), fitnessHomeostasisIndexBean.getTotalLoadOfExercise()));
 		
@@ -115,4 +114,3 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 }
-

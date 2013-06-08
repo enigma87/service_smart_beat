@@ -1,0 +1,29 @@
+shape_index = f(homeostasis_index,compounded_v_dot,piecewise_map_from_slope_of_time_regression_model_of_sohr);
+
+homeostasis_index = f(total_load_of_exercise,total_time_to_recover,supercompensation,detraining);
+
+total_load_of_exercise=f(heart_rate_zones,time_distribution_of_heart_rate_zones);
+heart_rate_zones = f(maximal_heart_rate,threshold_heart_rate,resting_heart_rate);
+
+total_time_to_recover = f(trainee_classification,trainee_class_based_model);
+trainee_class_based_model = f(time_after_training_session);
+
+supercompensation = f(piecewise_supercompensation_model);
+detraining = f(piecewise_detraining_model);
+
+compounded_v_dot = ((100*v_dot)/baseline_v_dot)-100;
+v_dot = f(heart_rate_zones, speed_distribution_of_heart_rate_zones);
+baseline_v_dot = average of v_dot for first four training sessions;
+
+slope_of_time_regression_model_of_sohr = f(time,sohr_from_day_4_34);
+
+primary data
+------------
+maximal_heart_rate,threshold_heart_rate,resting_heart_rate
+time_distribution_of_heart_rate_zones
+speed_distribution_of_heart_rate_zones
+sohr with history
+
+history for 
+modeling - orthostatic heart rate, TLE
+user experience - shape index, orthostatic heart rate, vdot
