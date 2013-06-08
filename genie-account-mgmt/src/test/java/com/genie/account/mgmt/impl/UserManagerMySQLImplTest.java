@@ -20,6 +20,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.genie.account.mgmt.beans.User;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
+import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -93,7 +94,7 @@ public class UserManagerMySQLImplTest {
 		Assert.assertNotNull(user1.getLastUpdatedTs());
 		Assert.assertNotNull(user1.getLastLoginTs());
 		Assert.assertEquals(new Boolean(true), user1.getActive());
-		userDao.deleteUser(user.getUserid());
+		userDao.deleteUser(user1.getUserid());
 	}
 
 	@Test
@@ -105,7 +106,7 @@ public class UserManagerMySQLImplTest {
 		usMgr.registerUser(user);
 		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertNotNull(user1);
-		userDao.deleteUser(user.getUserid());
+		userDao.deleteUser(user1.getUserid());
 	}
 	
 	@Test
@@ -117,7 +118,7 @@ public class UserManagerMySQLImplTest {
 		usMgr.registerUser(user);
 		User user1 = usMgr.getUserInformationByEmail(user.getEmail());
 		Assert.assertNotNull(user1);
-		userDao.deleteUser(user.getUserid());
+		userDao.deleteUser(user1.getUserid());
 	}
 	
 	@Test
@@ -133,7 +134,8 @@ public class UserManagerMySQLImplTest {
 		
 		User user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("John",user1.getMiddleName());		
-		userDao.deleteUser(user.getUserid());
+		userDao.deleteUser(user1.getUserid());
+		user.setMiddleName("Bob");
 	}
 	
 	@Test
@@ -148,8 +150,7 @@ public class UserManagerMySQLImplTest {
 		String appAccessTokenResponse = getAppAccessToken.get(String.class);
 		String[] appAccessToken = appAccessTokenResponse.split("=");
 		String appAccessTokenValue = appAccessToken[1];
-		System.out.println(appAccessTokenValue);
-		
+
 		/*Get test user from facebook*/
 		String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
 		ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
@@ -157,9 +158,25 @@ public class UserManagerMySQLImplTest {
 		Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
 		WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
 		JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
-    
 		String userID = FacebookTestUser.getString("id");
 		String userAccessToken = FacebookTestUser.getString("access_token");
+		String userEmail = FacebookTestUser.getString("email");
+		
+		
+		User userFb = new User();
+		userFb.setUserid(userID);
+		userFb.setAccessToken(userAccessToken);
+		userFb.setAccessTokenType("facebook");
+		userFb.setEmail(userEmail);
+		userFb.setFirstName("Alice");
+		userFb.setMiddleName("Bob");
+		userFb.setLastName("Charlie");
+		
+				
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.registerUser(userFb);
 		
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		AuthenticationStatus authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
@@ -177,6 +194,9 @@ public class UserManagerMySQLImplTest {
 		Client clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
 		WebResource deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
 		deleteFacebookTestUser.post();
+		userDao.deleteUser(userFb.getUserid());
 		
 	}
+	
+	
 }
