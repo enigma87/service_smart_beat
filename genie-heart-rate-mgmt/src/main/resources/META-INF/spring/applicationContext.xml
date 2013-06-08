@@ -38,13 +38,5 @@
 		<property name="userHeartRateZoneDao" ref="userHeartRateZoneDao" />
 		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 	</bean>
-	
-	<bean id="userDao" class="com.genie.account.mgmt.dao.UserDao">
-		<property name="dataSource" ref="dataSource" />
-	</bean>	
-	
-	<bean id="userManagerMySQLImpl" class="com.genie.account.mgmt.impl.UserManagerMySQLImpl">
-		<property name="userDao" ref="userDao"/>		
-	</bean>
-		
+			
 </beans>

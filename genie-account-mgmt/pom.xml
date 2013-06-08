@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.genie</groupId>
-  <artifactId>genie-heart-rate-mgmt</artifactId>
+  <artifactId>genie-account-mgmt</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>genie-heart-rate-mgmt Maven Webapp</name>
+  <name>genie-account-mgmt Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
 		<java.version>6</java.version>
@@ -100,6 +100,6 @@
         </dependency>    
   </dependencies>
   <build>
-    <finalName>genie-heart-rate-mgmt</finalName>
+    <finalName>genie-account-mgmt</finalName>
   </build>
 </project>
