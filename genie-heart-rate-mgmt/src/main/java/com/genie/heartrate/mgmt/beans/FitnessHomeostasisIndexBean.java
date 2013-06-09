@@ -2,6 +2,8 @@ package com.genie.heartrate.mgmt.beans;
 
 import java.sql.Timestamp;
 
+import com.genie.heartrate.mgmt.util.TraineeClassification;
+
 /**
  * @author dhasarathy
  **/
@@ -9,52 +11,61 @@ import java.sql.Timestamp;
 public class FitnessHomeostasisIndexBean {
 
 	private String userid;
-	private Double homeostasisIndex;
-	private Double totalLoadOfExercise;
-	private Timestamp timeAtFullRecovery;
-	private Integer lastTrainingSessionId;
+	private TraineeClassification traineeClassification;
+	private Double currentTotalLoadOfExercise;
+	private Timestamp currentEndTime;
+	private Double previousTotalLoadOfExercise;
+	private Timestamp previousEndTime;	
 	
-	public FitnessHomeostasisIndexBean() {
-		this.homeostasisIndex = 0.0;
-	}
+
 	public String getUserid() {
 		return userid;
 	}
 	
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}	
+	
+	public TraineeClassification getTraineeClassification() {
+		return traineeClassification;
 	}
 	
-	public Double getHomeostasisIndex() {
-		return homeostasisIndex;
+	public void setTraineeClassification(
+			TraineeClassification traineeClassification) {
+		this.traineeClassification = traineeClassification;
 	}
 	
-	public void setHomeostasisIndex(Double homeostasisIndex) {
-		this.homeostasisIndex = homeostasisIndex;
+	public Double getCurrentTotalLoadOfExercise() {
+		return currentTotalLoadOfExercise;
 	}
 	
-	public Double getTotalLoadOfExercise() {
-		return totalLoadOfExercise;
+	public void setCurrentTotalLoadOfExercise(Double currentTotalLoadOfExercise) {
+		this.currentTotalLoadOfExercise = currentTotalLoadOfExercise;
 	}
 	
-	public void setTotalLoadOfExercise(Double totalLoadOfExercise) {
-		this.totalLoadOfExercise = totalLoadOfExercise;
+	public Timestamp getCurrentEndTime() {
+		return currentEndTime;
+	}
+	
+	public void setCurrentEndTime(Timestamp currentEndTime) {
+		this.currentEndTime = currentEndTime;
+	}
+	
+	public Double getPreviousTotalLoadOfExercise() {
+		return previousTotalLoadOfExercise;
+	}
+	
+	public void setPreviousTotalLoadOfExercise(
+			Double previousTotalLoadOfExercise) {
+		this.previousTotalLoadOfExercise = previousTotalLoadOfExercise;
+	}
+	
+	public Timestamp getPreviousEndTime() {
+		return previousEndTime;
+	}
+	
+	public void setPreviousEndTime(Timestamp previousEndTime) {
+		this.previousEndTime = previousEndTime;
 	}		
-	
-	public Timestamp getTimeAtFullRecovery() {
-		return timeAtFullRecovery;
-	}
-	
-	public void setTimeAtFullRecovery(Timestamp timeAtFullRecovery) {
-		this.timeAtFullRecovery = timeAtFullRecovery;
-	}
-	
-	public Integer getLastTrainingSessionId() {
-		return lastTrainingSessionId;
-	}
-	
-	public void setLastTrainingSessionId(Integer lastTrainingSessionId) {
-		this.lastTrainingSessionId = lastTrainingSessionId;
-	}
 }
 

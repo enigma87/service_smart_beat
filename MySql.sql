@@ -76,10 +76,11 @@ delimiter $$
 
 CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `userid` varchar(128) NOT NULL,
-  `homeostasis_index` DOUBLE DEFAULT NULL,
-  `total_load_of_exercise` DOUBLE DEFAULT NULL,
-  `time_at_full_recovery` timestamp NULL DEFAULT NULL,
-  `last_training_session_id` MEDIUMINT UNSIGNED DEFAULT NULL,  
+  `trainee_classification` INTEGER DEFAULT NULL,  
+  `current_total_load_of_exercise` DOUBLE DEFAULT NULL,
+  `current_end_time` DOUBLE DEFAULT NULL,
+  `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
+  `previous_end_time` DOUBLE DEFAULT NULL,
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

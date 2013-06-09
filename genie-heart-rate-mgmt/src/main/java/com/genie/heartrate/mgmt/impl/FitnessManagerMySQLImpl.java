@@ -10,7 +10,6 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
-import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
@@ -26,7 +25,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private UserHeartRateTestDao userHeartRateTestDao;
 	private UserHeartRateZoneDao userHeartRateZoneDao;
 	
-	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	
@@ -96,21 +94,41 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 	}
 
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+		
+		/*Save current training session*/
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
 		String userid = fitnessTrainingSessionBean.getUserid();
-		
-		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByUserId(userid);
-		
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);		
-		fitnessHomeostasisIndexBean.setTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
-		fitnessHomeostasisIndexBean.setTimeAtFullRecovery(ShapeIndexAlgorithm.calculateTimeAtFullRecovery(fitnessShapeIndexBean.getTraineeClassification(), fitnessTrainingSessionBean.getEndTime(), fitnessHomeostasisIndexBean.getTotalLoadOfExercise()));
+		/*Update Homeostasis index model*/
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		/*Backup last session's data*/
+		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
+		fitnessHomeostasisIndexBean.setPreviousEndTime(fitnessHomeostasisIndexBean.getCurrentEndTime());
+		/*Set current session's data*/
+		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
+		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());
+		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 	}
 	
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId){
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
+	}
+
+	public FitnessShapeIndexBean getFitnessShapeIndex(String userid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private double getFitnessSupercompensationPoints(String userid){
+		double supercompensationPoints = 0.0;
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+		if(0 == regressedHomeostasisIndex){
+			// TODO Get supercompensation points
+		}
+		return supercompensationPoints;
 	}
 
 }

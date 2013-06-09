@@ -3,6 +3,7 @@
  */
 package com.genie.heartrate.mgmt.core;
 
+import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
@@ -21,4 +22,6 @@ public interface FitnessManager
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId);
+	
+	public FitnessShapeIndexBean getFitnessShapeIndex(String userid);
 }
