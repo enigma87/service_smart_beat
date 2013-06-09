@@ -125,7 +125,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
-		if(0 == regressedHomeostasisIndex){
+		if(0 == regressedHomeostasisIndex){			
 			// TODO Get supercompensation points
 		}
 		return supercompensationPoints;
