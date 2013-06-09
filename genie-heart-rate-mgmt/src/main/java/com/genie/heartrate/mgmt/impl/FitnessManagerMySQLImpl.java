@@ -10,6 +10,7 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
+import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao;
@@ -27,6 +28,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
+	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
 	
 	
 	public UserHeartRateTestDao getUserHeartRateTestDao()
@@ -126,8 +128,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
 		if(0 == regressedHomeostasisIndex){			
-			// TODO Get supercompensation points
-		}
+			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
+		} 
 		return supercompensationPoints;
 	}
 
