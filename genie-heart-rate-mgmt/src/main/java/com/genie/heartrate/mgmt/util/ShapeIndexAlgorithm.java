@@ -131,20 +131,20 @@ public class ShapeIndexAlgorithm
 	
 	public static final double[] SUPERCOMPENSATION_FROM_HI_BY_RANGE = {0.2,0.4,0.6,0.8,1.2,1.6};
 	
-	public static double calculateSupercompensationPoints(TraineeClassification traineeClassification, double regressedMinimumOfHomeostasisIndex){
+	public static double calculateSupercompensationPoints(TraineeClassification traineeClassification, double regressionMinimumOfHomeostasisIndex){
 		double supercompensationPoints = 0.0;
 		int index = traineeClassification.ordinal();
-		if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_A[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_A[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_A[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_A[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[0];
-		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_B[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_B[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_B[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_B[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[1];
-		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_C[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_C[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_C[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_C[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[2];
-		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_D[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_D[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_D[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_D[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[3];
-		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_E[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_E[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_E[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_E[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[4];
-		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_F[index][0]<= regressedMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_F[index][1]>= regressedMinimumOfHomeostasisIndex )){
+		}else if((SUPERCOMENSATION_FROM_HI_MAP_RANGE_F[index][0]<= regressionMinimumOfHomeostasisIndex ) && (SUPERCOMENSATION_FROM_HI_MAP_RANGE_F[index][1]>= regressionMinimumOfHomeostasisIndex )){
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[5];
 		}
 		return supercompensationPoints;
