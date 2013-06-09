@@ -5,6 +5,7 @@ package com.genie.heartrate.mgmt.util;
 
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,8 +83,26 @@ public class ShapeIndexAlgorithm
 	
 	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
 	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
-	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {4.1667, 5.2083, 6.25, 7.2917, 8.3333};	
-	public static Timestamp calculateTimeOfFullRecovery(TraineeClassification traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {4.1667, 5.2083, 6.25, 7.2917, 8.3333};
+	public static double getRegressedHomeostasisIndex(TraineeClassification traineeClassification, Timestamp previousTrainingSessionEndTime, double previousTrainingSessionTLE){
+		double regressedHomeostasisIndex = 0.0;
+		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, previousTrainingSessionEndTime, previousTrainingSessionTLE);
+		Timestamp currentTime = new Timestamp(new Date().getTime());
+		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
+			double hoursElapsed = (new Timestamp(new Date().getTime()).getTime() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
+			double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification.ordinal()];
+			double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification.ordinal()];
+			double TTR_CONSTANT_C = previousTrainingSessionTLE;
+			regressedHomeostasisIndex = TTR_CONSTANT_A*Math.pow(hoursElapsed, 2.0) + TTR_CONSTANT_B*hoursElapsed + TTR_CONSTANT_C;
+		}
+		return regressedHomeostasisIndex;
+	}
+	
+	public static final double updateHomeostasisIndex(double regressedHomeostasisIndex, double totalLoadOfExercise){
+		return regressedHomeostasisIndex - totalLoadOfExercise;
+	}
+			
+	public static Timestamp calculateTimeAtFullRecovery(TraineeClassification traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
 		
 		Timestamp timeAtFullRecovery = null;
 		
