@@ -98,7 +98,7 @@ public class ShapeIndexAlgorithm
 		return regressedHomeostasisIndex;
 	}
 	
-	public static final double updateHomeostasisIndex(double regressedHomeostasisIndex, double totalLoadOfExercise){
+	public static final double getRegressionMinimumOfHomeostasisIndex(double regressedHomeostasisIndex, double totalLoadOfExercise){
 		return regressedHomeostasisIndex - totalLoadOfExercise;
 	}
 			

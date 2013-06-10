@@ -1,6 +1,9 @@
 package com.genie.heartrate.mgmt.impl;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -11,11 +14,14 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
+import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
+import com.genie.heartrate.mgmt.util.TraineeClassification;
 /**
  * @author vidhun
  *
@@ -33,7 +39,7 @@ public class FitnessManagerMySQLImplTest {
 		userHeartRateTestDao = (UserHeartRateTestDao) appContext.getBean("userHeartRateTestDao");
 	}
 	
-	@Test
+	//@Test
 	public void testgetHeartRateTestResultsForUser() {
 		
 		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
@@ -59,7 +65,7 @@ public class FitnessManagerMySQLImplTest {
 	}
 
 	
-	@Test
+	//@Test
 	public void testsaveHeartRateTestResultsForUser() {
 		
 		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
@@ -89,7 +95,7 @@ public class FitnessManagerMySQLImplTest {
 			
 	}
 	
-	@Test
+	//@Test
 	public void testgetHeartRateZonesForUser() {
 		
 		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
@@ -131,7 +137,29 @@ public class FitnessManagerMySQLImplTest {
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
 		Integer fitnessTrainingSessionId = 20131;
-	
+	    
+		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = null;
+		try {
+			date = dateFormat.parse("10/06/2012");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		long time = date.getTime();
+		currentnew Timestamp(time);*/
+		
+		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid("ff2d44bb-8af8-46e3-b88f-0cd777ac188e");
+		fitnessHomeostasisIndexBean.setTraineeClassification(TraineeClassification.TRAINEE_CLASS_MODERATELY_TRAINED);
+		fitnessHomeostasisIndexBean.setCurrentEndTime(new Timestamp(nowPastOneHour));
+		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
+		System.out.println(fitnessHomeostasisIndexBean.getUserid());
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
+		fitnessHomeostasisIndexDAO.createHomeoStasisIndexModel(fitnessHomeostasisIndexBean);
+		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid("ff2d44bb-8af8-46e3-b88f-0cd777ac188e");
 		fitnessTrainingSessionBean.setTrainingSessionId(fitnessTrainingSessionId);

@@ -108,8 +108,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
 		fitnessHomeostasisIndexBean.setPreviousEndTime(fitnessHomeostasisIndexBean.getCurrentEndTime());
 		/*Set current session's data*/
-		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ()));
+		Double currentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
+		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(currentTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());
+		Double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(ShapeIndexAlgorithm.getRegressionMinimumOfHomeostasisIndex(regressedHomeostasisIndex, currentTotalLoadOfExercise));
 		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 	}
