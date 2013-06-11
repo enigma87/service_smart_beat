@@ -151,8 +151,8 @@ public class FitnessManagerMySQLImplTest {
 		
 		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		fitnessHomeostasisIndexBean.setUserid("ff2d44bb-8af8-46e3-b88f-0cd777ac188e");
-		fitnessHomeostasisIndexBean.setTraineeClassification(TraineeClassification.TRAINEE_CLASS_MODERATELY_TRAINED);
+		fitnessHomeostasisIndexBean.setUserid("ff2d-8af8");
+		fitnessHomeostasisIndexBean.setTraineeClassification(2);
 		fitnessHomeostasisIndexBean.setCurrentEndTime(new Timestamp(nowPastOneHour));
 		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
 		System.out.println(fitnessHomeostasisIndexBean.getUserid());
@@ -161,7 +161,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexDAO.createHomeoStasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
-		fitnessTrainingSessionBean.setUserid("ff2d44bb-8af8-46e3-b88f-0cd777ac188e");
+		fitnessTrainingSessionBean.setUserid("ff2d-8af8");
 		fitnessTrainingSessionBean.setTrainingSessionId(fitnessTrainingSessionId);
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(now));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));

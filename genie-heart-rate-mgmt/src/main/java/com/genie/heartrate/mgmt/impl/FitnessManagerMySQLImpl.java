@@ -51,6 +51,16 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		this.userHeartRateZoneDao = userHeartRateZoneDao;
 	}
 	
+	public FitnessHomeostasisIndexDAO getFitnessHomeostasisIndexDAO() {
+		return fitnessHomeostasisIndexDAO;
+	}
+	
+	public void setFitnessHomeostasisIndexDAO(
+			FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO) {
+		this.fitnessHomeostasisIndexDAO = fitnessHomeostasisIndexDAO;
+	}
+	
+	
 	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
 		return fitnessTrainingSessionDAO;
 	}

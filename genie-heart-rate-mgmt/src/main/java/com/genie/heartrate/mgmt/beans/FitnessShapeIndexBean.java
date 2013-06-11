@@ -9,7 +9,7 @@ import com.genie.heartrate.mgmt.util.TraineeClassification;
 public class FitnessShapeIndexBean {
 	
 	private String userid;
-	private TraineeClassification traineeClassification;
+	private Integer traineeClassification;
 	private Double shapeIndex;
 	
 	public String getUserid() {
@@ -20,14 +20,14 @@ public class FitnessShapeIndexBean {
 		this.userid = userid;
 	}
 	
-	public TraineeClassification getTraineeClassification() {
-		return traineeClassification;
-	}
+    public Integer getTraineeClassification() {
+	return traineeClassification;
+    }
 	
-	public void setTraineeClassification(TraineeClassification traineeClassification) {
+    public void setTraineeClassification(Integer traineeClassification) {
 		this.traineeClassification = traineeClassification;
 	}
-	
+    
 	public Double getShapeIndex() {
 		return shapeIndex;
 	}

@@ -10,8 +10,9 @@ import com.genie.heartrate.mgmt.util.TraineeClassification;
 
 public class FitnessHomeostasisIndexBean {
 
+
 	private String userid;
-	private TraineeClassification traineeClassification;
+	private Integer traineeClassification;
 	private Double localRegressionMinimumOfHomeostasisIndex;
 	private Double currentTotalLoadOfExercise;
 	private Timestamp currentEndTime;
@@ -27,15 +28,14 @@ public class FitnessHomeostasisIndexBean {
 		this.userid = userid;
 	}	
 	
-	public TraineeClassification getTraineeClassification() {
+	  public Integer getTraineeClassification() {
 		return traineeClassification;
-	}
-	
-	public void setTraineeClassification(
-			TraineeClassification traineeClassification) {
+	    }
+	  
+	  public void setTraineeClassification(Integer traineeClassification) {
 		this.traineeClassification = traineeClassification;
 	}
-	
+		
 	public Double getLocalRegressionMinimumOfHomeostasisIndex() {
 		return localRegressionMinimumOfHomeostasisIndex;
 	}

@@ -36,7 +36,7 @@ public class FitnessHomeostasisIndexDAO {
 		
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
-		.usingGeneratedKeyColumns(COLUMNS_FITNESS_HOMEOSTASIS_INDEX)
+		.usingColumns(COLUMNS_FITNESS_HOMEOSTASIS_INDEX)
 		.execute(new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
 	}
 	
@@ -63,15 +63,18 @@ public class FitnessHomeostasisIndexDAO {
 		
 	}
 	
-	private static final String UPDATE_HOMEOSTASIS_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_HOMEOSTASIS_INDEX +" set " 
+	private static final String UPDATE_HOMEOSTASIS_INDEX_MODEL = "UPDATE " + TABLE_FITNESS_HOMEOSTASIS_INDEX +" SET " 
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[1] + "=:traineeClassification, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[2] + "=:localRegressionMinimumOfHomeostasisIndex, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:currentTotalLoadOfExercise, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:currentEndTime, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[5] + "=:previousTotalLoadOfExercise, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime,"			
-			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";	
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime "			
+			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
+	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
+		       
+		        System.out.println(UPDATE_HOMEOSTASIS_INDEX_MODEL);
 				NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 				return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
 			}
