@@ -74,8 +74,7 @@ public class FitnessHomeostasisIndexDAO {
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
 		       
-		        System.out.println(UPDATE_HOMEOSTASIS_INDEX_MODEL);
-				NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		       	NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 				return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
 			}
 
