@@ -82,6 +82,7 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `current_end_time` timestamp NULL DEFAULT NULL,
   `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
   `previous_end_time` timestamp NULL DEFAULT NULL,
+  `supercompensation_status` BOOLEAN DEFAULT TRUE,
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

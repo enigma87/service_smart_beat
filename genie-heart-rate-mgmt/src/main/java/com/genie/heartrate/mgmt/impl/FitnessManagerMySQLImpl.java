@@ -136,11 +136,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return null;
 	}
 	
-	private double getFitnessSupercompensationPoints(String userid){
+	public double getFitnessSupercompensationPoints(String userid){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
-		if(0 == regressedHomeostasisIndex){			
+		if(0 == regressedHomeostasisIndex && FitnessHomeostasisIndexBean.uncompensated == fitnessHomeostasisIndexBean.getSupercompensationStatus() ){			
 			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
 		} 
 		return supercompensationPoints;

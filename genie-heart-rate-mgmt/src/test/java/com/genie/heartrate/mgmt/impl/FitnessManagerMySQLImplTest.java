@@ -177,4 +177,43 @@ public class FitnessManagerMySQLImplTest {
 		fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId(fitnessTrainingSessionId);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid("ff2d-8af8");
 	}
+	
+	@Test
+	public void testGetFitnessSupercompensationPoints(){
+		
+		long now = new Date().getTime();
+		long nowPastOneHour = now - 3600000;
+		long nowPastTwoDays = now - (3600000*48);
+		Integer fitnessTrainingSessionId = 20131;
+	    
+		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		Date date = null;
+		try {
+			date = dateFormat.parse("10/06/2012");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		long time = date.getTime();
+		currentnew Timestamp(time);*/
+		
+		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid("ff2d-8af8");
+		fitnessHomeostasisIndexBean.setTraineeClassification(2);
+		fitnessHomeostasisIndexBean.setCurrentEndTime(new Timestamp(nowPastOneHour));
+		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(180.0);
+		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoDays));
+		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);
+		fitnessHomeostasisIndexBean.setSupercompensationStatus(false);
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
+		fitnessHomeostasisIndexDAO.createHomeoStasisIndexModel(fitnessHomeostasisIndexBean);
+		
+		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
+		fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");
+		Double points = ((FitnessManagerMySQLImpl)fitnessManager).getFitnessSupercompensationPoints("ff2d-8af8");
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid("ff2d-8af8");
+	}
 }
