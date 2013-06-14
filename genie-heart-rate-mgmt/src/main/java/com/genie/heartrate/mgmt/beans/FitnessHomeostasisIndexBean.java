@@ -2,8 +2,6 @@ package com.genie.heartrate.mgmt.beans;
 
 import java.sql.Timestamp;
 
-import com.genie.heartrate.mgmt.util.TraineeClassification;
-
 /**
  * @author dhasarathy
  **/
@@ -19,8 +17,8 @@ public class FitnessHomeostasisIndexBean {
 	private Double previousTotalLoadOfExercise;
 	private Timestamp previousEndTime;
 	private Boolean supercompensationStatus;
-	public static Boolean compensated = true;
-	public static Boolean uncompensated = false;
+	public static final Boolean COMPENSATED = true;
+	public static final Boolean UNCOMPENSATED = false;
 	
 
 	public String getUserid() {

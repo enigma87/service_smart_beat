@@ -10,9 +10,8 @@ homeostasis_index = f(total_load_of_exercise,trainee_classification,time);
 total_load_of_exercise=f(heart_rate_zones,time_distribution_of_heart_rate_zones);
 heart_rate_zones = f(maximal_heart_rate,threshold_heart_rate,resting_heart_rate);
 
-compounded_v_dot = ((100*v_dot)/baseline_v_dot)-100;
+compounded_v_dot = ((100*v_dot)/previous_v_dot)-100;
 v_dot = f(heart_rate_zones, speed_distribution_of_heart_rate_zones);
-baseline_v_dot = average of v_dot for first four training sessions;
 
 slope_of_time_regression_model_of_sohr = f(time,sohr_from_day_4_34);
 
@@ -25,4 +24,5 @@ sohr with history
 
 history for 
 modeling - orthostatic heart rate, TLE
+shape index - once per training session and once per day at 0500
 user experience - shape index, orthostatic heart rate, vdot

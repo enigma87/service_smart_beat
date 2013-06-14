@@ -1,6 +1,5 @@
 package com.genie.heartrate.mgmt.beans;
 
-import com.genie.heartrate.mgmt.util.TraineeClassification;
 
 /**
  * @author dhasarathy
