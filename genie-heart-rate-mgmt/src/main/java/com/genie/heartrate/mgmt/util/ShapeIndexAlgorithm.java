@@ -191,11 +191,11 @@ public class ShapeIndexAlgorithm
 	public static double calculateVdot(double[] speedDistributionOfHRZ){
 		double[] VdotByZone = new double[5];
 		double Vdot = 0.0;
-		VdotByZone[0] = (speedDistributionOfHRZ[1] - SPEED_VDOT_CONSTANT_A_BY_HRZ[1])/SPEED_VDOT_CONSTANT_B_BY_HRZ[1];
-		VdotByZone[1] = (speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_A_BY_HRZ[2])/SPEED_VDOT_CONSTANT_B_BY_HRZ[2];
-		VdotByZone[2] = (speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_A_BY_HRZ[3])/SPEED_VDOT_CONSTANT_B_BY_HRZ[3];
-		VdotByZone[3] = (speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_A_BY_HRZ[4])/SPEED_VDOT_CONSTANT_B_BY_HRZ[4];
-		VdotByZone[4] = (speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_A_BY_HRZ[5])/SPEED_VDOT_CONSTANT_B_BY_HRZ[5];
+		VdotByZone[0] = (speedDistributionOfHRZ[1] - SPEED_VDOT_CONSTANT_B_BY_HRZ[1])/SPEED_VDOT_CONSTANT_A_BY_HRZ[1];
+		VdotByZone[1] = (speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_B_BY_HRZ[2])/SPEED_VDOT_CONSTANT_A_BY_HRZ[2];
+		VdotByZone[2] = (speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_B_BY_HRZ[3])/SPEED_VDOT_CONSTANT_A_BY_HRZ[3];
+		VdotByZone[3] = (speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_B_BY_HRZ[4])/SPEED_VDOT_CONSTANT_A_BY_HRZ[4];
+		VdotByZone[4] = (speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_B_BY_HRZ[5])/SPEED_VDOT_CONSTANT_A_BY_HRZ[5];
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
 	        sum += VdotByZone[i];
