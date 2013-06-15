@@ -122,6 +122,26 @@ public class ShapeIndexAlgorithm
 		return timeAtFullRecovery;
 	}
 	
+	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+		double timeToRecover = 0.0;
+		Timestamp currentTime = new Timestamp(new Date().getTime());
+		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
+			timeToRecover = (timeAtFullRecovery.getTime() - currentTime.getTime())/(1000*60*60);
+		}
+		return timeToRecover;
+	}
+	
+	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+		double timeAfterRecovery = 0.0;
+		Timestamp currentTime = new Timestamp(new Date().getTime());
+		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
+			timeAfterRecovery = (currentTime.getTime() - timeAtFullRecovery.getTime())/(1000*60*60);
+		}
+		return timeAfterRecovery;
+	}
+	
 	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_A = {{-1.0,-4.9},{-25.0,-49.9},{-60.0,-79.9},{-100.0,-149.9},{-180.0,-199.9}};
 	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_B = {{-5.0,-24.9},{-50.0,-99.9},{-80.0,-134.9},{-150.0,-189.9},{-200.0,-219.9}};
 	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_C = {{-25.0,-49.9},{-100.0,-149.9},{-135.0,-174.9},{-190.0,-219.9},{-220.0,-239.9}};
@@ -148,5 +168,20 @@ public class ShapeIndexAlgorithm
 			supercompensationPoints = SUPERCOMPENSATION_FROM_HI_BY_RANGE[5];
 		}
 		return supercompensationPoints;
+	}
+	
+	private static final double DETRAINING_THRESHOLD = 64;
+	private static final double DETRAINING_PENALTY_RATE[] = {0.1, 0.05};
+	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+		double detrainingPenalty = 0.0;
+		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		if(0 != timeAfterRecovery){
+			if(DETRAINING_THRESHOLD < timeAfterRecovery){
+				detrainingPenalty += (DETRAINING_PENALTY_RATE[1]*(DETRAINING_THRESHOLD - timeAfterRecovery));
+				timeAfterRecovery -= DETRAINING_THRESHOLD;
+			}
+			detrainingPenalty += (DETRAINING_PENALTY_RATE[0]*timeAfterRecovery);
+		}
+		return detrainingPenalty;
 	}
 }
