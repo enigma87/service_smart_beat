@@ -12,9 +12,9 @@ public class FitnessHomeostasisIndexBean {
 	private String userid;
 	private Integer traineeClassification;
 	private Double localRegressionMinimumOfHomeostasisIndex;
-	private Double currentTotalLoadOfExercise;
+	private Double currentTotalLoadOfExercise;	
 	private Timestamp currentEndTime;
-	private Double previousTotalLoadOfExercise;
+	private Double previousTotalLoadOfExercise;	
 	private Timestamp previousEndTime;
 	private Boolean supercompensationStatus;
 	public static final Boolean COMPENSATED = true;
@@ -52,7 +52,7 @@ public class FitnessHomeostasisIndexBean {
 	
 	public void setCurrentTotalLoadOfExercise(Double currentTotalLoadOfExercise) {
 		this.currentTotalLoadOfExercise = currentTotalLoadOfExercise;
-	}
+	}	
 	
 	public Timestamp getCurrentEndTime() {
 		return currentEndTime;
@@ -74,7 +74,7 @@ public class FitnessHomeostasisIndexBean {
 	public Timestamp getPreviousEndTime() {
 		return previousEndTime;
 	}
-	
+		
 	public void setPreviousEndTime(Timestamp previousEndTime) {
 		this.previousEndTime = previousEndTime;
 	}

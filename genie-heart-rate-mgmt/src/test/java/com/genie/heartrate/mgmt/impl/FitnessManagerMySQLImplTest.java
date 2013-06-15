@@ -157,7 +157,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
-		fitnessHomeostasisIndexDAO.createHomeoStasisIndexModel(fitnessHomeostasisIndexBean);
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid("ff2d-8af8");
@@ -209,7 +209,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setSupercompensationStatus(false);
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
-		fitnessHomeostasisIndexDAO.createHomeoStasisIndexModel(fitnessHomeostasisIndexBean);
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
 		fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");

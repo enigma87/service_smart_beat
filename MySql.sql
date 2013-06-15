@@ -86,6 +86,17 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
+delimiter $$
+
+CREATE TABLE genie.`fitness_speed_heartrate_model` (
+  `userid` varchar(128) NOT NULL,
+  `current_vdot` DOUBLE DEFAULT NULL,
+  `previous_vdot` DOUBLE DEFAULT NULL,   
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
 CREATE USER 'genie'@'localhost' IDENTIFIED BY 'genie';
 
 GRANT ALL PRIVILEGES ON genie.* To 'genie'@'localhost' IDENTIFIED BY 'genie';

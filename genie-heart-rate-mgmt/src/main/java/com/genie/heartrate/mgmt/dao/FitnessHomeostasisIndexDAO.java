@@ -32,7 +32,7 @@ public class FitnessHomeostasisIndexDAO {
 		this.dataSource = dataSource;
 	}
 	
-	public int createHomeoStasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
+	public int createHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
 		
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
