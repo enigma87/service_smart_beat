@@ -15,11 +15,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
+import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
+import com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO;
 import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
 import com.genie.heartrate.mgmt.util.TraineeClassification;
 /**
@@ -39,7 +41,7 @@ public class FitnessManagerMySQLImplTest {
 		userHeartRateTestDao = (UserHeartRateTestDao) appContext.getBean("userHeartRateTestDao");
 	}
 	
-	@Test
+	//@Test
 	public void testgetHeartRateTestResultsForUser() {
 		
 		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
@@ -170,12 +172,26 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz4Time(10.0);
 		fitnessTrainingSessionBean.setHrz5Time(28.0);
 		fitnessTrainingSessionBean.setHrz6Time(10.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1.0);
+		fitnessTrainingSessionBean.setHrz2Distance(2.2);
+		fitnessTrainingSessionBean.setHrz3Distance(3.6);
+		fitnessTrainingSessionBean.setHrz4Distance(4.1);
+		fitnessTrainingSessionBean.setHrz5Distance(4.3);
+		fitnessTrainingSessionBean.setHrz6Distance(1.8);
+		
+	    FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");		
+		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = new FitnessSpeedHeartRateBean();
+		fitnessSpeedHeartRateBean.setUserid("ff2d-8af8");
+		fitnessSpeedHeartRateBean.setCurrentVdot(40.5);
+		fitnessSpeedHeartRateBean.setPreviousVdot(80.0);
+		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
 
 		FitnessManager fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");
 		
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId(fitnessTrainingSessionId);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid("ff2d-8af8");
+		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid("ff2d-8af8");
 	}
 	
 	@Test
@@ -209,6 +225,9 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		
+
+		
 		
 		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
 		fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");

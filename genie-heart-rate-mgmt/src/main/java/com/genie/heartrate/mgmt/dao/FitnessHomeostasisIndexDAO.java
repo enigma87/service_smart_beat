@@ -69,7 +69,7 @@ public class FitnessHomeostasisIndexDAO {
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:currentTotalLoadOfExercise, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:currentEndTime, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[5] + "=:previousTotalLoadOfExercise, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime, "				
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime "				
 			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){

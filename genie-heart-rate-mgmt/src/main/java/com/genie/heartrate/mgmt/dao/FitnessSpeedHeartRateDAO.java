@@ -61,7 +61,7 @@ public class FitnessSpeedHeartRateDAO {
 	
 	private static final String UPDATE_SPEED_HEARTRATE_MODEL = "UPDATE " + TABLE_FITNESS_SPEED_HEARTRATE +" SET " 
 			+ COLUMNS_FITNESS_SPEED_HEARTRATE[1] + "=:currentVdot, "
-			+ COLUMNS_FITNESS_SPEED_HEARTRATE[2] + "=:previousVdot, "				
+			+ COLUMNS_FITNESS_SPEED_HEARTRATE[2] + "=:previousVdot "				
 			+ "WHERE " + COLUMNS_FITNESS_SPEED_HEARTRATE[COLUMN_USERID] + "=:userid;";
 	public int updateSpeedHeartrateModel(FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean){
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
