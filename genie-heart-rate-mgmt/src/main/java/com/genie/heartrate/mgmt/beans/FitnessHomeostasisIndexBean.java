@@ -15,10 +15,7 @@ public class FitnessHomeostasisIndexBean {
 	private Double currentTotalLoadOfExercise;	
 	private Timestamp currentEndTime;
 	private Double previousTotalLoadOfExercise;	
-	private Timestamp previousEndTime;
-	private Boolean supercompensationStatus;
-	public static final Boolean COMPENSATED = true;
-	public static final Boolean UNCOMPENSATED = false;
+	private Timestamp previousEndTime;		
 	
 
 	public String getUserid() {
@@ -77,15 +74,7 @@ public class FitnessHomeostasisIndexBean {
 		
 	public void setPreviousEndTime(Timestamp previousEndTime) {
 		this.previousEndTime = previousEndTime;
-	}
-	
-	public Boolean getSupercompensationStatus() {
-		return supercompensationStatus;
-	}
-	
-	public void setSupercompensationStatus(Boolean supercompensationStatus) {
-		this.supercompensationStatus = supercompensationStatus;
-	}
+	}		
 	
 }
 

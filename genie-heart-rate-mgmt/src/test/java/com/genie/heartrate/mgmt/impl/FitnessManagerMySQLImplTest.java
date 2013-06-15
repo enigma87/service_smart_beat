@@ -205,8 +205,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(180.0);
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoDays));
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);
-		fitnessHomeostasisIndexBean.setSupercompensationStatus(false);
+		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);		
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);

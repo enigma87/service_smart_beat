@@ -17,7 +17,7 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 public class FitnessHomeostasisIndexDAO {
 	
 	private static final String TABLE_FITNESS_HOMEOSTASIS_INDEX = "fitness_homeostasis_index_model";
-	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "trainee_classification", "local_regression_minimum_of_homeostasis_index","current_total_load_of_exercise", "current_end_time", "previous_total_load_of_exercise", "previous_end_time","supercompensation_status"};
+	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "trainee_classification", "local_regression_minimum_of_homeostasis_index","current_total_load_of_exercise", "current_end_time", "previous_total_load_of_exercise", "previous_end_time"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;
@@ -69,8 +69,7 @@ public class FitnessHomeostasisIndexDAO {
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:currentTotalLoadOfExercise, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:currentEndTime, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[5] + "=:previousTotalLoadOfExercise, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[7] + "=:supercompensationStatus "	
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime, "				
 			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){

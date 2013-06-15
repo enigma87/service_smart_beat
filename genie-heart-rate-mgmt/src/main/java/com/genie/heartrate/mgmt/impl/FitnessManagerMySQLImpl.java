@@ -140,9 +140,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		/*set current session's data*/
 		Double currentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
 		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(currentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());
-		/*set supercompensation status*/
-		fitnessHomeostasisIndexBean.setSupercompensationStatus(FitnessHomeostasisIndexBean.UNCOMPENSATED);
+		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());		
 		/*set HI local regression minimum*/
 		Double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(ShapeIndexAlgorithm.getRegressionMinimumOfHomeostasisIndex(regressedHomeostasisIndex, currentTotalLoadOfExercise));
@@ -171,10 +169,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
 		/*Check condition for supercompensation*/ 
-		if(0 == regressedHomeostasisIndex && FitnessHomeostasisIndexBean.UNCOMPENSATED == fitnessHomeostasisIndexBean.getSupercompensationStatus() ){			
-			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
-			fitnessHomeostasisIndexBean.setSupercompensationStatus(FitnessHomeostasisIndexBean.COMPENSATED);
-			fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		if(0 == regressedHomeostasisIndex){			
+			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
 		} 
 		return supercompensationPoints;
 	}
