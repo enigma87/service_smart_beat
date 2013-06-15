@@ -184,4 +184,27 @@ public class ShapeIndexAlgorithm
 		}
 		return detrainingPenalty;
 	}
+	
+	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
+	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ = {0,0.1852,0.2024,0.2232,0.2316,0.2406};
+	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ = {0,2.3743,2.5846,2.8357,3.0071,3.1978};
+	public static double calculateVdot(double[] speedDistributionOfHRZ){
+		double[] VdotByZone = new double[5];
+		double Vdot = 0.0;
+		VdotByZone[0] = (speedDistributionOfHRZ[1] - SPEED_VDOT_CONSTANT_A_BY_HRZ[1])/SPEED_VDOT_CONSTANT_B_BY_HRZ[1];
+		VdotByZone[1] = (speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_A_BY_HRZ[2])/SPEED_VDOT_CONSTANT_B_BY_HRZ[2];
+		VdotByZone[2] = (speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_A_BY_HRZ[3])/SPEED_VDOT_CONSTANT_B_BY_HRZ[3];
+		VdotByZone[3] = (speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_A_BY_HRZ[4])/SPEED_VDOT_CONSTANT_B_BY_HRZ[4];
+		VdotByZone[4] = (speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_A_BY_HRZ[5])/SPEED_VDOT_CONSTANT_B_BY_HRZ[5];
+		double sum = 0;
+	    for (int i = 0; i < VdotByZone.length; i++) {
+	        sum += VdotByZone[i];
+	    }
+	    Vdot = sum / VdotByZone.length;
+		return Vdot;
+	}
+	
+	public static double calculateCompoundedVdot(double currentVdot, double previousVdot){
+		return ((100*currentVdot)/previousVdot)-100;		
+	}
 }

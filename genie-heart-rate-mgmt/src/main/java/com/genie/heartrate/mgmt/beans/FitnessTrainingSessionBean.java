@@ -163,6 +163,18 @@ public class FitnessTrainingSessionBean {
 		
 		return timeDistributionOfHrz;
 	}
+	
+	public double[] getSpeedDistributionOfHRZ(){
+		double[] speedDistributiOnofHrz = new double[6];
+		speedDistributiOnofHrz[0] = getHrz1Distance()/getHrz1Time();
+		speedDistributiOnofHrz[1] = getHrz2Distance()/getHrz2Time();
+		speedDistributiOnofHrz[2] = getHrz3Distance()/getHrz3Time();
+		speedDistributiOnofHrz[3] = getHrz4Distance()/getHrz4Time();
+		speedDistributiOnofHrz[4] = getHrz5Distance()/getHrz5Time();
+		speedDistributiOnofHrz[5] = getHrz6Distance()/getHrz6Time();
+		
+		return speedDistributiOnofHrz;
+	}
 
 }
 
