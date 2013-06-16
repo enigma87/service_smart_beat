@@ -18,6 +18,8 @@ public class FitnessTrainingSessionDAO {
 	private static final String TABLE_FITNESS_TRAINING_SESSION = "fitness_training_session";
 	private static final String[] COLUMNS_FITNESS_TRAINING_SESSION = {"userid", "training_session_id", "start_time", "end_time", "hrz_1_time", "hrz_2_time", "hrz_3_time", "hrz_4_time", "hrz_5_time", "hrz_6_time", "hrz_1_distance","hrz_2_distance","hrz_3_distance","hrz_4_distance","hrz_5_distance","hrz_6_distance"};
 	private static final int COLUMN_TRAINING_SESSION_ID = 1;
+	private static final int COLUMN_USERID = 0;
+	private static final int COLUMN_END_TIME = 3;
 
 	private BasicDataSource dataSource;
 	
@@ -42,6 +44,7 @@ public class FitnessTrainingSessionDAO {
 		}
 		return trainingSessionId;
 	}
+	
 
 	private static final String QUERY_ALL_USING_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
 	public FitnessTrainingSessionBean getFitnessTrainingSessionById(String trainingSessionId){
@@ -49,6 +52,19 @@ public class FitnessTrainingSessionDAO {
 		try {
 			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_TRAINING_SESSION_ID, 
 					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),trainingSessionId);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block			
+		}
+		return fitnessTrainingSessionBean;
+	}
+	
+	private static final String QUERY_SELECT_END_TIME = "(" + "select max(" + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + ")" + " FROM " + TABLE_FITNESS_TRAINING_SESSION +" WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + " =?"+")" ;
+	private static final String QUERY_RECENT_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE "+COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME]+ " = "+QUERY_SELECT_END_TIME;
+	public FitnessTrainingSessionBean getRecentFitnessTrainingSessionByUserid(String Userid){
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = null;
+		try {
+			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TRAINING_SESSION_ID, 
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),Userid);
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block			
 		}

@@ -19,6 +19,7 @@ public class FitnessShapeIndexDAO {
 	private static final String[] COLUMNS_FITNESS_SHAPE_INDEX = {"userid", "shape_index", "time_of_record", "session_of_record"};
 	private static final int COLUMN_USERID = 0;
 	private static final int COLUMN_TIME_OF_RECORD = 2;
+	private static final int COLUMN_SESSION_OF_RECORD = 3;
 	
 	private BasicDataSource dataSource;
 	
@@ -41,16 +42,28 @@ public class FitnessShapeIndexDAO {
 
 	private static final String QUERY_SELECT_RECENT_TIME_OF_RECORD = "(" 
 	+ "select max(" + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + ")" 
-	+ " FROM " + TABLE_FITNESS_SHAPE_INDEX 
-	+ ")";
+	+ " FROM " + TABLE_FITNESS_SHAPE_INDEX ;
+	//+ ")";
 	
 	private static final String QUERY_RECENT_SHAPE_INDEX_MODEL = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX 
 	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + " = " + QUERY_SELECT_RECENT_TIME_OF_RECORD
-	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =? "+ ")";
 	public FitnessShapeIndexBean getRecentShapeIndexModel(String userid){
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		try{
-			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_MODEL, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class));
+			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_MODEL, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class),userid);
+		}catch(DataAccessException e){
+			// TODO Auto-generated catch block
+		}
+		return fitnessShapeIndexBean;
+	}
+	
+	private static final String QUERY_RECENT_SHAPE_INDEX_TRAINING_SESSION = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX 
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_SESSION_OF_RECORD] + " =?";
+	public FitnessShapeIndexBean getRecentShapeIndexModelByTraininSessionId(String trainingSessionId){
+		FitnessShapeIndexBean fitnessShapeIndexBean = null;
+		try{
+			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_TRAINING_SESSION, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class),trainingSessionId);
 		}catch(DataAccessException e){
 			// TODO Auto-generated catch block
 		}
@@ -61,7 +74,7 @@ public class FitnessShapeIndexDAO {
 	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_SHAPE_INDEX +" set " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[1] + "=:shapeIndex, " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[2] + "=:timeOfRecord,"	
-	+ COLUMNS_FITNESS_SHAPE_INDEX[4] + "=:sessionOfRecord"
+	+ COLUMNS_FITNESS_SHAPE_INDEX[3] + "=:sessionOfRecord"
 	+ "WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=:userid;";	
 	public int updateShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
