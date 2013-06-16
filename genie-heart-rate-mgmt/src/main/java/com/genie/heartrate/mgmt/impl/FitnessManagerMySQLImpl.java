@@ -125,35 +125,54 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			userHeartRateZoneDao.updateHeartRateZone(userHeartRateZone);
 		}
 	}
-
+	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
-		String trainingSessionId = null;
-		String userid = fitnessTrainingSessionBean.getUserid();
 		
-		/*update shape index model*/
-		FitnessShapeIndexBean previousShapeIndexBean = fitnessShapeIndexDAO.getRecentShapeIndexModel(userid);
-		FitnessShapeIndexBean nextShapeIndexBean = new FitnessShapeIndexBean();
-		nextShapeIndexBean.setUserid(userid);
-		nextShapeIndexBean.setTimeOfRecord(fitnessTrainingSessionBean.getEndTime());
-		
-		if(null != previousShapeIndexBean){
-			trainingSessionId = FitnessShapeIndexBean.getNextTrainingSessionId(previousShapeIndexBean.getSessionOfRecord());						
-			nextShapeIndexBean.setSessionOfRecord(trainingSessionId);		
-			double currentShapeIndex = previousShapeIndexBean.getShapeIndex();
-			nextShapeIndexBean.setShapeIndex(getFitnessShapeIndex(userid, currentShapeIndex));			
+		String userid = fitnessTrainingSessionBean.getUserid();		
+		String trainingSessionId = null, previousTrainingSessionId = null;		
+		FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
+		if(null != previousTrainingSession){
+			/*generate first training session id*/
+			trainingSessionId = FitnessTrainingSessionBean.getNextTrainingSessionId(previousTrainingSession.getTrainingSessionId());
+			/*save previous training session id for updating shape index*/
+			previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
 		}else{
-			trainingSessionId = FitnessShapeIndexBean.getFirstTrainingSessiontId(userid);
-			nextShapeIndexBean.setShapeIndex(ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE);
+			/*generate training session id from previous session id*/
+			trainingSessionId = FitnessTrainingSessionBean.getFirstTrainingSessiontId(userid);			
 		}
-		
-		/*Save current training session*/
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
+		/*save training session*/		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-				
-		
+		/*update shape index model*/
+		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
 		/*update homeostasis index model*/
+		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+		
+		/*update speed-heartrate model*/
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+	}
+	
+	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
+		double shapeIndex;
+		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
+		if(null == previousTrainingSessionId){
+			/*update shape index*/
+			FitnessShapeIndexBean previousShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(previousTrainingSessionId);
+			shapeIndex = getFitnessShapeIndex(userid, previousShapeIndexBean.getShapeIndex());
+		}else{
+			/*get initial shape index*/
+			shapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
+		}
+		shapeIndexBean.setUserid(userid);
+		shapeIndexBean.setShapeIndex(shapeIndex);
+		shapeIndexBean.setTimeOfRecord(fitnessTrainingSessionBean.getEndTime());
+		shapeIndexBean.setSessionOfRecord(fitnessTrainingSessionBean.getTrainingSessionId());
+		/*save shape index model*/
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(shapeIndexBean);
+	}
+	public void updateHomeostasisIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		/*backup last session's data*/
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
@@ -166,8 +185,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		Double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(ShapeIndexAlgorithm.getRegressionMinimumOfHomeostasisIndex(regressedHomeostasisIndex, currentTotalLoadOfExercise));
 		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		
-		/*update speed-heartrate model*/
+	}
+	
+	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
 		/*backup last session's data*/
 		fitnessSpeedHeartRateBean.setPreviousVdot(fitnessSpeedHeartRateBean.getCurrentVdot());
@@ -181,17 +201,23 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 	public double getFitnessShapeIndex(String userid, double currentShapeIndex) {
-		// TODO Auto-generated method stub
-		return 0.0;
+		double newShapeIndex = getFitnessSupercompensationPoints(userid)
+				+ getSpeedHeartrateFactor(userid)
+				- getFitnessDetrainingPenalty(userid);
+		
+		return newShapeIndex;
 	}
 	
 	public double getFitnessSupercompensationPoints(String userid){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getPreviousEndTime(), fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), 
+				fitnessHomeostasisIndexBean.getPreviousEndTime(), 
+				fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
 		/*Check condition for supercompensation*/ 
 		if(0 == regressedHomeostasisIndex){			
-			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
+			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), 
+					fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
 		} 
 		return supercompensationPoints;
 	}
@@ -199,7 +225,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getFitnessDetrainingPenalty(String userid){
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getCurrentEndTime(), fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
+		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
+				fitnessHomeostasisIndexBean.getCurrentEndTime(), 
+				fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
 		return detrainingPenalty;
 	}
 	
@@ -207,7 +235,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double speedHeartrateFactor = 0.0;
 		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
 		if(null != fitnessSpeedHeartRateBean.getCurrentVdot() && null != fitnessSpeedHeartRateBean.getPreviousVdot()){
-			speedHeartrateFactor = ShapeIndexAlgorithm.calculateCompoundedVdot(fitnessSpeedHeartRateBean.getCurrentVdot(), fitnessSpeedHeartRateBean.getPreviousVdot());
+			speedHeartrateFactor = ShapeIndexAlgorithm.calculateCompoundedVdot(fitnessSpeedHeartRateBean.getCurrentVdot(), 
+					fitnessSpeedHeartRateBean.getPreviousVdot());
 		}
 		return speedHeartrateFactor;
 	}

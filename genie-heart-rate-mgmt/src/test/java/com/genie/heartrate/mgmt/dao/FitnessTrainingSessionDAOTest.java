@@ -65,7 +65,7 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean1);
 		
-		FitnessTrainingSessionBean fitnessTrainingSessionBean2 = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionByUserid(userid);
+		FitnessTrainingSessionBean fitnessTrainingSessionBean2 = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
 		Assert.assertEquals("20132", fitnessTrainingSessionBean2.getTrainingSessionId());
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById("20132");

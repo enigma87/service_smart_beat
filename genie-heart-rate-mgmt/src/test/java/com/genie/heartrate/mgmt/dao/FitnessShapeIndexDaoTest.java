@@ -73,10 +73,10 @@ public class FitnessShapeIndexDaoTest {
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
 		
-		FitnessTrainingSessionBean fitnessTrainingSessionBean2 = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionByUserid(userid);
+		FitnessTrainingSessionBean fitnessTrainingSessionBean2 = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
 		String recentTrainingSessionId = fitnessTrainingSessionBean2.getTrainingSessionId();
 		Assert.assertEquals("20132", recentTrainingSessionId );
-		FitnessShapeIndexBean fitnessShapeIndexBean2 = fitnessShapeIndexDAO.getRecentShapeIndexModelByTraininSessionId(recentTrainingSessionId);
+		FitnessShapeIndexBean fitnessShapeIndexBean2 = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
 		Assert.assertEquals(150.0, fitnessShapeIndexBean2.getShapeIndex() );
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById("20132");

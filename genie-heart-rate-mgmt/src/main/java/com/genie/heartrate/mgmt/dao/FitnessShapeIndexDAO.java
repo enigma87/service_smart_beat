@@ -60,7 +60,7 @@ public class FitnessShapeIndexDAO {
 	
 	private static final String QUERY_RECENT_SHAPE_INDEX_TRAINING_SESSION = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX 
 	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_SESSION_OF_RECORD] + " =?";
-	public FitnessShapeIndexBean getRecentShapeIndexModelByTraininSessionId(String trainingSessionId){
+	public FitnessShapeIndexBean getShapeIndexModelByTrainingSessionId(String trainingSessionId){
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		try{
 			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_TRAINING_SESSION, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class),trainingSessionId);

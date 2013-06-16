@@ -60,11 +60,11 @@ public class FitnessTrainingSessionDAO {
 	
 	private static final String QUERY_SELECT_END_TIME = "(" + "select max(" + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + ")" + " FROM " + TABLE_FITNESS_TRAINING_SESSION +" WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + " =?"+")" ;
 	private static final String QUERY_RECENT_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE "+COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME]+ " = "+QUERY_SELECT_END_TIME;
-	public FitnessTrainingSessionBean getRecentFitnessTrainingSessionByUserid(String Userid){
+	public FitnessTrainingSessionBean getRecentFitnessTrainingSessionForUser(String userid){
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = null;
 		try {
 			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TRAINING_SESSION_ID, 
-					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),Userid);
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),userid);
 		} catch (DataAccessException e) {
 			// TODO Auto-generated catch block			
 		}
