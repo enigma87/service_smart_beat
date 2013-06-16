@@ -68,8 +68,7 @@ delimiter $$
 CREATE TABLE genie.`fitness_shape_index_model` (
   `userid` varchar(128) NOT NULL,  
   `shape_index` DOUBLE DEFAULT NULL,
-  `time_of_record` timestamp NULL DEFAULT NULL,
-  `session_of_record_short_id` varchar(128) NOT NULL,
+  `time_of_record` timestamp NULL DEFAULT NULL,  
   `session_of_record` varchar(128) NOT NULL,
   PRIMARY KEY(`session_of_record`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$

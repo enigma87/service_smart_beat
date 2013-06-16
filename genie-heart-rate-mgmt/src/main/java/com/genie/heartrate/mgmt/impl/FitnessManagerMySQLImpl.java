@@ -131,8 +131,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		/*Save current training session*/
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		String userid = fitnessTrainingSessionBean.getUserid();
-		/*update Homeostasis index model*/
+		String userid = fitnessTrainingSessionBean.getUserid();		
+		
+		/*update homeostasis index model*/
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		/*backup last session's data*/
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());

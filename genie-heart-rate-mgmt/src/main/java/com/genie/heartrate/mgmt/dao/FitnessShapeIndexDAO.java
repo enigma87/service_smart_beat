@@ -16,7 +16,7 @@ import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 
 public class FitnessShapeIndexDAO {
 	private static final String TABLE_FITNESS_SHAPE_INDEX = "fitness_shape_index_model";
-	private static final String[] COLUMNS_FITNESS_SHAPE_INDEX = {"userid", "shape_index", "time_of_record", "session_of_record_short_id", "session_of_record"};
+	private static final String[] COLUMNS_FITNESS_SHAPE_INDEX = {"userid", "shape_index", "time_of_record", "session_of_record"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;
@@ -60,8 +60,7 @@ public class FitnessShapeIndexDAO {
 	
 	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_SHAPE_INDEX +" set " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[1] + "=:shapeIndex, " 
-	+ COLUMNS_FITNESS_SHAPE_INDEX[2] + "=:timeOfRecord,"
-	+ COLUMNS_FITNESS_SHAPE_INDEX[3] + "=:sessionOfRecordShortId,"
+	+ COLUMNS_FITNESS_SHAPE_INDEX[2] + "=:timeOfRecord,"	
 	+ COLUMNS_FITNESS_SHAPE_INDEX[4] + "=:sessionOfRecord"
 	+ "WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=:userid;";	
 	public int updateShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){

@@ -16,8 +16,7 @@ public class FitnessShapeIndexDaoTest {
 	    FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO)appContext.getBean("fitnessShapeIndexDAO");
 		
 		FitnessShapeIndexBean fitnessShapeIndexBean = new FitnessShapeIndexBean();
-		fitnessShapeIndexBean.setUserid("1001-234-ed34");
-		fitnessShapeIndexBean.setTraineeClassification(2);
+		fitnessShapeIndexBean.setUserid("1001-234-ed34");		
 		fitnessShapeIndexBean.setShapeIndex(90.9);
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
 			
