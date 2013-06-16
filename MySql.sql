@@ -68,7 +68,10 @@ delimiter $$
 CREATE TABLE genie.`fitness_shape_index_model` (
   `userid` varchar(128) NOT NULL,  
   `shape_index` DOUBLE DEFAULT NULL,
-  PRIMARY KEY(`userid`)
+  `time_of_record` timestamp NULL DEFAULT NULL,
+  `session_of_record_short_id` varchar(128) NOT NULL,
+  `session_of_record` varchar(128) NOT NULL,
+  PRIMARY KEY(`session_of_record`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$
@@ -80,7 +83,7 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `current_total_load_of_exercise` DOUBLE DEFAULT NULL,
   `current_end_time` timestamp NULL DEFAULT NULL,
   `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
-  `previous_end_time` timestamp NULL DEFAULT NULL,  
+  `previous_end_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

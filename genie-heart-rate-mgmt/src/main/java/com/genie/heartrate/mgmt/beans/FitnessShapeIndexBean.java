@@ -1,5 +1,7 @@
 package com.genie.heartrate.mgmt.beans;
 
+import java.sql.Timestamp;
+
 
 /**
  * @author dhasarathy
@@ -7,9 +9,11 @@ package com.genie.heartrate.mgmt.beans;
 
 public class FitnessShapeIndexBean {
 	
-	private String userid;
-	private Integer traineeClassification;
+	private String userid;	
 	private Double shapeIndex;
+	private Timestamp timeOfRecord;
+	private String sessionOfRecordShortId;
+	private String sessionOfRecord;
 	
 	public String getUserid() {
 		return userid;
@@ -18,21 +22,37 @@ public class FitnessShapeIndexBean {
 	public void setUserid(String userid) {
 		this.userid = userid;
 	}
-	
-    public Integer getTraineeClassification() {
-	return traineeClassification;
-    }
-	
-    public void setTraineeClassification(Integer traineeClassification) {
-		this.traineeClassification = traineeClassification;
-	}
-    
+
 	public Double getShapeIndex() {
 		return shapeIndex;
 	}
 	
 	public void setShapeIndex(Double shapeIndex) {
 		this.shapeIndex = shapeIndex;
+	}
+	
+	public Timestamp getTimeOfRecord() {
+		return timeOfRecord;
+	}
+	
+	public void setTimeOfRecord(Timestamp timeOfRecord) {
+		this.timeOfRecord = timeOfRecord;
+	}
+	
+	public String getSessionOfRecordShortId() {
+		return sessionOfRecordShortId;
+	}
+	
+	public void setSessionOfRecordShortId(String sessionOfRecordShortId) {
+		this.sessionOfRecordShortId = sessionOfRecordShortId;
+	}
+	
+	public String getSessionOfRecord() {
+		return sessionOfRecord;
+	}
+	
+	public void setSessionOfRecord(String sessionOfRecord) {
+		this.sessionOfRecord = sessionOfRecord;
 	}
 }
 
