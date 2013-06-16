@@ -138,7 +138,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
-		Integer fitnessTrainingSessionId = 20131;
+		String fitnessTrainingSessionId = "20131";
 	    
 		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = null;
@@ -200,7 +200,7 @@ public class FitnessManagerMySQLImplTest {
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
 		long nowPastTwoDays = now - (3600000*48);
-		Integer fitnessTrainingSessionId = 20131;
+		String fitnessTrainingSessionId = "20131";
 	    
 		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = null;

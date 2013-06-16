@@ -155,7 +155,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessSpeedHeartRateDAO.updateSpeedHeartrateModel(fitnessSpeedHeartRateBean);
 	}
 	
-	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId){
+	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId){
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 

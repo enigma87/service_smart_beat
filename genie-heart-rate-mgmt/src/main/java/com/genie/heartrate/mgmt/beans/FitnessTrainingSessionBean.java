@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 public class FitnessTrainingSessionBean {
 	private String userid;
-	private Integer trainingSessionId;
+	private String trainingSessionId;
 	private Timestamp startTime;
 	private Timestamp endTime;	
 	private Double hrz1Time;
@@ -32,12 +32,12 @@ public class FitnessTrainingSessionBean {
 		this.userid = userid;
 	}
 	
-	public void setTrainingSessionId(Integer trainingSessionId) {
-		this.trainingSessionId = trainingSessionId;
+	public String getTrainingSessionId() {
+		return trainingSessionId;
 	}
 	
-	public Integer getTrainingSessionId() {
-		return trainingSessionId;
+	public void setTrainingSessionId(String trainingSessionId) {
+		this.trainingSessionId = trainingSessionId;
 	}
 	
 	public void setStartTime(Timestamp startTime) {

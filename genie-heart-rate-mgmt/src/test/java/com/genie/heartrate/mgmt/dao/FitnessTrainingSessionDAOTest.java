@@ -23,7 +23,7 @@ public class FitnessTrainingSessionDAOTest {
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
-	private static final Integer trainingSessionId = 20131;
+	private static final String trainingSessionId = "20131";
 	
 	@BeforeClass
 	public static void setupBeforeClass(){

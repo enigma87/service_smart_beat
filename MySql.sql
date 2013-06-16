@@ -45,7 +45,7 @@ delimiter $$
 
 CREATE TABLE genie.`fitness_training_session` (
   `userid` varchar(128) NOT NULL,
-  `training_session_id` MEDIUMINT UNSIGNED NOT NULL,
+  `training_session_id` varchar(128) NOT NULL,
   `start_time` timestamp NULL DEFAULT NULL,
   `end_time` timestamp NULL DEFAULT NULL,
   `hrz_1_time` DOUBLE DEFAULT NULL,
@@ -66,9 +66,8 @@ CREATE TABLE genie.`fitness_training_session` (
 delimiter $$
 
 CREATE TABLE genie.`fitness_shape_index_model` (
-  `userid` varchar(128) NOT NULL,
-  `trainee_classification` varchar(20) DEFAULT NULL,
-  `shape_index` DOUBLE DEFAULT NULL,  
+  `userid` varchar(128) NOT NULL,  
+  `shape_index` DOUBLE DEFAULT NULL,
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

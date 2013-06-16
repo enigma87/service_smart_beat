@@ -21,7 +21,7 @@ public interface FitnessManager
 	public void saveHeartRateZonesForUser(UserHeartRateZone userHeartRateZone);
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
-	public void deleteFitnessTrainingSessionbyTrainingSessionId(Integer fitnessTrainingSessionId);
+	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
 	
 	public FitnessShapeIndexBean getFitnessShapeIndex(String userid);
 }

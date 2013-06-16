@@ -44,7 +44,7 @@ public class FitnessTrainingSessionDAO {
 	}
 
 	private static final String QUERY_ALL_USING_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
-	public FitnessTrainingSessionBean getFitnessTrainingSessionById(Integer trainingSessionId){
+	public FitnessTrainingSessionBean getFitnessTrainingSessionById(String trainingSessionId){
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = null;
 		try {
 			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_TRAINING_SESSION_ID, 
@@ -56,7 +56,7 @@ public class FitnessTrainingSessionDAO {
 	}
 	
 	private static final String DELETE_SESSION_USING_TRAINING_SESSION_ID = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
-	public void deleteFitnessTrainingSessionById(Integer fitnessTrainingSessionId){
+	public void deleteFitnessTrainingSessionById(String fitnessTrainingSessionId){
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = getFitnessTrainingSessionById(fitnessTrainingSessionId);
 		if(null != fitnessTrainingSessionBean){
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
