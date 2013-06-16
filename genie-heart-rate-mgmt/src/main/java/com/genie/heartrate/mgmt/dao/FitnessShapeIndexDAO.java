@@ -18,6 +18,7 @@ public class FitnessShapeIndexDAO {
 	private static final String TABLE_FITNESS_SHAPE_INDEX = "fitness_shape_index_model";
 	private static final String[] COLUMNS_FITNESS_SHAPE_INDEX = {"userid", "shape_index", "time_of_record", "session_of_record"};
 	private static final int COLUMN_USERID = 0;
+	private static final int COLUMN_TIME_OF_RECORD = 2;
 	
 	private BasicDataSource dataSource;
 	
@@ -38,25 +39,24 @@ public class FitnessShapeIndexDAO {
 				.execute(new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
 	}
 
-	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
-	public FitnessShapeIndexBean getShapeIndexModelByUserId(String userid){
+	private static final String QUERY_SELECT_RECENT_TIME_OF_RECORD = "(" 
+	+ "select max(" + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + ")" 
+	+ " FROM " + TABLE_FITNESS_SHAPE_INDEX 
+	+ ")";
+	
+	private static final String QUERY_RECENT_SHAPE_INDEX_MODEL = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX 
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + " = " + QUERY_SELECT_RECENT_TIME_OF_RECORD
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
+	public FitnessShapeIndexBean getRecentShapeIndexModel(String userid){
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		try{
-			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_USERID, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class));
+			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_MODEL, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class));
 		}catch(DataAccessException e){
 			// TODO Auto-generated catch block
 		}
 		return fitnessShapeIndexBean;
 	}
-	
-	private static final String DELETE_SHAPE_INDEX_MODEL_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
-	public void deleteShapeIndexModelByUserid(String userid){
-		FitnessShapeIndexBean fitnessShapeIndexBean = getShapeIndexModelByUserId(userid);
-		if(null != fitnessShapeIndexBean){
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			jdbcTemplate.update(DELETE_SHAPE_INDEX_MODEL_BY_USER_ID);
-		}
-	}
+		
 	
 	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_SHAPE_INDEX +" set " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[1] + "=:shapeIndex, " 
