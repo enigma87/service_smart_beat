@@ -127,11 +127,31 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+		String trainingSessionId = null;
+		String userid = fitnessTrainingSessionBean.getUserid();
+		
+		/*update shape index model*/
+		FitnessShapeIndexBean previousShapeIndexBean = fitnessShapeIndexDAO.getRecentShapeIndexModel(userid);
+		FitnessShapeIndexBean nextShapeIndexBean = new FitnessShapeIndexBean();
+		nextShapeIndexBean.setUserid(userid);
+		nextShapeIndexBean.setTimeOfRecord(fitnessTrainingSessionBean.getEndTime());
+		
+		if(null != previousShapeIndexBean){
+			trainingSessionId = FitnessShapeIndexBean.getNextTrainingSessionId(previousShapeIndexBean.getSessionOfRecord());						
+			nextShapeIndexBean.setSessionOfRecord(trainingSessionId);		
+			double currentShapeIndex = previousShapeIndexBean.getShapeIndex();
+			nextShapeIndexBean.setShapeIndex(getFitnessShapeIndex(userid, currentShapeIndex));			
+		}else{
+			trainingSessionId = FitnessShapeIndexBean.getFirstTrainingSessiontId(userid);
+			nextShapeIndexBean.setShapeIndex(ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE);
+		}
 		
 		/*Save current training session*/
+		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		String userid = fitnessTrainingSessionBean.getUserid();		
+				
+		
 		
 		/*update homeostasis index model*/
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
@@ -160,9 +180,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
-	public FitnessShapeIndexBean getFitnessShapeIndex(String userid) {
+	public double getFitnessShapeIndex(String userid, double currentShapeIndex) {
 		// TODO Auto-generated method stub
-		return null;
+		return 0.0;
 	}
 	
 	public double getFitnessSupercompensationPoints(String userid){

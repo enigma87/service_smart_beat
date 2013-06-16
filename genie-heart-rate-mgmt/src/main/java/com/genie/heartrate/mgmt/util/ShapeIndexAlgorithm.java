@@ -20,6 +20,7 @@ import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
  */
 public class ShapeIndexAlgorithm 
 {
+	public static final double SHAPE_INDEX_INITIAL_VALUE = 100.0;
 
 	public static Map<String, Object> parseHeartRates(String json)
 	{
@@ -216,5 +217,5 @@ public class ShapeIndexAlgorithm
 		regressionModel.addData(timeSHRPairs);
 		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
 		return slopeOfTimeRegressionOfSHR;
-	}
+	}		
 }
