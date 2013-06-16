@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.math.stat.regression.SimpleRegression;
+
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 
@@ -206,5 +208,13 @@ public class ShapeIndexAlgorithm
 	
 	public static double calculateCompoundedVdot(double currentVdot, double previousVdot){
 		return ((100*currentVdot)/previousVdot)-100;		
+	}
+	
+	public static double calculateSlopeOfTimeRegressionOfStandingHeartRate(double[][] timeSHRPairs){
+		double slopeOfTimeRegressionOfSHR = 0.0;
+		SimpleRegression regressionModel = new SimpleRegression();
+		regressionModel.addData(timeSHRPairs);
+		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
+		return slopeOfTimeRegressionOfSHR;
 	}
 }
