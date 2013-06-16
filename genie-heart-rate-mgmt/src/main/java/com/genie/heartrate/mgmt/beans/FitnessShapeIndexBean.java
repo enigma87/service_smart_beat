@@ -70,7 +70,7 @@ public class FitnessShapeIndexBean {
 		if(currentYear.equals(parts[INDEX_YEAR])){
 			nextCount = Integer.parseInt(parts[INDEX_TRAINING_SESSION_COUNT]) + 1;			
 		}else{
-			nextCount = 0;
+			nextCount = 1;
 		}
 		nextTrainingSessionId = userid + DELIMITER_TRAINING_SESSION_ID + currentYear + DELIMITER_TRAINING_SESSION_ID + nextCount;
 		return nextTrainingSessionId;
