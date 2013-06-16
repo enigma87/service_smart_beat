@@ -80,5 +80,14 @@ public class FitnessShapeIndexDAO {
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		return jdbcTemplate.update(UPDATE_SHAPE_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
 	}
+	
+	private static final String DELETE_SHAPE_INDEX_MODEL_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
+	public void deleteShapeIndexModel(String userid){
+		FitnessShapeIndexBean fitnessShapeIndexBean = getRecentShapeIndexModel(userid);
+		if (null != fitnessShapeIndexBean ){
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		jdbcTemplate.update(DELETE_SHAPE_INDEX_MODEL_BY_USER_ID ,userid );
+		}
+	}
 }
 
