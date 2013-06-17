@@ -1,0 +1,74 @@
+trainee_ajay{
+	trainee_classification: untrained	
+}
+
+training_session{
+	start_time:08:00
+	end_time:08:40
+	hrz1_time:00:12
+	hrz2_time:00:14
+	hrz3_time:00:08
+	hrz4_time:00:06
+	hrz5_time:00:00
+	hrz6_time:00:00
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+trainee_beena{
+	trainee_classification: lightly_trained	
+}
+
+training_session{
+	start_time:12:12
+	end_time:13:12
+	hrz1_time:00:10
+	hrz2_time:00:15
+	hrz3_time:00:05
+	hrz4_time:00:30
+	hrz5_time:00:00
+	hrz6_time:00:00
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+trainee_chitra{
+	trainee_classification: moderately_trained	
+}
+
+training_session{
+	start_time:17:12
+	end_time:18:02
+	hrz1_time:00:04
+	hrz2_time:00:08
+	hrz3_time:00:11
+	hrz4_time:00:03
+	hrz5_time:00:10
+	hrz6_time:00:14
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+trainee_dinesh{
+	trainee_classification: well_trained	
+}
+
+training_session{
+	start_time:17:45
+	end_time:20:45
+	hrz1_time:00:28
+	hrz2_time:01:32
+	hrz3_time:00:20
+	hrz4_time:00:10
+	hrz5_time:00:15
+	hrz6_time:00:15
+}
+---------------------------------------------------------------------------------------------------------------------------------------
+trainee_elango{
+	trainee_classification: elite	
+}
+
+training_session{
+	start_time:16:10
+	end_time:18:10
+	hrz1_time:00:30
+	hrz2_time:00:10
+	hrz3_time:00:10
+	hrz4_time:00:40
+	hrz5_time:00:18
+	hrz6_time:00:12
+}
