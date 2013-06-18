@@ -12,11 +12,16 @@ public class FitnessHomeostasisIndexBean {
 	private String userid;
 	private Integer traineeClassification;
 	private Double localRegressionMinimumOfHomeostasisIndex;
+	private Double recentMinimumOfHomeostasisIndex;
 	private Double currentTotalLoadOfExercise;	
 	private Timestamp currentEndTime;
 	private Double previousTotalLoadOfExercise;	
 	private Timestamp previousEndTime;		
 	
+	public static final Integer UNTRAINED = 1;
+	public FitnessHomeostasisIndexBean() {
+		traineeClassification = UNTRAINED;
+	}
 
 	public String getUserid() {
 		return userid;
@@ -41,6 +46,15 @@ public class FitnessHomeostasisIndexBean {
 	public void setLocalRegressionMinimumOfHomeostasisIndex(
 			Double localRegressionMinimumOfHomeostasisIndex) {
 		this.localRegressionMinimumOfHomeostasisIndex = localRegressionMinimumOfHomeostasisIndex;
+	}
+	
+	public Double getRecentMinimumOfHomeostasisIndex() {
+		return recentMinimumOfHomeostasisIndex;
+	}
+	
+	public void setRecentMinimumOfHomeostasisIndex(
+			Double recentMinimumOfHomeostasisIndex) {
+		this.recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
 	}
 	
 	public Double getCurrentTotalLoadOfExercise() {

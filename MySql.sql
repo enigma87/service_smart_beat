@@ -79,6 +79,7 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `userid` varchar(128) NOT NULL,
   `trainee_classification` INTEGER DEFAULT NULL,
   `local_regression_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
+  `recent_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
   `current_total_load_of_exercise` DOUBLE DEFAULT NULL,
   `current_end_time` timestamp NULL DEFAULT NULL,
   `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  

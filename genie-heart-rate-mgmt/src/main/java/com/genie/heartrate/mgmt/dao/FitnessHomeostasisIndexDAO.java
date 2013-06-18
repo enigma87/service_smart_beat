@@ -17,7 +17,7 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 public class FitnessHomeostasisIndexDAO {
 	
 	private static final String TABLE_FITNESS_HOMEOSTASIS_INDEX = "fitness_homeostasis_index_model";
-	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "trainee_classification", "local_regression_minimum_of_homeostasis_index","current_total_load_of_exercise", "current_end_time", "previous_total_load_of_exercise", "previous_end_time"};
+	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "trainee_classification", "local_regression_minimum_of_homeostasis_index","recent_minimum_of_homeostasis_index","current_total_load_of_exercise", "current_end_time", "previous_total_load_of_exercise", "previous_end_time"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;
@@ -66,10 +66,11 @@ public class FitnessHomeostasisIndexDAO {
 	private static final String UPDATE_HOMEOSTASIS_INDEX_MODEL = "UPDATE " + TABLE_FITNESS_HOMEOSTASIS_INDEX +" SET " 
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[1] + "=:traineeClassification, "
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[2] + "=:localRegressionMinimumOfHomeostasisIndex, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:currentTotalLoadOfExercise, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:currentEndTime, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[5] + "=:previousTotalLoadOfExercise, "
-			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousEndTime "				
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[3] + "=:recentMinimumOfHomeostasisIndex, "
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[4] + "=:currentTotalLoadOfExercise, "
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[5] + "=:currentEndTime, "
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[6] + "=:previousTotalLoadOfExercise, "
+			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[7] + "=:previousEndTime "				
 			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
