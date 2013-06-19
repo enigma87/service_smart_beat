@@ -51,7 +51,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>Genie Smart Heart Rate Service</servlet-name>
-		<url-pattern>/rest/shrs/v1.0/*</url-pattern>
+		<url-pattern>/v1.0/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>

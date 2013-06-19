@@ -22,5 +22,7 @@ public interface FitnessManager
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
 	
-	public double getFitnessShapeIndex(String userid, double currentShapeIndex);
+	public double getFitnessShapeIndex(String recentTrainingSessionId);
+	
+	public String getRecentTrainingSessionId(String userid);
 }

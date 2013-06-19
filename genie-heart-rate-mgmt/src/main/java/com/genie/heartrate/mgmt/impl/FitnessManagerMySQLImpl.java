@@ -159,8 +159,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
 		if(null != previousTrainingSessionId){
 			/*update shape index*/
-			FitnessShapeIndexBean previousShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(previousTrainingSessionId);
-			shapeIndex = getFitnessShapeIndex(userid, previousShapeIndexBean.getShapeIndex());
+			shapeIndex = getFitnessShapeIndex(previousTrainingSessionId);
 		}else{
 			/*get initial shape index*/
 			shapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
@@ -222,10 +221,12 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
-	public double getFitnessShapeIndex(String userid, double currentShapeIndex) {
-		double newShapeIndex = getFitnessSupercompensationPoints(userid)
-				+ getSpeedHeartrateFactor(userid)
-				- getFitnessDetrainingPenalty(userid);
+	public double getFitnessShapeIndex(String recentTrainingSessionId) {
+		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
+		double newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
+				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())
+				+ getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid())
+				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid());
 		
 		return newShapeIndex;
 	}
@@ -262,6 +263,17 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 					fitnessSpeedHeartRateBean.getPreviousVdot());
 		}
 		return speedHeartrateFactor;
+	}
+	
+	public String getRecentTrainingSessionId(String userid){
+		
+		String recentTrainingSessionId = null;
+		
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
+		if(null != fitnessTrainingSessionBean){
+			recentTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+		}
+		return recentTrainingSessionId;
 	}
 
 }
