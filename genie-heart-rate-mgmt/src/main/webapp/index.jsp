@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-    <title>Facebook Login</title>
+    <title>Facebook Login Karuna</title>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 </head>
 <body>
