@@ -175,12 +175,16 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void updateHomeostasisIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		
 		double regressedHomeostasisIndex = 0.0;
+		Double recentMinimumOfHomeostasisIndex = 0.0;
+		Double localRegressionMinimumOfHomeostasisIndex = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
+			recentMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex();
+			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
 			fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
 			fitnessHomeostasisIndexBean.setPreviousEndTime(fitnessHomeostasisIndexBean.getCurrentEndTime());
-			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		}else{
 			/*creating Homeostasis Index Model for the user*/
 			fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
@@ -189,11 +193,17 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		}
 		/*set current session's data*/
+		
 		Double currentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
+		recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex - currentTotalLoadOfExercise;
+		if (recentMinimumOfHomeostasisIndex < localRegressionMinimumOfHomeostasisIndex){
+			localRegressionMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
+		}
 		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(currentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());		
+		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());	
+		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
 		/*set HI local regression minimum*/
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(ShapeIndexAlgorithm.getRegressionMinimumOfHomeostasisIndex(regressedHomeostasisIndex, currentTotalLoadOfExercise));
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 	}
 	

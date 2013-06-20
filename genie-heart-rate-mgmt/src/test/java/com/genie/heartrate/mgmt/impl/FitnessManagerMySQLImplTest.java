@@ -107,6 +107,7 @@ public class FitnessManagerMySQLImplTest {
 		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
 		UserHeartRateTest uhrt = new UserHeartRateTest();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
+		System.out.println(timestamp);
 		
 		uhrt.setUserid("123456789");
 		uhrt.setRestingHeartRate(56);
@@ -146,7 +147,7 @@ public class FitnessManagerMySQLImplTest {
 		long twoDaysAfterNow = now + (2*24*3600000);
 		long twoDaysAfterNowPastThreeHours = twoDaysAfterNow - (3*3600000);
 		String fitnessTrainingSessionId = "20131";
-	    
+	    System.out.println(new Timestamp(now));
 		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = null;
 		try {

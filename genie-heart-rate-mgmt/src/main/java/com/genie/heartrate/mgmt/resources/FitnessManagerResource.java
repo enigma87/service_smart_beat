@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
 import com.genie.heartrate.mgmt.core.FitnessManager;
-import com.genie.heartrate.mgmt.json.SaveTrainingSessionRequestJson;
-import com.genie.heartrate.mgmt.json.SaveTrainingSessionResponseJson;
+import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionRequestJson;
+import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.heartrate.mgmt.json.ShapeIndexResponseJson;
 import com.genie.heartrate.mgmt.util.Formatter;
 import com.genie.mgmt.GoodResponseObject;
@@ -80,10 +80,11 @@ public class FitnessManagerResource {
 		@Path("{userid}/saveFitnessTrainingSession")
 		@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 		@Produces(MediaType.APPLICATION_JSON)
-		public String saveFitnessTrainingSession(SaveTrainingSessionRequestJson saveTrainingSessionRequestJson)
+		public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson)
 		{
 
-			/*FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
+			/*saveTrainingSessionRequestJson.setUserid(userid);
+			 FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
 			
 			fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 			
@@ -93,7 +94,7 @@ public class FitnessManagerResource {
 			saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
 			saveTrainingSessionResponseJson.setShapeIndex(shapeIndex);*/
 			
-			SaveTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveTrainingSessionResponseJson();
+			SaveFitnessTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 			saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
 			saveTrainingSessionResponseJson.setShapeIndex(100.0);
 			
