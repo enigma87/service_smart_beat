@@ -1,10 +1,6 @@
 package com.genie.heartrate.mgmt.impl;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -18,15 +14,10 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
-import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO;
-import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
-import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
-import com.genie.heartrate.mgmt.util.TraineeClassification;
 /**
  * @author vidhun
  *
@@ -34,110 +25,14 @@ import com.genie.heartrate.mgmt.util.TraineeClassification;
 
 public class FitnessManagerMySQLImplTest {
 
-	 ApplicationContext appContext;
-	UserHeartRateTestDao userHeartRateTestDao;
+	ApplicationContext appContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	
 	@Before
-	public void setUpBeforeClass() throws Exception 
-	{
-		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		userHeartRateTestDao = (UserHeartRateTestDao) appContext.getBean("userHeartRateTestDao");
-	}
-	
-	//@Test
-	public void testgetHeartRateTestResultsForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		
-		uhrt1.setUserid("123456789");
-		uhrt1.setRestingHeartRate(56);
-		uhrt1.setMaximalHeartRate(168);
-		uhrt1.setThresholdHeartRate(108);
-		uhrt1.setRestingHeartRateTimestamp(timestamp);
-		uhrt1.setMaximalHeartRateTimestamp(timestamp);
-		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
-		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
-		Assert.assertNotNull(uhrt2);
-		
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
-			
+	public void setUpBeforeClass() throws Exception{
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");	
 	}
 
-	
-	//@Test
-	public void testsaveHeartRateTestResultsForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		uhrt1.setUserid("123456789");
-		uhrt1.setRestingHeartRate(56);
-		uhrt1.setMaximalHeartRate(168);
-		uhrt1.setThresholdHeartRate(108);
-		uhrt1.setRestingHeartRateTimestamp(timestamp);
-		uhrt1.setMaximalHeartRateTimestamp(timestamp);
-		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
-		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
-		Assert.assertEquals("123456789", uhrt2.getUserid());
-		Assert.assertEquals(new Integer(56), uhrt2.getRestingHeartRate());
-		Assert.assertEquals(new Integer(168), uhrt2.getMaximalHeartRate());
-		Assert.assertEquals(new Integer(108), uhrt2.getThresholdHeartRate());
-		Assert.assertNotNull(uhrt2.getRestingHeartRateTimestamp());
-		Assert.assertNotNull(uhrt2.getMaximalHeartRateTimestamp());
-		Assert.assertNotNull(uhrt2.getThresholdHeartRateTimestamp());
-		
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
-			
-	}
-	
-	//@Test
-	public void testgetHeartRateZonesForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		System.out.println(timestamp);
-		
-		uhrt.setUserid("123456789");
-		uhrt.setRestingHeartRate(56);
-		uhrt.setMaximalHeartRate(168);
-		uhrt.setThresholdHeartRate(108);
-		uhrt.setRestingHeartRateTimestamp(timestamp);
-		uhrt.setMaximalHeartRateTimestamp(timestamp);
-		uhrt.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt);
-		
-		UserHeartRateZone uhrz = hrMgmt.getHeartRateZonesForUser("123456789");
-		Assert.assertEquals("123456789", uhrz.getUserid());
-		Assert.assertEquals(new Double(56.0), uhrz.getHrz1Start());
-		Assert.assertEquals(new Double(82.0), uhrz.getHrz1End());
-		Assert.assertEquals(new Double(82.001), uhrz.getHrz2Start());
-		Assert.assertEquals(new Double(95.0), uhrz.getHrz2End());
-		Assert.assertEquals(new Double(95.001), uhrz.getHrz3Start());
-		Assert.assertEquals(new Double(103.519), uhrz.getHrz3End());
-		Assert.assertEquals(new Double(103.52), uhrz.getHrz4Start());
-		Assert.assertEquals(new Double(110.24), uhrz.getHrz4End());
-		Assert.assertEquals(new Double(110.241), uhrz.getHrz5Start());
-		Assert.assertEquals(new Double(161.279), uhrz.getHrz5End());
-		Assert.assertEquals(new Double(161.28), uhrz.getHrz6Start());
-		Assert.assertEquals(new Double(168.0), uhrz.getHrz6End());
-   
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");					
-	}	
-	
 	@Test
 	public void testSaveFitnessTrainingSession(){
 		
