@@ -180,11 +180,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
-			recentMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex();
 			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
-			fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
-			fitnessHomeostasisIndexBean.setPreviousEndTime(fitnessHomeostasisIndexBean.getCurrentEndTime());
-			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getPreviousEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getRecentEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		}else{
 			/*creating Homeostasis Index Model for the user*/
 			fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
@@ -194,13 +191,13 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		/*set current session's data*/
 		
-		Double currentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
-		recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex - currentTotalLoadOfExercise;
+		Double recentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
+		recentMinimumOfHomeostasisIndex = regressedHomeostasisIndex - recentTotalLoadOfExercise;
 		if (recentMinimumOfHomeostasisIndex < localRegressionMinimumOfHomeostasisIndex){
 			localRegressionMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
 		}
-		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(currentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setCurrentEndTime(fitnessTrainingSessionBean.getEndTime());	
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
+		fitnessHomeostasisIndexBean.setRecentEndTime(fitnessTrainingSessionBean.getEndTime());	
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
 		/*set HI local regression minimum*/
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
@@ -245,8 +242,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), 
-				fitnessHomeostasisIndexBean.getPreviousEndTime(), 
-				fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+				fitnessHomeostasisIndexBean.getRecentEndTime(), 
+				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		/*Check condition for supercompensation*/ 
 		
 		if(0 == regressedHomeostasisIndex){			
@@ -260,8 +257,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
-				fitnessHomeostasisIndexBean.getCurrentEndTime(), 
-				fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
+				fitnessHomeostasisIndexBean.getRecentEndTime(), 
+				fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
 		return detrainingPenalty;
 	}
 	
