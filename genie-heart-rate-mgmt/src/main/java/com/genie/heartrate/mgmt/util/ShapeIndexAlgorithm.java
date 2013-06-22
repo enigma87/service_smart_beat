@@ -63,7 +63,8 @@ public class ShapeIndexAlgorithm
 			double root2 = (-TTR_CONSTANT_B - d)/(2.0*TTR_CONSTANT_A);
 			double minRoot = Math.min(root1, root2);
 			long timeToRecoverInSeconds = new Double(minRoot*60*60).longValue();
-			timeAtFullRecovery = new Timestamp(trainingSessionEndTime.getTime()+timeToRecoverInSeconds);
+			Timestamp timestamp = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));
+			timeAtFullRecovery = timestamp;
 		}		
 		return timeAtFullRecovery;
 	}

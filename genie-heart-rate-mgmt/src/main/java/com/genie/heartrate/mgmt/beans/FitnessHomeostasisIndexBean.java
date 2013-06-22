@@ -13,8 +13,8 @@ public class FitnessHomeostasisIndexBean {
 	private Integer traineeClassification;
 	private Double localRegressionMinimumOfHomeostasisIndex;
 	private Double recentMinimumOfHomeostasisIndex;
-	private Double currentTotalLoadOfExercise;	
-	private Timestamp currentEndTime;
+	private Double recentTotalLoadOfExercise;	
+	private Timestamp recentEndTime;
 	private Double previousTotalLoadOfExercise;	
 	private Timestamp previousEndTime;		
 	
@@ -57,20 +57,20 @@ public class FitnessHomeostasisIndexBean {
 		this.recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
 	}
 	
-	public Double getCurrentTotalLoadOfExercise() {
-		return currentTotalLoadOfExercise;
+	public Double getRecentTotalLoadOfExercise() {
+		return recentTotalLoadOfExercise;
 	}
 	
-	public void setCurrentTotalLoadOfExercise(Double currentTotalLoadOfExercise) {
-		this.currentTotalLoadOfExercise = currentTotalLoadOfExercise;
+	public void setRecentTotalLoadOfExercise(Double currentTotalLoadOfExercise) {
+		this.recentTotalLoadOfExercise = currentTotalLoadOfExercise;
 	}	
 	
-	public Timestamp getCurrentEndTime() {
-		return currentEndTime;
+	public Timestamp getRecentEndTime() {
+		return recentEndTime;
 	}
 	
-	public void setCurrentEndTime(Timestamp currentEndTime) {
-		this.currentEndTime = currentEndTime;
+	public void setRecentEndTime(Timestamp currentEndTime) {
+		this.recentEndTime = currentEndTime;
 	}
 	
 	public Double getPreviousTotalLoadOfExercise() {
