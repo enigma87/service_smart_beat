@@ -1,0 +1,6 @@
+Git - mainly git shell
+Kdiff3 - merge tool for git http://sourceforge.net/projects/kdiff3/files/kdiff3/
+Maven - http://maven.apache.org/download.cgi and follow instructions
+Apache tomcat
+Eclipse
+Chrome plugins - Advanced REST client and Postman
