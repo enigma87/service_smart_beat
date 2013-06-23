@@ -26,7 +26,7 @@ public class FitnessHomeostasisIndexDaoTest {
 	private static final Integer traineeClassification = 2;
 	private static final Double localRegressionMinimumOfHomeostasisIndex = 130.0;
 	private static final Double recentMinimumOfHomeostasisIndex = 110.0;
-	private static final Double currentTotalLoadOfExercise = 100.0;
+	private static final Double recentTotalLoadOfExercise = 100.0;
 	private static final Double previousTotalLoadOfExercise = 125.0;
 	
 	@BeforeClass
@@ -36,9 +36,9 @@ public class FitnessHomeostasisIndexDaoTest {
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(currentTotalLoadOfExercise);
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setCurrentEndTime(new Timestamp(now));
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
 		
 		
@@ -55,9 +55,9 @@ public class FitnessHomeostasisIndexDaoTest {
 	    Assert.assertEquals(traineeClassification, fitnessHomeostasisIndexBean1.getTraineeClassification());
 	    Assert.assertEquals(localRegressionMinimumOfHomeostasisIndex, fitnessHomeostasisIndexBean1.getLocalRegressionMinimumOfHomeostasisIndex());
 	    Assert.assertEquals(recentMinimumOfHomeostasisIndex, fitnessHomeostasisIndexBean1.getRecentMinimumOfHomeostasisIndex());
-	    Assert.assertEquals(currentTotalLoadOfExercise, fitnessHomeostasisIndexBean1.getCurrentTotalLoadOfExercise());
+	    Assert.assertEquals(recentTotalLoadOfExercise, fitnessHomeostasisIndexBean1.getRecentTotalLoadOfExercise());
 	    Assert.assertEquals(previousTotalLoadOfExercise, fitnessHomeostasisIndexBean1.getPreviousTotalLoadOfExercise());
-	    Assert.assertNotNull(fitnessHomeostasisIndexBean1.getCurrentEndTime());
+	    Assert.assertNotNull(fitnessHomeostasisIndexBean1.getRecentEndTime());
 	    Assert.assertNotNull(fitnessHomeostasisIndexBean1.getPreviousEndTime());
 	    
 	    fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
@@ -74,10 +74,10 @@ public class FitnessHomeostasisIndexDaoTest {
 	    fitnessHomeostasisIndexBean1.setTraineeClassification(3);
 	    fitnessHomeostasisIndexBean1.setLocalRegressionMinimumOfHomeostasisIndex(180.0);
 	    fitnessHomeostasisIndexBean1.setRecentMinimumOfHomeostasisIndex(115.0);
-	    fitnessHomeostasisIndexBean1.setCurrentTotalLoadOfExercise(140.3);
+	    fitnessHomeostasisIndexBean1.setRecentTotalLoadOfExercise(140.3);
 	    fitnessHomeostasisIndexBean1.setPreviousTotalLoadOfExercise(100.0);
 	    fitnessHomeostasisIndexBean1.setPreviousEndTime(new Timestamp(now));
-	    fitnessHomeostasisIndexBean1.setCurrentEndTime(new Timestamp(nowPastOneHour));
+	    fitnessHomeostasisIndexBean1.setRecentEndTime(new Timestamp(nowPastOneHour));
 	    
 	    fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean1);
 	    
@@ -88,9 +88,9 @@ public class FitnessHomeostasisIndexDaoTest {
 	    Assert.assertEquals((Integer)3, fitnessHomeostasisIndexBean2.getTraineeClassification());
 	    Assert.assertEquals(180.0, fitnessHomeostasisIndexBean2.getLocalRegressionMinimumOfHomeostasisIndex());
 	    Assert.assertEquals(115.0, fitnessHomeostasisIndexBean2.getRecentMinimumOfHomeostasisIndex());
-	    Assert.assertEquals(140.3, fitnessHomeostasisIndexBean2.getCurrentTotalLoadOfExercise());
+	    Assert.assertEquals(140.3, fitnessHomeostasisIndexBean2.getRecentTotalLoadOfExercise());
 	    Assert.assertEquals(100.0, fitnessHomeostasisIndexBean2.getPreviousTotalLoadOfExercise());
-	    Assert.assertNotNull(fitnessHomeostasisIndexBean2.getCurrentEndTime());
+	    Assert.assertNotNull(fitnessHomeostasisIndexBean2.getRecentEndTime());
 	    Assert.assertNotNull(fitnessHomeostasisIndexBean2.getPreviousEndTime());
 	    
 	    fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);

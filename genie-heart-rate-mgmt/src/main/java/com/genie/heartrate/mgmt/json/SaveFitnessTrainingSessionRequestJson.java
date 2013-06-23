@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 
-public class SaveTrainingSessionRequestJson {
+public class SaveFitnessTrainingSessionRequestJson {
 
 	private String userid;
 	private Timestamp startTime;

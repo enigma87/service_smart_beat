@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genie.account.mgmt.resources;
+package com.genie.heartrate.mgmt.resources;
 
 import java.util.UUID;
 
@@ -28,19 +28,28 @@ import com.genie.account.mgmt.json.RegisterResponseJSON;
 import com.genie.account.mgmt.json.UserInfoJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.Formatter;
+import com.genie.heartrate.mgmt.core.FitnessManager;
+import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionRequestJson;
+import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionResponseJson;
+import com.genie.heartrate.mgmt.json.ShapeIndexResponseJson;
 import com.genie.mgmt.GoodResponseObject;
 
 /**
- * @author manojkumar
+ * @author dhasarathy
  *
  */
-	@Path("/Users")
-	@Component
-	public class UserResource 
+@Path("/trainee")
+@Component
+public class TraineeResource 
 {
 	@Autowired
 	@Qualifier("userManagerMySQLImpl")
 	private UserManager userManager;
+	
+	@Autowired
+	@Qualifier("fitnessManagerMySQLImpl")
+	private FitnessManager fitnessManager;
+	
 	
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
@@ -50,12 +59,20 @@ import com.genie.mgmt.GoodResponseObject;
 		return userManager;
 	}
 	
+	public FitnessManager getFitnessManager(){
+		return this.fitnessManager;
+	}
+	
+	public void setFitnessManager(FitnessManager fitnessManager){
+		this.fitnessManager = fitnessManager;
+	}
+
+	
 	@GET
 	@Path("{email}")
 	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType)	
-	{
+	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		if(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED.equals(authStatus.getAuthenticationStatus())){
 			User user = userManager.getUserInformationByEmail(email);
@@ -81,8 +98,7 @@ import com.genie.mgmt.GoodResponseObject;
 	@Path("register")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String registerUser(RegisterRequestJSON requestJson)
-	{
+	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
 		if(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED.equals(authStatus.getAuthenticationStatus())){
@@ -116,5 +132,65 @@ import com.genie.mgmt.GoodResponseObject;
 				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
 			}
 		}
-	}		
+	}
+	
+	@GET
+	@Path("{userid}/shapeIndex")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+		 
+		/*Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+		shapeIndexResponseJson.setUserid(userid);
+		shapeIndexResponseJson.setShapeIndex(shapeIndex);*/
+		
+		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+		shapeIndexResponseJson.setUserid(userid);
+		shapeIndexResponseJson.setShapeIndex(100.0);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexResponseJson);
+		try
+		{				
+			return Formatter.getAsJson(gro, true);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
+	@POST
+	@Path("{userid}/saveFitnessTrainingSession")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson){
+
+		/*saveTrainingSessionRequestJson.setUserid(userid);
+		 FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
+		
+		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionBean.getTrainingSessionId());
+		
+		SaveTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveTrainingSessionResponseJson();
+		saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
+		saveTrainingSessionResponseJson.setShapeIndex(shapeIndex);*/
+		
+		SaveFitnessTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
+		saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
+		saveTrainingSessionResponseJson.setShapeIndex(100.0);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveTrainingSessionResponseJson);
+		try
+		{
+
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+
 }

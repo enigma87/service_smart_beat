@@ -80,8 +80,8 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `trainee_classification` INTEGER DEFAULT NULL,
   `local_regression_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
   `recent_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
-  `current_total_load_of_exercise` DOUBLE DEFAULT NULL,
-  `current_end_time` timestamp NULL DEFAULT NULL,
+  `recent_total_load_of_exercise` DOUBLE DEFAULT NULL,
+  `recent_end_time` timestamp NULL DEFAULT NULL,
   `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
   `previous_end_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY(`userid`)
@@ -97,8 +97,3 @@ CREATE TABLE genie.`fitness_speed_heartrate_model` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$
-
-CREATE USER 'genie'@'localhost' IDENTIFIED BY 'genie';
-
-GRANT ALL PRIVILEGES ON genie.* To 'genie'@'localhost' IDENTIFIED BY 'genie';
-

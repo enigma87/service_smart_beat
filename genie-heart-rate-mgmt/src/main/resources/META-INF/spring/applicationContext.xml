@@ -19,14 +19,6 @@
 		<property name="username" value="${genie.database.username}" />
 		<property name="password" value="${genie.database.password}" />
 	</bean>
-
-	<bean id="userHeartRateTestDao" class="com.genie.heartrate.mgmt.dao.UserHeartRateTestDao">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
-	<bean id="userHeartRateZoneDao" class="com.genie.heartrate.mgmt.dao.UserHeartRateZoneDao">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
 	
 	<bean id="fitnessTrainingSessionDAO" class="com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO">
 		<property name="dataSource" ref="dataSource" />
@@ -44,9 +36,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="fitnessManagerMySQLImpl" class="com.genie.heartrate.mgmt.impl.FitnessManagerMySQLImpl">
-		<property name="userHeartRateTestDao" ref="userHeartRateTestDao"/>
-		<property name="userHeartRateZoneDao" ref="userHeartRateZoneDao" />
+	<bean id="fitnessManagerMySQLImpl" class="com.genie.heartrate.mgmt.impl.FitnessManagerMySQLImpl">		
 		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
 	    <property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />

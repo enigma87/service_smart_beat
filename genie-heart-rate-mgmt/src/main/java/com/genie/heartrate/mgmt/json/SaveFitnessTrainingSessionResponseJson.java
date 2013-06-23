@@ -1,6 +1,6 @@
 package com.genie.heartrate.mgmt.json;
 
-public class SaveTrainingSessionResponseJson {
+public class SaveFitnessTrainingSessionResponseJson {
 	
 	private String userid;
 	private String trainingSessionId;

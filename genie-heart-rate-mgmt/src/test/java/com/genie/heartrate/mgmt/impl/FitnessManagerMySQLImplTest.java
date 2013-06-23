@@ -1,10 +1,6 @@
 package com.genie.heartrate.mgmt.impl;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -18,15 +14,11 @@ import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
 import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
-import com.genie.heartrate.mgmt.beans.UserHeartRateTest;
-import com.genie.heartrate.mgmt.beans.UserHeartRateZone;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
 import com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO;
 import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
-import com.genie.heartrate.mgmt.dao.UserHeartRateTestDao;
-import com.genie.heartrate.mgmt.util.TraineeClassification;
 /**
  * @author vidhun
  *
@@ -34,119 +26,25 @@ import com.genie.heartrate.mgmt.util.TraineeClassification;
 
 public class FitnessManagerMySQLImplTest {
 
-	 ApplicationContext appContext;
-	UserHeartRateTestDao userHeartRateTestDao;
+	ApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	
 	@Before
 	public void setUpBeforeClass() throws Exception 
 	{
-		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		userHeartRateTestDao = (UserHeartRateTestDao) appContext.getBean("userHeartRateTestDao");
+		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");	
 	}
-	
-	//@Test
-	public void testgetHeartRateTestResultsForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		
-		uhrt1.setUserid("123456789");
-		uhrt1.setRestingHeartRate(56);
-		uhrt1.setMaximalHeartRate(168);
-		uhrt1.setThresholdHeartRate(108);
-		uhrt1.setRestingHeartRateTimestamp(timestamp);
-		uhrt1.setMaximalHeartRateTimestamp(timestamp);
-		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
-		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
-		Assert.assertNotNull(uhrt2);
-		
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
-			
-	}
-
-	
-	//@Test
-	public void testsaveHeartRateTestResultsForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt1 = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		uhrt1.setUserid("123456789");
-		uhrt1.setRestingHeartRate(56);
-		uhrt1.setMaximalHeartRate(168);
-		uhrt1.setThresholdHeartRate(108);
-		uhrt1.setRestingHeartRateTimestamp(timestamp);
-		uhrt1.setMaximalHeartRateTimestamp(timestamp);
-		uhrt1.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt1);
-		
-		UserHeartRateTest uhrt2 = hrMgmt.getHeartRateTestResultsForUser("123456789");
-		Assert.assertEquals("123456789", uhrt2.getUserid());
-		Assert.assertEquals(new Integer(56), uhrt2.getRestingHeartRate());
-		Assert.assertEquals(new Integer(168), uhrt2.getMaximalHeartRate());
-		Assert.assertEquals(new Integer(108), uhrt2.getThresholdHeartRate());
-		Assert.assertNotNull(uhrt2.getRestingHeartRateTimestamp());
-		Assert.assertNotNull(uhrt2.getMaximalHeartRateTimestamp());
-		Assert.assertNotNull(uhrt2.getThresholdHeartRateTimestamp());
-		
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");
-			
-	}
-	
-	//@Test
-	public void testgetHeartRateZonesForUser() {
-		
-		FitnessManager hrMgmt = new FitnessManagerMySQLImpl();
-		UserHeartRateTest uhrt = new UserHeartRateTest();
-		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-		
-		uhrt.setUserid("123456789");
-		uhrt.setRestingHeartRate(56);
-		uhrt.setMaximalHeartRate(168);
-		uhrt.setThresholdHeartRate(108);
-		uhrt.setRestingHeartRateTimestamp(timestamp);
-		uhrt.setMaximalHeartRateTimestamp(timestamp);
-		uhrt.setThresholdHeartRateTimestamp(timestamp);
-		if(hrMgmt instanceof FitnessManagerMySQLImpl){}
-		((FitnessManagerMySQLImpl)hrMgmt).setUserHeartRateTestDao(userHeartRateTestDao);
-		hrMgmt.saveHeartRateTestResultsForUser(uhrt);
-		
-		UserHeartRateZone uhrz = hrMgmt.getHeartRateZonesForUser("123456789");
-		Assert.assertEquals("123456789", uhrz.getUserid());
-		Assert.assertEquals(new Double(56.0), uhrz.getHrz1Start());
-		Assert.assertEquals(new Double(82.0), uhrz.getHrz1End());
-		Assert.assertEquals(new Double(82.001), uhrz.getHrz2Start());
-		Assert.assertEquals(new Double(95.0), uhrz.getHrz2End());
-		Assert.assertEquals(new Double(95.001), uhrz.getHrz3Start());
-		Assert.assertEquals(new Double(103.519), uhrz.getHrz3End());
-		Assert.assertEquals(new Double(103.52), uhrz.getHrz4Start());
-		Assert.assertEquals(new Double(110.24), uhrz.getHrz4End());
-		Assert.assertEquals(new Double(110.241), uhrz.getHrz5Start());
-		Assert.assertEquals(new Double(161.279), uhrz.getHrz5End());
-		Assert.assertEquals(new Double(161.28), uhrz.getHrz6Start());
-		Assert.assertEquals(new Double(168.0), uhrz.getHrz6End());
-   
-		userHeartRateTestDao.deleteHeartRateTestResults("123456789");					
-	}	
 	
 	@Test
 	public void testSaveFitnessTrainingSession(){
 		
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
-		long nowPastFiftyMinutes = now - 3000000;
+		long nowPastFourtyMinutes = now - 2400000;
 		long twoDaysAfterNow = now + (2*24*3600000);
 		long twoDaysAfterNowPastThreeHours = twoDaysAfterNow - (3*3600000);
 		String fitnessTrainingSessionId = "20131";
-	    
+	   
 		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = null;
 		try {
@@ -161,14 +59,14 @@ public class FitnessManagerMySQLImplTest {
 		/*Creating the Bean for the first Training Session*/	
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastFiftyMinutes));
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastFourtyMinutes));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(now));
 		fitnessTrainingSessionBean.setHrz1Time(4.0);
 		fitnessTrainingSessionBean.setHrz2Time(8.0);
 		fitnessTrainingSessionBean.setHrz3Time(11.0);
 		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
+		fitnessTrainingSessionBean.setHrz5Time(6.0);
+		fitnessTrainingSessionBean.setHrz6Time(8.0);
 		fitnessTrainingSessionBean.setHrz1Distance(421.7304);
 		fitnessTrainingSessionBean.setHrz2Distance(895.1108);
 		fitnessTrainingSessionBean.setHrz3Distance(1342.9544);
@@ -177,14 +75,14 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz6Distance(2070.7614);
 			
         /*Saving the first Fitness training session for the user*/
-		FitnessManager fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");
+		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		String trainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 		
 		/*Creating the DAOs for SpeedHeartRate, ShapeIndex and Homeostasis Models*/
-		FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO) appContext.getBean("fitnessSpeedHeartRateDAO");
-		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) appContext.getBean("fitnessShapeIndexDAO");
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO) smartbeatContext.getBean("fitnessSpeedHeartRateDAO");
+		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		
 		/*Getting the bean for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
 		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
@@ -193,7 +91,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		/*Asserting the Model data for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
 		Assert.assertEquals(userid, fitnessSpeedHeartRateBean.getUserid());
-		Assert.assertEquals(23.468882249859, fitnessSpeedHeartRateBean.getCurrentVdot());
+		Assert.assertEquals(33.865384604692366, fitnessSpeedHeartRateBean.getCurrentVdot());
 		Assert.assertNull(null, fitnessSpeedHeartRateBean.getPreviousVdot());
 		
 		Assert.assertEquals(userid, fitnessShapeIndexBean.getUserid());
@@ -202,12 +100,12 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertNotNull(fitnessShapeIndexBean.getTimeOfRecord());
 		
 		Assert.assertEquals(userid, fitnessHomeostasisIndexBean.getUserid());
-		Assert.assertEquals(212.25, fitnessHomeostasisIndexBean.getCurrentTotalLoadOfExercise());
-		Assert.assertEquals(-212.25, fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
-		Assert.assertNull(fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
-		Assert.assertNotNull(fitnessHomeostasisIndexBean.getCurrentEndTime());
-		Assert.assertNull(fitnessHomeostasisIndexBean.getPreviousEndTime());
-		
+		Assert.assertEquals(138.25, fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(-138.25, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-138.25, fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertNotNull(fitnessHomeostasisIndexBean.getRecentEndTime());
+	
+
 		/*Creating the Bean for the second Training Session*/
 		FitnessTrainingSessionBean fitnessTrainingSessionBean1 = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean1.setUserid(userid);
@@ -225,10 +123,45 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean1.setHrz4Distance(1576.2194);
 		fitnessTrainingSessionBean1.setHrz5Distance(2471.7788);
 		fitnessTrainingSessionBean1.setHrz6Distance(2588.0264);
-	
+		
 		/*Saving the second Fitness training session for the user*/
-		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		String trainingSessionId1 = fitnessTrainingSessionBean.getTrainingSessionId();
+		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean1);
+		String trainingSessionId1 = fitnessTrainingSessionBean1.getTrainingSessionId();
+	
+		/*Creating the DAOs for SpeedHeartRate, ShapeIndex and Homeostasis Models*/
+		FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO1 = (FitnessSpeedHeartRateDAO) smartbeatContext.getBean("fitnessSpeedHeartRateDAO");
+		FitnessShapeIndexDAO fitnessShapeIndexDAO1 = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO1 = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		
+		/*Getting the bean for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
+		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean1 = fitnessSpeedHeartRateDAO1.getSpeedHeartRateModelByUserid(userid);
+		FitnessShapeIndexBean fitnessShapeIndexBean1 = fitnessShapeIndexDAO1.getRecentShapeIndexModel(userid);
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean1 = fitnessHomeostasisIndexDAO1.getHomeostasisIndexModelByUserid(userid);
+		
+		
+		/*Asserting the Model data for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
+		Assert.assertEquals(userid, fitnessSpeedHeartRateBean1.getUserid());
+		Assert.assertEquals(29.702318178755274, fitnessSpeedHeartRateBean1.getCurrentVdot());
+		Assert.assertEquals(33.865384604692366, fitnessSpeedHeartRateBean1.getPreviousVdot());
+		
+		Assert.assertEquals(userid, fitnessShapeIndexBean1.getUserid());
+		Assert.assertEquals(97.8, fitnessShapeIndexBean1.getShapeIndex());
+		Assert.assertEquals(trainingSessionId1, fitnessShapeIndexBean1.getSessionOfRecord());
+		Assert.assertNotNull(fitnessShapeIndexBean1.getTimeOfRecord());
+		
+		Assert.assertEquals(userid, fitnessHomeostasisIndexBean1.getUserid());
+		Assert.assertEquals(367.0, fitnessHomeostasisIndexBean1.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(-505.25, fitnessHomeostasisIndexBean1.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-505.25, fitnessHomeostasisIndexBean1.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertNotNull(fitnessHomeostasisIndexBean1.getRecentEndTime());
+		
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		fitnessSpeedHeartRateDAO1.deleteSpeedHeartRateModelByUserid(userid);
+		fitnessShapeIndexDAO1.deleteShapeIndexModel(userid);
+		fitnessHomeostasisIndexDAO1.deleteHomeostasisIndexModelByUserid(userid);
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId1);
+		
 	}
 	
 	//@Test
@@ -254,19 +187,19 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(2);
-		fitnessHomeostasisIndexBean.setCurrentEndTime(new Timestamp(nowPastOneHour));
-		fitnessHomeostasisIndexBean.setCurrentTotalLoadOfExercise(120.0);
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(nowPastOneHour));
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(120.0);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(180.0);
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoDays));
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);		
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		
 		
 		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
-		fitnessManager = (FitnessManager)appContext.getBean("fitnessManagerMySQLImpl");
+		fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		Double points = ((FitnessManagerMySQLImpl)fitnessManager).getFitnessSupercompensationPoints(userid);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}
