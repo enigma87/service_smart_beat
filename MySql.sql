@@ -97,8 +97,3 @@ CREATE TABLE genie.`fitness_speed_heartrate_model` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$
-
-CREATE USER 'genie'@'localhost' IDENTIFIED BY 'genie';
-
-GRANT ALL PRIVILEGES ON genie.* To 'genie'@'localhost' IDENTIFIED BY 'genie';
-
