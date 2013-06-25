@@ -28,6 +28,7 @@ import com.genie.account.mgmt.json.RegisterResponseJSON;
 import com.genie.account.mgmt.json.UserInfoJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.Formatter;
+import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionResponseJson;
@@ -161,27 +162,27 @@ public class TraineeResource
 	}
 	
 	@POST
-	@Path("{userid}/saveFitnessTrainingSession")
+	@Path("{userid}/fitnessTrainingSession/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson){
 
-		/*saveTrainingSessionRequestJson.setUserid(userid);
-		 FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
+		saveTrainingSessionRequestJson.setUserid(userid);
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
 		
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
 		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionBean.getTrainingSessionId());
 		
-		SaveTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveTrainingSessionResponseJson();
-		saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
-		saveTrainingSessionResponseJson.setShapeIndex(shapeIndex);*/
+		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
+		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
+		saveFitnessTrainingSessionResponseJson.setShapeIndex(new Double (97.8));
 		
-		SaveFitnessTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
+		/*SaveFitnessTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 		saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
-		saveTrainingSessionResponseJson.setShapeIndex(100.0);
+		saveTrainingSessionResponseJson.setShapeIndex(100.0);*/
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveTrainingSessionResponseJson);
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try
 		{
 

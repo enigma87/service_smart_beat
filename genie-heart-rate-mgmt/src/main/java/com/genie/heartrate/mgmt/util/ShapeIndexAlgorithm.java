@@ -48,13 +48,13 @@ public class ShapeIndexAlgorithm
 		return regressedHomeostasisIndex - totalLoadOfExercise;
 	}
 			
-	public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+	public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		
 		Timestamp timeAtFullRecovery = null;
 		
 		double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 		double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification];
-		double TTR_CONSTANT_C = totalLoadOfExercise;
+		double TTR_CONSTANT_C = recentMinimumOfHomeostasisIndex;
 		
 		double discriminant = Math.pow(TTR_CONSTANT_B, 2) - 4*TTR_CONSTANT_A*TTR_CONSTANT_C;
 		if(discriminant > 0.0){

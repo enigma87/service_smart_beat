@@ -1,14 +1,17 @@
 package com.genie.heartrate.mgmt.json;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 
 public class SaveFitnessTrainingSessionRequestJson {
 
 	private String userid;
-	private Timestamp startTime;
-	private Timestamp endTime;	
+	private String startTime;
+	private String endTime;	
 	private Double hrz1Time;
 	private Double hrz2Time;
 	private Double hrz3Time;
@@ -21,6 +24,7 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Double hrz4Distance;
 	private Double hrz5Distance;
 	private Double hrz6Distance;
+
 	
 	public String getUserid() {
 		return userid;
@@ -30,19 +34,19 @@ public class SaveFitnessTrainingSessionRequestJson {
 		this.userid = userid;
 	}
 	
-	public void setStartTime(Timestamp startTime) {
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 	
-	public Timestamp getStartTime() {
+	public String getStartTime() {
 		return startTime;
 	}
 	
-	public Timestamp getEndTime() {
+	public String getEndTime() {
 		return endTime;
 	}
 	
-	public void setEndTime(Timestamp endTime) {
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}	
 	
@@ -144,6 +148,17 @@ public class SaveFitnessTrainingSessionRequestJson {
 	
 	public FitnessTrainingSessionBean getAsTrainingSessionBean(){
 		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        Date startTimeInDate = null;
+        Date endTimeInDate = null;
+		try {
+			startTimeInDate = dateFormat.parse(getStartTime());
+			endTimeInDate = dateFormat.parse(getEndTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(getUserid());
 		fitnessTrainingSessionBean.setHrz1Distance(getHrz1Distance());
@@ -158,8 +173,8 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setHrz4Time(getHrz4Time());
 		fitnessTrainingSessionBean.setHrz5Time(getHrz5Time());
 		fitnessTrainingSessionBean.setHrz6Time(getHrz6Time());
-		fitnessTrainingSessionBean.setStartTime(getStartTime());
-		fitnessTrainingSessionBean.setEndTime(getEndTime());
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
 		
 		return fitnessTrainingSessionBean;
 	}
