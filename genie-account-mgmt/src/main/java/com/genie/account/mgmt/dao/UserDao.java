@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import com.genie.account.mgmt.beans.User;
 
 /**
- * @author manojkumar
+ * @author vidhun
  *
  */
 public class UserDao 

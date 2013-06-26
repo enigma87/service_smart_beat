@@ -175,7 +175,8 @@ public class TraineeResource
 		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionBean.getTrainingSessionId());
 		
 		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
-		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
+		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
+		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
 		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
 		
 		

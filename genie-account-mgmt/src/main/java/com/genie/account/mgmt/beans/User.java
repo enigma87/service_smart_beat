@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * @author manojkumar
+ * @author vidhun
  *
  */
 public class User 

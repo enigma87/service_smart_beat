@@ -246,6 +246,7 @@ public class TraineeResourceTest extends JerseyTest {
 			JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionResponse.getJSONObject("obj");
 			Assert.assertEquals(genieUserID, objSaveFitnessTrainingSessionReponse.getString("userid"));
 			Assert.assertEquals(100.0, objSaveFitnessTrainingSessionReponse.getDouble("shapeIndex"));
+			Assert.assertNotNull(objSaveFitnessTrainingSessionReponse.getString("trainingSessionId"));
 			
 			/*Delete Facebook TestUser*/
 			String DeleteFbTestUserUrl = "https://graph.facebook.com/"+userID+"?method=delete&access_token="+userAccessToken;
