@@ -40,7 +40,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
-		long nowPastFourtyMinutes = now - 2400000;
+		long nowPastFourtyMinutes = now - 1200000;
 		long oneDayAfterNow = now + (24*3600000);
 		long oneDayAfterNowPastThreeHours = oneDayAfterNow - (3*3600000);
 		long twoDaysAfterNow = now + (2*24*3600000);

@@ -195,7 +195,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
 				fitnessHomeostasisIndexBean.getRecentEndTime(), 
-				fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
+				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		return detrainingPenalty;
 	}
 	

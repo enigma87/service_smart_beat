@@ -176,11 +176,8 @@ public class TraineeResource
 		
 		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
-		saveFitnessTrainingSessionResponseJson.setShapeIndex(new Double (97.8));
+		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
 		
-		/*SaveFitnessTrainingSessionResponseJson saveTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
-		saveTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
-		saveTrainingSessionResponseJson.setShapeIndex(100.0);*/
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try

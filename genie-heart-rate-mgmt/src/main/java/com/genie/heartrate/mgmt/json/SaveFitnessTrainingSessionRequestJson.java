@@ -5,8 +5,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 
+
+@XmlRootElement(name = "SaveFitnessTrainingSessionRequestJson")
 public class SaveFitnessTrainingSessionRequestJson {
 
 	private String userid;

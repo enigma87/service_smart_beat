@@ -175,5 +175,7 @@ public class UserResourceTest extends JerseyTest  {
 		userDao.deleteUser(genieUserID);
 		       
 	}
+	
+	
 
 }

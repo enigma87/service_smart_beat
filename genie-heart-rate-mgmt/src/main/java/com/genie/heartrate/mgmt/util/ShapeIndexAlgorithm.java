@@ -69,20 +69,20 @@ public class ShapeIndexAlgorithm
 		return timeAtFullRecovery;
 	}
 	
-	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double timeToRecover = 0.0;
 		Timestamp currentTime = new Timestamp(new Date().getTime());
-		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
 			timeToRecover = (timeAtFullRecovery.getTime() - currentTime.getTime())/(1000*60*60);
 		}
 		return timeToRecover;
 	}
 	
-	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double timeAfterRecovery = 0.0;
 		Timestamp currentTime = new Timestamp(new Date().getTime());
-		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
 			timeAfterRecovery = (currentTime.getTime() - timeAtFullRecovery.getTime())/(1000*60*60);
 		}
@@ -119,9 +119,9 @@ public class ShapeIndexAlgorithm
 	
 	private static final double DETRAINING_THRESHOLD = 64;
 	private static final double DETRAINING_PENALTY_RATE[] = {0.1, 0.05};
-	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double totalLoadOfExercise){
+	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double detrainingPenalty = 0.0;
-		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, totalLoadOfExercise);
+		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
 			if(DETRAINING_THRESHOLD < timeAfterRecovery){
 				detrainingPenalty += (DETRAINING_PENALTY_RATE[1]*(DETRAINING_THRESHOLD - timeAfterRecovery));
