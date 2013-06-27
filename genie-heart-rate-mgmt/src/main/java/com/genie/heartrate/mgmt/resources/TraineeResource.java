@@ -141,15 +141,11 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		 
-		/*Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
 		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
 		shapeIndexResponseJson.setUserid(userid);
-		shapeIndexResponseJson.setShapeIndex(shapeIndex);*/
-		
-		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
-		shapeIndexResponseJson.setUserid(userid);
-		shapeIndexResponseJson.setShapeIndex(100.0);
-		
+		shapeIndexResponseJson.setShapeIndex(shapeIndex);
+			
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexResponseJson);
 		try
 		{				
@@ -172,12 +168,13 @@ public class TraineeResource
 		
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionBean.getTrainingSessionId());
+		String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionId);
 		
 		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());
 		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
-		
+		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try
