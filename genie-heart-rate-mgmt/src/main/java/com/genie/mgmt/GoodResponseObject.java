@@ -4,7 +4,7 @@
 package com.genie.mgmt;
 
 /**
- * @author manojkumar
+ * @author vidhun
  *
  */
 public class GoodResponseObject 

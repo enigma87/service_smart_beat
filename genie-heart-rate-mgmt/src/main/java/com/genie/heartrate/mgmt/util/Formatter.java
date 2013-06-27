@@ -9,7 +9,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
- * @author manojkumar
+ * @author dhasarathy
  *
  */
 public class Formatter 

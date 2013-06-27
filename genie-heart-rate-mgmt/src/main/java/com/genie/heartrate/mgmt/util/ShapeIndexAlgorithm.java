@@ -9,7 +9,7 @@ import java.util.Date;
 import org.apache.commons.math.stat.regression.SimpleRegression;
 
 /**
- * @author manojkumar
+ * @author dhasarathy
  *
  */
 public class ShapeIndexAlgorithm 
