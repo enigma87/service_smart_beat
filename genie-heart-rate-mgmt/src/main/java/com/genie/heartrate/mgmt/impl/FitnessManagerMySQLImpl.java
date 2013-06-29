@@ -81,14 +81,15 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		/*save training session*/		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
+		/*update speed-heartrate model*/
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+		
 		/*update shape index model*/
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
 		/*update homeostasis index model*/
 		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		
-		/*update speed-heartrate model*/
-		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+
 	}
 	
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
