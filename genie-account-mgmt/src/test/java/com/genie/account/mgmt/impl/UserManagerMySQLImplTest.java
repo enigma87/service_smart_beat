@@ -26,6 +26,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.research.ws.wadl.Request;
 /**
  * @author vidhun
  *
@@ -150,17 +151,18 @@ public class UserManagerMySQLImplTest {
 		String[] appAccessToken = appAccessTokenResponse.split("=");
 		String appAccessTokenValue = appAccessToken[1];
 
-		/*Get test user from facebook*/
+	
+		/* 1. Get test user from facebook*/
 		String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
 		ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
 		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
 		WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
 		JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
+	
 		String userID = FacebookTestUser.getString("id");
 		String userAccessToken = FacebookTestUser.getString("access_token");
 		String userEmail = FacebookTestUser.getString("email");
-		
 		
 		User userFb = new User();
 		userFb.setUserid(userID);
@@ -170,7 +172,6 @@ public class UserManagerMySQLImplTest {
 		userFb.setFirstName("Alice");
 		userFb.setMiddleName("Bob");
 		userFb.setLastName("Charlie");
-		
 				
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
@@ -179,11 +180,11 @@ public class UserManagerMySQLImplTest {
 		
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		AuthenticationStatus authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED, authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.getValue(), authStatus.getAuthenticationStatus());
 		Assert.assertNull(authStatus.getAuthenticatedUser());
-		
+
 		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED, authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.getValue(), authStatus.getAuthenticationStatus());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
 		/*Delete Facebook TestUser*/
@@ -194,8 +195,69 @@ public class UserManagerMySQLImplTest {
 		WebResource deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
 		deleteFacebookTestUser.post();
 		userDao.deleteUser(userFb.getUserid());
+
 		
-	}
+		/*
+		 *  now user the test access_token and id to revoke the email permissions and test the authenticateRequest method
+		 *  a request without a valid email permission is a not successfully authenticated
+		*/
+
+		/* 2. Get test user from facebook */
+		getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
+		clientConfigGetFacebookTestUser = new DefaultClientConfig();
+		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+		clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
+		getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
+		FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
 	
-	
+		String accesstoken = FacebookTestUser.getString("access_token"); 
+		
+		WebResource deleteEmailPermission = clientGetFacebookTestUser.resource(
+				"https://graph.facebook.com/"
+				+ FacebookTestUser.getString("id")
+				+ "/permissions/email?access_token=" 
+				+ URLEncoder.encode(accesstoken,"ISO-8859-1")
+		);
+		
+		deleteEmailPermission.type(MediaType.TEXT_PLAIN_TYPE).delete(String.class);
+		
+		WebResource getFacebookTestUserNoEmail = clientGetFacebookTestUser.resource(
+				"https://graph.facebook.com/"
+				+ FacebookTestUser.getString("id") 
+				+ "?fields=id,name,email&access_token=" 
+				+ URLEncoder.encode(accesstoken,"ISO-8859-1")
+		);
+
+		JSONObject FacebookTestUserNoEmail = getFacebookTestUserNoEmail.type(MediaType.APPLICATION_FORM_URLENCODED).get(JSONObject.class);
+				
+		userID = FacebookTestUser.getString("id");
+		userAccessToken = FacebookTestUser.getString("access_token");
+
+		if (FacebookTestUserNoEmail.has("email") == false ) {
+			userEmail = "";
+		}
+		
+		userFb = new User();
+		userFb.setUserid(userID);
+		userFb.setAccessToken(userAccessToken);
+		userFb.setAccessTokenType("facebook");
+		userFb.setEmail(userEmail);
+		userFb.setFirstName("Alice");
+		userFb.setMiddleName("Bob");
+		userFb.setLastName("Charlie");
+		
+		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(AuthenticationStatus.Status.EMAIL_REQUIRED.getValue(), authStatus.getAuthenticationStatus());
+		Assert.assertNull(authStatus.getAuthenticatedUser());
+		
+		/*Delete Facebook TestUser*/
+		DeleteFbTestUserUrl = "https://graph.facebook.com/"+userID+"?method=delete&access_token="+userAccessToken;
+		clientConfigDeleteFacebookTestUser = new DefaultClientConfig();
+		clientConfigDeleteFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+		clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
+		deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
+		deleteFacebookTestUser.post();
+		userDao.deleteUser(userFb.getUserid());
+
+	}	
 }

@@ -8,17 +8,41 @@ import com.genie.account.mgmt.beans.User;
 
 public class AuthenticationStatus {
 
-	public static final String AUTHENTICATION_STATUS_APPROVED = "authentication_approved";
-	public static final String AUTHENTICATION_STATUS_DENIED = "authentication_denied";
+	public enum Status {
+		APPROVED(0),
+		DENIED(1),
+		EMAIL_REQUIRED(2);
+		
+		private int value;
+		
+		private Status (int value) {
+			this.value = value;
+		}
 	
-	private String authenticationStatus;
+		public int getValue () {
+			return value;
+		}
+	
+		public String getDescription () {
+			switch (this) {
+			default:
+				return "Access Denied.";
+			case EMAIL_REQUIRED:
+				return "Email Permission Required.";
+			case APPROVED:
+				return "Access Granted.";
+			}
+		}
+	}
+
+	private int authenticationStatus;
 	private User authenticatedUser;
 	
-	public String getAuthenticationStatus() {
+	public int getAuthenticationStatus() {
 		return authenticationStatus;
 	}
 	
-	public void setAuthenticationStatus(String authenticationStatus) {
+	public void setAuthenticationStatus(int authenticationStatus) {
 		this.authenticationStatus = authenticationStatus;
 	}
 	
@@ -29,5 +53,4 @@ public class AuthenticationStatus {
 	public void setAuthenticatedUser(User authenticatedUser) {
 		this.authenticatedUser = authenticatedUser;
 	}
-	
 }

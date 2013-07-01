@@ -75,23 +75,23 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
-		if(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED.equals(authStatus.getAuthenticationStatus())){
+		GoodResponseObject gro;
+		if(AuthenticationStatus.Status.APPROVED.getValue() == authStatus.getAuthenticationStatus()){
 			User user = userManager.getUserInformationByEmail(email);
-			UserInfoJSON userInfoJSON = new UserInfoJSON();
-			userInfoJSON.copyFromUserBean(user);
-			GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
-			try {
-				return Formatter.getAsJson(gro, true);
-			} catch (Exception e) {
-				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			if (null != user) {
+				UserInfoJSON userInfoJSON = new UserInfoJSON();
+				userInfoJSON.copyFromUserBean(user);
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
+			} else {
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Unknown User!");
 			}
-		}else{
-			GoodResponseObject gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");
-			try {
-				return Formatter.getAsJson(gro, true);
-			} catch (Exception e) {
-				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
-			}
+		} else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");
+		}
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception e) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class TraineeResource
 	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
-		if(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED.equals(authStatus.getAuthenticationStatus())){
+		if(AuthenticationStatus.Status.DENIED.getValue() == authStatus.getAuthenticationStatus()) {
 			if(null == authStatus.getAuthenticatedUser()){
 				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
 				try {
@@ -114,16 +114,27 @@ public class TraineeResource
 			else{
 				User newUser = authStatus.getAuthenticatedUser();
 				newUser.setUserid(UUID.randomUUID().toString());
-				userManager.registerUser(authStatus.getAuthenticatedUser());
+				userManager.registerUser(newUser);
 				RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
 				regResponseJson.setUserid(newUser.getUserid());
 				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);			
+							
 				try {
 					return Formatter.getAsJson(gro, false);
 				} catch (Exception e) {
 					throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
 				}
 			}
+		} 
+		else if (AuthenticationStatus.Status.EMAIL_REQUIRED.getValue() == authStatus.getAuthenticationStatus()) {
+
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatus.Status.EMAIL_REQUIRED.getValue() + ", " + AuthenticationStatus.Status.EMAIL_REQUIRED.getDescription());
+	
+			try {
+				return Formatter.getAsJson(gro, false);
+			} catch (Exception e) {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+			}		
 		}
 		else{
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "User already exists");			
@@ -180,7 +191,6 @@ public class TraineeResource
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try
 		{
-
 			return Formatter.getAsJson(gro, false);
 		}
 		catch(Exception ex)
@@ -188,5 +198,4 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
-
 }

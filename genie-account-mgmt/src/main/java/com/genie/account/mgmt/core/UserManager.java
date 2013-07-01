@@ -2,6 +2,7 @@ package com.genie.account.mgmt.core;
 
 
 import com.genie.account.mgmt.beans.User;
+import com.genie.account.mgmt.impl.UserManagerMySQLImpl;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.AuthorizationStatus;
 

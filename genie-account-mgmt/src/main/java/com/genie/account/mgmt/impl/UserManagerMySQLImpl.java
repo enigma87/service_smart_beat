@@ -7,14 +7,14 @@ import com.genie.account.mgmt.json.facebook.GraphAPIErrorJSON;
 import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
 import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.AuthorizationStatus;
+//import com.genie.account.mgmt.util.RegistrationStatus;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-
-
 
 
 /**
@@ -24,7 +24,6 @@ import com.sun.jersey.api.json.JSONConfiguration;
 public class UserManagerMySQLImpl implements UserManager{
 	
 	private UserDao userDao;
-	
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
@@ -34,9 +33,15 @@ public class UserManagerMySQLImpl implements UserManager{
 	}
 	
 	public void registerUser(User user) {
-		userDao.createUser(user);		
+		//if (null != user.getEmail()) {
+		userDao.createUser(user);
+		/*	return RegistrationStatus.Status.OK.getValue(); 
+		} else {
+			return RegistrationStatus.Status.INVALID_EMAIL.getValue();
+		}
+		*/
 	}
-
+	
 	public User getUserInformation(String userid) {	
 		
 		return userDao.getUserInfo(userid);
@@ -47,7 +52,7 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao.getUserInfoByEmail(email);
 	}	
 				
-	public GraphAPIResponseJSON authenticateFacebookUser(String accessToken){
+	public GraphAPIResponseJSON authenticateFacebookUser(String accessToken) {
 		
 		String url = "https://graph.facebook.com/me?fields=id,name,email&access_token="+accessToken;		
 		ClientConfig clientConfig = new DefaultClientConfig();
@@ -81,13 +86,16 @@ public class UserManagerMySQLImpl implements UserManager{
 			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
 				GraphAPIResponseJSON responseJson = authenticateFacebookUser(accessToken);
 				if(null != responseJson.getError()){/*Token invalid*/
-					authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED);
+					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED.getValue());
+					authStatus.setAuthenticatedUser(null);
+				} else if (null == responseJson.getEmail()) {
+					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.EMAIL_REQUIRED.getValue());
 					authStatus.setAuthenticatedUser(null);
 				}
 				else{/*Token valid*/
 					user = userDao.getUserInfoByEmail(responseJson.getEmail());
 					if(null == user){/*Uncached token doesn't match an existing user*/
-						authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_DENIED);
+						authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED.getValue());
 						user = new User();
 						user.setAccessToken(accessToken);
 						user.setAccessTokenType(accessTokenType);
@@ -99,14 +107,14 @@ public class UserManagerMySQLImpl implements UserManager{
 					else{/*Uncached token matches an existing user*/
 						user.setAccessToken(accessToken);
 						userDao.updateUser(user);
-						authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED);
+						authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED.getValue());
 						authStatus.setAuthenticatedUser(user);
 					}
 				}
 			}
 		}
 		else{/*Token cached*/
-			authStatus.setAuthenticationStatus(AuthenticationStatus.AUTHENTICATION_STATUS_APPROVED);
+			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED.getValue());
 			authStatus.setAuthenticatedUser(user);
 		}
 		return authStatus;
