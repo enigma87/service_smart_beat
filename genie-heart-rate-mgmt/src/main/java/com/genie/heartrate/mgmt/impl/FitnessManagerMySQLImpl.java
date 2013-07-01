@@ -78,17 +78,19 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			trainingSessionId = FitnessTrainingSessionBean.getFirstTrainingSessiontId(userid);			
 		}
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
-		/*save training session*/		
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
 		/*update shape index model*/
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
+		/*update speed-heartrate model*/
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+		
 		/*update homeostasis index model*/
 		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
 		
-		/*update speed-heartrate model*/
-		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+		/*save training session*/		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+
 	}
 	
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
@@ -138,7 +140,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
 		/*set HI local regression minimum*/
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+        fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 	}
 	
 	

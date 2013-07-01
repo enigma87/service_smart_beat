@@ -19,6 +19,12 @@ public class FitnessHomeostasisIndexBean {
 	private Timestamp previousEndTime;		
 	
 	public static final Integer UNTRAINED = 1;
+	public static final Integer LIGHTLY_TRAINED = 2;
+	public static final Integer MODERATELY_TRAINED = 3;
+	public static final Integer WELL_TRAINED = 4;
+	public static final Integer ELITE = 5;
+	
+	
 	public FitnessHomeostasisIndexBean() {
 		traineeClassification = UNTRAINED;
 	}
