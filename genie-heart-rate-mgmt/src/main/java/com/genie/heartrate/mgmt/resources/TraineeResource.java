@@ -21,20 +21,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.genie.account.mgmt.beans.User;
-import com.genie.account.mgmt.core.AuthenticationStatus;
-import com.genie.account.mgmt.core.AuthenticationStatusCode;
-import com.genie.account.mgmt.core.UserManager;
-import com.genie.account.mgmt.json.RegisterRequestJSON;
-import com.genie.account.mgmt.json.RegisterResponseJSON;
-import com.genie.account.mgmt.json.UserInfoJSON;
-import com.genie.account.mgmt.util.Formatter;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.core.FitnessManager;
 import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.heartrate.mgmt.json.ShapeIndexResponseJson;
 import com.genie.mgmt.GoodResponseObject;
+import com.genie.social.beans.User;
+import com.genie.social.core.AuthenticationStatus;
+import com.genie.social.core.AuthenticationStatusCode;
+import com.genie.social.core.UserManager;
+import com.genie.social.json.RegisterRequestJSON;
+import com.genie.social.json.RegisterResponseJSON;
+import com.genie.social.json.UserInfoJSON;
+import com.genie.social.util.Formatter;
 
 /**
  * @author dhasarathy
@@ -77,7 +77,7 @@ public class TraineeResource
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
-		if(AuthenticationStatusCode.APPROVED.equals(authStatus.getAuthenticationStatus())){
+		if(AuthenticationStatusCode.APPROVED == authStatus.getAuthenticationStatusCode()){
 			User user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
@@ -103,7 +103,7 @@ public class TraineeResource
 	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
-		if(AuthenticationStatusCode.DENIED.equals(authStatus.getAuthenticationStatus())) {
+		if(AuthenticationStatusCode.DENIED == authStatus.getAuthenticationStatusCode()) {
 			if(null == authStatus.getAuthenticatedUser()){
 				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
 				try {
@@ -127,9 +127,9 @@ public class TraineeResource
 				}
 			}
 		} 
-		else if (AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus())) {
+		else if (AuthenticationStatusCode.DENIED_EMAIL_REQUIRED == authStatus.getAuthenticationStatusCode()) {
 
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.getValue() + ", " + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.getDescription());
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {

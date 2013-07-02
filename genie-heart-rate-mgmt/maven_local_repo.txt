@@ -1,1 +1,1 @@
-mvn install:install-file -DlocalRepositoryPath=lib -Dpackaging=jar -Dfile=../genie-account-mgmt/target/account.jar -DgroupId=com.genie.account -DartifactId=account -Dversion=1.0-SNAPSHOT
+mvn install:install-file -DlocalRepositoryPath=lib -Dpackaging=jar -Dfile=../genie-account-mgmt/target/genie-social.jar -DgroupId=com.genie.social -DartifactId=genie-social -Dversion=1.0-SNAPSHOT
