@@ -1,11 +1,12 @@
 package com.genie.account.mgmt.impl;
 
 import com.genie.account.mgmt.beans.User;
+import com.genie.account.mgmt.core.AuthenticationStatus;
+import com.genie.account.mgmt.core.AuthenticationStatusCode;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
 import com.genie.account.mgmt.json.facebook.GraphAPIErrorJSON;
 import com.genie.account.mgmt.json.facebook.GraphAPIResponseJSON;
-import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.AuthorizationStatus;
 //import com.genie.account.mgmt.util.RegistrationStatus;
 
@@ -33,13 +34,7 @@ public class UserManagerMySQLImpl implements UserManager{
 	}
 	
 	public void registerUser(User user) {
-		//if (null != user.getEmail()) {
 		userDao.createUser(user);
-		/*	return RegistrationStatus.Status.OK.getValue(); 
-		} else {
-			return RegistrationStatus.Status.INVALID_EMAIL.getValue();
-		}
-		*/
 	}
 	
 	public User getUserInformation(String userid) {	
@@ -86,16 +81,16 @@ public class UserManagerMySQLImpl implements UserManager{
 			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
 				GraphAPIResponseJSON responseJson = authenticateFacebookUser(accessToken);
 				if(null != responseJson.getError()){/*Token invalid*/
-					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED.getValue());
+					authStatus.setAuthenticationStatus(AuthenticationStatusCode.DENIED);					
 					authStatus.setAuthenticatedUser(null);
 				} else if (null == responseJson.getEmail()) {
-					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.EMAIL_REQUIRED.getValue());
+					authStatus.setAuthenticationStatus(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);					
 					authStatus.setAuthenticatedUser(null);
 				}
 				else{/*Token valid*/
 					user = userDao.getUserInfoByEmail(responseJson.getEmail());
 					if(null == user){/*Uncached token doesn't match an existing user*/
-						authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED.getValue());
+						authStatus.setAuthenticationStatus(AuthenticationStatusCode.DENIED);						
 						user = new User();
 						user.setAccessToken(accessToken);
 						user.setAccessTokenType(accessTokenType);
@@ -107,14 +102,14 @@ public class UserManagerMySQLImpl implements UserManager{
 					else{/*Uncached token matches an existing user*/
 						user.setAccessToken(accessToken);
 						userDao.updateUser(user);
-						authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED.getValue());
+						authStatus.setAuthenticationStatus(AuthenticationStatusCode.APPROVED);						
 						authStatus.setAuthenticatedUser(user);
 					}
 				}
 			}
 		}
 		else{/*Token cached*/
-			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED.getValue());
+			authStatus.setAuthenticationStatus(AuthenticationStatusCode.APPROVED);			
 			authStatus.setAuthenticatedUser(user);
 		}
 		return authStatus;

@@ -5,11 +5,10 @@ trainee_ajay{
 training_session{
 	start_time:08:00
 	end_time:08:40
-	hrz1_time:00:12
-	hrz2_time:00:14
-	hrz3_time:00:08
-	hrz4_time:00:06
-	hrz5_time:00:00
+	hrz1_time:00:12 speed 6.3 km/h
+	hrz2_time:00:14 speed 7.2 km/h
+	hrz3_time:00:08 speed 8.4 km/h
+	hrz4_time:00:06 speed 9.9 km/h
 	hrz6_time:00:00
 }
 ---------------------------------------------------------------------------------------------------------------------------------------
@@ -20,10 +19,10 @@ trainee_beena{
 training_session{
 	start_time:12:12
 	end_time:13:12
-	hrz1_time:00:10
-	hrz2_time:00:15
-	hrz3_time:00:05
-	hrz4_time:00:30
+	hrz1_time:00:10 speed 9.2 km/h
+	hrz2_time:00:15 speed 10.35 km/h
+	hrz3_time:00:05 speed 10.7 km/h
+	hrz4_time:00:30 speed 11.4 km/h
 	hrz5_time:00:00
 	hrz6_time:00:00
 }
@@ -35,12 +34,12 @@ trainee_chitra{
 training_session{
 	start_time:17:12
 	end_time:18:02
-	hrz1_time:00:04
-	hrz2_time:00:08
-	hrz3_time:00:11
-	hrz4_time:00:03
-	hrz5_time:00:10
-	hrz6_time:00:14
+	hrz1_time:00:04 speed 9.9 km/h
+	hrz2_time:00:08 speed 10.7 km/h
+	hrz3_time:00:11 speed 11.4 km/h
+	hrz4_time:00:03 speed 12.1 km/h
+	hrz5_time:00:10 speed 12.8 km/h
+	hrz6_time:00:14 speed 13.4 km/h
 }
 ---------------------------------------------------------------------------------------------------------------------------------------
 trainee_dinesh{
@@ -50,25 +49,25 @@ trainee_dinesh{
 training_session{
 	start_time:17:45
 	end_time:20:45
-	hrz1_time:00:28
-	hrz2_time:01:32
-	hrz3_time:00:20
-	hrz4_time:00:10
-	hrz5_time:00:15
-	hrz6_time:00:15
+	hrz1_time:00:28 speed 11.4 km/h
+	hrz2_time:01:32 speed 12.2 km/h
+	hrz3_time:00:20 speed 13.35 km/h
+	hrz4_time:00:10 speed 14.1 km/h
+	hrz5_time:00:15 speed 15 km/h
+	hrz6_time:00:15 speed 15.7 km/h
 }
 ---------------------------------------------------------------------------------------------------------------------------------------
-trainee_elango{
+trainee_esther{
 	trainee_classification: elite	
 }
 
 training_session{
 	start_time:16:10
 	end_time:18:10
-	hrz1_time:00:30
-	hrz2_time:00:10
-	hrz3_time:00:10
-	hrz4_time:00:40
-	hrz5_time:00:18
-	hrz6_time:00:12
+	hrz1_time:00:30 speed 12.2 km/h
+	hrz2_time:00:10 speed 13.4 km/h
+	hrz3_time:00:10 speed 14.7 km/h
+	hrz4_time:00:40 speed 15.5 km/h
+	hrz5_time:00:18 speed 16.4 km/h
+	hrz6_time:00:12 speed 17.3 km/h
 }

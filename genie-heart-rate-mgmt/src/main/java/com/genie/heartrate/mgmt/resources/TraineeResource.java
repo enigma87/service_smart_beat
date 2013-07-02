@@ -22,11 +22,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.genie.account.mgmt.beans.User;
+import com.genie.account.mgmt.core.AuthenticationStatus;
+import com.genie.account.mgmt.core.AuthenticationStatusCode;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.json.RegisterRequestJSON;
 import com.genie.account.mgmt.json.RegisterResponseJSON;
 import com.genie.account.mgmt.json.UserInfoJSON;
-import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.genie.account.mgmt.util.Formatter;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 import com.genie.heartrate.mgmt.core.FitnessManager;
@@ -76,7 +77,7 @@ public class TraineeResource
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
-		if(AuthenticationStatus.Status.APPROVED.getValue() == authStatus.getAuthenticationStatus()){
+		if(AuthenticationStatusCode.APPROVED.equals(authStatus.getAuthenticationStatus())){
 			User user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
@@ -102,7 +103,7 @@ public class TraineeResource
 	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
-		if(AuthenticationStatus.Status.DENIED.getValue() == authStatus.getAuthenticationStatus()) {
+		if(AuthenticationStatusCode.DENIED.equals(authStatus.getAuthenticationStatus())) {
 			if(null == authStatus.getAuthenticatedUser()){
 				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
 				try {
@@ -126,10 +127,9 @@ public class TraineeResource
 				}
 			}
 		} 
-		else if (AuthenticationStatus.Status.EMAIL_REQUIRED.getValue() == authStatus.getAuthenticationStatus()) {
+		else if (AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus())) {
 
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatus.Status.EMAIL_REQUIRED.getValue() + ", " + AuthenticationStatus.Status.EMAIL_REQUIRED.getDescription());
-	
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.getValue() + ", " + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.getDescription());
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {

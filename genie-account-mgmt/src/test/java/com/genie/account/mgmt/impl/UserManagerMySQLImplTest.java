@@ -18,15 +18,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.account.mgmt.beans.User;
+import com.genie.account.mgmt.core.AuthenticationStatus;
+import com.genie.account.mgmt.core.AuthenticationStatusCode;
 import com.genie.account.mgmt.core.UserManager;
 import com.genie.account.mgmt.dao.UserDao;
-import com.genie.account.mgmt.util.AuthenticationStatus;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.research.ws.wadl.Request;
 /**
  * @author vidhun
  *
@@ -180,11 +180,11 @@ public class UserManagerMySQLImplTest {
 		
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		AuthenticationStatus authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED.getValue(), authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatusCode.DENIED, authStatus.getAuthenticationStatus());
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 
 		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.getValue(), authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatusCode.APPROVED, authStatus.getAuthenticationStatus());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
 		/*Delete Facebook TestUser*/
@@ -247,7 +247,7 @@ public class UserManagerMySQLImplTest {
 		userFb.setLastName("Charlie");
 		
 		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.EMAIL_REQUIRED.getValue(), authStatus.getAuthenticationStatus());
+		Assert.assertEquals(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED, authStatus.getAuthenticationStatus());
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 		/*Delete Facebook TestUser*/
