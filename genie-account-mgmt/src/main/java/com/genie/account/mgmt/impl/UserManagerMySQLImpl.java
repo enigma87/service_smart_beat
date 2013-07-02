@@ -83,7 +83,7 @@ public class UserManagerMySQLImpl implements UserManager{
 				if(null != responseJson.getError()){/*Token invalid*/
 					authStatus.setAuthenticationStatus(AuthenticationStatusCode.DENIED);					
 					authStatus.setAuthenticatedUser(null);
-				} else if (null == responseJson.getEmail()) {
+				} else if (null == responseJson.getEmail()) {/*Token invalid - no email permissions given*/
 					authStatus.setAuthenticationStatus(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);					
 					authStatus.setAuthenticatedUser(null);
 				}
