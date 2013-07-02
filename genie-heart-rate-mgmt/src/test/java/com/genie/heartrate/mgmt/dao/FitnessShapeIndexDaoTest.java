@@ -11,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
-import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
 import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
 
 public class FitnessShapeIndexDaoTest {

@@ -1,7 +1,5 @@
 package com.genie.heartrate.mgmt.dao;
 
-import static org.junit.Assert.*;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

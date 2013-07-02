@@ -1,7 +1,5 @@
 package com.genie.heartrate.mgmt.dao;
 
-import static org.junit.Assert.*;
-
 import java.sql.Timestamp;
 import java.util.Date;
 
