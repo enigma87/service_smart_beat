@@ -58,7 +58,7 @@ public class GraphAPI {
 	/*section - me*/
 	private static final String URL_USER 			= URL_ROOT + "me";
 
-	public static AuthenticationStatus getAuthenticatedFacebookUser(String accessToken) {
+	public static AuthenticationStatus getUserAuthenticationStatus(String accessToken) {
 		FacebookClient facebookClient = null;
 		User user = null;
 		AuthenticationStatus authenticationStatus = new AuthenticationStatus();

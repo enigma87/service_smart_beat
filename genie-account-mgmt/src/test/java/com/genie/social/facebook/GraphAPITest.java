@@ -14,9 +14,9 @@ import com.genie.social.core.AuthenticationStatus;
 public class GraphAPITest {
 
 	@Test
-	public void testGetAuthenticatedFacebookUser() {
+	public void testGetUserAuthenticationStatus() {
 		String accessToken = "CAACEdEose0cBABFKK0l8hmNFYYglNUn9vtMZC7j9rTbdY6xKcxFY63KG3r1pYkuedILaUOzIMSZBiw2M03Rl9BXZA9ptEZCMThksL3a0L6yuEmzhUbZAk7e0bT8P1unbvkDQaZAuJdxOctnD4pjvSri0j2m03jMZAkZD";
-		AuthenticationStatus authenticationStatus = GraphAPI.getAuthenticatedFacebookUser(accessToken);
+		AuthenticationStatus authenticationStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
 		assertNotNull(authenticationStatus.getAuthenticatedUser());
 		System.out.println(authenticationStatus.getAuthenticatedUser());
 	}

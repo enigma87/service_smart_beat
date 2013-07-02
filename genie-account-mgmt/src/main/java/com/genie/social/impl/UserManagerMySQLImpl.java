@@ -5,6 +5,7 @@ import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
+import com.genie.social.facebook.GraphAPI;
 import com.genie.social.json.facebook.GraphAPIErrorJSON;
 import com.genie.social.json.facebook.GraphAPIResponseJSON;
 import com.genie.social.util.AuthorizationStatus;
@@ -47,64 +48,27 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao.getUserInfoByEmail(email);
 	}	
 				
-	public GraphAPIResponseJSON authenticateFacebookUser(String accessToken) {
-		
-		String url = "https://graph.facebook.com/me?fields=id,name,email&access_token="+accessToken;		
-		ClientConfig clientConfig = new DefaultClientConfig();
-		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client client = Client.create(clientConfig);
-		WebResource webresource = client.resource(url);
-		GraphAPIResponseJSON responseJSON = null;
-		try{
-			responseJSON =  webresource.get(GraphAPIResponseJSON.class);
-			if(null != responseJSON.getName()){
-				String[] names = responseJSON.getName().split(" ");
-				responseJSON.setFirstName(names[0]);
-				responseJSON.setLastName(names[1]);
-			}
-		}
-		catch(UniformInterfaceException e){
-			GraphAPIErrorJSON errorJSON = new GraphAPIErrorJSON();
-			errorJSON.setType(GraphAPIErrorJSON.TYPE_OAUTH_EXCEPTION);
-			responseJSON = new GraphAPIResponseJSON();
-			responseJSON.setError(errorJSON);
-		}
-		return responseJSON;
-	}
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
 		
 		AuthenticationStatus authStatus = new AuthenticationStatus();
-		
 		User user = userDao.getUserInfoByAccessToken(accessToken);		
-		if(null == user){/*Token not cached*/			
+		
+		if(null == user){
+			/*Token not cached*/			
 			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
-				GraphAPIResponseJSON responseJson = authenticateFacebookUser(accessToken);
-				if(null != responseJson.getError()){/*Token invalid*/
-					authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.DENIED);					
-					authStatus.setAuthenticatedUser(null);
-				} else if (null == responseJson.getEmail()) {/*Token invalid - no email permissions given*/
-					authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);					
-					authStatus.setAuthenticatedUser(null);
-				}
-				else{/*Token valid*/
-					user = userDao.getUserInfoByEmail(responseJson.getEmail());
-					if(null == user){/*Uncached token doesn't match an existing user*/
-						authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.DENIED);						
-						user = new User();
-						user.setAccessToken(accessToken);
-						user.setAccessTokenType(accessTokenType);
-						user.setEmail(responseJson.getEmail());
-						user.setFirstName(responseJson.getFirstName());
-						user.setLastName(responseJson.getLastName());
-						authStatus.setAuthenticatedUser(user);
-					}
-					else{/*Uncached token matches an existing user*/
-						user.setAccessToken(accessToken);
-						userDao.updateUser(user);
-						authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);						
-						authStatus.setAuthenticatedUser(user);
-					}
+				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
+				
+				/* get existing user if there, by email of authenticated FB user */
+				User authUser = authStatus.getAuthenticatedUser();
+				user =  null == authUser ? null : userDao.getUserInfoByEmail(authUser.getEmail());
+		
+				if (user != null) {
+					/*Uncached token matches an existing user*/
+					user.setAccessToken(accessToken);
+					userDao.updateUser(user);
+					authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);						
+					authStatus.setAuthenticatedUser(user);
 				}
 			}
 		}
@@ -113,7 +77,7 @@ public class UserManagerMySQLImpl implements UserManager{
 			authStatus.setAuthenticatedUser(user);
 		}
 		return authStatus;
-	}
+}		
 
 	public void saveUserInformation(User user) {
 		userDao.updateUser(user);		
