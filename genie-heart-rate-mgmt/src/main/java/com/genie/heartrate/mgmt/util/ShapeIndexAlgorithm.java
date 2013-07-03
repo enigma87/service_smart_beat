@@ -28,14 +28,14 @@ public class ShapeIndexAlgorithm
 	}
 	
 	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
-	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
-	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {4.1667, 5.2083, 6.25, 7.2917, 8.3333};
+	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {0,-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
+	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {0,4.1667, 5.2083, 6.25, 7.2917, 8.3333};
 	public static double getRegressedHomeostasisIndex(Integer traineeClassification, Timestamp previousTrainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double regressedHomeostasisIndex = 0.0;
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, previousTrainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
-			double hoursElapsed = (new Timestamp(new Date().getTime()).getTime() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
+			double hoursElapsed = ((new Timestamp(new Date().getTime())).getTime() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
 			double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_C = recentMinimumOfHomeostasisIndex;
@@ -89,12 +89,12 @@ public class ShapeIndexAlgorithm
 		return timeAfterRecovery;
 	}
 	
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_A = {{-1.0,-4.9},{-25.0,-49.9},{-60.0,-79.9},{-100.0,-149.9},{-180.0,-199.9}};
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_B = {{-5.0,-24.9},{-50.0,-99.9},{-80.0,-134.9},{-150.0,-189.9},{-200.0,-219.9}};
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_C = {{-25.0,-49.9},{-100.0,-149.9},{-135.0,-174.9},{-190.0,-219.9},{-220.0,-239.9}};
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_D = {{-50.0,-99.9},{-150.0,-174.9},{-175.0,-199.9},{-220.0,-239.9},{-240.0,-259.9}};
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_E = {{-100.0,-149.9},{-175.0,-199.9},{-200.0,-229.9},{-240.0,-264.9},{-260.0,-279.9}};
-	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_F = {{-150.0,-300.0},{-200.0,-300.0},{-230.0,-300.0},{-265.0,-300.0},{-280.0,-300.0}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_A = {{0,0},{-1.0,-4.9},{-25.0,-49.9},{-60.0,-79.9},{-100.0,-149.9},{-180.0,-199.9}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_B = {{0,0},{-5.0,-24.9},{-50.0,-99.9},{-80.0,-134.9},{-150.0,-189.9},{-200.0,-219.9}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_C = {{0,0},{-25.0,-49.9},{-100.0,-149.9},{-135.0,-174.9},{-190.0,-219.9},{-220.0,-239.9}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_D = {{0,0},{-50.0,-99.9},{-150.0,-174.9},{-175.0,-199.9},{-220.0,-239.9},{-240.0,-259.9}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_E = {{0,0},{-100.0,-149.9},{-175.0,-199.9},{-200.0,-229.9},{-240.0,-264.9},{-260.0,-279.9}};
+	public static final double[][] SUPERCOMENSATION_FROM_HI_MAP_RANGE_F = {{0,0},{-150.0,-300.0},{-200.0,-300.0},{-230.0,-300.0},{-265.0,-300.0},{-280.0,-300.0}};
 	
 	public static final double[] SUPERCOMPENSATION_FROM_HI_BY_RANGE = {0.2,0.4,0.6,0.8,1.2,1.6};
 	
@@ -133,8 +133,8 @@ public class ShapeIndexAlgorithm
 	}
 	
 	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
-	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ = {0,0.1852,0.2024,0.2232,0.2316,0.2406};
-	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ = {0,2.3743,2.5846,2.8357,3.0071,3.1978};
+	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ = {0,0,0.1852,0.2024,0.2232,0.2316,0.2406};
+	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ = {0,0,2.3743,2.5846,2.8357,3.0071,3.1978};
 	public static double calculateVdot(double[] speedDistributionOfHRZ){
 		double[] VdotByZone = new double[5];
 		double Vdot = 0.0;
