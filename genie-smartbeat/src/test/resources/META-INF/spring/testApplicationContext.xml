@@ -11,7 +11,7 @@
     
     <context:component-scan base-package="com.genie"/>
     
-    <context:property-placeholder location="classpath*:META-INF/spring/unit-test.properties"/>
+    <context:property-placeholder location="classpath*:META-INF/spring/genie-smartbeat-mysql.properties"/>
     
 	<bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
 		<property name="driverClassName" value="${genie.database.driverClassName}" />
