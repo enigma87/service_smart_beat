@@ -1,9 +1,9 @@
 /**
  * 
  */
-package com.genie.heartrate.mgmt.core;
+package com.genie.smartbeat.core;
 
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
 /**
  * @author dhasarathy

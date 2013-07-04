@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.beans;
+package com.genie.smartbeat.beans;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -167,13 +167,13 @@ public class FitnessTrainingSessionBean {
 	}
 	
 	public double[] getSpeedDistributionOfHRZ(){
-		double[] speedDistributiOnofHrz = new double[6];
-		speedDistributiOnofHrz[0] = (getHrz1Distance()/getHrz1Time())*0.06;
-		speedDistributiOnofHrz[1] = (getHrz2Distance()/getHrz2Time())*0.06;
-		speedDistributiOnofHrz[2] = (getHrz3Distance()/getHrz3Time())*0.06;
-		speedDistributiOnofHrz[3] = (getHrz4Distance()/getHrz4Time())*0.06;
-		speedDistributiOnofHrz[4] = (getHrz5Distance()/getHrz5Time())*0.06;
-		speedDistributiOnofHrz[5] = (getHrz6Distance()/getHrz6Time())*0.06;
+		double[] speedDistributiOnofHrz = new double[7];
+		speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
+		speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
+		speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
+		speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
+		speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
+		speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
 		
 		return speedDistributiOnofHrz;
 	}

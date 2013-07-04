@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genie.heartrate.mgmt.resources;
+package com.genie.smartbeat.resources;
 
 import java.util.UUID;
 
@@ -21,12 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
-import com.genie.heartrate.mgmt.core.FitnessManager;
-import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionRequestJson;
-import com.genie.heartrate.mgmt.json.SaveFitnessTrainingSessionResponseJson;
-import com.genie.heartrate.mgmt.json.ShapeIndexResponseJson;
 import com.genie.mgmt.GoodResponseObject;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
+import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
+import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.AuthenticationStatusCode;
@@ -71,7 +71,7 @@ public class TraineeResource
 
 	
 	@GET
-	@Path("{email}")
+	@Path("info/byEmail/{email}")
 	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
@@ -147,7 +147,7 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("{userid}/shapeIndex")
+	@Path("shapeIndex/{userid}")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
@@ -169,7 +169,7 @@ public class TraineeResource
 	}
 	
 	@POST
-	@Path("{userid}/fitnessTrainingSession/save")
+	@Path("fitnessTrainingSession/{userid}/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson){

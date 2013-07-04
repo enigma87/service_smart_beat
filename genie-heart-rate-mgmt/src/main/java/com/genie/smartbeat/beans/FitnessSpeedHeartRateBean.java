@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.beans;
+package com.genie.smartbeat.beans;
 
 /**
  * @author dhasarathy

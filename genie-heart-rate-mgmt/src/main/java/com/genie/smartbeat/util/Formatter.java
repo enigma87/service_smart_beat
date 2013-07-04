@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genie.heartrate.mgmt.util;
+package com.genie.smartbeat.util;
 
 import java.text.SimpleDateFormat;
 

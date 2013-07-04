@@ -6,12 +6,12 @@
 
 	<context-param>
 		<param-name>webAppRootKey</param-name>
-		<param-value>HeartRateMgmt</param-value>
+		<param-value>genie-smartbeat-root-key</param-value>
 	</context-param>
 	
 	<context-param>
 		<param-name>webappName</param-name>
-	    <param-value>SmartBeat Genie Heart Rate Management WebApp</param-value>
+	    <param-value>genie-smartbeat-webapp</param-value>
 	</context-param>
 	
 	<context-param>
@@ -35,12 +35,12 @@
 	</listener>
 	
 	<servlet>
-		<servlet-name>Genie Smart Heart Rate Service</servlet-name>
+		<servlet-name>genie-smartbeat-servlet</servlet-name>
 		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
 		
 		<init-param>
 		<param-name>com.sun.jersey.config.property.packages</param-name>
-		<param-value>com.genie.heartrate.mgmt.resources</param-value>		
+		<param-value>com.genie.smartbeat.resources</param-value>		
 		</init-param>
 		<init-param>
 		<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
@@ -50,7 +50,7 @@
 	</servlet>
 	
 	<servlet-mapping>
-		<servlet-name>Genie Smart Heart Rate Service</servlet-name>
+		<servlet-name>genie-smartbeat-servlet</servlet-name>
 		<url-pattern>/v1.0/*</url-pattern>
 	</servlet-mapping>
 

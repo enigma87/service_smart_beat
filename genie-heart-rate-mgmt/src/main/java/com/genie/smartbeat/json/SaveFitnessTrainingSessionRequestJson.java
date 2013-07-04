@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.json;
+package com.genie.smartbeat.json;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -7,7 +7,7 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
 
 @XmlRootElement(name = "SaveFitnessTrainingSessionRequestJson")

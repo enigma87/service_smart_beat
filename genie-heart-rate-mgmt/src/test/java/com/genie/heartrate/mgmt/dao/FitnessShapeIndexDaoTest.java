@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
+import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 
 public class FitnessShapeIndexDaoTest {
 	

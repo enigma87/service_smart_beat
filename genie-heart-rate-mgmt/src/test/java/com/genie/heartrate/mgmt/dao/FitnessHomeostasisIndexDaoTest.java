@@ -10,7 +10,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
+import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
+import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 
 public class FitnessHomeostasisIndexDaoTest {
 

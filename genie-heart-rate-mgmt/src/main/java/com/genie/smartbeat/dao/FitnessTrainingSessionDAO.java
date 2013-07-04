@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.dao;
+package com.genie.smartbeat.dao;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
 /**
  * @author dhasarathy

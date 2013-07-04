@@ -1,10 +1,10 @@
-package com.genie.heartrate.mgmt.json;
+package com.genie.smartbeat.json;
 
-public class ShapeIndexResponseJson {
+public class SaveFitnessTrainingSessionResponseJson {
 	
 	private String userid;
+	private String trainingSessionId;
 	private Double shapeIndex;
-	
 	
 	public String getUserid() {
 		return userid;
@@ -14,6 +14,14 @@ public class ShapeIndexResponseJson {
 		this.userid = userid;
 	}
 	
+	public String getTrainingSessionId() {
+		return trainingSessionId;
+	}
+	
+	public void setTrainingSessionId(String trainingSessionId) {
+		this.trainingSessionId = trainingSessionId;
+	}
+
 	public Double getShapeIndex() {
 		return shapeIndex;
 	}
@@ -21,6 +29,4 @@ public class ShapeIndexResponseJson {
 	public void setShapeIndex(Double shapeIndex) {
 		this.shapeIndex = shapeIndex;
 	}
-
-
 }

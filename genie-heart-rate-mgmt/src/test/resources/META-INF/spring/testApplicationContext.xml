@@ -21,31 +21,31 @@
 	</bean>
 
 	
-	<bean id="fitnessTrainingSessionDAO" class="com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO">
+	<bean id="fitnessTrainingSessionDAO" class="com.genie.smartbeat.dao.FitnessTrainingSessionDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="fitnessHomeostasisIndexDAO" class="com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO">
+	<bean id="fitnessHomeostasisIndexDAO" class="com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-     <bean id="fitnessShapeIndexDAO" class="com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO">
+     <bean id="fitnessShapeIndexDAO" class="com.genie.smartbeat.dao.FitnessShapeIndexDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="fitnessSpeedHeartRateDAO" class="com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO">
+	<bean id="fitnessSpeedHeartRateDAO" class="com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
- 	<bean id="userDao" class="com.genie.account.mgmt.dao.UserDao">
+ 	<bean id="userDao" class="com.genie.social.dao.UserDao">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="userManagerMySQLImpl" class="com.genie.account.mgmt.impl.UserManagerMySQLImpl">
+	<bean id="userManagerMySQLImpl" class="com.genie.social.impl.UserManagerMySQLImpl">
 		<property name="userDao" ref="userDao"/>		
 	</bean>
 	
-	<bean id="fitnessManagerMySQLImpl" class="com.genie.heartrate.mgmt.impl.FitnessManagerMySQLImpl">
+	<bean id="fitnessManagerMySQLImpl" class="com.genie.smartbeat.impl.FitnessManagerMySQLImpl">
 		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
 		<property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />

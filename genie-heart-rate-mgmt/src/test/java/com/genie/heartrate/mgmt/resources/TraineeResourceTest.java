@@ -16,10 +16,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
-import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
-import com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO;
-import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
+import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
+import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
+import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.social.dao.UserDao;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;

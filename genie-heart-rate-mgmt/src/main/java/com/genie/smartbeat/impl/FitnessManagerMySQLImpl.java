@@ -1,18 +1,18 @@
 /**
  * 
  */
-package com.genie.heartrate.mgmt.impl;
+package com.genie.smartbeat.impl;
 
-import com.genie.heartrate.mgmt.beans.FitnessHomeostasisIndexBean;
-import com.genie.heartrate.mgmt.beans.FitnessShapeIndexBean;
-import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
-import com.genie.heartrate.mgmt.beans.FitnessTrainingSessionBean;
-import com.genie.heartrate.mgmt.core.FitnessManager;
-import com.genie.heartrate.mgmt.dao.FitnessHomeostasisIndexDAO;
-import com.genie.heartrate.mgmt.dao.FitnessShapeIndexDAO;
-import com.genie.heartrate.mgmt.dao.FitnessSpeedHeartRateDAO;
-import com.genie.heartrate.mgmt.dao.FitnessTrainingSessionDAO;
-import com.genie.heartrate.mgmt.util.ShapeIndexAlgorithm;
+import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
+import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
+import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
+import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
+import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.util.ShapeIndexAlgorithm;
 
 /**
  * @author dhasarathy

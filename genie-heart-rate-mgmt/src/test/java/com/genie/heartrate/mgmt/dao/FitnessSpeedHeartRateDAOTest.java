@@ -6,7 +6,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.genie.heartrate.mgmt.beans.FitnessSpeedHeartRateBean;
+import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
+import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 
 public class FitnessSpeedHeartRateDAOTest {
 	
