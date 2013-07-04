@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genie.smartbeat.util;
+package com.genie.smartbeat.domain;
 
 import java.sql.Timestamp;
 import java.util.Date;

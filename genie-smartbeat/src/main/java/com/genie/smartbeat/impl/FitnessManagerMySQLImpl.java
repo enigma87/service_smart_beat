@@ -12,7 +12,7 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
-import com.genie.smartbeat.util.ShapeIndexAlgorithm;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 /**
  * @author dhasarathy
