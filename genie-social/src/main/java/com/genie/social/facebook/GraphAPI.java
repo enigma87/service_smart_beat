@@ -1,5 +1,6 @@
 package com.genie.social.facebook;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
@@ -15,7 +16,9 @@ import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.json.facebook.GraphAPIErrorJSON;
 import com.genie.social.json.facebook.GraphAPIResponseJSON;
 import com.restfb.DefaultFacebookClient;
+import com.restfb.DefaultWebRequestor;
 import com.restfb.FacebookClient;
+import com.restfb.WebRequestor;
 import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Parameter;
 import com.restfb.exception.FacebookOAuthException;
@@ -54,6 +57,7 @@ public class GraphAPI {
 	private static final String VAL_NAME 				= "name";
 	private static final String VAL_EMAIL 				= "email";
 	private static final String VAL_CLIENT_CREDENTIALS 	= "client_credentials";
+	private static final String VAL_DELETE				= "delete";
 	
 	/*section - me*/
 	private static final String URL_USER 			= URL_ROOT + "me";
@@ -74,7 +78,7 @@ public class GraphAPI {
 				user.setFirstName(names[0]);
 				user.setLastName(names[1]);
 				user.setEmail(facebookUser.getEmail());				
-				user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
+				if (facebookUser.getBirthdayAsDate() != null) user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
 				user.setAccessToken(accessToken);
 				user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
 				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);
@@ -128,8 +132,9 @@ public class GraphAPI {
 		return user;
 	}*/	
 	
-	public static User getTestUser(){
+	public static User getTestUser() {
 		String getFacebookTestUserUrl = null;
+
 		try{
 			getFacebookTestUserUrl = URL_APP_GENIE_TEST_USERS + "?"
 					+ KEY_INSTALLED + "=" + VAL_TRUE + "&"
@@ -139,12 +144,24 @@ public class GraphAPI {
 			
 		}catch(UnsupportedEncodingException e){
 			return null;
-		}		
-		ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
-		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
-		WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);		
-		JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
+		}
+	
+		WebRequestor facebookAppWebRequestor = new DefaultWebRequestor();
+		String stringResponseJSON;
+		JSONObject facebookTestUser;
+		
+		try {
+			stringResponseJSON = facebookAppWebRequestor.executePost(getFacebookTestUserUrl, "").getBody();
+		} catch (IOException e1) {
+			return null;
+		}
+		
+		try {
+			facebookTestUser = new JSONObject(stringResponseJSON);
+		} catch (JSONException e1) {
+			return null;
+		}
+		
 		
 		String userID = null;
 		String userAccessToken = null;
@@ -153,9 +170,9 @@ public class GraphAPI {
 		String lastName = null;
 		
 		try{
-			userID = FacebookTestUser.getString("id");
-			userAccessToken = FacebookTestUser.getString("access_token");
-			userEmail = FacebookTestUser.getString("email");			
+			userID = facebookTestUser.getString("id");
+			userAccessToken = facebookTestUser.getString("access_token");
+			userEmail = facebookTestUser.getString("email");			
 		}catch(JSONException e){
 			return null;
 		}		
@@ -169,5 +186,19 @@ public class GraphAPI {
 		
 		return user;
 	}
+
+	public static void deleteTestUser(User testUser) throws IOException {
+		
+		String deleteTestUserURL;
+		
+		deleteTestUserURL = URL_ROOT + testUser.getUserid() + "?"
+					+ KEY_METHOD + "=" + VAL_DELETE + "&"
+					+ KEY_ACCESS_TOKEN + "=" + URLEncoder.encode(testUser.getAccessToken(), ENCODING_ISO_8859_1);		
+			
+		
+		new DefaultWebRequestor().executePost(deleteTestUserURL, "");	
+		return;
+	}
+
 }
 

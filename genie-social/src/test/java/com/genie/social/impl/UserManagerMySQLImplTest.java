@@ -22,7 +22,15 @@ import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
+import com.genie.social.facebook.GraphAPI;
 import com.genie.social.impl.UserManagerMySQLImpl;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.DefaultWebRequestor;
+import com.restfb.FacebookClient;
+import com.restfb.FacebookClient.AccessToken;
+import com.restfb.Parameter;
+import com.restfb.WebRequestor;
+import com.restfb.WebRequestor.Response;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -141,124 +149,65 @@ public class UserManagerMySQLImplTest {
 	
 	@Test
 	public void testAuthenticateRequest() throws Exception{
+		/*
+		 * 1. Get test user from facebook and verify if valid/invalid accessToken grants appropriate access permissions
+		 */
+		GraphAPI graphAPI = new GraphAPI();
 		
-		/*Get App Access Token from facebook*/
-	    String getAppAccessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="+appID+"&client_secret=bd8fa4961cb1c2a284cbe8486707b73a&grant_type=client_credentials";
-		ClientConfig clientConfigGetAppAccessToken = new DefaultClientConfig();
-		clientConfigGetAppAccessToken.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client clientGetAppToken = Client.create(clientConfigGetAppAccessToken);
-		WebResource getAppAccessToken = clientGetAppToken.resource(getAppAccessTokenUrl);
-		String appAccessTokenResponse = getAppAccessToken.get(String.class);
-		String[] appAccessToken = appAccessTokenResponse.split("=");
-		String appAccessTokenValue = appAccessToken[1];
-
-	
-		/* 1. Get test user from facebook*/
-		String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
-		ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
-		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
-		WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
-		JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
-	
-		String userID = FacebookTestUser.getString("id");
-		String userAccessToken = FacebookTestUser.getString("access_token");
-		String userEmail = FacebookTestUser.getString("email");
-		
-		User userFb = new User();
-		userFb.setUserid(userID);
-		userFb.setAccessToken(userAccessToken);
+		User userFb = graphAPI.getTestUser();
 		userFb.setAccessTokenType("facebook");
-		userFb.setEmail(userEmail);
-		userFb.setFirstName("Alice");
-		userFb.setMiddleName("Bob");
-		userFb.setLastName("Charlie");
+		userFb.setFirstName("Achilles");
 				
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
 		usMgr.registerUser(userFb);
 		
-		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
-		AuthenticationStatus authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatusCode.DENIED.intValue(), authStatus.getAuthenticationStatusCode());
-		Assert.assertNull(authStatus.getAuthenticatedUser());
-
-		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		AuthenticationStatus authStatus;
+		
+		//case 1.a
+		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatusCode.APPROVED.intValue(), authStatus.getAuthenticationStatusCode());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
-		/*Delete Facebook TestUser*/
-		String DeleteFbTestUserUrl = "https://graph.facebook.com/"+userID+"?method=delete&access_token="+userAccessToken;
-		ClientConfig clientConfigDeleteFacebookTestUser = new DefaultClientConfig();
-		clientConfigDeleteFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		Client clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
-		WebResource deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
-		deleteFacebookTestUser.post();
-		userDao.deleteUser(userFb.getUserid());
+		// case 1.b user exists and not cached
+		String copyAccessToken = userFb.getAccessToken();
+		userFb.setAccessToken("");
+		userDao.updateUser(userFb);
+		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(AuthenticationStatusCode.APPROVED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
+		// case 1.c
+		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
+		authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(AuthenticationStatusCode.DENIED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertNull(authStatus.getAuthenticatedUser());
+
+		System.out.println(userFb.getUserid());
+		graphAPI.deleteTestUser(userFb);
+		userDao.deleteUser(userFb.getUserid());
 		
 		/*
-		 *  now user the test access_token and id to revoke the email permissions and test the authenticateRequest method
+		 *  2. Get test user from facebook: now user the test access_token and id to revoke the email permissions and test the authenticateRequest method
 		 *  a request without a valid email permission is a not successfully authenticated
 		*/
-
-		/* 2. Get test user from facebook */
-		getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
-		clientConfigGetFacebookTestUser = new DefaultClientConfig();
-		clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
-		getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
-		FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
-	
-		String accesstoken = FacebookTestUser.getString("access_token"); 
-		
-		WebResource deleteEmailPermission = clientGetFacebookTestUser.resource(
-				"https://graph.facebook.com/"
-				+ FacebookTestUser.getString("id")
-				+ "/permissions/email?access_token=" 
-				+ URLEncoder.encode(accesstoken,"ISO-8859-1")
-		);
-		
-		deleteEmailPermission.type(MediaType.TEXT_PLAIN_TYPE).delete(String.class);
-		
-		WebResource getFacebookTestUserNoEmail = clientGetFacebookTestUser.resource(
-				"https://graph.facebook.com/"
-				+ FacebookTestUser.getString("id") 
-				+ "?fields=id,name,email&access_token=" 
-				+ URLEncoder.encode(accesstoken,"ISO-8859-1")
-		);
-
-		JSONObject FacebookTestUserNoEmail = getFacebookTestUserNoEmail.type(MediaType.APPLICATION_FORM_URLENCODED).get(JSONObject.class);
-				
-		userID = FacebookTestUser.getString("id");
-		userAccessToken = FacebookTestUser.getString("access_token");
-
-		if (FacebookTestUserNoEmail.has("email") == false ) {
-			userEmail = "";
-		}
-		
-		userFb = new User();
-		userFb.setUserid(userID);
-		userFb.setAccessToken(userAccessToken);
+		userFb = graphAPI.getTestUser();
 		userFb.setAccessTokenType("facebook");
-		userFb.setEmail(userEmail);
-		userFb.setFirstName("Alice");
-		userFb.setMiddleName("Bob");
-		userFb.setLastName("Charlie");
+		userFb.setFirstName("Hector");
 		
-		authStatus = userManagerMySQLImpl.authenticateRequest(userAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		WebRequestor webRequestor = new DefaultWebRequestor();
+		
+		FacebookClient fbClient = new DefaultFacebookClient(userFb.getAccessToken());
+		boolean deleted = fbClient.deleteObject(userFb.getUserid() + "/permissions/email");
+		com.restfb.types.User facebookUser = fbClient.fetchObject("me", com.restfb.types.User.class);
+		
+		// case 2.a
+		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.intValue(), authStatus.getAuthenticationStatusCode());
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
-		/*Delete Facebook TestUser*/
-		DeleteFbTestUserUrl = "https://graph.facebook.com/"+userID+"?method=delete&access_token="+userAccessToken;
-		clientConfigDeleteFacebookTestUser = new DefaultClientConfig();
-		clientConfigDeleteFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-		clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
-		deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
-		deleteFacebookTestUser.post();
-		userDao.deleteUser(userFb.getUserid());
-
+		graphAPI.deleteTestUser(userFb);
+		
 	}	
 }

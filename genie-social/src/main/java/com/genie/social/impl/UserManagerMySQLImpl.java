@@ -50,19 +50,18 @@ public class UserManagerMySQLImpl implements UserManager{
 				
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
-		
 		AuthenticationStatus authStatus = new AuthenticationStatus();
 		User user = userDao.getUserInfoByAccessToken(accessToken);		
 		
 		if(null == user){
 			/*Token not cached*/			
+			
 			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
 				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
-				
 				/* get existing user if there, by email of authenticated FB user */
 				User authUser = authStatus.getAuthenticatedUser();
 				user =  null == authUser ? null : userDao.getUserInfoByEmail(authUser.getEmail());
-		
+			
 				if (user != null) {
 					/*Uncached token matches an existing user*/
 					user.setAccessToken(accessToken);
@@ -89,5 +88,3 @@ public class UserManagerMySQLImpl implements UserManager{
 	}
 		
 }
-
-
