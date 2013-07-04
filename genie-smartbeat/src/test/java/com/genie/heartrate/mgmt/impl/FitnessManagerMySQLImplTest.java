@@ -36,12 +36,14 @@ public class FitnessManagerMySQLImplTest {
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");	
 	}
 	
-	//@Test
+	@Test
 	public void testSaveFitnessTrainingSession10(){
 		
 		long now = new Date().getTime();
 		long nowBeforeTwoDays = now - (2*24*3600000);
 		long nowBeforeTwoDaysFourtyMinutes = nowBeforeTwoDays - (2400000);
+		long nowBeforeTwentyEightHours = now - (28*3600000);
+		long nowBeforeTwentyEightHoursAfterFourtyMinutes = nowBeforeTwentyEightHours+(2400000);
 		long nowPastFiveHours = now - (5*3600000);
 		long nowPastFourHours = now - (4*3600000);
 		long oneDayAfterNow = now + (24*3600000);
@@ -66,20 +68,20 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setUserid(userid);
 		//fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastFourtyMinutes));
 		//fitnessTrainingSessionBean.setEndTime(new Timestamp(now));
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeTwoDaysFourtyMinutes));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeTwoDays));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(6.0);
-		fitnessTrainingSessionBean.setHrz6Time(8.0);
-		fitnessTrainingSessionBean.setHrz1Distance(421.7304);
-		fitnessTrainingSessionBean.setHrz2Distance(895.1108);
-		fitnessTrainingSessionBean.setHrz3Distance(1342.9544);
-		fitnessTrainingSessionBean.setHrz4Distance(402.9899);
-		fitnessTrainingSessionBean.setHrz5Distance(1408.0273);
-		fitnessTrainingSessionBean.setHrz6Distance(2070.7614);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeTwentyEightHours));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeTwentyEightHoursAfterFourtyMinutes));
+		fitnessTrainingSessionBean.setHrz1Time(12.0);
+		fitnessTrainingSessionBean.setHrz2Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Time(8.0);
+		fitnessTrainingSessionBean.setHrz4Time(6.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1260.0);
+		fitnessTrainingSessionBean.setHrz2Distance(1680.0);
+		fitnessTrainingSessionBean.setHrz3Distance(1120.0);
+		fitnessTrainingSessionBean.setHrz4Distance(990.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
 			
         /*Saving the first Fitness training session for the user*/
 		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
@@ -99,7 +101,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		/*Asserting the Model data for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
 		Assert.assertEquals(userid, fitnessSpeedHeartRateBean.getUserid());
-		Assert.assertEquals(33.865384604692366, fitnessSpeedHeartRateBean.getCurrentVdot());
+		Assert.assertEquals(8.594862144406003, fitnessSpeedHeartRateBean.getCurrentVdot());
 		Assert.assertNull(null, fitnessSpeedHeartRateBean.getPreviousVdot());
 		
 		Assert.assertEquals(userid, fitnessShapeIndexBean.getUserid());
@@ -108,9 +110,9 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertNotNull(fitnessShapeIndexBean.getTimeOfRecord());
 		
 		Assert.assertEquals(userid, fitnessHomeostasisIndexBean.getUserid());
-		Assert.assertEquals(138.25, fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
-		Assert.assertEquals(-138.25, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
-		Assert.assertEquals(-138.25, fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertEquals(46.0, fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(-46.0, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-46.0, fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
 		Assert.assertNotNull(fitnessHomeostasisIndexBean.getRecentEndTime());
 	
 
@@ -120,17 +122,17 @@ public class FitnessManagerMySQLImplTest {
 	    fitnessTrainingSessionBean1.setStartTime(new Timestamp(nowPastFiveHours));
 		fitnessTrainingSessionBean1.setEndTime(new Timestamp(nowPastFourHours));
 		fitnessTrainingSessionBean1.setHrz1Time(10.0);
-		fitnessTrainingSessionBean1.setHrz2Time(15.0);
-		fitnessTrainingSessionBean1.setHrz3Time(10.0);
-		fitnessTrainingSessionBean1.setHrz4Time(15.0);
-		fitnessTrainingSessionBean1.setHrz5Time(5.0);
-		fitnessTrainingSessionBean1.setHrz6Time(5.0);
-		fitnessTrainingSessionBean1.setHrz1Distance(500.7304);
-		fitnessTrainingSessionBean1.setHrz2Distance(1968.8635);
-		fitnessTrainingSessionBean1.setHrz3Distance(1432.3931);
-		fitnessTrainingSessionBean1.setHrz4Distance(2364.424);
-		fitnessTrainingSessionBean1.setHrz5Distance(823.7615);
-		fitnessTrainingSessionBean1.setHrz6Distance(862.7104);
+		fitnessTrainingSessionBean1.setHrz2Time(11.0);
+		fitnessTrainingSessionBean1.setHrz3Time(2.0);
+		fitnessTrainingSessionBean1.setHrz4Time(2.0);
+		fitnessTrainingSessionBean1.setHrz5Time(0.0);
+		fitnessTrainingSessionBean1.setHrz6Time(0.0);
+		fitnessTrainingSessionBean1.setHrz1Distance(1016.67);
+		fitnessTrainingSessionBean1.setHrz2Distance(1338.33);
+		fitnessTrainingSessionBean1.setHrz3Distance(286.67);
+		fitnessTrainingSessionBean1.setHrz4Distance(313.33);
+		fitnessTrainingSessionBean1.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean1.setHrz6Distance(0.0);
 		
 		/*Saving the second Fitness training session for the user*/
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean1);
@@ -149,18 +151,18 @@ public class FitnessManagerMySQLImplTest {
 		
 		/*Asserting the Model data for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
 		Assert.assertEquals(userid, fitnessSpeedHeartRateBean1.getUserid());
-		Assert.assertEquals(29.69994179705032, fitnessSpeedHeartRateBean1.getCurrentVdot());
-		Assert.assertEquals(33.865384604692366, fitnessSpeedHeartRateBean1.getPreviousVdot());
+		Assert.assertEquals(8.493134086588622, fitnessSpeedHeartRateBean1.getCurrentVdot());
+		Assert.assertEquals(8.594862144406003, fitnessSpeedHeartRateBean1.getPreviousVdot());
 		
 		Assert.assertEquals(userid, fitnessShapeIndexBean1.getUserid());
-		Assert.assertEquals(99.8, fitnessShapeIndexBean1.getShapeIndex());
+		Assert.assertEquals(99.1, fitnessShapeIndexBean1.getShapeIndex());
 		Assert.assertEquals(trainingSessionId1, fitnessShapeIndexBean1.getSessionOfRecord());
 		Assert.assertNotNull(fitnessShapeIndexBean1.getTimeOfRecord());
 		
 		Assert.assertEquals(userid, fitnessHomeostasisIndexBean1.getUserid());
-		Assert.assertEquals(147.5, fitnessHomeostasisIndexBean1.getRecentTotalLoadOfExercise());
-		Assert.assertEquals(-147.5, fitnessHomeostasisIndexBean1.getRecentMinimumOfHomeostasisIndex());
-		Assert.assertEquals(-147.5, fitnessHomeostasisIndexBean1.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertEquals(20.5, fitnessHomeostasisIndexBean1.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(-20.5, fitnessHomeostasisIndexBean1.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-20.5, fitnessHomeostasisIndexBean1.getLocalRegressionMinimumOfHomeostasisIndex());
 		Assert.assertNotNull(fitnessHomeostasisIndexBean1.getRecentEndTime());
 		
 		/*Creating the bean for the third Session*/
@@ -170,18 +172,18 @@ public class FitnessManagerMySQLImplTest {
 		//fitnessTrainingSessionBean.setEndTime(new Timestamp(now));
 		fitnessTrainingSessionBean3.setStartTime(new Timestamp(twoDaysAfterNowBeforeFourtyMinutes));
 		fitnessTrainingSessionBean3.setEndTime(new Timestamp(twoDaysAfterNow));
-		fitnessTrainingSessionBean3.setHrz1Time(4.0);
-		fitnessTrainingSessionBean3.setHrz2Time(8.0);
-		fitnessTrainingSessionBean3.setHrz3Time(11.0);
-		fitnessTrainingSessionBean3.setHrz4Time(3.0);
-		fitnessTrainingSessionBean3.setHrz5Time(6.0);
-		fitnessTrainingSessionBean3.setHrz6Time(8.0);
-		fitnessTrainingSessionBean3.setHrz1Distance(421.7304);
-		fitnessTrainingSessionBean3.setHrz2Distance(895.1108);
-		fitnessTrainingSessionBean3.setHrz3Distance(1342.9544);
-		fitnessTrainingSessionBean3.setHrz4Distance(402.9899);
-		fitnessTrainingSessionBean3.setHrz5Distance(1408.0273);
-		fitnessTrainingSessionBean3.setHrz6Distance(2070.7614);
+		fitnessTrainingSessionBean3.setHrz1Time(10.0);
+		fitnessTrainingSessionBean3.setHrz2Time(22.0);
+		fitnessTrainingSessionBean3.setHrz3Time(0.0);
+		fitnessTrainingSessionBean3.setHrz4Time(0.0);
+		fitnessTrainingSessionBean3.setHrz5Time(0.0);
+		fitnessTrainingSessionBean3.setHrz6Time(0.0);
+		fitnessTrainingSessionBean3.setHrz1Distance(1033.33);
+		fitnessTrainingSessionBean3.setHrz2Distance(2640.0);
+		fitnessTrainingSessionBean3.setHrz3Distance(0.0);
+		fitnessTrainingSessionBean3.setHrz4Distance(0.0);
+		fitnessTrainingSessionBean3.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean3.setHrz6Distance(0.0);
 			
         /*Saving the first Fitness training session for the user*/
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean3);
@@ -209,9 +211,9 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertNotNull(fitnessShapeIndexBean2.getTimeOfRecord());
 		
 		Assert.assertEquals(userid, fitnessHomeostasisIndexBean2.getUserid());
-		Assert.assertEquals(138.25, fitnessHomeostasisIndexBean2.getRecentTotalLoadOfExercise());
-		Assert.assertEquals(-265.6112, fitnessHomeostasisIndexBean2.getRecentMinimumOfHomeostasisIndex());
-		Assert.assertEquals(-265.6112, fitnessHomeostasisIndexBean2.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertEquals(22.0, fitnessHomeostasisIndexBean2.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(-22, fitnessHomeostasisIndexBean2.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-22, fitnessHomeostasisIndexBean2.getLocalRegressionMinimumOfHomeostasisIndex());
 		Assert.assertNotNull(fitnessHomeostasisIndexBean2.getRecentEndTime());
 		System.out.println(fitnessManager.getFitnessShapeIndex(trainingSessionId2));
 	
@@ -229,7 +231,7 @@ public class FitnessManagerMySQLImplTest {
 
 
 	
-	@Test
+	//@Test
 	public void testSaveFitnessTrainingSession00(){
 		
 		long now = new Date().getTime();

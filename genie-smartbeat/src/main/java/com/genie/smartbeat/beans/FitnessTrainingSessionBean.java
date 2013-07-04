@@ -168,12 +168,43 @@ public class FitnessTrainingSessionBean {
 	
 	public double[] getSpeedDistributionOfHRZ(){
 		double[] speedDistributiOnofHrz = new double[7];
-		speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
-		speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
-		speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
-		speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
-		speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
-		speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
+		
+		if (0.0 != getHrz1Time() ){
+			speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[1] = 0.0;
+		}
+		
+		if (0.0 != getHrz2Time()){
+			speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[2] = 0.0;
+		}
+	
+		if(0.0 != getHrz3Time()){
+			speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[3] = 0.0;
+		}
+		
+		if(0.0 != getHrz4Time()){
+			speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[4] = 0.0;
+		}
+		
+		if(0.0 != getHrz5Time()){
+			speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[5] = 0.0;
+		}
+		
+		if (0.0 != getHrz6Time()){
+			speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
+		}else{
+			speedDistributiOnofHrz[6] = 0.0;
+		}
+		
 		
 		return speedDistributiOnofHrz;
 	}

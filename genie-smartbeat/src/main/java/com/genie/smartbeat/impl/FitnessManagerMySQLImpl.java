@@ -132,7 +132,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		Double recentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
 		recentMinimumOfHomeostasisIndex = regressedHomeostasisIndex - recentTotalLoadOfExercise;
-		if (recentMinimumOfHomeostasisIndex < localRegressionMinimumOfHomeostasisIndex){
+		if (recentMinimumOfHomeostasisIndex < localRegressionMinimumOfHomeostasisIndex || regressedHomeostasisIndex == 0.0){
 			localRegressionMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
 		}
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
