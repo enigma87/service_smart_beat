@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.genie.mgmt;
+package com.genie.smartbeat.resources;
 
 /**
  * @author vidhun
