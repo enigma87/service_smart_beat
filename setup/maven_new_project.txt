@@ -1,0 +1,2 @@
+mvn archetype:generate -DgroupId=com.genie.social -DartifactId=genie-social -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+mvn eclipse:eclipse
