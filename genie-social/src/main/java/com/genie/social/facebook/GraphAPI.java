@@ -5,30 +5,18 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
 
-import javax.ws.rs.core.MediaType;
-
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.AuthenticationStatusCode;
-import com.genie.social.json.facebook.GraphAPIErrorJSON;
-import com.genie.social.json.facebook.GraphAPIResponseJSON;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultWebRequestor;
 import com.restfb.FacebookClient;
-import com.restfb.WebRequestor;
 import com.restfb.FacebookClient.AccessToken;
-import com.restfb.Parameter;
+import com.restfb.WebRequestor;
 import com.restfb.exception.FacebookOAuthException;
-import com.restfb.types.TestUser;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 
 /**
  * @author dhasarathy
@@ -42,25 +30,15 @@ public class GraphAPI {
 	
 	/*keys*/
 	private static final String KEY_METHOD			= "method";
-	private static final String KEY_ACCESS_TOKEN 	= "access_token";
-	private static final String KEY_FIELDS			= "fields";
-	private static final String KEY_CLIENT_ID 		= "client_id";
-	private static final String KEY_CLIENT_SECRET 	= "client_secret";
-	private static final String KEY_GRANT_TYPE 		= "grant_type";
+	private static final String KEY_ACCESS_TOKEN 	= "access_token";	
 	private static final String KEY_INSTALLED		= "installed";
 	private static final String KEY_PERMISSIONS		= "permissions";
 	
 	/*vals*/
 	private static final String VAL_POST				= "post";	
-	private static final String VAL_TRUE 				= "true";
-	private static final String VAL_ID 					= "id";
-	private static final String VAL_NAME 				= "name";
-	private static final String VAL_EMAIL 				= "email";
-	private static final String VAL_CLIENT_CREDENTIALS 	= "client_credentials";
+	private static final String VAL_TRUE 				= "true";	
+	private static final String VAL_EMAIL 				= "email";	
 	private static final String VAL_DELETE				= "delete";
-	
-	/*section - me*/
-	private static final String URL_USER 			= URL_ROOT + "me";
 
 	public static AuthenticationStatus getUserAuthenticationStatus(String accessToken) {
 		FacebookClient facebookClient = null;
@@ -94,11 +72,7 @@ public class GraphAPI {
 	/*section - oauth*/
 	private static final String APP_ID_GENIE 			= "333643156765163";
 	private static final String CLIENT_SECRET_GENIE 	= "bd8fa4961cb1c2a284cbe8486707b73a";
-	private static final String URL_OAUTH 				= URL_ROOT + "oauth/";
-	private static final String URL_OAUTH_ACC_TOKEN 	= URL_OAUTH + "access_token/";
-	
-	
-	
+
 	public static String getAppGenieAccessToken(){
 		FacebookClient facebookClient = new DefaultFacebookClient();
 		AccessToken appAccessToken = facebookClient.obtainAppAccessToken(APP_ID_GENIE, CLIENT_SECRET_GENIE);
@@ -161,8 +135,6 @@ public class GraphAPI {
 		} catch (JSONException e1) {
 			return null;
 		}
-		
-		
 		String userID = null;
 		String userAccessToken = null;
 		String userEmail = null;
@@ -194,11 +166,8 @@ public class GraphAPI {
 		deleteTestUserURL = URL_ROOT + testUser.getUserid() + "?"
 					+ KEY_METHOD + "=" + VAL_DELETE + "&"
 					+ KEY_ACCESS_TOKEN + "=" + URLEncoder.encode(testUser.getAccessToken(), ENCODING_ISO_8859_1);		
-			
-		
 		new DefaultWebRequestor().executePost(deleteTestUserURL, "");	
 		return;
 	}
 
 }
-
