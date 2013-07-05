@@ -27,22 +27,6 @@ CREATE TABLE genie.`user` (
 
 delimiter $$
 
-
-delimiter $$
-
-CREATE TABLE genie.`user_heart_rate_test` (
-  `userid` varchar(128) NOT NULL,
-  `resting_heart_rate` int(11) DEFAULT NULL,
-  `resting_heart_rate_timestamp` timestamp NULL DEFAULT NULL,
-  `maximal_heart_rate` int(11) DEFAULT NULL,
-  `maximal_heart_rate_timestamp` timestamp NULL DEFAULT NULL,
-  `threshold_heart_rate` int(11) DEFAULT NULL,
-  `threshold_heart_rate_timestamp` timestamp NULL DEFAULT NULL,
-  UNIQUE KEY `userid_UNIQUE` (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
-
-delimiter $$
-
 CREATE TABLE genie.`fitness_training_session` (
   `userid` varchar(128) NOT NULL,
   `training_session_id` varchar(128) NOT NULL,
@@ -94,6 +78,19 @@ CREATE TABLE genie.`fitness_speed_heartrate_model` (
   `current_vdot` DOUBLE DEFAULT NULL,
   `previous_vdot` DOUBLE DEFAULT NULL,   
   PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_heartrate_test` (
+  `userid` varchar(128) NOT NULL,
+  `heartrate_test_id` varchar(128) NOT NULL,
+  `heartrate_type` int(3) DEFAULT NULL,  
+  `heartrate` DOUBLE DEFAULT NULL,
+  `time_of_record` timestamp NULL DEFAULT NULL,
+  UNIQUE KEY `userid_UNIQUE` (`heartrate_test_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$

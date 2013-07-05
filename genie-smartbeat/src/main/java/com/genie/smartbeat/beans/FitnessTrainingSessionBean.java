@@ -209,7 +209,7 @@ public class FitnessTrainingSessionBean {
 		return speedDistributiOnofHrz;
 	}
 	
-	private static final String DELIMITER_TRAINING_SESSION_ID = "_";
+	private static final String DELIMITER_TRAINING_SESSION_ID = "_TRN_";
 	public static String getFirstTrainingSessiontId(String userid){
 		SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
 		Date currentDate = new Date();
