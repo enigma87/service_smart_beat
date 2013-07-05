@@ -156,11 +156,14 @@ public class ShapeIndexAlgorithm
 		return ((100*currentVdot)/previousVdot)-100;		
 	}
 	
+	private static final int LENGTH_LIMIT_OHR_FACTOR = 4;
 	public static double calculateSlopeOfTimeRegressionOfStandingHeartRate(double[][] timeSHRPairs){
 		double slopeOfTimeRegressionOfSHR = 0.0;
-		SimpleRegression regressionModel = new SimpleRegression();
-		regressionModel.addData(timeSHRPairs);
-		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
+		if(LENGTH_LIMIT_OHR_FACTOR < timeSHRPairs.length){
+			SimpleRegression regressionModel = new SimpleRegression();
+			regressionModel.addData(timeSHRPairs);
+			slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
+		}
 		return slopeOfTimeRegressionOfSHR;
 	}		
 }

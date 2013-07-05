@@ -6,17 +6,7 @@ import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
 import com.genie.social.facebook.GraphAPI;
-import com.genie.social.json.facebook.GraphAPIErrorJSON;
-import com.genie.social.json.facebook.GraphAPIResponseJSON;
 import com.genie.social.util.AuthorizationStatus;
-//import com.genie.account.mgmt.util.RegistrationStatus;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 
 
 /**
