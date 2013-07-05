@@ -25,6 +25,7 @@ public class FitnessHeartrateTestDAOTest {
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean2;
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean3;
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean4;
+	private static FitnessHeartrateTestBean fitnessHeartrateTestBean5;
 	
 	@BeforeClass
 	public static void beforeClass(){
@@ -64,6 +65,13 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean4.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean4.setHeartrate(160.0);
 		fitnessHeartrateTestBean4.setTimeOfRecord(new Timestamp(now));
+		
+		fitnessHeartrateTestBean5 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean5.setUserid("user2");
+		fitnessHeartrateTestBean5.setHeartrateTestId("user2Test1");
+		fitnessHeartrateTestBean5.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean5.setHeartrate(160.0);
+		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(now));
 	}
 	
 	@Test
@@ -93,6 +101,24 @@ public class FitnessHeartrateTestDAOTest {
 		bean = fitnessHeartrateTestDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
 		assertNull(bean);
 	}
+	
+	@Test
+	public void testGetNumberOfHeartrateTestsByUser(){
+		Integer numberOfHeartrateTests = fitnessHeartrateTestDAO.getNumberOfHeartrateTestsByUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(0), numberOfHeartrateTests);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean4);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean5);
+		numberOfHeartrateTests = fitnessHeartrateTestDAO.getNumberOfHeartrateTestsByUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(4), numberOfHeartrateTests);
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean4.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean5.getHeartrateTestId());
+	}
 
 	@Test
 	public void testGetRecentHeartrateTestForUserByType() {
@@ -114,6 +140,23 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean4);
 		FitnessHeartrateTestBean bean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(fitnessHeartrateTestBean1.getUserid());
 		assertEquals(fitnessHeartrateTestBean4.getHeartrateTestId(), bean.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean4.getHeartrateTestId());
+	}
+	
+	@Test
+	public void testGetNumberOfHeartRateTestsForUserByType(){
+		Integer numberOfHeartrateTests = 0;
+		numberOfHeartrateTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType());
+		assertEquals(new Integer(0), numberOfHeartrateTests);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean4);
+		numberOfHeartrateTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType());
+		assertEquals(new Integer(3), numberOfHeartrateTests);
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());

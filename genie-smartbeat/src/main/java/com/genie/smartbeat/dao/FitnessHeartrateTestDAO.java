@@ -62,28 +62,7 @@ public class FitnessHeartrateTestDAO {
 			jdbcTemplate.update(DELETE_HEARTRATE_TEST_BY_ID,heartrateTestId);
 		}
 	}
-	
-	private static final String QUERY_SELECT_RECENT_TIME_BY_TYPE = "(" + 
-														"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
-														" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-														" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + " =?" + 
-														" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + " =?" +														
-													 ")";
-	private static final String QUERY_RECENT_TEST_BY_TYPE = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-			" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
-			" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME_BY_TYPE;
-	
-	public FitnessHeartrateTestBean getRecentHeartrateTestForUserByType(String userid, Integer heartrateType){
-		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;		
-		try{
-			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST_BY_TYPE, 
-					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid,heartrateType);
-		}catch(DataAccessException e){
-			
-		}		
-		return fitnessHeartrateTestBean;
-	}
-	
+		
 	private static final String QUERY_SELECT_RECENT_TIME = "(" + 
 				"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
 				" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
@@ -101,6 +80,62 @@ public class FitnessHeartrateTestDAO {
 			
 		}
 		return fitnessHeartrateTestBean;
+	}
+	
+	private static final String QUERY_ALL_TESTS = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+			" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?";			
+
+	private static final String COUNT_QUERY_ALL_TESTS = "SELECT COUNT(*) FROM ( " +
+					QUERY_ALL_TESTS +
+					" ) AS TEMP";
+	public Integer getNumberOfHeartrateTestsByUser(String userid){
+		Integer numberofHeartRateTests = 0;
+		try{
+			numberofHeartRateTests =  new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_ALL_TESTS, userid);
+		}catch(DataAccessException e){
+			
+		}
+		return numberofHeartRateTests;
+	}
+	
+	private static final String QUERY_SELECT_RECENT_TIME_BY_TYPE = "(" + 
+																		"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
+																		" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+																		" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + " =?" + 
+																		" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + " =?" +														
+																	 ")";
+	private static final String QUERY_RECENT_TEST_BY_TYPE = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+															" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
+															" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME_BY_TYPE;
+
+	public FitnessHeartrateTestBean getRecentHeartrateTestForUserByType(String userid, Integer heartrateType){
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;		
+		try{
+			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST_BY_TYPE, 
+			ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid,heartrateType);
+		}catch(DataAccessException e){
+		
+		}		
+		return fitnessHeartrateTestBean;
+	}
+	
+	private static final String QUERY_ALL_TESTS_BY_TYPE = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+															" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?" +
+															" AND "	  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + "=?";
+	
+	private static final String COUNT_QUERY_ALL_TESTS_BY_TYPE = "SELECT COUNT(*) FROM ( " +
+																QUERY_ALL_TESTS_BY_TYPE +
+																" ) AS TEMP";
+	public Integer getNumberOfHeartRateTestsForUserByType(String userid, Integer heartrateType){
+		
+		Integer numberofHeartRateTests = 0;
+		try{
+			numberofHeartRateTests =  new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_ALL_TESTS_BY_TYPE, userid, heartrateType);
+		}catch(DataAccessException e){
+			
+		}
+		return numberofHeartRateTests;
 	}
 }
 
