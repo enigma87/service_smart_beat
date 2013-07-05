@@ -54,6 +54,7 @@
 		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
 		<property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />
 		<property name="fitnessShapeIndexDAO" ref="fitnessShapeIndexDAO" />
+		<property name="fitnessHeartrateTestDAO" ref="fitnessHeartrateTestDAO" />
 	</bean>
 	
 </beans>

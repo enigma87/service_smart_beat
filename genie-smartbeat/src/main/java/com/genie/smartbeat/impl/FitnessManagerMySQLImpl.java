@@ -9,6 +9,7 @@ import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
@@ -27,6 +28,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
+	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
 	
 	
 	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
@@ -63,6 +65,15 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void setFitnessShapeIndexDAO(
 			FitnessShapeIndexDAO fitnessShapeIndexDAO) {
 		this.fitnessShapeIndexDAO = fitnessShapeIndexDAO;
+	}
+	
+	public FitnessHeartrateTestDAO getFitnessHeartrateTestDAO() {
+		return fitnessHeartrateTestDAO;
+	}
+	
+	public void setFitnessHeartrateTestDAO(
+			FitnessHeartrateTestDAO fitnessHeartrateTestDAO) {
+		this.fitnessHeartrateTestDAO = fitnessHeartrateTestDAO;
 	}
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
@@ -225,8 +236,15 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) {
-		// TODO Auto-generated method stub
 		
+		String userid = fitnessHeartrateTestBean.getUserid();
+		FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(userid);
+		if(null != previousHeartrateTestBean){
+			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
+		}else{
+			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
+		}
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
 	}
 
 }
