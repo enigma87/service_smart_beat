@@ -57,6 +57,6 @@ public class FitnessHeartrateTestBean {
 	
 	public void setTimeOfRecord(Timestamp timeOfRecord) {
 		this.timeOfRecord = timeOfRecord;
-	}
+	}	
 }
 

@@ -3,6 +3,7 @@
  */
 package com.genie.smartbeat.impl;
 
+import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
@@ -13,6 +14,7 @@ import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+import com.genie.smartbeat.util.SmartbeatIDGenerator;
 
 /**
  * @author dhasarathy
@@ -70,12 +72,12 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
 		if(null != previousTrainingSession){
 			/*generate first training session id*/
-			trainingSessionId = FitnessTrainingSessionBean.getNextTrainingSessionId(previousTrainingSession.getTrainingSessionId());
+			trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
 			/*save previous training session id for updating shape index*/
 			previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
 		}else{
 			/*generate training session id from previous session id*/
-			trainingSessionId = FitnessTrainingSessionBean.getFirstTrainingSessiontId(userid);			
+			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
 		}
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		
@@ -220,6 +222,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			recentTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 		}
 		return recentTrainingSessionId;
+	}
+
+	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
