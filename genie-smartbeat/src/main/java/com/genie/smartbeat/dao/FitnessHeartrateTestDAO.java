@@ -63,24 +63,43 @@ public class FitnessHeartrateTestDAO {
 		}
 	}
 	
-	private static final String QUERY_SELECT_END_TIME = "(" + 
+	private static final String QUERY_SELECT_RECENT_TIME_BY_TYPE = "(" + 
 														"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
 														" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
 														" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + " =?" + 
 														" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + " =?" +														
 													 ")";
-	private static final String QUERY_RECENT_TEST = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+	private static final String QUERY_RECENT_TEST_BY_TYPE = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
 			" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
-			" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_END_TIME;
+			" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME_BY_TYPE;
 	
-	public FitnessHeartrateTestBean getRecentHeartrateTestForUser(String userid, Integer heartrateType){
+	public FitnessHeartrateTestBean getRecentHeartrateTestForUserByType(String userid, Integer heartrateType){
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;		
 		try{
-			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST, 
+			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST_BY_TYPE, 
 					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid,heartrateType);
 		}catch(DataAccessException e){
 			
 		}		
+		return fitnessHeartrateTestBean;
+	}
+	
+	private static final String QUERY_SELECT_RECENT_TIME = "(" + 
+				"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
+				" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+				" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + " =?" + 																	
+			 ")";
+	private static final String QUERY_RECENT_TEST = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+	" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
+	" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME;
+	public FitnessHeartrateTestBean getRecentHeartrateTestForUser(String userid){
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
+		try{
+			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST, 
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid);
+		}catch(DataAccessException e){
+			
+		}
 		return fitnessHeartrateTestBean;
 	}
 }
