@@ -70,13 +70,14 @@ public class FitnessHeartrateTestDAO {
 														" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + " =?" +														
 													 ")";
 	private static final String QUERY_RECENT_TEST = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-			" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_END_TIME;
+			" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
+			" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_END_TIME;
 	
 	public FitnessHeartrateTestBean getRecentHeartrateTestForUser(String userid, Integer heartrateType){
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;		
 		try{
 			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST, 
-					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,heartrateType);
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid,heartrateType);
 		}catch(DataAccessException e){
 			
 		}		
