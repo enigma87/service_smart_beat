@@ -1,9 +1,7 @@
 package com.genie.smartbeat.dao;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
@@ -29,7 +27,6 @@ public class FitnessHeartrateTestDAO {
 	private static final int COLUMN_USERID 				= 0;
 	private static final int COLUMN_HEARTRATE_TEST_ID 	= 1;
 	private static final int COLUMN_HEARTRATE_TYPE 		= 2;
-	private static final int COLUMN_HEARTRATE 			= 3;
 	private static final int COLUMN_TIME_OF_RECORD 		= 4;
 	
 	private BasicDataSource dataSource;
@@ -147,20 +144,10 @@ public class FitnessHeartrateTestDAO {
 	public List<FitnessHeartrateTestBean> getNRecentHeartRateTestsForUserByType(String userid, Integer heartrateType, Integer n){
 		String QUERY_N_RECENT_BY_TYPE =  QUERY_ALL_TESTS_BY_TYPE +
 										 " ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " DESC" +
-										 " LIMIT " + n;
-				
+										 " LIMIT " + n;				
 		List<FitnessHeartrateTestBean> nRecentHeartRateTests = new ArrayList<FitnessHeartrateTestBean>();
 		try{
-			List<Map<String, Object>> rows = new JdbcTemplate(dataSource).queryForList(QUERY_N_RECENT_BY_TYPE, userid, heartrateType);
-			for(Map<String, Object> row: rows){
-				FitnessHeartrateTestBean fitnessHeartrateTestBean = new FitnessHeartrateTestBean();
-				fitnessHeartrateTestBean.setUserid((String)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]));
-				fitnessHeartrateTestBean.setHeartrateTestId((String)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TEST_ID]));
-				fitnessHeartrateTestBean.setHeartrateType((Integer)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE]));
-				fitnessHeartrateTestBean.setHeartrate((Double)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE]));
-				fitnessHeartrateTestBean.setTimeOfRecord((Timestamp)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]));
-				nRecentHeartRateTests.add(fitnessHeartrateTestBean);
-			}
+			nRecentHeartRateTests = new JdbcTemplate(dataSource).query(QUERY_N_RECENT_BY_TYPE, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class), userid, heartrateType);			
 		}catch(DataAccessException e){
 			
 		}
