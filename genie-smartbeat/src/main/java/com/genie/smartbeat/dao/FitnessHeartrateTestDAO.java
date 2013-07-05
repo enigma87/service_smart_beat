@@ -1,5 +1,10 @@
 package com.genie.smartbeat.dao;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,6 +29,7 @@ public class FitnessHeartrateTestDAO {
 	private static final int COLUMN_USERID 				= 0;
 	private static final int COLUMN_HEARTRATE_TEST_ID 	= 1;
 	private static final int COLUMN_HEARTRATE_TYPE 		= 2;
+	private static final int COLUMN_HEARTRATE 			= 3;
 	private static final int COLUMN_TIME_OF_RECORD 		= 4;
 	
 	private BasicDataSource dataSource;
@@ -136,6 +142,29 @@ public class FitnessHeartrateTestDAO {
 			
 		}
 		return numberofHeartRateTests;
+	}
+		
+	public List<FitnessHeartrateTestBean> getNRecentHeartRateTestsForUserByType(String userid, Integer heartrateType, Integer n){
+		String QUERY_N_RECENT_BY_TYPE =  QUERY_ALL_TESTS_BY_TYPE +
+										 " ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " DESC" +
+										 " LIMIT " + n;
+				
+		List<FitnessHeartrateTestBean> nRecentHeartRateTests = new ArrayList<FitnessHeartrateTestBean>();
+		try{
+			List<Map<String, Object>> rows = new JdbcTemplate(dataSource).queryForList(QUERY_N_RECENT_BY_TYPE, userid, heartrateType);
+			for(Map<String, Object> row: rows){
+				FitnessHeartrateTestBean fitnessHeartrateTestBean = new FitnessHeartrateTestBean();
+				fitnessHeartrateTestBean.setUserid((String)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]));
+				fitnessHeartrateTestBean.setHeartrateTestId((String)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TEST_ID]));
+				fitnessHeartrateTestBean.setHeartrateType((Integer)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE]));
+				fitnessHeartrateTestBean.setHeartrate((Double)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE]));
+				fitnessHeartrateTestBean.setTimeOfRecord((Timestamp)row.get(COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]));
+				nRecentHeartRateTests.add(fitnessHeartrateTestBean);
+			}
+		}catch(DataAccessException e){
+			
+		}
+		return nRecentHeartRateTests;
 	}
 }
 
