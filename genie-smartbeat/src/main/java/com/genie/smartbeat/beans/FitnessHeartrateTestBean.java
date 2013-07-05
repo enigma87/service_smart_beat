@@ -7,7 +7,12 @@ import java.sql.Timestamp;
  **/
 
 public class FitnessHeartrateTestBean {
-
+	
+	public static final Integer HEARTRATE_TYPE_RESTING 					= 0;
+	public static final Integer HEARTRATE_TYPE_THRESHOLD 				= 1;
+	public static final Integer HEARTRATE_TYPE_MAXIMAL 					= 2;
+	public static final Integer HEARTRATE_TYPE_STANDING_ORTHOSTATIC 	= 3;
+	
 	private String userid;
 	private String heartrateTestId;
 	private Integer heartrateType;
