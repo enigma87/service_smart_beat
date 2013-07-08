@@ -62,7 +62,7 @@ public class UserTest {
 		Assert.assertTrue(timestamp.equals(user.getLastUpdatedTs()));
 		Assert.assertTrue(timestamp.equals(user.getLastLoginTs()));
 		Assert.assertEquals(new Boolean(true), user.getActive());
-		
+		Assert.assertEquals(user.toString(), user.getFirstName() + " " + user.getLastName());
 		
 	}
 
