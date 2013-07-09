@@ -2,7 +2,6 @@ package com.genie.social.impl;
 
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
-import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
 import com.genie.social.facebook.GraphAPI;
@@ -56,13 +55,13 @@ public class UserManagerMySQLImpl implements UserManager{
 					/*Uncached token matches an existing user*/
 					user.setAccessToken(accessToken);
 					userDao.updateUser(user);
-					authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);						
+					authStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());						
 					authStatus.setAuthenticatedUser(user);
 				}
 			}
 		}
 		else{/*Token cached*/
-			authStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);			
+			authStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());			
 			authStatus.setAuthenticatedUser(user);
 		}
 		return authStatus;

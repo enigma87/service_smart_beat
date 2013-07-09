@@ -28,7 +28,6 @@ import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
-import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.json.RegisterRequestJSON;
 import com.genie.social.json.RegisterResponseJSON;
@@ -76,7 +75,7 @@ public class TraineeResource
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
-		if(AuthenticationStatusCode.APPROVED == authStatus.getAuthenticationStatusCode()){
+		if(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode())) {
 			User user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
@@ -102,7 +101,7 @@ public class TraineeResource
 	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
-		if(AuthenticationStatusCode.DENIED == authStatus.getAuthenticationStatusCode()) {
+		if(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode())) {
 			if(null == authStatus.getAuthenticatedUser()){
 				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
 				try {
@@ -126,9 +125,9 @@ public class TraineeResource
 				}
 			}
 		} 
-		else if (AuthenticationStatusCode.DENIED_EMAIL_REQUIRED == authStatus.getAuthenticationStatusCode()) {
+		else if (AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode())) {
 
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED);
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {

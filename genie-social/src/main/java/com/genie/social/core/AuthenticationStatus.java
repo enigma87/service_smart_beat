@@ -8,6 +8,32 @@ import com.genie.social.beans.User;
 
 public class AuthenticationStatus {
 
+	public enum Status {
+		APPROVED(0),
+		DENIED(1),
+		DENIED_EMAIL_REQUIRED(2);
+		
+		private int statusval;
+		
+		private  Status(int val) {
+			this.statusval = val;
+		}
+		
+		public int getValue() {
+			return this.statusval;
+		}
+		
+		@Override
+		public String toString() {
+			switch (this) {
+			  case APPROVED: return "Access Granted!"; 
+			  case DENIED_EMAIL_REQUIRED: return "Valid EmailID required for Access."; 
+			  case DENIED: return "Access Denied.";
+			}
+			return null;
+		}	
+	}
+	
 	private Integer authenticationStatusCode;
 	private User authenticatedUser;
 	

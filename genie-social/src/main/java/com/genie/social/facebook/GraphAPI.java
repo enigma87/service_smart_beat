@@ -10,7 +10,6 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
-import com.genie.social.core.AuthenticationStatusCode;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultWebRequestor;
 import com.restfb.FacebookClient;
@@ -48,7 +47,7 @@ public class GraphAPI {
 			facebookClient = new DefaultFacebookClient(accessToken);
 			com.restfb.types.User facebookUser = facebookClient.fetchObject("me", com.restfb.types.User.class);
 			if(null == facebookUser.getEmail()){
-				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED);
+				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.getValue());
 				authenticationStatus.setAuthenticatedUser(null);
 			}else{
 				user = new User();
@@ -59,11 +58,11 @@ public class GraphAPI {
 				if (facebookUser.getBirthdayAsDate() != null) user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
 				user.setAccessToken(accessToken);
 				user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
-				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatusCode.APPROVED);
+				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());
 				authenticationStatus.setAuthenticatedUser(user);
 			}
 		}catch(FacebookOAuthException e){
-			authenticationStatus.setAuthenticationStatusCode(AuthenticationStatusCode.DENIED);
+			authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.DENIED.getValue());
 			authenticationStatus.setAuthenticatedUser(null);
 		}
 		return authenticationStatus;

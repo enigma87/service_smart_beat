@@ -15,7 +15,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.User;
 import com.genie.social.core.AuthenticationStatus;
-import com.genie.social.core.AuthenticationStatusCode;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
 import com.genie.social.facebook.GraphAPI;
@@ -149,7 +148,7 @@ public class UserManagerMySQLImplTest {
 		
 		//case 1.a
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatusCode.APPROVED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
 		// case 1.b user exists and not cached
@@ -157,13 +156,13 @@ public class UserManagerMySQLImplTest {
 		userFb.setAccessToken("");
 		userDao.updateUser(userFb);
 		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatusCode.APPROVED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
 		// case 1.c
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatusCode.DENIED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		GraphAPI.deleteTestUser(userFb);
 		userDao.deleteUser(userFb.getUserid());
@@ -180,7 +179,7 @@ public class UserManagerMySQLImplTest {
 		fbClient.deleteObject(userFb.getUserid() + "/permissions/email");
 		// case 2.a
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatusCode.DENIED_EMAIL_REQUIRED.intValue(), authStatus.getAuthenticationStatusCode());
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 		GraphAPI.deleteTestUser(userFb);
