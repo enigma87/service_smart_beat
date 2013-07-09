@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -30,7 +30,7 @@ public class UserManagerMySQLImplTest {
 	private static ApplicationContext applicationContext;
 	private static UserDao userDao;
 	private static UserManager userManagerMySQLImpl;
-	private static User user;
+	private static UserBean user;
 	private static Date Dob = null;
 	private static Timestamp timestamp ;	
 	
@@ -49,10 +49,10 @@ public class UserManagerMySQLImplTest {
 				
 			}
 
-		user = new User();
+		user = new UserBean();
 		user.setUserid("123456789");
 		user.setAccessToken("access_token_123456789");
-		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
+		user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_CUSTOM);
 		user.setFirstName("Alice");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
@@ -73,10 +73,10 @@ public class UserManagerMySQLImplTest {
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
 		usMgr.registerUser(user);
 		
-		User user1 = usMgr.getUserInformation(user.getUserid());
+		UserBean user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("123456789", user1.getUserid());
 		user.setAccessToken("access_token_123456789");
-		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
+		user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_CUSTOM);
 		Assert.assertEquals("Alice", user1.getFirstName());
 		Assert.assertEquals("Bob", user1.getMiddleName());
 		Assert.assertEquals("CampBell", user1.getLastName());
@@ -96,7 +96,7 @@ public class UserManagerMySQLImplTest {
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
 		usMgr.registerUser(user);
-		User user1 = usMgr.getUserInformation(user.getUserid());
+		UserBean user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertNotNull(user1);
 		userDao.deleteUser(user1.getUserid());
 	}
@@ -108,7 +108,7 @@ public class UserManagerMySQLImplTest {
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
 		usMgr.registerUser(user);
-		User user1 = usMgr.getUserInformationByEmail(user.getEmail());
+		UserBean user1 = usMgr.getUserInformationByEmail(user.getEmail());
 		Assert.assertNotNull(user1);
 		userDao.deleteUser(user1.getUserid());
 	}
@@ -124,7 +124,7 @@ public class UserManagerMySQLImplTest {
 		user.setMiddleName("John");		
 		usMgr.saveUserInformation(user);
 		
-		User user1 = usMgr.getUserInformation(user.getUserid());
+		UserBean user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("John",user1.getMiddleName());		
 		userDao.deleteUser(user1.getUserid());
 		user.setMiddleName("Bob");
@@ -135,7 +135,7 @@ public class UserManagerMySQLImplTest {
 		/*
 		 * 1. Get test user from facebook and verify if valid/invalid accessToken grants appropriate access permissions
 		 */
-		User userFb = GraphAPI.getTestUser();
+		UserBean userFb = GraphAPI.getTestUser();
 		userFb.setAccessTokenType("facebook");
 		userFb.setFirstName("Achilles");
 				
@@ -147,7 +147,7 @@ public class UserManagerMySQLImplTest {
 		AuthenticationStatus authStatus;
 		
 		//case 1.a
-		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
@@ -155,13 +155,13 @@ public class UserManagerMySQLImplTest {
 		String copyAccessToken = userFb.getAccessToken();
 		userFb.setAccessToken("");
 		userDao.updateUser(userFb);
-		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
 		// case 1.c
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
-		authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		GraphAPI.deleteTestUser(userFb);
@@ -178,7 +178,7 @@ public class UserManagerMySQLImplTest {
 		FacebookClient fbClient = new DefaultFacebookClient(userFb.getAccessToken());
 		fbClient.deleteObject(userFb.getUserid() + "/permissions/email");
 		// case 2.a
-		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		

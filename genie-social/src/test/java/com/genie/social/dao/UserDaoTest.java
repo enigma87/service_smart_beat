@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.dao.UserDao;
 
 /**
@@ -24,7 +24,7 @@ public class UserDaoTest {
 
 	private static ApplicationContext applicationContext;
 	private static UserDao userDao;
-	private static User user;
+	private static UserBean user;
 	private static Date Dob = null;
 	private static Timestamp timestamp ;
 
@@ -44,10 +44,10 @@ public class UserDaoTest {
 				
 			}
 
-		user = new User();
+		user = new UserBean();
 		user.setUserid("123456789");
 		user.setAccessToken("CAACEdEose0cBANFZBcZAyzn7agEZAOzlEKr75c6hSppL969nNNS9wFwxxFHJwp48vi2G884onYxxqZBuwVNsC4BqVUfwZAIUZCrXvNGv2yvjXdBnxZCbfMMDRtDbw2XVhpQGLOEr1wlIJHBGsBwcKY9M72Q4PO9loMZD");
-		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
+		user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		user.setFirstName("Katoor");
 		user.setMiddleName("Motham");
 		user.setLastName("Dada");
@@ -65,7 +65,7 @@ public class UserDaoTest {
 		
 		userDao.createUser(user);
 		
-		User user1 = userDao.getUserInfo(user.getUserid());
+		UserBean user1 = userDao.getUserInfo(user.getUserid());
 		Assert.assertEquals("123456789", user1.getUserid());		
 		Assert.assertEquals("Katoor", user1.getFirstName());
 		Assert.assertEquals("Motham", user1.getMiddleName());
@@ -87,7 +87,7 @@ public class UserDaoTest {
 		user.setMiddleName("John");		
 		userDao.updateUser(user);
 		
-		User user1 = userDao.getUserInfo(user.getUserid());
+		UserBean user1 = userDao.getUserInfo(user.getUserid());
 		Assert.assertEquals("John", user1.getMiddleName());
 		userDao.deleteUser(user.getUserid());
 	}
@@ -96,7 +96,7 @@ public class UserDaoTest {
 	public void testGetUserInfoByEmail() {
 		
 		userDao.createUser(user);
-		User user = userDao.getUserInfoByEmail("abc@xyz.com");
+		UserBean user = userDao.getUserInfoByEmail("abc@xyz.com");
 		Assert.assertNotNull(user);
 		userDao.deleteUser(user.getUserid());
 	
@@ -105,7 +105,7 @@ public class UserDaoTest {
 	@Test
 	public void testGetUserInfoByUserid() {
 		userDao.createUser(user);
-		User user = userDao.getUserInfo("123456789");
+		UserBean user = userDao.getUserInfo("123456789");
 		Assert.assertNotNull(user);
 		userDao.deleteUser(user.getUserid());
 	}
@@ -113,7 +113,7 @@ public class UserDaoTest {
 	@Test
 	public void testGetUserInfoByAccessToken(){
 		String accessToken = "CAACEdEose0cBANFZBcZAyzn7agEZAOzlEKr75c6hSppL969nNNS9wFwxxFHJwp48vi2G884onYxxqZBuwVNsC4BqVUfwZAIUZCrXvNGv2yvjXdBnxZCbfMMDRtDbw2XVhpQGLOEr1wlIJHBGsBwcKY9M72Q4PO9loMZD";
-		User testUser = userDao.getUserInfoByAccessToken(accessToken);
+		UserBean testUser = userDao.getUserInfoByAccessToken(accessToken);
 		Assert.assertNull(testUser);
 		userDao.createUser(user);
 		testUser = userDao.getUserInfoByAccessToken(accessToken);

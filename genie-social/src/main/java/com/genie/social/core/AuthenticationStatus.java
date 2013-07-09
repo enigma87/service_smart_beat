@@ -1,6 +1,6 @@
 package com.genie.social.core;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 
 /**
  * @author dhasarathy
@@ -35,7 +35,7 @@ public class AuthenticationStatus {
 	}
 	
 	private Status authenticationStatus;
-	private User authenticatedUser;
+	private UserBean authenticatedUser;
 	
 	public Status getAuthenticationStatusCode() {
 		return authenticationStatus;
@@ -45,11 +45,11 @@ public class AuthenticationStatus {
 		this.authenticationStatus = authenticationStatus;
 	}
 	
-	public User getAuthenticatedUser() {
+	public UserBean getAuthenticatedUser() {
 		return authenticatedUser;
 	}
 	
-	public void setAuthenticatedUser(User authenticatedUser) {
+	public void setAuthenticatedUser(UserBean authenticatedUser) {
 		this.authenticatedUser = authenticatedUser;
 	}
 }

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 
 /**
  * @author vidhun
@@ -31,7 +31,7 @@ public class UserDao
 		this.dataSource = dataSource;
 	}		
 	
-	public int createUser(User user)
+	public int createUser(UserBean user)
 	{
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName("user")
@@ -43,7 +43,7 @@ public class UserDao
 			"email=:email, image_url=:imageUrl, created_ts=:createdTs, last_updated_ts=:lastUpdatedTs, last_login_ts=:lastLoginTs, active=:active " +
 			"WHERE userid=:userid;";	
 	
-	public int updateUser(User user)
+	public int updateUser(UserBean user)
 	{
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(user));
@@ -51,12 +51,12 @@ public class UserDao
 	
 	public void deleteUser(String userid){
 	
-		User user = null;
+		UserBean user = null;
 		try
 		{
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE userid=?", 
-				ParameterizedBeanPropertyRowMapper.newInstance(User.class), userid);
+				ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), userid);
 			
 			if (null != user ){
 				jdbcTemplate.update("DELETE FROM user where userid = ?", userid);
@@ -68,13 +68,13 @@ public class UserDao
 		}
 	}
 	
-	public User getUserInfoByEmail(String email)
+	public UserBean getUserInfoByEmail(String email)
 	{
-		User user = null;
+		UserBean user = null;
 		try
 		{
 			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM user WHERE email=?", 
-				ParameterizedBeanPropertyRowMapper.newInstance(User.class), email);
+				ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), email);
 		}
 		catch(EmptyResultDataAccessException ex)
 		{
@@ -83,13 +83,13 @@ public class UserDao
 		return user;
 	}
 	
-	public User getUserInfo(String userid)
+	public UserBean getUserInfo(String userid)
 	{
-		User user = null;
+		UserBean user = null;
 		try
 		{
 			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM user WHERE userid=?", 
-				ParameterizedBeanPropertyRowMapper.newInstance(User.class), userid);
+				ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), userid);
 		}
 		catch(EmptyResultDataAccessException ex)
 		{
@@ -98,12 +98,12 @@ public class UserDao
 		return user;
 	}
 	
-	public User getUserInfoByAccessToken(String accessToken){
-		User user = null;
+	public UserBean getUserInfoByAccessToken(String accessToken){
+		UserBean user = null;
 		try
 		{
 			user = new JdbcTemplate(dataSource).queryForObject("SELECT * FROM user WHERE access_token=?", 
-				ParameterizedBeanPropertyRowMapper.newInstance(User.class), accessToken);
+				ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), accessToken);
 		}
 		catch(EmptyResultDataAccessException ex)
 		{

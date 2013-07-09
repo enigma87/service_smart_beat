@@ -8,7 +8,7 @@ import java.sql.Date;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultWebRequestor;
@@ -41,7 +41,7 @@ public class GraphAPI {
 
 	public static AuthenticationStatus getUserAuthenticationStatus(String accessToken) {
 		FacebookClient facebookClient = null;
-		User user = null;
+		UserBean user = null;
 		AuthenticationStatus authenticationStatus = new AuthenticationStatus();
 		try{
 			facebookClient = new DefaultFacebookClient(accessToken);
@@ -50,14 +50,14 @@ public class GraphAPI {
 				authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED);
 				authenticationStatus.setAuthenticatedUser(null);
 			}else{
-				user = new User();
+				user = new UserBean();
 				String names[] = facebookUser.getName().split(" ");
 				user.setFirstName(names[0]);
 				user.setLastName(names[1]);
 				user.setEmail(facebookUser.getEmail());				
 				if (facebookUser.getBirthdayAsDate() != null) user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
 				user.setAccessToken(accessToken);
-				user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
+				user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 				authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
 				authenticationStatus.setAuthenticatedUser(user);
 			}
@@ -105,7 +105,7 @@ public class GraphAPI {
 		return user;
 	}*/	
 	
-	public static User getTestUser() {
+	public static UserBean getTestUser() {
 		String getFacebookTestUserUrl = null;
 
 		try{
@@ -147,7 +147,7 @@ public class GraphAPI {
 		}catch(JSONException e){
 			return null;
 		}		
-		User user = new User();
+		UserBean user = new UserBean();
 		user.setUserid(userID);
 		user.setAccessToken(userAccessToken);
 		user.setAccessTokenType("facebook");
@@ -158,7 +158,7 @@ public class GraphAPI {
 		return user;
 	}
 
-	public static void deleteTestUser(User testUser) throws IOException {
+	public static void deleteTestUser(UserBean testUser) throws IOException {
 		
 		String deleteTestUserURL;
 		

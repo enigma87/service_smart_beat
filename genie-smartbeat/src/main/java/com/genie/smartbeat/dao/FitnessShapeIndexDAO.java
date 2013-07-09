@@ -69,7 +69,6 @@ public class FitnessShapeIndexDAO {
 		}
 		return fitnessShapeIndexBean;
 	}
-		
 	
 	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_SHAPE_INDEX +" set " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[1] + "=:shapeIndex, " 

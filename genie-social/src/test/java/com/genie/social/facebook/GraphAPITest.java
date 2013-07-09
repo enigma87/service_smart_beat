@@ -10,7 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
@@ -23,7 +23,7 @@ public class GraphAPITest {
 
 	@Test
 	public void testGetUserAuthenticationStatus() throws IOException {
-		User userFb = GraphAPI.getTestUser();
+		UserBean userFb = GraphAPI.getTestUser();
 		userFb.setAccessTokenType("facebook");
 		userFb.setFirstName("Achilles");
 		/*
@@ -69,7 +69,7 @@ public class GraphAPITest {
 	
 	@Test
 	public void testGetTestUser(){
-		User userFb = GraphAPI.getTestUser();
+		UserBean userFb = GraphAPI.getTestUser();
 		assertNotNull(userFb);		
 	}
 	
@@ -77,7 +77,7 @@ public class GraphAPITest {
 		/*
 		 * User has fb access
 		 */
-		User userFb = GraphAPI.getTestUser();
+		UserBean userFb = GraphAPI.getTestUser();
 		AuthenticationStatus authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
 		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());

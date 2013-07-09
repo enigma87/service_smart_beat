@@ -2,7 +2,7 @@ package com.genie.social.json;
 
 import java.sql.Date;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 
 /**
  * @author dhasarathy
@@ -56,7 +56,7 @@ public class UserInfoJSON {
 		this.imageUrl = imageUrl;
 	}
 	
-	public void copyFromUserBean(User user){
+	public void copyFromUserBean(UserBean user){
 		this.setUserid(user.getUserid());
 		this.setFirstName(user.getFirstName());
 		this.setLastName(user.getLastName());

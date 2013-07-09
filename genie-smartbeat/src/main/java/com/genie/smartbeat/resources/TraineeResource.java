@@ -26,7 +26,7 @@ import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.json.RegisterRequestJSON;
@@ -76,7 +76,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
 		if(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode())) {
-			User user = userManager.getUserInformationByEmail(email);
+			UserBean user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
 				userInfoJSON.copyFromUserBean(user);
@@ -111,7 +111,7 @@ public class TraineeResource
 				}	
 			}
 			else{
-				User newUser = authStatus.getAuthenticatedUser();
+				UserBean newUser = authStatus.getAuthenticatedUser();
 				newUser.setUserid(UUID.randomUUID().toString());
 				userManager.registerUser(newUser);
 				RegisterResponseJSON regResponseJson = new RegisterResponseJSON();

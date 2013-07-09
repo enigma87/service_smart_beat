@@ -1,6 +1,6 @@
 package com.genie.social.impl;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -23,32 +23,32 @@ public class UserManagerMySQLImpl implements UserManager{
 		return userDao;
 	}
 	
-	public void registerUser(User user) {
+	public void registerUser(UserBean user) {
 		userDao.createUser(user);
 	}
 	
-	public User getUserInformation(String userid) {	
+	public UserBean getUserInformation(String userid) {	
 		
 		return userDao.getUserInfo(userid);
 	}
 
 
-	public User getUserInformationByEmail(String email) {
+	public UserBean getUserInformationByEmail(String email) {
 		return userDao.getUserInfoByEmail(email);
 	}	
 				
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
 		AuthenticationStatus authStatus = new AuthenticationStatus();
-		User user = userDao.getUserInfoByAccessToken(accessToken);		
+		UserBean user = userDao.getUserInfoByAccessToken(accessToken);		
 		
 		if(null == user){
 			/*Token not cached*/			
 			
-			if(accessTokenType.equals(User.ACCESS_TOKEN_TYPE_FACEBOOK)){
+			if(accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)){
 				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
 				/* get existing user if there, by email of authenticated FB user */
-				User authUser = authStatus.getAuthenticatedUser();
+				UserBean authUser = authStatus.getAuthenticatedUser();
 				user =  null == authUser ? null : userDao.getUserInfoByEmail(authUser.getEmail());
 			
 				if (user != null) {
@@ -67,11 +67,11 @@ public class UserManagerMySQLImpl implements UserManager{
 		return authStatus;
 }		
 
-	public void saveUserInformation(User user) {
+	public void saveUserInformation(UserBean user) {
 		userDao.updateUser(user);		
 	}
 
-	public AuthorizationStatus authorizeRequest(User subjectOfRequest, User requestingUser) {
+	public AuthorizationStatus authorizeRequest(UserBean subjectOfRequest, UserBean requestingUser) {
 		
 		return null;
 	}

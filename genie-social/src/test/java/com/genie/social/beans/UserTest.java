@@ -10,7 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.genie.social.beans.User;
+import com.genie.social.beans.UserBean;
 
 /**
  * @author vidhun
@@ -22,7 +22,7 @@ public class UserTest {
 	@Test
 	public void testUserTest() {
 		
-		User user = new User();
+		UserBean user = new UserBean();
 		Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 		
 		String Dateformat = "MM/dd/yyyy";
@@ -37,7 +37,7 @@ public class UserTest {
 		
 		user.setUserid("123456789");		
 		user.setAccessToken("access_token_123456789");
-		user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_CUSTOM);
+		user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_CUSTOM);
 		user.setFirstName("Antony");
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
@@ -51,7 +51,7 @@ public class UserTest {
 		
 		Assert.assertEquals("123456789", user.getUserid());
 		Assert.assertEquals("access_token_123456789", user.getAccessToken());
-		Assert.assertEquals(User.ACCESS_TOKEN_TYPE_CUSTOM, user.getAccessTokenType());
+		Assert.assertEquals(UserBean.ACCESS_TOKEN_TYPE_CUSTOM, user.getAccessTokenType());
 		Assert.assertEquals("Antony", user.getFirstName());
 		Assert.assertEquals("Bob", user.getMiddleName());
 		Assert.assertEquals("CampBell", user.getLastName());
