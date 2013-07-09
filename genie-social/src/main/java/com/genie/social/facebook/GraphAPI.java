@@ -47,7 +47,7 @@ public class GraphAPI {
 			facebookClient = new DefaultFacebookClient(accessToken);
 			com.restfb.types.User facebookUser = facebookClient.fetchObject("me", com.restfb.types.User.class);
 			if(null == facebookUser.getEmail()){
-				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.getValue());
+				authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED);
 				authenticationStatus.setAuthenticatedUser(null);
 			}else{
 				user = new User();
@@ -58,11 +58,11 @@ public class GraphAPI {
 				if (facebookUser.getBirthdayAsDate() != null) user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
 				user.setAccessToken(accessToken);
 				user.setAccessTokenType(User.ACCESS_TOKEN_TYPE_FACEBOOK);
-				authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());
+				authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
 				authenticationStatus.setAuthenticatedUser(user);
 			}
 		}catch(FacebookOAuthException e){
-			authenticationStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.DENIED.getValue());
+			authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
 			authenticationStatus.setAuthenticatedUser(null);
 		}
 		return authenticationStatus;

@@ -34,15 +34,15 @@ public class AuthenticationStatus {
 		}	
 	}
 	
-	private Integer authenticationStatusCode;
+	private Status authenticationStatus;
 	private User authenticatedUser;
 	
-	public int getAuthenticationStatusCode() {
-		return authenticationStatusCode;
+	public Status getAuthenticationStatusCode() {
+		return authenticationStatus;
 	}
 	
-	public void setAuthenticationStatusCode(int authenticationStatusCode) {
-		this.authenticationStatusCode = authenticationStatusCode;
+	public void setAuthenticationStatus(Status authenticationStatus) {
+		this.authenticationStatus = authenticationStatus;
 	}
 	
 	public User getAuthenticatedUser() {

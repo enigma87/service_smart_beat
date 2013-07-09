@@ -55,13 +55,13 @@ public class UserManagerMySQLImpl implements UserManager{
 					/*Uncached token matches an existing user*/
 					user.setAccessToken(accessToken);
 					userDao.updateUser(user);
-					authStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());						
+					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);						
 					authStatus.setAuthenticatedUser(user);
 				}
 			}
 		}
 		else{/*Token cached*/
-			authStatus.setAuthenticationStatusCode(AuthenticationStatus.Status.APPROVED.getValue());			
+			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);			
 			authStatus.setAuthenticatedUser(user);
 		}
 		return authStatus;
