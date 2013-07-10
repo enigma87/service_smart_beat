@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
@@ -231,7 +232,7 @@ public class FitnessManagerMySQLImplTest {
 
 
 	
-	//@Test
+	@Test
 	public void testSaveFitnessTrainingSession00(){
 		
 		long now = new Date().getTime();
@@ -425,7 +426,7 @@ public class FitnessManagerMySQLImplTest {
 	}	
 	
 	
-	//@Test
+	@Test
 	public void testGetFitnessSupercompensationPoints(){
 		
 		long now = new Date().getTime();
@@ -455,13 +456,38 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);		
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNotNull(fitnessHomeostasisIndexDAO);
-		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		
-		
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);		
 		
 		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
 		fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		Double points = ((FitnessManagerMySQLImpl)fitnessManager).getFitnessSupercompensationPoints(userid);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+	}
+	
+	@Test
+	public void testSaveHeartRateTest(){
+		
+		long now = new Date().getTime();
+		long oneDayBefore = now - (24*3600000);
+		long twoDaysBefore = now - (48*3600000);
+		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
+		fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
+
+		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean1.setUserid("user1");
+		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
+		fitnessHeartrateTestBean1.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean1.setHeartrate(124.0);
+		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(twoDaysBefore));
+		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean1);
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean2.setUserid("user1");
+		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
+		fitnessHeartrateTestBean2.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean2.setHeartrate(114.0);
+		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(now));
+		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean2);
+		
 	}
 }
