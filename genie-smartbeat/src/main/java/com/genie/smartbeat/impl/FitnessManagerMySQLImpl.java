@@ -244,17 +244,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
 			Integer latestDayOfRecord = previousHeartrateTestBean.getDayOfRecord() + differenceInDays.intValue();
 			fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
+			if(fitnessHeartrateTestBean.getHeartrateType() != FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
+				fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(previousHeartrateTestBean.getHeartrateTestId());
+			}
 		}else{
 			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
 			fitnessHeartrateTestBean.setDayOfRecord(1);
 		}
-		if(fitnessHeartrateTestBean.getHeartrateType() == FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC || null == previousHeartrateTestBean){
-			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
-		}else{
-			fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(previousHeartrateTestBean.getHeartrateTestId());
-			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
-		}
-		
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
 	}
 
 }
