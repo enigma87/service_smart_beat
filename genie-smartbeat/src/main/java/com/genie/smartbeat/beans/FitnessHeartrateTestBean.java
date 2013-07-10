@@ -18,6 +18,7 @@ public class FitnessHeartrateTestBean {
 	private Integer heartrateType;
 	private Double heartrate;
 	private Timestamp timeOfRecord;
+	private Integer dayOfRecord;
 	
 	public String getUserid() {
 		return userid;
@@ -58,5 +59,13 @@ public class FitnessHeartrateTestBean {
 	public void setTimeOfRecord(Timestamp timeOfRecord) {
 		this.timeOfRecord = timeOfRecord;
 	}	
+	
+	public Integer getDayOfRecord() {
+		return dayOfRecord;
+	}
+	
+	public void setDayOfRecord(Integer dayOfRecord) {
+		this.dayOfRecord = dayOfRecord;
+	}
 }
 

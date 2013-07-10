@@ -23,11 +23,13 @@ public class FitnessHeartrateTestDAO {
 																	"heartrate_test_id", 
 																	"heartrate_type", 
 																	"heartrate", 
-																	"time_of_record"};
+																	"time_of_record",
+																	"day_of_record"};
 	private static final int COLUMN_USERID 				= 0;
 	private static final int COLUMN_HEARTRATE_TEST_ID 	= 1;
 	private static final int COLUMN_HEARTRATE_TYPE 		= 2;
 	private static final int COLUMN_TIME_OF_RECORD 		= 4;
+
 	
 	private BasicDataSource dataSource;
 	

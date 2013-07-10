@@ -90,6 +90,7 @@ CREATE TABLE genie.`fitness_heartrate_test` (
   `heartrate_type` int(3) DEFAULT NULL,  
   `heartrate` DOUBLE DEFAULT NULL,
   `time_of_record` timestamp NULL DEFAULT NULL,
+  `day_of_record` INTEGER DEFAULT NULL,
   UNIQUE KEY `userid_UNIQUE` (`heartrate_test_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

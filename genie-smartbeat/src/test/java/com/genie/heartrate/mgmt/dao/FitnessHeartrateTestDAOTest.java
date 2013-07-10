@@ -45,6 +45,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean1.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean1.setHeartrate(124.0);
 		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(threeHoursBefore));
+		fitnessHeartrateTestBean1.setDayOfRecord(1);
 		
 		fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean2.setUserid("user1");
@@ -52,6 +53,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean2.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean2.setHeartrate(130.0);
 		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
+		fitnessHeartrateTestBean2.setDayOfRecord(3);
 		
 		fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean3.setUserid("user1");
@@ -59,6 +61,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean3.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean3.setHeartrate(146.0);
 		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(oneHourBefore));
+		fitnessHeartrateTestBean3.setDayOfRecord(8);
 		
 		fitnessHeartrateTestBean4 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean4.setUserid("user1");
@@ -66,6 +69,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean4.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean4.setHeartrate(160.0);
 		fitnessHeartrateTestBean4.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean4.setDayOfRecord(9);
 		
 		fitnessHeartrateTestBean5 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean5.setUserid("user2");
@@ -73,6 +77,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean5.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean5.setHeartrate(160.0);
 		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean5.setDayOfRecord(10);
 	}
 	
 	@Test
