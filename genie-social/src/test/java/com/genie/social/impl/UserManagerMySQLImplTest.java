@@ -148,7 +148,7 @@ public class UserManagerMySQLImplTest {
 		
 		//case 1.a
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
 		// case 1.b user exists and not cached
@@ -156,13 +156,13 @@ public class UserManagerMySQLImplTest {
 		userFb.setAccessToken("");
 		userDao.updateUser(userFb);
 		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
 		// case 1.c
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		authStatus = userManagerMySQLImpl.authenticateRequest(fakeAccessToken, UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		GraphAPI.deleteTestUser(userFb);
 		userDao.deleteUser(userFb.getUserid());
@@ -179,7 +179,7 @@ public class UserManagerMySQLImplTest {
 		fbClient.deleteObject(userFb.getUserid() + "/permissions/email");
 		// case 2.a
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 		GraphAPI.deleteTestUser(userFb);

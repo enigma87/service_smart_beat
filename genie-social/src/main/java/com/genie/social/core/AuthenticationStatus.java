@@ -37,7 +37,7 @@ public class AuthenticationStatus {
 	private Status authenticationStatus;
 	private UserBean authenticatedUser;
 	
-	public Status getAuthenticationStatusCode() {
+	public Status getAuthenticationStatus() {
 		return authenticationStatus;
 	}
 	

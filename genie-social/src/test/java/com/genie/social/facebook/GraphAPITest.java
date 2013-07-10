@@ -30,7 +30,7 @@ public class GraphAPITest {
 		 * When user is valid
 		 */
 		AuthenticationStatus authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
 		/*
@@ -38,7 +38,7 @@ public class GraphAPITest {
 		 */
 		String fakeAccessToken = "CAACEdEose0cBAErbkQ3pVP8p9AZCSMrR6JeuaTlSZADrgeyf9jHnWUUhKOezuC5Jh04VFUCvqGEOFZCohorOZAjFK7608GZAziXv1l3z4utpX9eSyjeP0PMtv10sbZCstKhlCDnilhllZC92d3S16eS2UtwbGHu9eoZD"; 
 		authStatus = GraphAPI.getUserAuthenticationStatus(fakeAccessToken);
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 		/*
@@ -47,7 +47,7 @@ public class GraphAPITest {
 		FacebookClient fbClient = new DefaultFacebookClient(userFb.getAccessToken());
 		fbClient.deleteObject(userFb.getUserid() + "/permissions/email");
 		authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 		/*
@@ -55,7 +55,7 @@ public class GraphAPITest {
 		 */
 		GraphAPI.deleteTestUser(userFb);
 		authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 		
 	}
@@ -79,7 +79,7 @@ public class GraphAPITest {
 		 */
 		UserBean userFb = GraphAPI.getTestUser();
 		AuthenticationStatus authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
 		/*
@@ -87,7 +87,7 @@ public class GraphAPITest {
 		 */
 		GraphAPI.deleteTestUser(userFb);
 		authStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
-		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNull(authStatus.getAuthenticatedUser());
 
 	}

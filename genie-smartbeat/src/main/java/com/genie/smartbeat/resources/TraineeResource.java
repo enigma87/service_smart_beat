@@ -75,7 +75,7 @@ public class TraineeResource
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
-		if(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatusCode())) {
+		if(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus())) {
 			UserBean user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
@@ -101,7 +101,7 @@ public class TraineeResource
 	public String registerUser(RegisterRequestJSON requestJson){
 		GoodResponseObject gro = null;
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
-		if(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatusCode())) {
+		if(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus())) {
 			if(null == authStatus.getAuthenticatedUser()){
 				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
 				try {
@@ -125,7 +125,7 @@ public class TraineeResource
 				}
 			}
 		} 
-		else if (AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatusCode())) {
+		else if (AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus())) {
 
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED);
 			try {
