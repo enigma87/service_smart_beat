@@ -20,6 +20,7 @@ import com.genie.social.beans.UserBean;
 public class UserDao 
 {	
 	private BasicDataSource dataSource;
+	private static final String[] COLUMNS_USER_BEAN = {"userid", "access_token", "access_token_type", "first_name", "middle_name", "last_name", "dob", "email", "image_url", "created_ts", "last_updated_ts", "last_login_ts", "active", "privilege_level"};
 	
 	public BasicDataSource getDataSource()
 	{
@@ -35,12 +36,12 @@ public class UserDao
 	{
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName("user")
-		.usingColumns("userid", "access_token", "access_token_type", "first_name", "middle_name", "last_name", "dob", "email", "image_url", "created_ts", "last_updated_ts", "last_login_ts", "active")
+		.usingColumns(COLUMNS_USER_BEAN)
 		.execute(new BeanPropertySqlParameterSource(user));
 	}
 	
 	private static final String UPDATE = "UPDATE user SET access_token=:accessToken, access_token_type=:accessTokenType, first_name=:firstName, middle_name=:middleName, last_name=:lastName, dob=:dob, " +
-			"email=:email, image_url=:imageUrl, created_ts=:createdTs, last_updated_ts=:lastUpdatedTs, last_login_ts=:lastLoginTs, active=:active " +
+			"email=:email, image_url=:imageUrl, created_ts=:createdTs, last_updated_ts=:lastUpdatedTs, last_login_ts=:lastLoginTs, active=:active, privilege_level=:privilegeLevel " +
 			"WHERE userid=:userid;";	
 	
 	public int updateUser(UserBean user)
@@ -56,15 +57,14 @@ public class UserDao
 		{
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			user = jdbcTemplate.queryForObject("SELECT * FROM user WHERE userid=?", 
-				ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), userid);
+			ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class), userid);
 			
-			if (null != user ){
-				jdbcTemplate.update("DELETE FROM user where userid = ?", userid);
-			}
+			// when query returns null it is handled in catch, no need for a null check
+			jdbcTemplate.update("DELETE FROM user where userid = ?", userid);
 		}
 		catch(EmptyResultDataAccessException ex)
 		{
-			
+			return;
 		}
 	}
 	

@@ -58,17 +58,17 @@ public class UserDaoTest {
 		user.setLastUpdatedTs(timestamp);
 		user.setLastLoginTs(timestamp);
 		user.setActive(true);
+		user.setPrivilegeLevel((byte) 1);
 	}
 	
 	@Test
 	public void testCreateUser() {
 		
-		userDao.createUser(user);
-		
+		userDao.createUser(user);	
+	
 		UserBean user1 = userDao.getUserInfo(user.getUserid());
 		Assert.assertEquals("123456789", user1.getUserid());		
 		Assert.assertEquals("Katoor", user1.getFirstName());
-		Assert.assertEquals("Motham", user1.getMiddleName());
 		Assert.assertEquals("Dada", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
 		Assert.assertEquals("abc@xyz.com", user1.getEmail());		
@@ -77,19 +77,23 @@ public class UserDaoTest {
 		Assert.assertNotNull(user1.getLastUpdatedTs());
 		Assert.assertNotNull(user1.getLastLoginTs());
 		Assert.assertEquals(new Boolean(true), user1.getActive());
+		Assert.assertEquals((byte) 1, user1.getPrivilegeLevel());
+		
 		userDao.deleteUser(user.getUserid());
 	}
 	
 	@Test
 	public void testUpdateUser() {
+		UserBean user1 = user.clone();
+		userDao.createUser(user1);
+		user1.setMiddleName("John");		
+		user1.setPrivilegeLevel((byte) 2);
+		userDao.updateUser(user1);
 		
-		userDao.createUser(user);
-		user.setMiddleName("John");		
-		userDao.updateUser(user);
-		
-		UserBean user1 = userDao.getUserInfo(user.getUserid());
-		Assert.assertEquals("John", user1.getMiddleName());
-		userDao.deleteUser(user.getUserid());
+		UserBean user2 = userDao.getUserInfo(user1.getUserid());
+		Assert.assertEquals("John", user2.getMiddleName());
+		Assert.assertEquals((byte) 2, user2.getPrivilegeLevel());
+		userDao.deleteUser(user1.getUserid());
 	}
 	
 	@Test
@@ -121,7 +125,14 @@ public class UserDaoTest {
 		Assert.assertEquals(accessToken, testUser.getAccessToken());
 		userDao.deleteUser(testUser.getUserid());
 	}
-	
 
+	@Test
+	public void testDeleteUser() {
+		userDao.createUser(user);
+		userDao.deleteUser("12345");
+		Assert.assertEquals(user.getUserid(), userDao.getUserInfo(user.getUserid()).getUserid());
+		userDao.deleteUser(user.getUserid());
+		Assert.assertEquals(null, userDao.getUserInfo(user.getUserid()));
+	}
 }
 

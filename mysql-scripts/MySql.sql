@@ -19,6 +19,7 @@ CREATE TABLE genie.`user` (
   `last_updated_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `last_login_ts` timestamp NULL DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
+  `privilege_level` TINYINT UNSIGNED NOT NULL DEFAULT 1, 
   PRIMARY KEY (`userid`),
   UNIQUE KEY `uniq_user_email` (`email`) USING BTREE,
   UNIQUE KEY `userid_UNIQUE` (`userid`)
