@@ -69,7 +69,7 @@ public class TraineeResource
 
 	
 	@GET
-	@Path("info/byEmail/{email}")
+	@Path("email/{email}")
 	@Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
@@ -145,7 +145,7 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("shapeIndex/{userid}")
+	@Path("id/{userid}/shapeIndex")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
@@ -167,7 +167,7 @@ public class TraineeResource
 	}
 	
 	@POST
-	@Path("fitnessTrainingSession/{userid}/save")
+	@Path("id/{userid}/trainingSession/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson){
