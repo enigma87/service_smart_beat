@@ -17,7 +17,7 @@ public class ShapeIndexAlgorithm
 	public static final double SHAPE_INDEX_INITIAL_VALUE = 100.0;
 	
 	private static final int ZONE_START = 0;
-	private static final int ZONE_END 	= 1;
+	private static final int ZONE_END 	= 1;	
 	public static double[][] calculateHeartrateZones(double restingHeartrate, double thresholdHeartrate, double maximalHeartrate){
 		
 		double[] heartrateZones[] = new double[7][2];

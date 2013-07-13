@@ -4,12 +4,14 @@
 package com.genie.smartbeat.impl;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
+import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
@@ -29,6 +31,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
 	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
+	private FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO;
 	
 	
 	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
@@ -246,12 +249,34 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
 			if(fitnessHeartrateTestBean.getHeartrateType() != FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
 				fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(previousHeartrateTestBean.getHeartrateTestId());
+				/*update heartrate zone model*/
+				updateHeartrateZoneModel(fitnessHeartrateTestBean.getUserid());
 			}
 		}else{
 			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
 			fitnessHeartrateTestBean.setDayOfRecord(1);
 		}
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
+	}
+	
+	public void updateHeartrateZoneModel(String userid){
+		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_RESTING);
+		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_THRESHOLD);
+		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
+		
+		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
+			double[][] heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
+			FitnessHeartrateZoneBean fitnessHeartrateZoneBean = fitnessHeartrateZoneDAO.getHeartrateZoneModelByUserid(userid);
+			if(null == fitnessHeartrateZoneBean){
+				fitnessHeartrateZoneBean = new FitnessHeartrateZoneBean();
+				fitnessHeartrateZoneBean.setUserid(userid);
+				fitnessHeartrateZoneBean.setHeartrateZones(heartrateZones);
+				fitnessHeartrateZoneDAO.createHeartrateZoneModel(fitnessHeartrateZoneBean);
+			}else{
+				fitnessHeartrateZoneBean.setHeartrateZones(heartrateZones);
+				fitnessHeartrateZoneDAO.updateHeartrateZoneModel(fitnessHeartrateZoneBean);
+			}
+		}
 	}
 
 }

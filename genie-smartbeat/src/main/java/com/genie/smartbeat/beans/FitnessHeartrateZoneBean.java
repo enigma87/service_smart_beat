@@ -122,6 +122,44 @@ public class FitnessHeartrateZoneBean {
 	
 	public void setHeartrateZone6End(Double heartrateZone6End) {
 		this.heartrateZone6End = heartrateZone6End;
-	}	
+	}
+	
+	public static final int ZONE_START 	= 0;
+	public static final int ZONE_END 	= 1;
+	public void setHeartrateZones(double[][] heartrateZones){
+		this.setHeartrateZone1Start(heartrateZones[1][ZONE_START]);
+		this.setHeartrateZone1Start(heartrateZones[1][ZONE_END]);
+		this.setHeartrateZone2Start(heartrateZones[2][ZONE_START]);
+		this.setHeartrateZone2Start(heartrateZones[2][ZONE_END]);
+		this.setHeartrateZone3Start(heartrateZones[3][ZONE_START]);
+		this.setHeartrateZone3Start(heartrateZones[3][ZONE_END]);
+		this.setHeartrateZone4Start(heartrateZones[4][ZONE_START]);
+		this.setHeartrateZone4Start(heartrateZones[4][ZONE_END]);
+		this.setHeartrateZone5Start(heartrateZones[5][ZONE_START]);
+		this.setHeartrateZone5Start(heartrateZones[5][ZONE_END]);
+		this.setHeartrateZone6Start(heartrateZones[6][ZONE_START]);
+		this.setHeartrateZone6Start(heartrateZones[6][ZONE_END]);
+	}
+	
+	public double[][] getHeartrateZones(){
+		double[][] heartrateZones = new double[7][2];
+		
+		heartrateZones[1][ZONE_START] 	= this.getHeartrateZone1Start();
+		heartrateZones[1][ZONE_END] 	= this.getHeartrateZone1End();
+		heartrateZones[2][ZONE_START] 	= this.getHeartrateZone2Start();
+		heartrateZones[2][ZONE_END] 	= this.getHeartrateZone2End();
+		heartrateZones[3][ZONE_START] 	= this.getHeartrateZone3Start();
+		heartrateZones[3][ZONE_END] 	= this.getHeartrateZone3End();
+		heartrateZones[4][ZONE_START] 	= this.getHeartrateZone4Start();
+		heartrateZones[4][ZONE_END] 	= this.getHeartrateZone4End();
+		heartrateZones[5][ZONE_START] 	= this.getHeartrateZone5Start();
+		heartrateZones[5][ZONE_END] 	= this.getHeartrateZone5End();
+		heartrateZones[6][ZONE_START] 	= this.getHeartrateZone6Start();
+		heartrateZones[6][ZONE_END] 	= this.getHeartrateZone6End();
+		
+		return heartrateZones;
+	}
 }
+
+
 
