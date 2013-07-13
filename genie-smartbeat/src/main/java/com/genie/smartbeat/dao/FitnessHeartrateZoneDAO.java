@@ -84,11 +84,16 @@ public class FitnessHeartrateZoneDAO {
 																+ COLUMNS_FITNESS_HEARTRATE_ZONE[9] + "=:heartrateZone5Start, "
 																+ COLUMNS_FITNESS_HEARTRATE_ZONE[10] + "=:heartrateZone5End, "
 																+ COLUMNS_FITNESS_HEARTRATE_ZONE[11] + "=:heartrateZone6Start, "
-																+ COLUMNS_FITNESS_HEARTRATE_ZONE[12] + "=:heartrateZone6End, "	
+																+ COLUMNS_FITNESS_HEARTRATE_ZONE[12] + "=:heartrateZone6End "	
 																+ "WHERE " + COLUMNS_FITNESS_HEARTRATE_ZONE[COLUMN_USERID] + "=:userid;";
 	public int updateHeartrateZoneModel(FitnessHeartrateZoneBean fitnessHeartrateZoneBean){
-		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		return jdbcTemplate.update(UPDATE_HEARTRATE_ZONE_MODEL, new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
+		
+		int affectedRows = 0;
+		if(null != getHeartrateZoneModelByUserid(fitnessHeartrateZoneBean.getUserid())){
+			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+			affectedRows =  jdbcTemplate.update(UPDATE_HEARTRATE_ZONE_MODEL, new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
+		}		
+		return affectedRows;
 	}
 }
 
