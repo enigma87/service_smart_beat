@@ -15,7 +15,35 @@ import org.apache.commons.math.stat.regression.SimpleRegression;
 public class ShapeIndexAlgorithm 
 {
 	public static final double SHAPE_INDEX_INITIAL_VALUE = 100.0;
+	
+	private static final int ZONE_START = 0;
+	private static final int ZONE_END 	= 1;
+	public static double[][] calculateHeartrateZones(double restingHeartrate, double thresholdHeartrate, double maximalHeartrate){
 		
+		double[] heartrateZones[] = new double[7][2];
+		double heartrateReserve = maximalHeartrate - restingHeartrate;
+		
+		heartrateZones[1][ZONE_START] 	= restingHeartrate;
+		heartrateZones[1][ZONE_END] 	= restingHeartrate + ((thresholdHeartrate - restingHeartrate)/2);
+		
+		heartrateZones[2][ZONE_START] 	= heartrateZones[1][ZONE_END];
+		heartrateZones[2][ZONE_END] 	= heartrateZones[1][ZONE_END] + ((thresholdHeartrate - heartrateZones[1][ZONE_END])/2);
+		
+		heartrateZones[4][ZONE_START] 	= thresholdHeartrate - 0.04*heartrateReserve;
+		heartrateZones[4][ZONE_END] 	= thresholdHeartrate + 0.02*heartrateReserve;
+		
+		heartrateZones[3][ZONE_START] 	= heartrateZones[2][ZONE_END];
+		heartrateZones[3][ZONE_END] 	= heartrateZones[4][ZONE_START];
+		
+		heartrateZones[6][ZONE_START] 	= maximalHeartrate - 0.06*heartrateReserve;
+		heartrateZones[6][ZONE_END] 	= maximalHeartrate;
+		
+		heartrateZones[5][ZONE_START] 	= heartrateZones[4][ZONE_END];
+		heartrateZones[5][ZONE_END] 	= heartrateZones[6][ZONE_START];
+		
+		return heartrateZones;
+	}
+	
 	private static final double TRAINING_IMPACT_BY_ZONE[] = {0,0,1,1.75,3,5,9};	
 	public static double calculateTotalLoadofExercise(double[] timeDistributionOfHeartRateZones){
 		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*timeDistributionOfHeartRateZones[0] +
