@@ -279,4 +279,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 	}
 
+	public FitnessHeartrateZoneBean getHeartrateZones(String userid) {
+		return fitnessHeartrateZoneDAO.getHeartrateZoneModelByUserid(userid);		
+	}
+
 }
