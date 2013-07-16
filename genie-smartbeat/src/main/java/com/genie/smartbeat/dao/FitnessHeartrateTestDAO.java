@@ -1,5 +1,6 @@
 package com.genie.smartbeat.dao;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,6 +155,20 @@ public class FitnessHeartrateTestDAO {
 			
 		}
 		return nRecentHeartRateTests;
+	}
+	
+	public Integer getDayOfRecordForUser(String userid){
+		Integer recentDayofRecord = 0;
+		FitnessHeartrateTestBean fitnessHeartRateTestBean = null;
+		fitnessHeartRateTestBean = getRecentHeartrateTestForUser(userid);
+		if(null != fitnessHeartRateTestBean){
+			recentDayofRecord = fitnessHeartRateTestBean.getDayOfRecord();
+		}
+		return recentDayofRecord;
+	}
+	
+	public Integer getTodaysHeartRateTestCountForUser(String userid){
+		Integer todaysHeartRateTestCount = 0;
 	}
 }
 

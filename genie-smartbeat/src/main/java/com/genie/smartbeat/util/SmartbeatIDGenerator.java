@@ -46,5 +46,10 @@ public class SmartbeatIDGenerator {
 								nextCount;
 		return nextId;
 	}
+	
+	public static String getId(String userid, String marker, Integer majorIndex, Integer minorIndex){
+		String Id = userid+"_"+marker+"_"+majorIndex+"_"+minorIndex;
+		return Id;
+	}
 }
 

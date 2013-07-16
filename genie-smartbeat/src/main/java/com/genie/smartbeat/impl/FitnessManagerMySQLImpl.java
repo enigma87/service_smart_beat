@@ -238,7 +238,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) {
 		
 		String userid = fitnessHeartrateTestBean.getUserid();
-		FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(userid);
+	    FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, fitnessHeartrateTestBean.getHeartrateType());
 		if(null != previousHeartrateTestBean){
 			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
 			Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
