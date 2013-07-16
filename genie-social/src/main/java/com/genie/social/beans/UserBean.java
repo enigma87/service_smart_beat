@@ -10,7 +10,7 @@ import java.sql.Timestamp;
  * @author vidhun
  * 
  */
-public class UserBean 
+public class UserBean implements Cloneable
 {
 	private String userid;
 	private String accessToken;
@@ -25,6 +25,7 @@ public class UserBean
 	private Timestamp lastUpdatedTs;
 	private Timestamp lastLoginTs;
 	private Boolean active = true;
+	private byte privilegeLevel = 1;
 
 	public static final String ACCESS_TOKEN_TYPE_CUSTOM = "custom";
 	public static final String ACCESS_TOKEN_TYPE_FACEBOOK = "facebook";
@@ -122,6 +123,13 @@ public class UserBean
 		this.active = active;
 	}
 
+	public byte getPrivilegeLevel() {
+		return this.privilegeLevel;
+	}
+	
+	public void setPrivilegeLevel(byte privilegeLevel) {
+		this.privilegeLevel = privilegeLevel;
+	}
 	public Timestamp getCreatedTs()
 	{
 		return this.createdTs;
@@ -155,5 +163,14 @@ public class UserBean
 	@Override
 	public String toString() {
 		return getFirstName() + " " + getLastName();
+	}
+	
+	public UserBean clone() {
+		
+		try {
+			return (UserBean) super.clone();
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
 	}
 }

@@ -19,6 +19,7 @@ CREATE TABLE genie.`user` (
   `last_updated_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `last_login_ts` timestamp NULL DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
+  `privilege_level` TINYINT UNSIGNED NOT NULL DEFAULT 1, 
   PRIMARY KEY (`userid`),
   UNIQUE KEY `uniq_user_email` (`email`) USING BTREE,
   UNIQUE KEY `userid_UNIQUE` (`userid`)
@@ -92,6 +93,25 @@ CREATE TABLE genie.`fitness_heartrate_test` (
   `time_of_record` timestamp NULL DEFAULT NULL,
   `day_of_record` INTEGER DEFAULT NULL,
   UNIQUE KEY `userid_UNIQUE` (`heartrate_test_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_heartrate_zone_model` (
+  `userid` varchar(128) NOT NULL,
+  `heartrate_zone_1_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_1_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_2_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_2_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_3_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_3_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_4_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_4_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_5_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_5_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_6_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_6_end` DOUBLE DEFAULT NULL,
+  PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
 delimiter $$

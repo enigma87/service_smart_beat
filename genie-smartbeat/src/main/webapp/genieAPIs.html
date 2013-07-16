@@ -4,34 +4,55 @@
     <title></title>
 </head>
 <body>
-    <table>
-        <thead>
-            <tr style="background-color: #0094ff; color: #fff">
-                <th>S No</th>
-                <th>API</th>
-                <th>request</th>
-				<th>payload/response</th>
-                <th>Comment</th>
-            </tr>
-            <tr>
-                <td style="border: thin solid #C0C0C0">1</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-                <td style="border: thin solid #C0C0C0">https://www.google.co.in/</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-            </tr>
-			<tr>
-                <td style="border: thin solid #C0C0C0">1</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-                <td style="border: thin solid #C0C0C0">https://www.google.co.in/</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-            </tr>
-			<tr>
-                <td style="border: thin solid #C0C0C0">1</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-                <td style="border: thin solid #C0C0C0">https://www.google.co.in/</td>
-                <td style="border: thin solid #C0C0C0">Google</td>
-            </tr>
-        </thead>
-    </table>
+    <p>
+        root url - http://host:8080/smartbeat/v1.0/
+    </p>
+    <p>
+        trainee/register<br />
+        -----------------<br />
+        request type - post<br />
+        payload type - application/json<br />
+        example payload<br />
+        {"accessToken":"CAACEdEose0cBAHhfImAg7nd4hD2pO2GcKuryn6nZCUMq1yHfsSxQ2Q81HpwfV3PR67s5FtKHUuQ3boes5qbdS3HL7Rzp9q50qPtrkSdkTxHoiBqYwxr13b1g9F0LpG8Y9FllMrBxSxQJZAiPsASyQcZBMy1YSYZD", "accessTokenType":"facebook"}<br />
+    </p>
+    <p>
+        trainee/email/{email}?accessToken=FBToken&accessTokenType=facebook<br />
+        -------------------------------------------------------------<br />
+        request -type get<br />
+        return on successful query<br />
+        {<br />
+        "status": 200,<br />
+        "message": "OK",<br />
+        "obj": {<br />
+        "userid": "8ac78e26-116f-4967-9d40-f538f95de0f9",<br />
+        "firstName": "Dhasarathy",<br />
+        "lastName": "Parthasarathy",<br />
+        "dob": null,<br />
+        "imageUrl": null<br />
+        }<br />
+        }<br />
+    </p>
+    <p>
+        trainee/id/{userid}/trainingSession/save?accessToken=FBToken&accessTokenType=facebook<br />
+        -----------------------------------------------------------------------------------------<br />
+        request type - post<br />
+        payload type - application/json<br />
+        example payload<br />
+    </p>
+    <p>
+        trainee/id/{userid}/shapeIndex?accessToken=FBToken&accessTokenType=facebook<br />
+        -----------------------------------------------------------------------------------------<br />
+        request type - get<br />
+        return on succesful query<br />
+        {<br />
+        "status": 200,<br />
+        "message": "OK",<br />
+        "obj": {<br />
+        "userid": "1101",<br />
+        "shapeIndex": 100<br />
+        }<br />
+        }<br />
+    </p>
+
 </body>
 </html>

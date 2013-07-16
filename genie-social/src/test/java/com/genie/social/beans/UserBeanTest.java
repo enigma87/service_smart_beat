@@ -17,7 +17,7 @@ import com.genie.social.beans.UserBean;
  *
  */
 
-public class UserTest {
+public class UserBeanTest {
 
 	@Test
 	public void testUserTest() {
@@ -47,7 +47,6 @@ public class UserTest {
 		user.setCreatedTs(timestamp);
 		user.setLastUpdatedTs(timestamp);
 		user.setLastLoginTs(timestamp);
-		user.setActive(true);
 		
 		Assert.assertEquals("123456789", user.getUserid());
 		Assert.assertEquals("access_token_123456789", user.getAccessToken());
@@ -62,8 +61,13 @@ public class UserTest {
 		Assert.assertTrue(timestamp.equals(user.getLastUpdatedTs()));
 		Assert.assertTrue(timestamp.equals(user.getLastLoginTs()));
 		Assert.assertEquals(new Boolean(true), user.getActive());
+		Assert.assertEquals((byte) 1, user.getPrivilegeLevel());
 		Assert.assertEquals(user.toString(), user.getFirstName() + " " + user.getLastName());
 		
+		user.setActive(false);
+		user.setPrivilegeLevel((byte) 2);
+		Assert.assertEquals(new Boolean(false), user.getActive());
+		Assert.assertEquals((byte) 2, user.getPrivilegeLevel());
 	}
 
 }
