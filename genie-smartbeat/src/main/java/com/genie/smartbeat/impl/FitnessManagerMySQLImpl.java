@@ -107,7 +107,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		/*update shape index model*/
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
-		/*update speed-heartrate model*/
+		/*update speed-heartrate model*/				
 		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
 		
 		/*update homeostasis index model*/
@@ -170,6 +170,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	
 	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
+		
+		/*set default surfaceIndex if not present*/
+		if(null == fitnessTrainingSessionBean.getSurfaceIndex()){
+			fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED);
+		}
 		
 		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
 		/*backup last session's data*/

@@ -28,6 +28,7 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Double hrz4Distance;
 	private Double hrz5Distance;
 	private Double hrz6Distance;
+	private Integer surfaceIndex;
 
 	
 	public String getUserid() {
@@ -150,6 +151,14 @@ public class SaveFitnessTrainingSessionRequestJson {
 		this.hrz6Distance = hrz6Distance;
 	}
 	
+	public Integer getSurfaceIndex() {		
+		return surfaceIndex;
+	}
+	
+	public void setSurfaceIndex(Integer surfaceIndex) {
+		this.surfaceIndex = surfaceIndex;
+	}
+	
 	public FitnessTrainingSessionBean getAsTrainingSessionBean(){
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -179,6 +188,7 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setHrz6Time(getHrz6Time());
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
+		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
 		
 		return fitnessTrainingSessionBean;
 	}
