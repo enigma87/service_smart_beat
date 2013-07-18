@@ -23,6 +23,7 @@ public class FitnessTrainingSessionBean {
 	private Double hrz4Distance;
 	private Double hrz5Distance;
 	private Double hrz6Distance;
+	private Integer surfaceIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -150,6 +151,14 @@ public class FitnessTrainingSessionBean {
 	
 	public void setHrz6Distance(Double hrz6Distance) {
 		this.hrz6Distance = hrz6Distance;
+	}
+	
+	public Integer getSurfaceIndex() {
+		return surfaceIndex;
+	}
+	
+	public void setSurfaceIndex(Integer surfaceIndex) {
+		this.surfaceIndex = surfaceIndex;
 	}
 	
 	public double[] getTimeDistributionOfHRZ(){

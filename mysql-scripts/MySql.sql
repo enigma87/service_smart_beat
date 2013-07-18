@@ -44,7 +44,8 @@ CREATE TABLE genie.`fitness_training_session` (
   `hrz_3_distance` DOUBLE DEFAULT NULL,
   `hrz_4_distance` DOUBLE DEFAULT NULL,
   `hrz_5_distance` DOUBLE DEFAULT NULL,
-  `hrz_6_distance` DOUBLE DEFAULT NULL,  
+  `hrz_6_distance` DOUBLE DEFAULT NULL,
+  `surface_index` INTEGER DEFAULT NULL,  
   PRIMARY KEY(`training_session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

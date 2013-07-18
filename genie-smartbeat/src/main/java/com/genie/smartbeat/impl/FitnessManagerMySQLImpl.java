@@ -184,7 +184,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		
 		/*set last session's data*/
-		fitnessSpeedHeartRateBean.setCurrentVdot(ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ()));
+		fitnessSpeedHeartRateBean.setCurrentVdot(ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(), fitnessTrainingSessionBean.getSurfaceIndex()));
 		fitnessSpeedHeartRateDAO.updateSpeedHeartrateModel(fitnessSpeedHeartRateBean);
 	}
 	

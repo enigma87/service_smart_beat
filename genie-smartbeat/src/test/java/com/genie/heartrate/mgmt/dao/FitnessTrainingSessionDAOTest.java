@@ -14,6 +14,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 /**
  * @author dhasarathy
@@ -36,6 +37,7 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastTwoHour));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));
+		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
 	}
 
 	@Test

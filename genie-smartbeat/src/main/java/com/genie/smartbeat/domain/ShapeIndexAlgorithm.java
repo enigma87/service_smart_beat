@@ -161,17 +161,28 @@ public class ShapeIndexAlgorithm
 	}
 	
 	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
-	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ = {0,0,0.1852,0.2024,0.2232,0.2316,0.2406};
-	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ = {0,0,2.3743,2.5846,2.8357,3.0071,3.1978};
-	public static double calculateVdot(double[] speedDistributionOfHRZ){
+	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ 		= {0,0,0.1852,0.2024,0.2232,0.2316,0.2406};
+	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ 		= {0,0,2.3743,2.5846,2.8357,3.0071,3.1978};
+	public static final double[] SPEED_CORRECTION_FACTOR_BY_SURFACE = {1,1.03,1.05,1.07,1.1,1.2,1.35,1.5};
+	public static final int RUNNING_SURFACE_TRACK_PAVED 			= 0;
+	public static final int RUNNING_SURFACE_GOOD_DIRT_TRACK_WET		= 1;
+	public static final int RUNNING_SURFACE_GOOD_FOREST_PATH		= 2;
+	public static final int RUNNING_SURFACE_MEDIOCRE_SHORT_GRASS	= 3;
+	public static final int RUNNING_SURFACE_ROUGH_PATH				= 4;
+	public static final int RUNNING_SURFACE_SLIPPERY_PATH			= 5;
+	public static final int RUNNING_SURFACE_MUD_SNOW_SAND			= 6;
+	public static final int RUNNING_SURFACE_WET_MUD_DEEP_SNOW		= 7;
+	
+	public static double calculateVdot(double[] speedDistributionOfHRZ, int runningSurface){
 		double[] VdotByZone = new double[7];
 		double Vdot = 0.0;
+		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
 		/*no contribution to vDot from zone 1*/
-		VdotByZone[2] = (speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_B_BY_HRZ[2])/SPEED_VDOT_CONSTANT_A_BY_HRZ[2];
-		VdotByZone[3] = (speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_B_BY_HRZ[3])/SPEED_VDOT_CONSTANT_A_BY_HRZ[3];
-		VdotByZone[4] = (speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_B_BY_HRZ[4])/SPEED_VDOT_CONSTANT_A_BY_HRZ[4];
-		VdotByZone[5] = (speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_B_BY_HRZ[5])/SPEED_VDOT_CONSTANT_A_BY_HRZ[5];
-		VdotByZone[6] = (speedDistributionOfHRZ[6] - SPEED_VDOT_CONSTANT_B_BY_HRZ[6])/SPEED_VDOT_CONSTANT_A_BY_HRZ[6];
+		VdotByZone[2] = (speedCorrectionFactor*speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_B_BY_HRZ[2])/SPEED_VDOT_CONSTANT_A_BY_HRZ[2];
+		VdotByZone[3] = (speedCorrectionFactor*speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_B_BY_HRZ[3])/SPEED_VDOT_CONSTANT_A_BY_HRZ[3];
+		VdotByZone[4] = (speedCorrectionFactor*speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_B_BY_HRZ[4])/SPEED_VDOT_CONSTANT_A_BY_HRZ[4];
+		VdotByZone[5] = (speedCorrectionFactor*speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_B_BY_HRZ[5])/SPEED_VDOT_CONSTANT_A_BY_HRZ[5];
+		VdotByZone[6] = (speedCorrectionFactor*speedDistributionOfHRZ[6] - SPEED_VDOT_CONSTANT_B_BY_HRZ[6])/SPEED_VDOT_CONSTANT_A_BY_HRZ[6];
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
 	        sum += VdotByZone[i];
