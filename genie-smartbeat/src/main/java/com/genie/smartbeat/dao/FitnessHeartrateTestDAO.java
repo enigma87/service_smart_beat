@@ -2,6 +2,8 @@ package com.genie.smartbeat.dao;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -167,8 +169,39 @@ public class FitnessHeartrateTestDAO {
 		return recentDayofRecord;
 	}
 	
+	private static final String QUERY_TODAYS_TESTS = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+			" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] 			+ "=?"  +
+			" AND "   + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] 	+ ">=?" +
+			" AND "   + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] 	+ "<=?";			
+
+	private static final String COUNT_QUERY_TODAYS_TESTS = "SELECT COUNT(*) FROM ( " +
+						QUERY_TODAYS_TESTS +
+					" ) AS TEMP";
+
 	public Integer getTodaysHeartRateTestCountForUser(String userid){
 		Integer todaysHeartRateTestCount = 0;
+		Date today = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);		
+		Timestamp today0000 = new Timestamp(cal.getTime().getTime());
+				
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+		Timestamp today2359 = new Timestamp(cal.getTime().getTime());
+		
+		try{
+			todaysHeartRateTestCount =  new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_TODAYS_TESTS, userid,today0000,today2359);
+		}catch(DataAccessException e){
+			
+		}
+		
+		return todaysHeartRateTestCount;
 	}
 }
 

@@ -79,6 +79,15 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		this.fitnessHeartrateTestDAO = fitnessHeartrateTestDAO;
 	}
 	
+	public FitnessHeartrateZoneDAO getFitnessHeartrateZoneDAO() {
+		return fitnessHeartrateZoneDAO;
+	}
+	
+	public void setFitnessHeartrateZoneDAO(
+			FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO) {
+		this.fitnessHeartrateZoneDAO = fitnessHeartrateZoneDAO;
+	}
+	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
 		
 		String userid = fitnessTrainingSessionBean.getUserid();		

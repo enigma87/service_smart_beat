@@ -28,16 +28,16 @@ public class FitnessHeartrateTestDAOTest {
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean4;
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean5;
 	
+	private static long now = new Date().getTime();
+	private static long oneHourBefore 	= now - (1*3600000);
+	private static long twoHoursBefore = now - (2*3600000);
+	private static long threeHoursBefore = now - (3*3600000);
+	
 	@BeforeClass
 	public static void beforeClass(){
 		
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
-		
-		long now = new Date().getTime();
-		long oneHourBefore 	= now - (1*3600000);
-		long twoHoursBefore = now - (2*3600000);
-		long threeHoursBefore = now - (3*3600000);
 		
 		fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean1.setUserid("user1");
@@ -193,6 +193,26 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean4.getHeartrateTestId());
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean5.getHeartrateTestId());
 	}
-
+	
+	@Test
+	public void testGetTodaysHeartRateTestCountForUser(){
+		Integer todaysHRTCount = fitnessHeartrateTestDAO.getTodaysHeartRateTestCountForUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(0), todaysHRTCount);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		todaysHRTCount = fitnessHeartrateTestDAO.getTodaysHeartRateTestCountForUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(1), todaysHRTCount);
+		long oneDayBefore = now - (25*3600000);
+		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(oneDayBefore));
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		todaysHRTCount = fitnessHeartrateTestDAO.getTodaysHeartRateTestCountForUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(1), todaysHRTCount);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
+		todaysHRTCount = fitnessHeartrateTestDAO.getTodaysHeartRateTestCountForUser(fitnessHeartrateTestBean1.getUserid());
+		assertEquals(new Integer(2), todaysHRTCount);
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());
+		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
+	}
 }
 
