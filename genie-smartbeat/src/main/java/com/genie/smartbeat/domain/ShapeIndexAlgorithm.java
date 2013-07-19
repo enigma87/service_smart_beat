@@ -173,9 +173,9 @@ public class ShapeIndexAlgorithm
 	}
 	
 	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
-	public static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ 		= {0,0,0.1852,0.2024,0.2232,0.2316,0.2406};
-	public static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ 		= {0,0,2.3743,2.5846,2.8357,3.0071,3.1978};
-	public static final double[] SPEED_CORRECTION_FACTOR_BY_SURFACE = {1,1.03,1.05,1.07,1.1,1.2,1.35,1.5};
+	private static final double[] SPEED_VDOT_CONSTANT_A_BY_HRZ 		= {0,0,0.1852,0.2024,0.2232,0.2316,0.2406};
+	private static final double[] SPEED_VDOT_CONSTANT_B_BY_HRZ 		= {0,0,2.3743,2.5846,2.8357,3.0071,3.1978};
+	private static final double[] SPEED_CORRECTION_FACTOR_BY_SURFACE = {1,1.03,1.05,1.07,1.1,1.2,1.35,1.5};
 	public static final int RUNNING_SURFACE_TRACK_PAVED 			= 0;
 	public static final int RUNNING_SURFACE_GOOD_DIRT_TRACK_WET		= 1;
 	public static final int RUNNING_SURFACE_GOOD_FOREST_PATH		= 2;
