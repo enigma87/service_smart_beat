@@ -3,6 +3,9 @@
  */
 package com.genie.smartbeat.impl;
 
+import java.util.Iterator;
+import java.util.List;
+
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -239,6 +242,23 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 					fitnessSpeedHeartRateBean.getPreviousVdot());
 		}
 		return speedHeartrateFactor;
+	}
+	
+	public double getOrthostaticHeartrateFactor(String userid){
+		double orthostaticHeartrateFactor = 0.0;
+		int numberOfSOHRTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(userid, 
+														FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+														numberOfSOHRTests - ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT);
+		double[][] dayOfRecordSOHRSeries = new double[sohrTimeSeries.size()][2];
+		int index = 0;
+		for(Iterator<FitnessHeartrateTestBean> i = sohrTimeSeries.iterator(); i.hasNext();index++){
+			FitnessHeartrateTestBean bean = i.next();
+			dayOfRecordSOHRSeries[index][0] = bean.getDayOfRecord();
+			dayOfRecordSOHRSeries[index][1] = bean.getHeartrate();
+		}
+		orthostaticHeartrateFactor = ShapeIndexAlgorithm.calculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate(dayOfRecordSOHRSeries);
+		return orthostaticHeartrateFactor;
 	}
 	
 	public String getRecentTrainingSessionId(String userid){
