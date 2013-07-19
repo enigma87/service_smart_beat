@@ -2,12 +2,13 @@ package com.genie.smartbeat.beans;
 
 import java.sql.Timestamp;
 
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+
 /**
  * @author dhasarathy
  **/
 
 public class FitnessHomeostasisIndexBean {
-
 
 	private String userid;
 	private Integer traineeClassification;
@@ -18,15 +19,8 @@ public class FitnessHomeostasisIndexBean {
 	private Double previousTotalLoadOfExercise;	
 	private Timestamp previousEndTime;		
 	
-	public static final Integer UNTRAINED = 1;
-	public static final Integer LIGHTLY_TRAINED = 2;
-	public static final Integer MODERATELY_TRAINED = 3;
-	public static final Integer WELL_TRAINED = 4;
-	public static final Integer ELITE = 5;
-	
-	
 	public FitnessHomeostasisIndexBean() {
-		traineeClassification = UNTRAINED;
+		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED;
 	}
 
 	public String getUserid() {
