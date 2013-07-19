@@ -13,6 +13,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 /**
  * @author dhasarathy
@@ -42,7 +43,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean1.setUserid("user1");
 		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean1.setHeartrate(124.0);
 		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(threeHoursBefore));
 		fitnessHeartrateTestBean1.setDayOfRecord(1);
@@ -50,7 +51,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean2.setUserid("user1");
 		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
-		fitnessHeartrateTestBean2.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean2.setHeartrate(130.0);
 		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
 		fitnessHeartrateTestBean2.setDayOfRecord(3);
@@ -58,7 +59,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean3.setUserid("user1");
 		fitnessHeartrateTestBean3.setHeartrateTestId("user1Test3");
-		fitnessHeartrateTestBean3.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean3.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean3.setHeartrate(146.0);
 		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(oneHourBefore));
 		fitnessHeartrateTestBean3.setDayOfRecord(8);
@@ -66,7 +67,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean4 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean4.setUserid("user1");
 		fitnessHeartrateTestBean4.setHeartrateTestId("user1Test4");
-		fitnessHeartrateTestBean4.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean4.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean4.setHeartrate(160.0);
 		fitnessHeartrateTestBean4.setTimeOfRecord(new Timestamp(now));
 		fitnessHeartrateTestBean4.setDayOfRecord(9);
@@ -74,7 +75,7 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean5 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean5.setUserid("user2");
 		fitnessHeartrateTestBean5.setHeartrateTestId("user2Test1");
-		fitnessHeartrateTestBean5.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean5.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean5.setHeartrate(160.0);
 		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(now));
 		fitnessHeartrateTestBean5.setDayOfRecord(10);

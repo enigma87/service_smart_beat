@@ -246,9 +246,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public double getOrthostaticHeartrateFactor(String userid){
 		double orthostaticHeartrateFactor = 0.0;
-		int numberOfSOHRTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		int numberOfSOHRTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(userid, 
-														FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+														ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
 														numberOfSOHRTests - ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT);
 		double[][] dayOfRecordSOHRSeries = new double[sohrTimeSeries.size()][2];
 		int index = 0;
@@ -281,7 +281,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
 			Integer latestDayOfRecord = previousHeartrateTestBean.getDayOfRecord() + differenceInDays.intValue();
 			fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
-			if(fitnessHeartrateTestBean.getHeartrateType() != FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
+			if(fitnessHeartrateTestBean.getHeartrateType() != ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
 				fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(previousHeartrateTestBean.getHeartrateTestId());
 				/*update heartrate zone model*/
 				updateHeartrateZoneModel(fitnessHeartrateTestBean.getUserid());
@@ -294,9 +294,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public void updateHeartrateZoneModel(String userid){
-		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_RESTING);
-		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_THRESHOLD);
-		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, FitnessHeartrateTestBean.HEARTRATE_TYPE_MAXIMAL);
+		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
 		
 		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
 			double[][] heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());

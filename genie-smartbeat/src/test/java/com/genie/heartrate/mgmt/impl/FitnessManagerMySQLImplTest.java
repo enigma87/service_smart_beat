@@ -20,6 +20,7 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 /**
  * @author vidhun
@@ -476,7 +477,7 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean1.setUserid("user1");
 		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean1.setHeartrate(124.0);
 		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(twoDaysBefore));
 		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean1);
@@ -484,7 +485,7 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean2.setUserid("user1");
 		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
-		fitnessHeartrateTestBean2.setHeartrateType(FitnessHeartrateTestBean.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
 		fitnessHeartrateTestBean2.setHeartrate(114.0);
 		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(now));
 		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean2);
