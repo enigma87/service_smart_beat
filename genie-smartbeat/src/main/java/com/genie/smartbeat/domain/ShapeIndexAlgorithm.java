@@ -218,5 +218,18 @@ public class ShapeIndexAlgorithm
 		return slopeOfTimeRegressionOfSHR;
 	}
 
-	
+	public static final double[][] VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION = {{35.0,45.0},{45.0,52.0},{52.0,58.0}};
+	public static int getTraineeClassificationUsingVdot(Double Vdot){
+		Integer traineeClassification = TRAINEE_CLASSIFICATION_UNTRAINED;
+        if((Vdot>= VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[0][0]) && (Vdot< VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[0][1])){
+			traineeClassification = TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED;
+		}else if((Vdot>= VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[1][0]) && (Vdot< VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[1][1])){
+			traineeClassification = TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+		}else if((Vdot>= VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[2][0]) && (Vdot< VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[2][1])){
+			traineeClassification = TRAINEE_CLASSIFICATION_WELL_TRAINED;
+		}else if(Vdot>= VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION[2][1]){
+			traineeClassification = TRAINEE_CLASSIFICATION_ELITE;
+		}
+		return traineeClassification;
+	}
 }

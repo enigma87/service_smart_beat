@@ -75,12 +75,12 @@ trainee_chitra{
 training_session{
 	start_time:17:12
 	end_time:18:02
-	hrz1_time:00:04 speed 9.9 km/h
-	hrz2_time:00:08 speed 10.7 km/h
-	hrz3_time:00:11 speed 11.4 km/h
-	hrz4_time:00:03 speed 12.1 km/h
-	hrz5_time:00:10 speed 12.8 km/h
-	hrz6_time:00:14 speed 13.4 km/h
+	hrz1_time:00:04 speed 9.9 km/h   Distance = 660
+	hrz2_time:00:08 speed 10.7 km/h  Distance = 1426.67
+	hrz3_time:00:11 speed 11.4 km/h  Distance = 2090
+	hrz4_time:00:03 speed 12.1 km/h  Distance = 605
+	hrz5_time:00:10 speed 12.8 km/h  Distance = 2133.33
+	hrz6_time:00:14 speed 13.4 km/h  Distance = 3126.67
 
 	start_time:08:12 day 2
 	end_time:08:42
