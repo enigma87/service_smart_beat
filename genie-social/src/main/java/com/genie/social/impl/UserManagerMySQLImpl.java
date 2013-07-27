@@ -1,5 +1,7 @@
 package com.genie.social.impl;
 
+import javax.annotation.Resource.AuthenticationType;
+
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
@@ -49,14 +51,17 @@ public class UserManagerMySQLImpl implements UserManager{
 				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
 				/* get existing user if there, by email of authenticated FB user */
 				UserBean authUser = authStatus.getAuthenticatedUser();
-				user =  null == authUser ? null : userDao.getUserInfoByEmail(authUser.getEmail());
 			
-				if (user != null) {
+				if (userDao.getUserInfoByEmail(authUser.getEmail()) != null) {
 					/*Uncached token matches an existing user*/
 					user.setAccessToken(accessToken);
-					userDao.updateUser(user);
+					userDao.updateUser(authUser);
 					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);						
-					authStatus.setAuthenticatedUser(user);
+					authStatus.setAuthenticatedUser(authUser);
+				} else {
+					/*fb user not in system*/
+					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+					authStatus.setAuthenticatedUser(authUser);
 				}
 			}
 		}
