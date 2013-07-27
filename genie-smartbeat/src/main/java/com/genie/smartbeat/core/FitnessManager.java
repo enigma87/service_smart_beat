@@ -4,7 +4,6 @@
 package com.genie.smartbeat.core;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
 /**
@@ -22,7 +21,7 @@ public interface FitnessManager{
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);
 	
 	/*heart rate zones*/
-	public FitnessHeartrateZoneBean getHeartrateZones(String userid);
+	public double[][] getHeartrateZones(String userid);
 	
 	/*shape index*/
 	public double getFitnessShapeIndex(String recentTrainingSessionId);

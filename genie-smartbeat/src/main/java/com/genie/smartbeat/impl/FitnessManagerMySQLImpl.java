@@ -314,8 +314,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 	}
 
-	public FitnessHeartrateZoneBean getHeartrateZones(String userid) {
-		return fitnessHeartrateZoneDAO.getHeartrateZoneModelByUserid(userid);		
+	public double[][] getHeartrateZones(String userid) {
+		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		return ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
 	}
 
 }
