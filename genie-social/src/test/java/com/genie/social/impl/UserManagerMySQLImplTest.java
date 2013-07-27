@@ -142,21 +142,20 @@ public class UserManagerMySQLImplTest {
 		UserManager usMgr = new UserManagerMySQLImpl();
 		if(usMgr instanceof UserManagerMySQLImpl){}
 		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
-		usMgr.registerUser(userFb);
 		
 		AuthenticationStatus authStatus;
 		
-		//case 1.a
+		//case 1.a : new user
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
+		Assert.assertEquals(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus()), true);
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 		
-		// case 1.b user exists and not cached
-		String copyAccessToken = userFb.getAccessToken();
-		userFb.setAccessToken("");
+		// case 1.b user exists
+		usMgr.registerUser(userFb);
 		userDao.updateUser(userFb);
-		authStatus = userManagerMySQLImpl.authenticateRequest(copyAccessToken, UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
-		Assert.assertEquals(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus()), true);
+		AuthenticationStatus fbAuthStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
+		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
+		Assert.assertEquals(fbAuthStatus.getAuthenticationStatus(), authStatus.getAuthenticationStatus());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());
 
 		// case 1.c

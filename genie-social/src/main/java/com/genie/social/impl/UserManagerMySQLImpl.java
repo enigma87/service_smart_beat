@@ -41,36 +41,25 @@ public class UserManagerMySQLImpl implements UserManager{
 				
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
-		AuthenticationStatus authStatus = new AuthenticationStatus();
-		UserBean user = userDao.getUserInfoByAccessToken(accessToken);		
+		AuthenticationStatus fbAuthStatus = new AuthenticationStatus();
+		fbAuthStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
 		
-		if(null == user){
-			/*Token not cached*/			
+		// fb Authentication is successful
+		if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)
+			&& fbAuthStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
+			&& fbAuthStatus.getAuthenticatedUser() != null) { 
+		
+			// User exists in system: use fbAuth 
+			if (userDao.getUserInfoByAccessToken(accessToken) != null) return fbAuthStatus;
+			if (userDao.getUserInfoByEmail(fbAuthStatus.getAuthenticatedUser().getEmail()) != null) return fbAuthStatus;
 			
-			if(accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)){
-				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
-				/* get existing user if there, by email of authenticated FB user */
-				UserBean authUser = authStatus.getAuthenticatedUser();
-			
-				if (userDao.getUserInfoByEmail(authUser.getEmail()) != null) {
-					/*Uncached token matches an existing user*/
-					user.setAccessToken(accessToken);
-					userDao.updateUser(authUser);
-					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);						
-					authStatus.setAuthenticatedUser(authUser);
-				} else {
-					/*fb user not in system*/
-					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
-					authStatus.setAuthenticatedUser(authUser);
-				}
-			}
+			// New fb user: keep auth user, deny authentication 
+			fbAuthStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+			return fbAuthStatus;
 		}
-		else{/*Token cached*/
-			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);			
-			authStatus.setAuthenticatedUser(user);
-		}
-		return authStatus;
-}		
+		// not a valid user: use fbAuth
+		return fbAuthStatus;
+	}		
 
 	public void saveUserInformation(UserBean user) {
 		userDao.updateUser(user);		
