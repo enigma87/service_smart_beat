@@ -41,24 +41,24 @@ public class UserManagerMySQLImpl implements UserManager{
 				
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
-		AuthenticationStatus fbAuthStatus = new AuthenticationStatus();
-		fbAuthStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
-		
-		// fb Authentication is successful
-		if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)
-			&& fbAuthStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
-			&& fbAuthStatus.getAuthenticatedUser() != null) { 
-		
-			// User exists in system: use fbAuth 
-			if (userDao.getUserInfoByAccessToken(accessToken) != null) return fbAuthStatus;
-			if (userDao.getUserInfoByEmail(fbAuthStatus.getAuthenticatedUser().getEmail()) != null) return fbAuthStatus;
-			
-			// New fb user: keep auth user, deny authentication 
-			fbAuthStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
-			return fbAuthStatus;
+		AuthenticationStatus authStatus = null;
+		UserBean authenticatedUser = userDao.getUserInfoByAccessToken(accessToken);
+
+		if (authenticatedUser != null) {
+			authStatus = new AuthenticationStatus();
+			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
+			authStatus.setAuthenticatedUser(authenticatedUser);
 		}
-		// not a valid user: use fbAuth
-		return fbAuthStatus;
+		else if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)) {
+			authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
+			
+			if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
+				&& userDao.getUserInfoByEmail(authStatus.getAuthenticatedUser().getEmail()) == null) {
+				
+				authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+			}
+		}	
+		return authStatus;
 	}		
 
 	public void saveUserInformation(UserBean user) {
