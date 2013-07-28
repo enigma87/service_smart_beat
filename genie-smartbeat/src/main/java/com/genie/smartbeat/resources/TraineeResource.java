@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
@@ -166,6 +167,26 @@ public class TraineeResource
 		}
 	}
 	
+	@GET
+	@Path("id/{userid}/heartrateZones")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getHeartrateZones(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+
+		double[][] heartrateZones = fitnessManager.getHeartrateZones(userID);
+		HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
+		heartRateZoneJson.setUserid(userID);
+		heartRateZoneJson.setHeartrateZones(heartrateZones);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateZoneJson);
+	
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
 	@POST
 	@Path("id/{userid}/trainingSession/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
@@ -196,4 +217,6 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
+
+
 }

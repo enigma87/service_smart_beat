@@ -381,5 +381,18 @@ public class TraineeResourceTest extends JerseyTest {
 			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 			       
 		}
+		
+		@Test
+		public void testGetHeartrateZones() {
+			String userid = "073a9e7d-9cf2-49a0-8926-f27362fd547e";
+			String accessToken = "CAACEdEose0cBAPlsgswFasGRgCIKYexcP5NKCKApuumRV0O2NsO1o1AJrcGFZCD08E74dNsyz6q2mYPRGmjHj0By2gSPQTvmvsH9uiwtBoIueRCpL3cwhBm40PsYCEPVZC9rRWmHZCOor3WMZBgrb59jU9qSRBgZD";
+			String getHeartrateZonesUrl = "http://localhost:9998/trainee/id/"+userid+"/heartrateZones?accessToken="+accessToken+"&accessTokenType=facebook";
+			ClientConfig clientConfigGetShapeIndex = new DefaultClientConfig();
+			clientConfigGetShapeIndex.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+			Client clientGetShapeIndex = Client.create(clientConfigGetShapeIndex);
+			WebResource getShapeIndex = clientGetShapeIndex.resource(getHeartrateZonesUrl);
+			JSONObject getShapeIndexResponse = getShapeIndex.get(JSONObject.class);
+			
+		}
 
 }
