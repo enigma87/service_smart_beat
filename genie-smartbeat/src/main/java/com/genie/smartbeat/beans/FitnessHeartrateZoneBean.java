@@ -128,17 +128,17 @@ public class FitnessHeartrateZoneBean {
 	public static final int ZONE_END 	= 1;
 	public void setHeartrateZones(double[][] heartrateZones){
 		this.setHeartrateZone1Start(heartrateZones[1][ZONE_START]);
-		this.setHeartrateZone1Start(heartrateZones[1][ZONE_END]);
+		this.setHeartrateZone1End(heartrateZones[1][ZONE_END]);
 		this.setHeartrateZone2Start(heartrateZones[2][ZONE_START]);
-		this.setHeartrateZone2Start(heartrateZones[2][ZONE_END]);
+		this.setHeartrateZone2End(heartrateZones[2][ZONE_END]);
 		this.setHeartrateZone3Start(heartrateZones[3][ZONE_START]);
-		this.setHeartrateZone3Start(heartrateZones[3][ZONE_END]);
+		this.setHeartrateZone3End(heartrateZones[3][ZONE_END]);
 		this.setHeartrateZone4Start(heartrateZones[4][ZONE_START]);
-		this.setHeartrateZone4Start(heartrateZones[4][ZONE_END]);
+		this.setHeartrateZone4End(heartrateZones[4][ZONE_END]);
 		this.setHeartrateZone5Start(heartrateZones[5][ZONE_START]);
-		this.setHeartrateZone5Start(heartrateZones[5][ZONE_END]);
+		this.setHeartrateZone5End(heartrateZones[5][ZONE_END]);
 		this.setHeartrateZone6Start(heartrateZones[6][ZONE_START]);
-		this.setHeartrateZone6Start(heartrateZones[6][ZONE_END]);
+		this.setHeartrateZone6End(heartrateZones[6][ZONE_END]);
 	}
 	
 	public double[][] getHeartrateZones(){
