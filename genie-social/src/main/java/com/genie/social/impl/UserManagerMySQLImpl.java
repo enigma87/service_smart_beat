@@ -1,7 +1,5 @@
 package com.genie.social.impl;
 
-import javax.annotation.Resource.AuthenticationType;
-
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
