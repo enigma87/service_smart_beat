@@ -25,8 +25,8 @@ training_session{
 	end time: 16:32 
 	hrz1_time:00:10 speed 6.2 km/h
 	hrz2_time:00:22 speed 7.2 km/h
-	hrz3_time:00:00 speed 8.5 km/h
-	hrz4_time:00:00 speed 9.6 km/h
+	hrz3_time:00:00 
+	hrz4_time:00:00 
 	hrz5_time:00:00
 	hrz6_time:00:00
 	
