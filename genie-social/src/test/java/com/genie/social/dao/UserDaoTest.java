@@ -134,5 +134,16 @@ public class UserDaoTest {
 		userDao.deleteUser(user.getUserid());
 		Assert.assertEquals(null, userDao.getUserInfo(user.getUserid()));
 	}
+	
+	@Test
+	public void testIsExistingUser(){
+		boolean isExistingUser = false;
+		isExistingUser = userDao.isExistingUser("abc@xyz.com");
+		Assert.assertFalse(isExistingUser);
+		userDao.createUser(user);
+		isExistingUser = userDao.isExistingUser("abc@xyz.com");
+		Assert.assertTrue(isExistingUser);
+		userDao.deleteUser("12345");
+	}
 }
 
