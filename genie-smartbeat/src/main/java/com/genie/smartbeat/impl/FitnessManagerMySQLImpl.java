@@ -202,11 +202,17 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 	public double getFitnessShapeIndex(String recentTrainingSessionId) {
+		double newShapeIndex = 0;
+		
+		if(null != recentTrainingSessionId){
 		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
-		double newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
+		newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
 				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())
 				+ getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid())
 				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid());
+		}else{
+			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
+		}
 		
 		return newShapeIndex;
 	}

@@ -199,7 +199,7 @@ public class ShapeIndexAlgorithm
 	    for (int i = 0; i < VdotByZone.length; i++) {
 	        sum += VdotByZone[i];
 	    }
-	    Vdot = sum / VdotByZone.length;
+	    Vdot = sum / (VdotByZone.length-1);
 		return Vdot;
 	}
 	
