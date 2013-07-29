@@ -321,10 +321,17 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 
 	public double[][] getHeartrateZones(String userid) {
+		double[][] heartrateZones = null;
 		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
 		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		return ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
+		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
+			heartrateZones =  ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
+		}else{
+			int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+			heartrateZones = ShapeIndexAlgorithm.getDefaultHeartrateZones(traineeClassification);
+		}
+		return heartrateZones;
 	}
 
 }

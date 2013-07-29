@@ -136,7 +136,7 @@ public class HeartRateZoneResponseJson {
 		this.setHeartrateZone6End(heartrateZones[6][ZONE_END]);
 	}
 	
-	public double[][] getHeartrateZones(){
+	public double[][] noJSONGetHeartrateZones(){
 		double[][] heartrateZones = new double[7][2];
 		
 		heartrateZones[1][ZONE_START] 	= this.getHeartrateZone1Start();

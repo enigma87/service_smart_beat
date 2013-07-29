@@ -16,15 +16,33 @@ public class ShapeIndexAlgorithm
 {
 	public static final double SHAPE_INDEX_INITIAL_VALUE 					= 100.0;
 	
+	public static final Integer TRAINEE_CLASSIFICATION_UNTRAINED 			= 1;
+	public static final Integer TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED 		= 2;
+	public static final Integer TRAINEE_CLASSIFICATION_MODERATELY_TRAINED 	= 3;
+	public static final Integer TRAINEE_CLASSIFICATION_WELL_TRAINED 		= 4;
+	public static final Integer TRAINEE_CLASSIFICATION_ELITE 				= 5;
+	
 	public static final Integer HEARTRATE_TYPE_RESTING 						= 0;
 	public static final Integer HEARTRATE_TYPE_THRESHOLD 					= 1;
 	public static final Integer HEARTRATE_TYPE_MAXIMAL 						= 2;
 	public static final Integer HEARTRATE_TYPE_STANDING_ORTHOSTATIC 		= 3;
 	
 	
+	private static final double[][][] DEFAULT_HRZ_BY_TRAINEE_CLASSIFICATION = 	{
+																					{{0.0,0.0},{0.0,0.0},{0.0,0.0},{0.0,0.0},{0.0,0.0},{0.0,0.0}},
+																					{{0.0,0.0},{48.0,102.0},{103.0,129.0},{130.0,150.0},{151.0,159.0},{160.0,172.0},{172.0,180.0}},
+																					{{0.0,0.0},{48.0,102.0},{103.0,129.0},{130.0,150.0},{151.0,159.0},{160.0,172.0},{172.0,180.0}},
+																					{{0.0,0.0},{48.0,102.0},{103.0,129.0},{130.0,150.0},{151.0,159.0},{160.0,172.0},{172.0,180.0}},
+																					{{0.0,0.0},{48.0,102.0},{103.0,129.0},{130.0,150.0},{151.0,159.0},{160.0,172.0},{172.0,180.0}},
+																					{{0.0,0.0},{48.0,102.0},{103.0,129.0},{130.0,150.0},{151.0,159.0},{160.0,172.0},{172.0,180.0}}		
+																				};
+	public static double[][] getDefaultHeartrateZones(int traineeClassification){
+		double[] heartrateZones[] = DEFAULT_HRZ_BY_TRAINEE_CLASSIFICATION[traineeClassification];				
+		return heartrateZones;
+	}
 	
 	private static final int ZONE_START_IDX = 0;
-	private static final int ZONE_END_IDX 	= 1;	
+	private static final int ZONE_END_IDX 	= 1;
 	public static double[][] calculateHeartrateZones(double restingHeartrate, double thresholdHeartrate, double maximalHeartrate){
 		
 		double[] heartrateZones[] = new double[7][2];
@@ -64,12 +82,7 @@ public class ShapeIndexAlgorithm
 	
 	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
 	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {0,-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
-	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {0,4.1667, 5.2083, 6.25, 7.2917, 8.3333};
-	public static final Integer TRAINEE_CLASSIFICATION_UNTRAINED 			= 1;
-	public static final Integer TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED 		= 2;
-	public static final Integer TRAINEE_CLASSIFICATION_MODERATELY_TRAINED 	= 3;
-	public static final Integer TRAINEE_CLASSIFICATION_WELL_TRAINED 		= 4;
-	public static final Integer TRAINEE_CLASSIFICATION_ELITE 				= 5;	
+	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {0,4.1667, 5.2083, 6.25, 7.2917, 8.3333};	
 	public static double getRegressedHomeostasisIndex(Integer traineeClassification, Timestamp previousTrainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double regressedHomeostasisIndex = 0.0;
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, previousTrainingSessionEndTime, recentMinimumOfHomeostasisIndex);
