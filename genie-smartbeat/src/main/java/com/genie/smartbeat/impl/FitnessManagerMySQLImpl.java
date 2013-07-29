@@ -328,7 +328,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
 			heartrateZones =  ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
 		}else{
-			int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+			Integer traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid(userid);
+			if(null == traineeClassification){
+				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
+			}
 			heartrateZones = ShapeIndexAlgorithm.getDefaultHeartrateZones(traineeClassification);
 		}
 		return heartrateZones;

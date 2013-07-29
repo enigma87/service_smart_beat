@@ -73,11 +73,19 @@ public class FitnessHomeostasisIndexDAO {
 			+ COLUMNS_FITNESS_HOMEOSTASIS_INDEX[7] + "=:previousEndTime "				
 			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
 	
-	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
-		       
-		       	NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-				return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
-			}
+	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){		       
+       	NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+		return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+	}
+	
+	public Integer getTraineeClassificationByUserid(String userid){
+		Integer traineeClassification = null;
+		FitnessHomeostasisIndexBean homeostasisIndexBean = getHomeostasisIndexModelByUserid(userid);
+		if(null != homeostasisIndexBean){
+			traineeClassification = homeostasisIndexBean.getTraineeClassification();
+		}
+		return traineeClassification;
+	}
 
 }
 
