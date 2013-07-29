@@ -3,6 +3,7 @@
  */
 package com.genie.smartbeat.impl;
 
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -120,6 +121,22 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 
 	}
+	
+	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getTrainingSessionIdsByWeekNumber(String userid, String year, int weekNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getTrainingSessionIdsByDay(String userid, Date day) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
 		double shapeIndex;
@@ -336,5 +353,4 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		return heartrateZones;
 	}
-
 }
