@@ -194,6 +194,7 @@ public class TraineeResourceTest extends JerseyTest {
 			long now = new Date().getTime();
 			long nowBeforeOneHour = now - 3600000;
 			long nowBeforeTwentyMinutes = now - 1200000;
+			long nowBeforeFortyMinutes = now - 2*1200000;
 			
 			/*Get App Access Token from facebook*/
 		    String getAppAccessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="+appID+"&client_secret=bd8fa4961cb1c2a284cbe8486707b73a&grant_type=client_credentials";
@@ -233,27 +234,28 @@ public class TraineeResourceTest extends JerseyTest {
 			String genieUserID = objRegister.getString("userid");
 			
 			/*Save fitness training Session for the user*/
-			String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/"+genieUserID+"/fitnessTrainingSession/save?accessToken="+userAccessToken+"&accessTokenType=facebook";;
+			String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/id/"+genieUserID+"/trainingSession/save?accessToken="+userAccessToken+"&accessTokenType=facebook";;
 			JSONObject trainingSessionDataJsonObj = new JSONObject();
 			trainingSessionDataJsonObj.put("startTime", new Timestamp (nowBeforeOneHour));
-			trainingSessionDataJsonObj.put("endTime", new Timestamp (nowBeforeTwentyMinutes) );
-			trainingSessionDataJsonObj.put("hrz1Time","4.0");
-			trainingSessionDataJsonObj.put("hrz2Time","8.0");
-			trainingSessionDataJsonObj.put("hrz3Time","11.0");
-			trainingSessionDataJsonObj.put("hrz4Time","3.0");
-			trainingSessionDataJsonObj.put("hrz5Time","6.0");
-			trainingSessionDataJsonObj.put("hrz6Time","8.0");
-			trainingSessionDataJsonObj.put("hrz1Distance","421.7304");
-			trainingSessionDataJsonObj.put("hrz2Distance","895.1108");
-			trainingSessionDataJsonObj.put("hrz3Distance","1342.9544");
-			trainingSessionDataJsonObj.put("hrz4Distance","402.9899");
-			trainingSessionDataJsonObj.put("hrz5Distance","1408.0273");
-			trainingSessionDataJsonObj.put("hrz6Distance","2070.7614");
+			trainingSessionDataJsonObj.put("endTime", new Timestamp (nowBeforeFortyMinutes) );
+			trainingSessionDataJsonObj.put("hrz1Time","12.0");
+			trainingSessionDataJsonObj.put("hrz2Time","14.0");
+			trainingSessionDataJsonObj.put("hrz3Time","8.0");
+			trainingSessionDataJsonObj.put("hrz4Time","6.0");
+			trainingSessionDataJsonObj.put("hrz5Time","0.0");
+			trainingSessionDataJsonObj.put("hrz6Time","0.0");
+			trainingSessionDataJsonObj.put("hrz1Distance","1260.3");
+			trainingSessionDataJsonObj.put("hrz2Distance","1680.4");
+			trainingSessionDataJsonObj.put("hrz3Distance","1120.2");
+			trainingSessionDataJsonObj.put("hrz4Distance","990.18");
+			trainingSessionDataJsonObj.put("hrz5Distance","0.0");
+			trainingSessionDataJsonObj.put("hrz6Distance","0.0");
 			ClientConfig clientConfigSaveFitnessTrainingSession = new DefaultClientConfig();
 			clientConfigSaveFitnessTrainingSession.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 			Client clientSaveFitnessTrainingSession = Client.create(clientConfigSaveFitnessTrainingSession);
 			WebResource saveFitnessTrainingSession = clientSaveFitnessTrainingSession.resource(saveFitnessTrainingSessionUrl);
 			JSONObject saveFitnessTrainingSessionResponse = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);
+			System.out.println(saveFitnessTrainingSessionResponse);
 			Assert.assertEquals("200", saveFitnessTrainingSessionResponse.getString("status"));
 			Assert.assertEquals("OK", saveFitnessTrainingSessionResponse.getString("message"));
 			JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionResponse.getJSONObject("obj");
@@ -343,7 +345,7 @@ public class TraineeResourceTest extends JerseyTest {
 			clientConfigSaveFitnessTrainingSession.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 			Client clientSaveFitnessTrainingSession = Client.create(clientConfigSaveFitnessTrainingSession);
 			WebResource saveFitnessTrainingSession = clientSaveFitnessTrainingSession.resource(saveFitnessTrainingSessionUrl);
-			JSONObject saveFitnessTrainingSessionResponse = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);
+			JSONObject saveFitnessTrainingSessionResponse = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);			
 			Assert.assertEquals("200", saveFitnessTrainingSessionResponse.getString("status"));
 			Assert.assertEquals("OK", saveFitnessTrainingSessionResponse.getString("message"));
 			JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionResponse.getJSONObject("obj");

@@ -5,53 +5,103 @@
 </head>
 <body>
     <p>
-        root url - http://host:8080/smartbeat/v1.0/
+        root url - http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/
     </p>
     <p>
         trainee/register<br />
         -----------------<br />
         request type - post<br />
         payload type - application/json<br />
-        example payload<br />
-        {"accessToken":"CAACEdEose0cBAHhfImAg7nd4hD2pO2GcKuryn6nZCUMq1yHfsSxQ2Q81HpwfV3PR67s5FtKHUuQ3boes5qbdS3HL7Rzp9q50qPtrkSdkTxHoiBqYwxr13b1g9F0LpG8Y9FllMrBxSxQJZAiPsASyQcZBMy1YSYZD", "accessTokenType":"facebook"}<br />
+        example request<br />
+		http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/register<br /> {"accessToken":"CAACEdEose0cBAHhfImAg7nd4hD2pO2GcKuryn6nZCUMq1yHfsSxQ2Q81HpwfV3PR67s5FtKHUuQ3boes5qbdS3HL7Rzp9q50qPtrkSdkTxHoiBqYwxr13b1g9F0LpG8Y9FllMrBxSxQJZAiPsASyQcZBMy1YSYZD", "accessTokenType":"facebook"}<br />
     </p>
     <p>
         trainee/email/{email}?accessToken=FBToken&accessTokenType=facebook<br />
         -------------------------------------------------------------<br />
         request -type get<br />
+		example request<br />
+		http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/email/abc@xyz.com<br />
         return on successful query<br />
-        {<br />
-        "status": 200,<br />
-        "message": "OK",<br />
-        "obj": {<br />
-        "userid": "8ac78e26-116f-4967-9d40-f538f95de0f9",<br />
-        "firstName": "Dhasarathy",<br />
-        "lastName": "Parthasarathy",<br />
-        "dob": null,<br />
-        "imageUrl": null<br />
-        }<br />
-        }<br />
+        {
+			"status": 200,
+			"message": "OK",
+			"obj": {
+				"userid": "3a7fbd32-124b-4b64-9314-0d45d20adde4",
+				"firstName": "John",
+				"lastName": "Doe",
+				"dob": null,
+				"imageUrl": null
+			}
+        }
     </p>
     <p>
         trainee/id/{userid}/trainingSession/save?accessToken=FBToken&accessTokenType=facebook<br />
         -----------------------------------------------------------------------------------------<br />
         request type - post<br />
         payload type - application/json<br />
-        example payload<br />
+        example request<br />
+		http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/id/3a7fbd32-124b-4b64-9314-0d45d20adde4/trainingSession/save<br />
+		{
+		 "startTime" : "2013-06-20 22:31:12.453",
+		 "endTime" : "2013-06-20 22:31:12.453",
+		 "hrz1Time" : "4.0",
+		 "hrz2Time" : "8.0",
+		 "hrz3Time" : "11.0",
+		 "hrz4Time" : "3.0",
+		 "hrz5Time" : "10.0",
+		 "hrz6Time" : "14.0",
+		 "hrz1Distance" : "421.7304",
+		 "hrz2Distance" : "421.7304",
+		 "hrz3Distance" : "421.7304",
+		 "hrz4Distance" : "421.7304",
+		 "hrz5Distance" : "421.7304",
+		 "hrz6Distance" : "421.7304"
+		}<br /> <br /> 
+		return on successful query<br />      {"status":200,"message":"OK","obj":{"userid":"3a7fbd32-124b-4b64-9314-0d45d20adde4","trainingSessionId":"3a7fbd32-124b-4b64-9314-0d45d20adde4_TRN_2013_1","shapeIndex":100}}
+
     </p>
     <p>
         trainee/id/{userid}/shapeIndex?accessToken=FBToken&accessTokenType=facebook<br />
         -----------------------------------------------------------------------------------------<br />
         request type - get<br />
+		example request<br />
+		http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/id/3a7fbd32-124b-4b64-9314-0d45d20adde4/shapeIndex<br />
         return on succesful query<br />
-        {<br />
-        "status": 200,<br />
-        "message": "OK",<br />
-        "obj": {<br />
-        "userid": "1101",<br />
-        "shapeIndex": 100<br />
-        }<br />
-        }<br />
+        {
+        "status": 200,
+        "message": "OK",
+        "obj": {
+        "userid": "3a7fbd32-124b-4b64-9314-0d45d20adde4",
+        "shapeIndex": 100
+        }
+        }
+    </p>
+	<p>
+        trainee/id/{userid}/heartrateZones?accessToken=FBToken&accessTokenType=facebook<br />
+        -----------------------------------------------------------------------------------------<br />
+        request type - get<br />
+		example request<br />
+		http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/id/3a7fbd32-124b-4b64-9314-0d45d20adde4/heartrateZones<br />
+        return on succesful query<br />
+        {
+		"status": 200,
+		"message": "OK",
+		"obj": {
+			"userid": "3a7fbd32-124b-4b64-9314-0d45d20adde4",
+			"heartrateZone1Start": 48,
+			"heartrateZone1End": 102,
+			"heartrateZone2Start": 103,
+			"heartrateZone2End": 129,
+			"heartrateZone3Start": 130,
+			"heartrateZone3End": 150,
+			"heartrateZone4Start": 151,
+			"heartrateZone4End": 159,
+			"heartrateZone5Start": 160,
+			"heartrateZone5End": 172,
+			"heartrateZone6Start": 172,
+			"heartrateZone6End": 180
+			}
+		}
     </p>
 
 </body>
