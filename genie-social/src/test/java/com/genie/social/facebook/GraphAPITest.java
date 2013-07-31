@@ -1,10 +1,8 @@
 package com.genie.social.facebook;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-
-import javax.ws.rs.DELETE;
 
 import junit.framework.Assert;
 
@@ -70,7 +68,8 @@ public class GraphAPITest {
 	@Test
 	public void testGetTestUser(){
 		UserBean userFb = GraphAPI.getTestUser();
-		assertNotNull(userFb);		
+		assertNotNull(userFb);
+		System.out.println(userFb.getGender());
 	}
 	
 	public void testDeleteTestUser() throws IOException {

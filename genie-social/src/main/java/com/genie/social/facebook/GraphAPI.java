@@ -10,6 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
+import com.genie.social.core.UserManager;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultWebRequestor;
 import com.restfb.FacebookClient;
@@ -38,6 +39,8 @@ public class GraphAPI {
 	private static final String VAL_TRUE 				= "true";	
 	private static final String VAL_EMAIL 				= "email";	
 	private static final String VAL_DELETE				= "delete";
+	private static final String VAL_GENDER_FEMALE		= "female";
+	private static final String VAL_GENDER_MALE			= "male";
 
 	public static AuthenticationStatus getUserAuthenticationStatus(String accessToken) {
 		FacebookClient facebookClient = null;
@@ -56,6 +59,13 @@ public class GraphAPI {
 				user.setLastName(names[1]);
 				user.setEmail(facebookUser.getEmail());				
 				if (facebookUser.getBirthdayAsDate() != null) user.setDob(new Date(facebookUser.getBirthdayAsDate().getTime()));
+				if(facebookUser.getGender()!=null){
+					if(VAL_GENDER_FEMALE.equals(facebookUser.getGender())){
+						user.setGender(UserManager.GENDER_FEMALE);
+					}else if(VAL_GENDER_MALE.equals(facebookUser.getGender())){
+						user.setGender(UserManager.GENDER_MALE);
+					}
+				}
 				user.setAccessToken(accessToken);
 				user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 				authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
@@ -111,7 +121,7 @@ public class GraphAPI {
 		try{
 			getFacebookTestUserUrl = URL_APP_GENIE_TEST_USERS + "?"
 					+ KEY_INSTALLED + "=" + VAL_TRUE + "&"
-					+ KEY_PERMISSIONS + "=" + VAL_EMAIL + "&"
+					+ KEY_PERMISSIONS + "=" + VAL_EMAIL +"&"
 					+ KEY_METHOD + "=" + VAL_POST + "&"
 					+ KEY_ACCESS_TOKEN + "=" + URLEncoder.encode(getAppGenieAccessToken(), ENCODING_ISO_8859_1);		
 			

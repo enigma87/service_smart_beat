@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 import junit.framework.Assert;
 
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -395,6 +396,21 @@ public class TraineeResourceTest extends JerseyTest {
 			WebResource getShapeIndex = clientGetShapeIndex.resource(getHeartrateZonesUrl);
 			JSONObject getShapeIndexResponse = getShapeIndex.get(JSONObject.class);
 			
+		}
+		
+		@Test
+		public void tempTest() throws JSONException{
+			String userAccessToken = "CAAEvclnXOesBAH2q1LYuZCcbUsfui60bWyeiZB4KAh38aUqBP0D0M5LmHyC03TiMP7BbNEZA7gtkkaVlxWZC8twZAg9fwUB54zZATTdcczkIuRCpSMGyt5CoioOtN3q5E8z0UzZB24JwZCzaF6bMorEYj5AwuD1DVluppPs5s55WygZDZD";
+			String registerUserUrl = "http://localhost:9998/trainee/register";
+			JSONObject inputJsonObj = new JSONObject();
+			inputJsonObj.put("accessToken", userAccessToken );
+			inputJsonObj.put("accessTokenType", "facebook" );
+			ClientConfig clientConfigRegisterUser = new DefaultClientConfig();
+			clientConfigRegisterUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+			Client clientRegisterUser = Client.create(clientConfigRegisterUser);
+			WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
+			JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
+			System.out.println(registerResJson);
 		}
 
 }
