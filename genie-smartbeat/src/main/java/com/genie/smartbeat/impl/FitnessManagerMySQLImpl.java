@@ -339,18 +339,25 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public double[][] getHeartrateZones(String userid) {
 		double[][] heartrateZones = null;
+		double restingHeartrate = 0.0, thresholdHeartrate = 0.0, maximalHeartrate = 0.0;
 		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
 		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
 		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
-			heartrateZones =  ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
+			restingHeartrate 	= restingHeartrateTestBean.getHeartrate();
+			thresholdHeartrate 	= thresholdHeartrateTestBean.getHeartrate();
+			maximalHeartrate 	= maximalHeartrateTestBean.getHeartrate();			
 		}else{
 			Integer traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid(userid);
 			if(null == traineeClassification){
 				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
 			}
-			heartrateZones = ShapeIndexAlgorithm.getDefaultHeartrateZones(traineeClassification);
+			double[] rmtHeartrates = ShapeIndexAlgorithm.getDefaultRMTHeartrates(traineeClassification, 35, ShapeIndexAlgorithm.GENDER_FEMALE);
+			restingHeartrate 	= rmtHeartrates[0];
+			thresholdHeartrate 	= rmtHeartrates[1];
+			maximalHeartrate 	= rmtHeartrates[2];
 		}
+		heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrate, thresholdHeartrate, maximalHeartrate);
 		return heartrateZones;
 	}
 }
