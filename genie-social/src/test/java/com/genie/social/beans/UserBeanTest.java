@@ -69,5 +69,18 @@ public class UserBeanTest {
 		Assert.assertEquals(new Boolean(false), user.getActive());
 		Assert.assertEquals((byte) 2, user.getPrivilegeLevel());
 	}
+	
+	@Test
+	public void testGetAge(){
+		int age = 0;
+		UserBean user = new UserBean();
+		age = user.getAge();
+		Assert.assertEquals(-1,age);		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -25);		
+		user.setDob(new Date(cal.getTimeInMillis()));		
+		age = user.getAge();
+		Assert.assertEquals(25,age);		
+	}
 
 }

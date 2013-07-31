@@ -2,7 +2,6 @@ package com.genie.social.dao;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.UserBean;
-import com.genie.social.dao.UserDao;
+import com.genie.social.core.UserManager;
 
 /**
  * @author dhasarathy
@@ -52,6 +51,7 @@ public class UserDaoTest {
 		user.setFirstName("Katoor");
 		user.setMiddleName("Motham");
 		user.setLastName("Dada");
+		user.setGender(UserManager.GENDER_FEMALE);
 		user.setDob(Dob);
 		user.setEmail("abc@xyz.com");		
 		user.setImageUrl("www.picasa.com/1002");
@@ -72,6 +72,7 @@ public class UserDaoTest {
 		Assert.assertEquals("Katoor", user1.getFirstName());
 		Assert.assertEquals("Dada", user1.getLastName());
 		Assert.assertEquals(Dob, user1.getDob());
+		Assert.assertEquals(UserManager.GENDER_FEMALE, user.getGender());
 		Assert.assertEquals("abc@xyz.com", user1.getEmail());		
 		Assert.assertEquals("www.picasa.com/1002", user1.getImageUrl());
 		Assert.assertNotNull(user1.getCreatedTs());
@@ -145,22 +146,6 @@ public class UserDaoTest {
 		isExistingUser = userDao.isExistingUser("abc@xyz.com");
 		Assert.assertTrue(isExistingUser);
 		userDao.deleteUser("12345");
-	}
-	
-	@Test
-	public void testGetAgeOfUser(){
-		int age = 0;
-		age = userDao.getAgeOfUser("123456789");
-		Assert.assertEquals(-1,age);		
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -25);
-		Date prevDob = user.getDob();
-		user.setDob(new Date(cal.getTimeInMillis()));
-		userDao.createUser(user);
-		age = userDao.getAgeOfUser("123456789");
-		Assert.assertEquals(25,age);
-		userDao.deleteUser("123456789");
-		user.setDob(prevDob);
-	}
+	}	
 }
 

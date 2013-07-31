@@ -13,6 +13,7 @@ CREATE TABLE genie.`user` (
   `middle_name` text,
   `last_name` text,
   `dob` date DEFAULT NULL,
+  `gender` TINYINT UNSIGNED NOT NULL, 
   `email` varchar(100) NOT NULL,  
   `image_url` text,  
   `created_ts` timestamp NULL DEFAULT NULL,

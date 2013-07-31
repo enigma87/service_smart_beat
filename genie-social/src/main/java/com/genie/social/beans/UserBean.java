@@ -5,6 +5,7 @@ package com.genie.social.beans;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * @author vidhun
@@ -19,6 +20,7 @@ public class UserBean implements Cloneable
 	private String middleName;
 	private String lastName;
 	private Date dob;
+	private byte gender;
 	private String email;
 	private String imageUrl;		
 	private Timestamp createdTs;
@@ -93,6 +95,14 @@ public class UserBean implements Cloneable
 		this.dob = dob;
 	}
 
+	public byte getGender() {
+		return gender;
+	}
+	
+	public void setGender(byte gender) {
+		this.gender = gender;
+	}
+	
 	public String getEmail()
 	{
 		return this.email;
@@ -158,6 +168,29 @@ public class UserBean implements Cloneable
 	public void setLastLoginTs(Timestamp lastLoginTs)
 	{
 		this.lastLoginTs = lastLoginTs;
+	}
+	
+	public int getAge(){
+		int age = -1;		
+	    if(null != getDob()){
+	    	Calendar today = Calendar.getInstance();
+		    Calendar birthDate = Calendar.getInstance();
+		    birthDate.setTime(getDob());
+		    if (!birthDate.after(today)) {		    	
+		    	age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+		    	// If birth date is greater than todays date (after 2 days adjustment of leap year) then decrement age one year   
+		        if ( (birthDate.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR) > 3) ||
+		                (birthDate.get(Calendar.MONTH) > today.get(Calendar.MONTH ))){
+		            age--;
+	
+		         // If birth date and todays date are of same month and birth day of month is greater than todays day of month then decrement age
+		        }else if ((birthDate.get(Calendar.MONTH) == today.get(Calendar.MONTH )) &&
+		                  (birthDate.get(Calendar.DAY_OF_MONTH) > today.get(Calendar.DAY_OF_MONTH ))){
+		            age--;
+		        }
+		    }
+	    }
+	    return age;
 	}
 
 	@Override

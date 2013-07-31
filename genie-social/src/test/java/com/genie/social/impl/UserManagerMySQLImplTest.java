@@ -183,5 +183,5 @@ public class UserManagerMySQLImplTest {
 		
 		GraphAPI.deleteTestUser(userFb);
 		
-	}	
+	}		
 }

@@ -35,8 +35,7 @@ public class UserManagerMySQLImpl implements UserManager{
 
 	public UserBean getUserInformationByEmail(String email) {
 		return userDao.getUserInfoByEmail(email);
-	}	
-				
+	}
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
 		AuthenticationStatus authStatus = null;
