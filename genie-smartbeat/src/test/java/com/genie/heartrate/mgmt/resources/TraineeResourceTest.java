@@ -164,12 +164,13 @@ public class TraineeResourceTest extends JerseyTest {
 			String genieUserID = objRegister.getString("userid");
 			
 			/*Get User Information by email*/
-			String getUserInfoByEmailUrl = "http://localhost:9998/trainee/"+userEmail+"?accessToken="+userAccessToken+"&accessTokenType=facebook";		
+			String getUserInfoByEmailUrl = "http://localhost:9998/trainee/email/"+userEmail+"?accessToken="+userAccessToken+"&accessTokenType=facebook";		
 			ClientConfig clientConfig = new DefaultClientConfig();
 			clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 			Client client = Client.create(clientConfig);
 			WebResource webresource = client.resource(getUserInfoByEmailUrl);
 			JSONObject getUserInfoResponse = webresource.get(JSONObject.class);
+			System.out.println(getUserInfoResponse);
 			JSONObject objGetUserInfo = getUserInfoResponse.getJSONObject("obj");
 			Assert.assertEquals("200", getUserInfoResponse.getString("status"));
 			Assert.assertEquals("OK", getUserInfoResponse.getString("message"));
@@ -401,16 +402,13 @@ public class TraineeResourceTest extends JerseyTest {
 		@Test
 		public void tempTest() throws JSONException{
 			String userAccessToken = "CAAEvclnXOesBAH2q1LYuZCcbUsfui60bWyeiZB4KAh38aUqBP0D0M5LmHyC03TiMP7BbNEZA7gtkkaVlxWZC8twZAg9fwUB54zZATTdcczkIuRCpSMGyt5CoioOtN3q5E8z0UzZB24JwZCzaF6bMorEYj5AwuD1DVluppPs5s55WygZDZD";
-			String registerUserUrl = "http://localhost:9998/trainee/register";
-			JSONObject inputJsonObj = new JSONObject();
-			inputJsonObj.put("accessToken", userAccessToken );
-			inputJsonObj.put("accessTokenType", "facebook" );
-			ClientConfig clientConfigRegisterUser = new DefaultClientConfig();
-			clientConfigRegisterUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-			Client clientRegisterUser = Client.create(clientConfigRegisterUser);
-			WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
-			JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
-			System.out.println(registerResJson);
+			String getUserInfoByEmailUrl = "http://localhost:9998/trainee/email/"+"dhasarathy@gmail.com"+"?accessToken="+userAccessToken+"&accessTokenType=facebook";		
+			ClientConfig clientConfig = new DefaultClientConfig();
+			clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+			Client client = Client.create(clientConfig);
+			WebResource webresource = client.resource(getUserInfoByEmailUrl);
+			JSONObject getUserInfoResponse = webresource.get(JSONObject.class);
+			System.out.println(getUserInfoResponse);			
 		}
 
 }

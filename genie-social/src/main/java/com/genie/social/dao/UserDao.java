@@ -38,7 +38,7 @@ public class UserDao
 														"privilege_level"};
 	private static final int COLUMN_USERID 			= 0;
 	private static final int COLUMN_ACCESS_TOKEN 	= 1;
-	private static final int COLUMN_EMAIL 			= 7;	
+	private static final int COLUMN_EMAIL 			= 8;	
 	
 	public BasicDataSource getDataSource()
 	{
