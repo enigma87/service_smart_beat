@@ -2,6 +2,7 @@ package com.genie.social.dao;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -144,6 +145,22 @@ public class UserDaoTest {
 		isExistingUser = userDao.isExistingUser("abc@xyz.com");
 		Assert.assertTrue(isExistingUser);
 		userDao.deleteUser("12345");
+	}
+	
+	@Test
+	public void testGetAgeOfUser(){
+		int age = 0;
+		age = userDao.getAgeOfUser("123456789");
+		Assert.assertEquals(-1,age);		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -25);
+		Date prevDob = user.getDob();
+		user.setDob(new Date(cal.getTimeInMillis()));
+		userDao.createUser(user);
+		age = userDao.getAgeOfUser("123456789");
+		Assert.assertEquals(25,age);
+		userDao.deleteUser("123456789");
+		user.setDob(prevDob);
 	}
 }
 

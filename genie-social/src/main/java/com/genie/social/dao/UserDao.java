@@ -3,6 +3,8 @@
  */
 package com.genie.social.dao;
 
+import java.util.Calendar;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -145,5 +147,29 @@ public class UserDao
 			isExistingUser = true;
 		}
 		return isExistingUser;
+	}
+	
+	public int getAgeOfUser(String userid){
+		int age = -1;
+		UserBean user = getUserInfo(userid);
+	    if(null != user){
+	    	Calendar today = Calendar.getInstance();
+		    Calendar birthDate = Calendar.getInstance();
+		    birthDate.setTime(user.getDob());
+		    if (!birthDate.after(today)) {		    	
+		    	age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+		    	// If birth date is greater than todays date (after 2 days adjustment of leap year) then decrement age one year   
+		        if ( (birthDate.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR) > 3) ||
+		                (birthDate.get(Calendar.MONTH) > today.get(Calendar.MONTH ))){
+		            age--;
+	
+		         // If birth date and todays date are of same month and birth day of month is greater than todays day of month then decrement age
+		        }else if ((birthDate.get(Calendar.MONTH) == today.get(Calendar.MONTH )) &&
+		                  (birthDate.get(Calendar.DAY_OF_MONTH) > today.get(Calendar.DAY_OF_MONTH ))){
+		            age--;
+		        }
+		    }
+	    }
+	    return age;
 	}
 }
