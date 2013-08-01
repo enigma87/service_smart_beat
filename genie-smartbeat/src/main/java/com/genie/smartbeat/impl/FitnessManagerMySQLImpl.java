@@ -286,17 +286,19 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getOrthostaticHeartrateFactor(String userid){
 		double orthostaticHeartrateFactor = 0.0;
 		int numberOfSOHRTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(userid, 
-														ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
-														numberOfSOHRTests - ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT);
-		double[][] dayOfRecordSOHRSeries = new double[sohrTimeSeries.size()][2];
-		int index = 0;
-		for(Iterator<FitnessHeartrateTestBean> i = sohrTimeSeries.iterator(); i.hasNext();index++){
-			FitnessHeartrateTestBean bean = i.next();
-			dayOfRecordSOHRSeries[index][0] = bean.getDayOfRecord();
-			dayOfRecordSOHRSeries[index][1] = bean.getHeartrate();
-		}
-		orthostaticHeartrateFactor = ShapeIndexAlgorithm.calculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate(dayOfRecordSOHRSeries);
+		if(ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT < numberOfSOHRTests){
+			List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(userid, 
+					ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+					numberOfSOHRTests - ShapeIndexAlgorithm.SOHR_DAY_OF_RECORD_SERIES_LIMIT);
+			double[][] dayOfRecordSOHRSeries = new double[sohrTimeSeries.size()][2];
+			int index = 0;
+			for(Iterator<FitnessHeartrateTestBean> i = sohrTimeSeries.iterator(); i.hasNext();index++){
+				FitnessHeartrateTestBean bean = i.next();				
+				dayOfRecordSOHRSeries[index][0] = bean.getDayOfRecord();
+				dayOfRecordSOHRSeries[index][1] = bean.getHeartrate();
+			}
+			orthostaticHeartrateFactor = ShapeIndexAlgorithm.calculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate(dayOfRecordSOHRSeries);
+		}		
 		return orthostaticHeartrateFactor;
 	}
 	

@@ -237,14 +237,13 @@ public class ShapeIndexAlgorithm
 		return ((100*currentVdot)/previousVdot)-100;		
 	}
 	
-	public static final int SOHR_STABILIZATION_LIMIT = 4;
+	public static final int SOHR_STABILIZATION_LIMIT 		= 4;
+	public static final int SOHR_DAY_OF_RECORD_SERIES_LIMIT = 30;
 	public static double calculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate(double[][] dayOfRecordSOHRSeries){
-		double slopeOfTimeRegressionOfSHR = 0.0;
-		if(SOHR_STABILIZATION_LIMIT < dayOfRecordSOHRSeries.length){
-			SimpleRegression regressionModel = new SimpleRegression();
-			regressionModel.addData(dayOfRecordSOHRSeries);
-			slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
-		}
+		double slopeOfTimeRegressionOfSHR = 0.0;		
+		SimpleRegression regressionModel = new SimpleRegression();
+		regressionModel.addData(dayOfRecordSOHRSeries);
+		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();		
 		return slopeOfTimeRegressionOfSHR;
 	}
 
