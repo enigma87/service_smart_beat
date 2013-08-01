@@ -4,6 +4,8 @@
 package com.genie.smartbeat.domain;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
 
 import org.apache.commons.math.stat.regression.SimpleRegression;
@@ -28,7 +30,7 @@ public class ShapeIndexAlgorithm
 	public static final Integer HEARTRATE_TYPE_STANDING_ORTHOSTATIC 		= 3;
 	
 	public static final int GENDER_FEMALE 									= 0;
-	public static final int GENDER_MALE 									= 0;
+	public static final int GENDER_MALE 									= 1;
 		
 	public static final double[] DEFAULT_FEMALE_RESTING_HEARTRATE_BY_TRAINEE_CLASSIFICATION 				= {0.0,78.0,69.0,60.0,53.0,42.0};
 	public static final double[] DEFAULT_MALE_RESTING_HEARTRATE_BY_TRAINEE_CLASSIFICATION 					= {0.0,72.0,65.0,55.0,48.0,40.0};
@@ -58,21 +60,25 @@ public class ShapeIndexAlgorithm
 		
 		double[] heartrateZones[] = new double[7][2];
 		double heartrateReserve = maximalHeartrate - restingHeartrate;
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat heartrateZoneFormat = new DecimalFormat("###.##",symbols);
 		
-		heartrateZones[1][ZONE_START_IDX] 	= restingHeartrate;
-		heartrateZones[1][ZONE_END_IDX] 	= restingHeartrate + ((thresholdHeartrate - restingHeartrate)/2);
 		
-		heartrateZones[2][ZONE_START_IDX] 	= heartrateZones[1][ZONE_END_IDX];
-		heartrateZones[2][ZONE_END_IDX] 	= heartrateZones[1][ZONE_END_IDX] + ((thresholdHeartrate - heartrateZones[1][ZONE_END_IDX])/2);
+		heartrateZones[1][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(restingHeartrate));
+		heartrateZones[1][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(restingHeartrate + ((thresholdHeartrate - restingHeartrate)/2)));
 		
-		heartrateZones[4][ZONE_START_IDX] 	= thresholdHeartrate - 0.04*heartrateReserve;
-		heartrateZones[4][ZONE_END_IDX] 	= thresholdHeartrate + 0.02*heartrateReserve;
+		heartrateZones[2][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(heartrateZones[1][ZONE_END_IDX]));
+		heartrateZones[2][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(heartrateZones[1][ZONE_END_IDX] + ((thresholdHeartrate - heartrateZones[1][ZONE_END_IDX])/2)));
+		
+		heartrateZones[4][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(thresholdHeartrate - 0.04*heartrateReserve));
+		heartrateZones[4][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(thresholdHeartrate + 0.02*heartrateReserve));
 		
 		heartrateZones[3][ZONE_START_IDX] 	= heartrateZones[2][ZONE_END_IDX];
 		heartrateZones[3][ZONE_END_IDX] 	= heartrateZones[4][ZONE_START_IDX];
 		
-		heartrateZones[6][ZONE_START_IDX] 	= maximalHeartrate - 0.06*heartrateReserve;
-		heartrateZones[6][ZONE_END_IDX] 	= maximalHeartrate;
+		heartrateZones[6][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(maximalHeartrate - 0.06*heartrateReserve));
+		heartrateZones[6][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(maximalHeartrate));
 		
 		heartrateZones[5][ZONE_START_IDX] 	= heartrateZones[4][ZONE_END_IDX];
 		heartrateZones[5][ZONE_END_IDX] 	= heartrateZones[6][ZONE_START_IDX];

@@ -1,6 +1,8 @@
 package com.genie.heartrate.mgmt.impl;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 import junit.framework.Assert;
@@ -22,6 +24,8 @@ import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
+import com.genie.social.beans.UserBean;
+import com.genie.social.core.UserManager;
 /**
  * @author vidhun
  *
@@ -549,6 +553,25 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertEquals(53.72886508310602, fitnessSpeedHeartRateBean.getCurrentVdot());
     	Assert.assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED, fitnessHomeostasisIndexBean.getTraineeClassification());
 	
+	}
+	
+	//@Test
+	public void testGetHeartrateZones(){
+		UserManager userManager = (UserManager)smartbeatContext.getBean("userManagerMySQLImpl");
+		UserBean user = new UserBean();
+		user.setUserid("12345");
+		user.setAccessToken("accessToken1");
+		user.setAccessTokenType("facebook");
+		user.setFirstName("Jane");
+		user.setEmail("jane@acme.com");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -25);
+		user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+		user.setGender(UserManager.GENDER_FEMALE);
+		userManager.registerUser(user);
+		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		double[][] heartrateZones = fitnessManager.getHeartrateZones("12345");
+		System.out.println(Arrays.deepToString(heartrateZones));
 	}
 	
 	

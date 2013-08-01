@@ -7,6 +7,9 @@ import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -22,6 +25,8 @@ import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
+import com.genie.social.beans.UserBean;
+import com.genie.social.core.UserManager;
 
 /**
  * @author dhasarathy
@@ -30,6 +35,9 @@ import com.genie.smartbeat.util.SmartbeatIDGenerator;
 public class FitnessManagerMySQLImpl implements FitnessManager 
 {
 
+	@Autowired
+	@Qualifier("userManagerMySQLImpl")
+	private UserManager userManager;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
@@ -37,6 +45,13 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
 	private FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO;
 	
+	public void setUserManager(UserManager userManager) {
+		this.userManager = userManager;
+	}
+	
+	public UserManager getUserManager() {
+		return userManager;
+	}
 	
 	public FitnessTrainingSessionDAO getFitnessTrainingSessionDAO() {
 		return fitnessTrainingSessionDAO;
@@ -352,7 +367,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			if(null == traineeClassification){
 				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
 			}
-			double[] rmtHeartrates = ShapeIndexAlgorithm.getDefaultRMTHeartrates(traineeClassification, 35, ShapeIndexAlgorithm.GENDER_FEMALE);
+			UserBean user = userManager.getUserInformation(userid);
+			double[] rmtHeartrates = ShapeIndexAlgorithm.getDefaultRMTHeartrates(traineeClassification, user.getAge(), user.getGender());
 			restingHeartrate 	= rmtHeartrates[0];
 			thresholdHeartrate 	= rmtHeartrates[1];
 			maximalHeartrate 	= rmtHeartrates[2];
