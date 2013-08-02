@@ -220,11 +220,11 @@ public class ShapeIndexAlgorithm
 		double Vdot = 0.0;
 		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
 		/*no contribution to vDot from zone 1*/
-		VdotByZone[2] = (speedCorrectionFactor*speedDistributionOfHRZ[2] - SPEED_VDOT_CONSTANT_B_BY_HRZ[2])/SPEED_VDOT_CONSTANT_A_BY_HRZ[2];
-		VdotByZone[3] = (speedCorrectionFactor*speedDistributionOfHRZ[3] - SPEED_VDOT_CONSTANT_B_BY_HRZ[3])/SPEED_VDOT_CONSTANT_A_BY_HRZ[3];
-		VdotByZone[4] = (speedCorrectionFactor*speedDistributionOfHRZ[4] - SPEED_VDOT_CONSTANT_B_BY_HRZ[4])/SPEED_VDOT_CONSTANT_A_BY_HRZ[4];
-		VdotByZone[5] = (speedCorrectionFactor*speedDistributionOfHRZ[5] - SPEED_VDOT_CONSTANT_B_BY_HRZ[5])/SPEED_VDOT_CONSTANT_A_BY_HRZ[5];
-		VdotByZone[6] = (speedCorrectionFactor*speedDistributionOfHRZ[6] - SPEED_VDOT_CONSTANT_B_BY_HRZ[6])/SPEED_VDOT_CONSTANT_A_BY_HRZ[6];
+		for(int i = 2; i<=6;i++){
+			if(0 < speedDistributionOfHRZ[i]){
+				VdotByZone[i] = (speedCorrectionFactor*speedDistributionOfHRZ[i] - SPEED_VDOT_CONSTANT_B_BY_HRZ[i])/SPEED_VDOT_CONSTANT_A_BY_HRZ[i];
+			}
+		}		
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
 	        sum += VdotByZone[i];

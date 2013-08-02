@@ -302,7 +302,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		/*Asserting the Model data for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
 		Assert.assertEquals(userid, fitnessSpeedHeartRateBean.getUserid());
-		Assert.assertEquals(30.671885339501824, fitnessSpeedHeartRateBean.getCurrentVdot());
+		Assert.assertEquals(35.7838662294188, fitnessSpeedHeartRateBean.getCurrentVdot());
 		Assert.assertNull(null, fitnessSpeedHeartRateBean.getPreviousVdot());
 		
 		Assert.assertEquals(userid, fitnessShapeIndexBean.getUserid());
