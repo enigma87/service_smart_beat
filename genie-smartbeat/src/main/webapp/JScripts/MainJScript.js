@@ -77,7 +77,7 @@ function getUserID() {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: $("#txt_URL").val(),
+        url: $("#txt_UserIDURL").val(),
         success: function (responce) {
             var returnedData = responce.obj;
 
@@ -95,7 +95,7 @@ function getShapeIndex() {
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: $("#txt_URL").val(),
+        url: $("#txt_ShapeIndexURL").val(),
         success: function (responce) {
             var returnedData = responce.obj;
 
