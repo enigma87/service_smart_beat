@@ -17,6 +17,9 @@ $(document).ready(function () {
     $("#btn_GetUserIDDetails").click(function () {
         getUserID();
     });
+    $("#btn_GetShapeIndexDetails").click(function () {
+        getShapeIndex();
+    });
     $("#a_GetUserID").click(function (event) {
         event.preventDefault();
         getUserID();
@@ -96,10 +99,8 @@ function getShapeIndex() {
         success: function (responce) {
             var returnedData = responce.obj;
 
-            $("#dv_UserID").html(returnedData.userid);
-            $("#dv_FirstName").html(returnedData.firstName);
-            $("#dv_LastName").html(returnedData.lastName);
-            $("#dv_DOB").html(returnedData.dob);
+            $("#dv_UserID2").html(returnedData.userid);
+            $("#dv_ShapeIndex").html(returnedData.shapeIndex);
 
             $("#img_Loading").hide();
         }
