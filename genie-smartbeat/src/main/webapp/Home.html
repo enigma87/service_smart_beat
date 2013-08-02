@@ -42,8 +42,10 @@
                 if (response.status === 'connected') {
                     var uid = response.authResponse.userID;
                     var accessToken = response.authResponse.accessToken;
-                    $("#a_GetUserID").attr("href", "http://localhost:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
-                    $("#txt_UserIDURL").val("http://localhost:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    var email = response.authResponse.email;
+
+                    $("#a_GetUserID").attr("href", "http://localhost:8080/smartbeat/v1.0/trainee/email/" + email + "?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    $("#txt_UserIDURL").val("http://localhost:8080/smartbeat/v1.0/trainee/email/" + email +?accessToken=" + accessToken + "&accessTokenType=facebook");
                     //$("#href_Test").attr("href", "http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
                     //$("#txt_URL").val("http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
 
