@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -73,6 +75,17 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById("20132");
 	
+	}
+	
+	@Test
+	public void testGetFitnessTrainingSessionByRange() {
+		
+			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionByRange("073a9e7d-9cf2-49a0-8926-f27362fd547e" ,"2013-07-04 00:00:00", "2013-07-05 23:59:59");
+			for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
+				String id = i.next();
+				System.out.println(id);
+			}
+			
 	}
 
 }
