@@ -143,17 +143,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return null;
 	}
 
-	public List<String> getTrainingSessionIdsByWeekNumber(String userid, String year, int weekNumber) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<String> getTrainingSessionIdsByDay(String userid, Date day) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
 		double shapeIndex;
 		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
