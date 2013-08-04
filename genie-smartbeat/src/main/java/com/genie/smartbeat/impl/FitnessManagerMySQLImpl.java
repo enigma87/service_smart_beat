@@ -4,6 +4,7 @@
 package com.genie.smartbeat.impl;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
@@ -248,7 +249,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		return newShapeIndex;
 	}
-	
+
 	public double getFitnessSupercompensationPoints(String userid){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
@@ -377,5 +378,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrate, thresholdHeartrate, maximalHeartrate);
 		return heartrateZones;
+	}
+	
+	public List<String> getTrainingSessionIdsByTimeRange(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+		return fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange(userID, startTimestamp, endTimestamp);
 	}
 }

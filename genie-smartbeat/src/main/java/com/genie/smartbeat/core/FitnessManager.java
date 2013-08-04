@@ -3,7 +3,7 @@
  */
 package com.genie.smartbeat.core;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
@@ -19,10 +19,8 @@ public interface FitnessManager{
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
 	public String getRecentTrainingSessionId(String userid);
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId);
-	public List<String> getTrainingSessionIdsByWeekNumber(String userid, String year, int weekNumber);
-	public List<String> getTrainingSessionIdsByDay(String userid, Date day);
+	public List<String> getTrainingSessionIdsByTimeRange(String userID, Timestamp startTime, Timestamp endTime);
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
-		
 	
 	/*heart rate test*/
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);

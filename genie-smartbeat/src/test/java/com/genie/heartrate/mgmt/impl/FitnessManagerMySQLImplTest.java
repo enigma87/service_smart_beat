@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -65,7 +67,7 @@ public class FitnessManagerMySQLImplTest {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		long time = date.getTime();
 		currentnew Timestamp(time);*/
 		
@@ -574,5 +576,14 @@ public class FitnessManagerMySQLImplTest {
 		System.out.println(Arrays.deepToString(heartrateZones));
 	}
 	
+	@Test
+	public void testGetFitnessTrainingSessionIdsByTimeRange() {
+		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		List<String> sessions =  fitnessManager.getTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
+		for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
+			String id = i.next();
+			System.out.println(id);
+		}
+	}
 	
 }

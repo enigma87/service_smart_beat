@@ -9,14 +9,17 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 
 /**
  * @author dhasarathy
@@ -26,6 +29,7 @@ public class FitnessTrainingSessionDAOTest {
 	
 	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
+	private static FitnessManagerMySQLImpl fitnessTrainingSessionManager = new FitnessManagerMySQLImpl();
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -35,6 +39,9 @@ public class FitnessTrainingSessionDAOTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
+		//set up test data
+		setupTestData();
+		
 		fitnessTrainingSessionBean.setUserid(userid);
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastTwoHour));
@@ -80,13 +87,54 @@ public class FitnessTrainingSessionDAOTest {
 	@Test
 	public void testGetFitnessTrainingSessionByRange() {
 		
-			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionByRange("073a9e7d-9cf2-49a0-8926-f27362fd547e" ,"2013-07-04 00:00:00", "2013-07-05 23:59:59");
+			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
 			for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
 				String id = i.next();
 				System.out.println(id);
 			}
-			
 	}
+	
+	public static void setupTestData() {
 
+		// throw in some dummy values to test
+		String [][] dummyValues = {{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","1","2013-07-03 18:23:10","2013-07-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","2","2013-07-04 18:23:10","2013-07-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","3","2013-07-05 18:23:10","2013-07-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","4","2013-08-03 18:23:10","2013-08-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","5","2013-08-04 18:23:10","2013-08-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","6","2013-08-05 18:23:10","2013-08-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","7","2013-08-06 18:23:10","2013-08-06 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","8","2013-08-07 18:23:10","2013-08-07 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","9","2013-08-08 18:23:10","2013-08-08 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"}};
+
+		for (int i=0; i < dummyValues.length; i++) {
+			FitnessTrainingSessionBean newTrainingSession = new FitnessTrainingSessionBean();
+			String [] row = dummyValues[i];
+			
+			newTrainingSession.setUserid(row[0]);
+			newTrainingSession.setTrainingSessionId(row[1]);
+			newTrainingSession.setStartTime(Timestamp.valueOf(row[2]));
+			newTrainingSession.setEndTime(Timestamp.valueOf(row[3]));
+			newTrainingSession.setHrz1Time(Double.valueOf(row[4]));
+			newTrainingSession.setHrz2Time(Double.valueOf(row[5]));
+			newTrainingSession.setHrz3Time(Double.valueOf(row[6]));
+			newTrainingSession.setHrz4Time(Double.valueOf(row[7]));
+			newTrainingSession.setHrz5Time(Double.valueOf(row[8]));
+			newTrainingSession.setHrz6Time(Double.valueOf(row[9]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[10]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[11]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[12]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[13]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[14]));
+			newTrainingSession.setHrz1Distance(Double.valueOf(row[15]));
+			newTrainingSession.setSurfaceIndex(Integer.valueOf(row[16]));
+		
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
+		}
+	}
+	
+	@AfterClass
+	public static void freeTestData () {
+		fitnessTrainingSessionDAO.deleteTestData();
+	}
 }
-
