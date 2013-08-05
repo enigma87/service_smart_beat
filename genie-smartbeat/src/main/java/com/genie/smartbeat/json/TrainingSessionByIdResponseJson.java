@@ -1,12 +1,10 @@
-package com.genie.smartbeat.beans;
+package com.genie.smartbeat.json;
 
 import java.sql.Timestamp;
 
-/**
- * @author dhasarathy
- **/
+import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
-public class FitnessTrainingSessionBean {
+public class TrainingSessionByIdResponseJson {
 	private String userid;
 	private String trainingSessionId;
 	private Timestamp startTime;
@@ -161,57 +159,23 @@ public class FitnessTrainingSessionBean {
 		this.surfaceIndex = surfaceIndex;
 	}
 	
-	public double[] getTimeDistributionOfHRZ(){
-		double[] timeDistributionOfHrz = new double[6];
-		timeDistributionOfHrz[0] = getHrz1Time();
-		timeDistributionOfHrz[1] = getHrz2Time();
-		timeDistributionOfHrz[2] = getHrz3Time();
-		timeDistributionOfHrz[3] = getHrz4Time();
-		timeDistributionOfHrz[4] = getHrz5Time();
-		timeDistributionOfHrz[5] = getHrz6Time();
-		
-		return timeDistributionOfHrz;
-	}
-
-	public double[] getSpeedDistributionOfHRZ(){
-		double[] speedDistributiOnofHrz = new double[7];
-		
-		if (0.0 != getHrz1Time() ){
-			speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[1] = 0.0;
-		}
-		
-		if (0.0 != getHrz2Time()){
-			speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[2] = 0.0;
-		}
-	
-		if(0.0 != getHrz3Time()){
-			speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[3] = 0.0;
-		}
-		
-		if(0.0 != getHrz4Time()){
-			speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[4] = 0.0;
-		}
-		
-		if(0.0 != getHrz5Time()){
-			speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[5] = 0.0;
-		}
-		
-		if (0.0 != getHrz6Time()){
-			speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[6] = 0.0;
-		}
-		return speedDistributiOnofHrz;
+	public void noJSONSetTrainingSession(FitnessTrainingSessionBean trainingSessionBean) {
+		this.setHrz1Time(trainingSessionBean.getHrz1Time());
+		this.setHrz2Time(trainingSessionBean.getHrz2Time());
+		this.setHrz3Time(trainingSessionBean.getHrz3Time());
+		this.setHrz4Time(trainingSessionBean.getHrz4Time());
+		this.setHrz5Time(trainingSessionBean.getHrz5Time());
+		this.setHrz6Time(trainingSessionBean.getHrz6Time());
+		this.setHrz1Distance(trainingSessionBean.getHrz1Distance());
+		this.setHrz2Distance(trainingSessionBean.getHrz2Distance());
+		this.setHrz3Distance(trainingSessionBean.getHrz3Distance());
+		this.setHrz4Distance(trainingSessionBean.getHrz4Distance());
+		this.setHrz4Distance(trainingSessionBean.getHrz5Distance());
+		this.setHrz5Distance(trainingSessionBean.getHrz6Distance());
+		this.setStartTime(trainingSessionBean.getStartTime());
+		this.setEndTime(trainingSessionBean.getEndTime());
+		this.setUserid(trainingSessionBean.getUserid());
+		this.setTrainingSessionId(trainingSessionBean.getTrainingSessionId());
+		this.setSurfaceIndex(trainingSessionBean.getSurfaceIndex());
 	}
 }
-

@@ -2,7 +2,7 @@ package com.genie.smartbeat.json;
 
 import java.util.List;
 
-public class TrainingSessionByRangeResponseJson {
+public class TrainingSessionIdsByRangeResponseJson {
 	private String userID;
 	private List<String> trainingSessionIDs;
 	

@@ -3,7 +3,6 @@
  */
 package com.genie.smartbeat.impl;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
@@ -139,8 +138,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
-		// TODO Auto-generated method stub
-		return null;
+		return fitnessTrainingSessionDAO.getFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
