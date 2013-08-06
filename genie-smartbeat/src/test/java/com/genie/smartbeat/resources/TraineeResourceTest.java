@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.resources;
+package com.genie.smartbeat.resources;
 
 import java.net.URLEncoder;
 import java.sql.Timestamp;

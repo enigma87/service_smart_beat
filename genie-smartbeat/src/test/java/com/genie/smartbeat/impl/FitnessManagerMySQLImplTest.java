@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.impl;
+package com.genie.smartbeat.impl;
 
 import java.sql.Timestamp;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.dao;
+package com.genie.smartbeat.dao;
 
 import java.sql.Timestamp;
 import java.util.Date;

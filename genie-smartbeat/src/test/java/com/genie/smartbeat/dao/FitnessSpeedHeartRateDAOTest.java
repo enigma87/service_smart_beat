@@ -1,4 +1,4 @@
-package com.genie.heartrate.mgmt.dao;
+package com.genie.smartbeat.dao;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
