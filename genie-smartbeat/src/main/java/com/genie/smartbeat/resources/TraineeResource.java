@@ -192,10 +192,10 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSessionRange")
+	@Path("id/{userid}/trainingSession/inTimeInterval")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp) {
+	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsByTimeRange(userID, startTimeStamp, endTimeStamp);
 		TrainingSessionIdsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionIdsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
@@ -211,10 +211,10 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSessionById")
+	@Path("id/{userid}/trainingSession")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getFitnessTrainingSessionById(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType, @QueryParam("trainingSessionID") String trainingSessionID) {
+	public String getFitnessTrainingSessionById(@PathParam("userid") String userID, @QueryParam("trainingSessionID") String trainingSessionID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		
 		TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
 		FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
