@@ -23,11 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
+import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
@@ -167,6 +169,25 @@ public class TraineeResource
 		}
 		catch(Exception ex)
 		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
+	@GET
+	@Path("id/{userid}/shapeIndex/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getShapeIndexHistoryInInterval (@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
+		shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
+		shapeIndexHistoryJson.setUserID(userID);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}

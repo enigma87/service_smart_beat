@@ -586,4 +586,13 @@ public class FitnessManagerMySQLImplTest {
 		}
 	}
 	
+	@Test 
+	public void testgetShapeIndexHistoryInTimeInterval() {
+		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e", Timestamp.valueOf("2013-07-03 18:23:11"), Timestamp.valueOf("2013-08-05 23:59:59"));
+		for (Iterator<FitnessShapeIndexBean> i = shapeIndexBeans.iterator(); i.hasNext();) {
+			FitnessShapeIndexBean shapeIndexBean = i.next();
+			System.out.println(shapeIndexBean.getShapeIndex().toString() + " -> "+ shapeIndexBean.getTimeOfRecord());
+		}
+	}
 }
