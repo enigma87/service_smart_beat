@@ -155,7 +155,7 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		 
-		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+		Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
 		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
 		shapeIndexResponseJson.setUserid(userid);
 		shapeIndexResponseJson.setShapeIndex(shapeIndex);
@@ -196,7 +196,7 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsByTimeRange(userID, startTimeStamp, endTimeStamp);
+		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
 		TrainingSessionIdsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionIdsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
 		trainingSessionRangeJson.setTrainingSessionIDs(sessionIDs);
@@ -241,7 +241,7 @@ public class TraineeResource
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
 		String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionId);
+		Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
 		
 		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		

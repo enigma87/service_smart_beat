@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
 /**
@@ -19,7 +20,7 @@ public interface FitnessManager{
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
 	public String getRecentTrainingSessionId(String userid);
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId);
-	public List<String> getTrainingSessionIdsByTimeRange(String userID, Timestamp startTime, Timestamp endTime);
+	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
 	
 	/*heart rate test*/
@@ -29,5 +30,6 @@ public interface FitnessManager{
 	public double[][] getHeartrateZones(String userid);
 	
 	/*shape index*/
-	public double getFitnessShapeIndex(String recentTrainingSessionId);
+	public double getShapeIndex(String recentTrainingSessionId);
+	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime);
 }
