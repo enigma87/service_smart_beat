@@ -38,6 +38,9 @@ public class FitnessShapeIndexDAO {
 	}
 	
 	public int createFitnessShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
+		// set nanos to 0, MySQL doesn't support it
+		fitnessShapeIndexBean.getTimeOfRecord().setNanos(0);
+
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName(TABLE_FITNESS_SHAPE_INDEX)
 				.usingColumns(COLUMNS_FITNESS_SHAPE_INDEX)
@@ -89,16 +92,17 @@ public class FitnessShapeIndexDAO {
 		return shapeIndexBeans;
 	}
 	
-	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE" + TABLE_FITNESS_SHAPE_INDEX +" set " 
+/*	private static final String UPDATE_SHAPE_INDEX_MODEL = "UPDATE " + TABLE_FITNESS_SHAPE_INDEX +" set " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[1] + "=:shapeIndex, " 
 	+ COLUMNS_FITNESS_SHAPE_INDEX[2] + "=:timeOfRecord,"	
 	+ COLUMNS_FITNESS_SHAPE_INDEX[3] + "=:sessionOfRecord"
-	+ "WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=:userid;";	
-	public int updateShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=:userid;";	
+*/	
+/*	public int updateShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
 		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 		return jdbcTemplate.update(UPDATE_SHAPE_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
 	}
-	
+*/	
 	private static final String DELETE_SHAPE_INDEX_MODEL_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
 	public void deleteShapeIndexModel(String userid){
 		FitnessShapeIndexBean fitnessShapeIndexBean = getRecentShapeIndexModel(userid);		
