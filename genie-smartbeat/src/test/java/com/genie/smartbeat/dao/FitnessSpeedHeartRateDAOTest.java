@@ -28,8 +28,8 @@ public class FitnessSpeedHeartRateDAOTest {
 	}
 			
     
-	//@Test
-	public void testCreateAndGetFitnessSpeedHeartRateDAO() {
+	@Test
+	public void createSpeedHeartRateModel() {
 		
 		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
 		

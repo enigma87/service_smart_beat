@@ -63,6 +63,10 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		FitnessTrainingSessionBean localTrainingSessionBean = fitnessTrainingSessionDAO.getFitnessTrainingSessionById(trainingSessionId);
 		assertNull(localTrainingSessionBean);
+
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
+		localTrainingSessionBean = fitnessTrainingSessionDAO.getFitnessTrainingSessionById(trainingSessionId);
+		assertNull(localTrainingSessionBean);
 	}
 	
 	@Test
