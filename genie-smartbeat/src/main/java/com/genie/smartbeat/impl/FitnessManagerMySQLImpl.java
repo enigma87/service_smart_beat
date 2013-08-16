@@ -146,7 +146,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
 		if(null != previousTrainingSessionId){
 			/*update shape index*/
-			shapeIndex = getFitnessShapeIndex(previousTrainingSessionId);
+			shapeIndex = getShapeIndex(previousTrainingSessionId);
 		}else{
 			/*get initial shape index*/
 			shapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
@@ -221,7 +221,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
-	public double getFitnessShapeIndex(String recentTrainingSessionId) {
+	public double getShapeIndex(String recentTrainingSessionId) {
 		double newShapeIndex = 0;
 		
 		if(null != recentTrainingSessionId){
@@ -367,7 +367,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return heartrateZones;
 	}
 	
-	public List<String> getTrainingSessionIdsByTimeRange(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
 		return fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange(userID, startTimestamp, endTimestamp);
+	}
+
+	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
+		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
 }

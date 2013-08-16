@@ -45,6 +45,9 @@ public class FitnessHeartrateTestDAO {
 	}
 	
 	public int createHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean){
+		// set nano seconds to 0 in Timestamp - MySQL doesn't support it
+		fitnessHeartrateTestBean.getTimeOfRecord().setNanos(0);
+		
 		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_TEST)
 		.usingColumns(COLUMNS_FITNESS_HEARTRATE_TEST)
@@ -127,7 +130,7 @@ public class FitnessHeartrateTestDAO {
 		}		
 		return fitnessHeartrateTestBean;
 	}
-	
+ 	
 	private static final String QUERY_ALL_TESTS_BY_TYPE = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
 															" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?" +
 															" AND "	  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + "=?";
@@ -188,13 +191,13 @@ public class FitnessHeartrateTestDAO {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);		
 		Timestamp today0000 = new Timestamp(cal.getTime().getTime());
-				
+		//System.out.println(today0000.toString());				
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
 		cal.set(Calendar.SECOND, 59);
 		cal.set(Calendar.MILLISECOND, 999);
 		Timestamp today2359 = new Timestamp(cal.getTime().getTime());
-		
+		//System.out.println(today2359.toString());		
 		try{
 			todaysHeartRateTestCount =  new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_TODAYS_TESTS, userid,today0000,today2359);
 		}catch(DataAccessException e){

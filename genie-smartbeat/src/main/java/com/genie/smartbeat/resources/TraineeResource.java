@@ -23,11 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
+import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
@@ -155,7 +157,7 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		 
-		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+		Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
 		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
 		shapeIndexResponseJson.setUserid(userid);
 		shapeIndexResponseJson.setShapeIndex(shapeIndex);
@@ -167,6 +169,25 @@ public class TraineeResource
 		}
 		catch(Exception ex)
 		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
+	@GET
+	@Path("id/{userid}/shapeIndex/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getShapeIndexHistoryInInterval (@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
+		shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
+		shapeIndexHistoryJson.setUserID(userID);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
@@ -192,11 +213,11 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSessionRange")
+	@Path("id/{userid}/trainingSession/inTimeInterval")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp) {
-		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsByTimeRange(userID, startTimeStamp, endTimeStamp);
+	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
 		TrainingSessionIdsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionIdsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
 		trainingSessionRangeJson.setTrainingSessionIDs(sessionIDs);
@@ -211,10 +232,10 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSessionById")
+	@Path("id/{userid}/trainingSession")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getFitnessTrainingSessionById(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType, @QueryParam("trainingSessionID") String trainingSessionID) {
+	public String getFitnessTrainingSessionById(@PathParam("userid") String userID, @QueryParam("trainingSessionID") String trainingSessionID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		
 		TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
 		FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
@@ -241,7 +262,7 @@ public class TraineeResource
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
 		String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-		Double shapeIndex = fitnessManager.getFitnessShapeIndex(fitnessTrainingSessionId);
+		Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
 		
 		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
 		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
