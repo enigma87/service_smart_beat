@@ -5,26 +5,26 @@ trainee_ajay{
 training_session{
 	start_time:08:00 day 1
 	end_time:08:40
-	hrz1_time:00:12 speed 6.3 km/h 
-	hrz2_time:00:14 speed 7.2 km/h
-	hrz3_time:00:08 speed 8.4 km/h
-	hrz4_time:00:06 speed 9.9 km/h
+	hrz1_time:00:12 speed 6.3 km/h Distance - 1260.0
+	hrz2_time:00:14 speed 7.2 km/h Distance - 1680.0
+	hrz3_time:00:08 speed 8.4 km/h Distance - 1120.0
+	hrz4_time:00:06 speed 9.9 km/h Distance - 990.0
 	hrz5_time:00:00
 	hrz6_time:00:00
 
         start time: 12:00 day 2
 	end time: 12:25 
-	hrz1_time:00:10 speed 6.1 km/h
-	hrz2_time:00:11 speed 7.3 km/h
-	hrz3_time:00:02 speed 8.6 km/h
-	hrz4_time:00:02 speed 9.4 km/h
+	hrz1_time:00:10 speed 6.1 km/h Distance - 1016.67
+	hrz2_time:00:11 speed 7.3 km/h Distance - 1338.33
+	hrz3_time:00:02 speed 8.6 km/h Distance - 286.67
+	hrz4_time:00:02 speed 9.4 km/h Distance - 313.33
 	hrz5_time:00:00
 	hrz6_time:00:00
 
 	start time: 16:00 day 3
 	end time: 16:32 
-	hrz1_time:00:10 speed 6.2 km/h
-	hrz2_time:00:22 speed 7.2 km/h
+	hrz1_time:00:10 speed 6.2 km/h Distance - 1033.33
+	hrz2_time:00:22 speed 7.2 km/h Distance - 2640.0
 	hrz3_time:00:00 
 	hrz4_time:00:00 
 	hrz5_time:00:00
@@ -93,12 +93,12 @@ training_session{
 
 	start_time:17:12 day 3
 	end_time:18:43
-	hrz1_time:00:32 speed 10.05 km/h
-	hrz2_time:00:43 speed 10.9 km/h
-	hrz3_time:00:01 speed 11.5 km/h
-	hrz4_time:00:03 speed 12.55 km/h
-	hrz5_time:00:12 speed 12.75 km/h
-	hrz6_time:00:00 speed 13.45 km/h
+	hrz1_time:00:32 speed 10.05 km/h  Distance - 5360
+	hrz2_time:00:43 speed 10.9 km/h   Distance - 7811.67
+	hrz3_time:00:01 speed 11.5 km/h   Distance - 191.67
+	hrz4_time:00:03 speed 12.55 km/h  Distance - 627.5
+	hrz5_time:00:12 speed 12.75 km/h  Distance - 2550
+	hrz6_time:00:00 speed 13.45 km/h  Distance - 0
 }
 ---------------------------------------------------------------------------------------------------------------------------------------
 trainee_dinesh{
