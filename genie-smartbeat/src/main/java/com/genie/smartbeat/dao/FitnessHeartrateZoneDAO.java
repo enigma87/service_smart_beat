@@ -44,10 +44,14 @@ public class FitnessHeartrateZoneDAO {
 	}
 	
 	public int createHeartrateZoneModel(FitnessHeartrateZoneBean fitnessHeartrateZoneBean){
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_ZONE)
-		.usingColumns(COLUMNS_FITNESS_HEARTRATE_ZONE)
-		.execute(new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
+		if (fitnessHeartrateZoneBean.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+		
+			return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_ZONE)
+					.usingColumns(COLUMNS_FITNESS_HEARTRATE_ZONE)
+					.execute(new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
+		}
+		return 0;
 	}
 	
 	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_ZONE + " WHERE " + COLUMNS_FITNESS_HEARTRATE_ZONE[COLUMN_USERID] + " =?";
@@ -89,7 +93,9 @@ public class FitnessHeartrateZoneDAO {
 	public int updateHeartrateZoneModel(FitnessHeartrateZoneBean fitnessHeartrateZoneBean){
 		
 		int affectedRows = 0;
-		if(null != getHeartrateZoneModelByUserid(fitnessHeartrateZoneBean.getUserid())){
+		if(null != getHeartrateZoneModelByUserid(fitnessHeartrateZoneBean.getUserid())
+				&& fitnessHeartrateZoneBean.isValidForTableInsert()){
+			
 			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 			affectedRows =  jdbcTemplate.update(UPDATE_HEARTRATE_ZONE_MODEL, new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
 		}		

@@ -45,5 +45,13 @@ public class FitnessShapeIndexBean {
 	public void setSessionOfRecord(String sessionOfRecord) {
 		this.sessionOfRecord = sessionOfRecord;
 	}				
-}
+	
+	public boolean isValidForTableInsert() {
+		if (this.getUserid().isEmpty()
+				|| this.getSessionOfRecord().isEmpty()) {
 
+			return false;
+		}
+		return true;
+	}
+}
