@@ -104,18 +104,26 @@ public class ShapeIndexAlgorithmTest {
 		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
 		double recentMinimumOfHomeostasisIndex = -86.5;
 		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
-		assertEquals(Math.round(1.93),Math.round(timeAfterRecovery));
-		System.out.println(timeAfterRecovery);
+		assertEquals(Math.round(1.93),Math.round(timeAfterRecovery));		
 	}
 
 	@Test
 	public void testCalculateSupercompensationPoints() {
-		fail("Not yet implemented");
+		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+		double regressionMinimumOfHomeostasisIndex = -86.5;
+		double supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
 	}
 
 	@Test
 	public void testCalculateDetrainingPenalty() {
-		fail("Not yet implemented");
+		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+		Calendar calendar = Calendar.getInstance();		
+		calendar.add(Calendar.HOUR, -32);		
+		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
+		double recentMinimumOfHomeostasisIndex = -86.5;
+		double detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.27*100), Math.round(detrainingPenalty*100));
 	}
 
 	@Test
@@ -123,7 +131,7 @@ public class ShapeIndexAlgorithmTest {
 		double[] speedDistributionOfHRZ = {0,0,11.1,11.8,13.2,0,0};
 		int runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
 		double vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);
-		System.out.println(vdot);
+		assertEquals(Math.round(46.36), Math.round(vdot));
 	}
 
 	@Test
@@ -138,7 +146,9 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testGetTraineeClassificationUsingVdot() {
-		fail("Not yet implemented");
+		Double vdot = 46.36;
+		Integer traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, traineeClassification);
 	}
 
 }
