@@ -120,7 +120,10 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateVdot() {
-		fail("Not yet implemented");
+		double[] speedDistributionOfHRZ = {0,0,11.1,11.8,13.2,0,0};
+		int runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
+		double vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);
+		System.out.println(vdot);
 	}
 
 	@Test
