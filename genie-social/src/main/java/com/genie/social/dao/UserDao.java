@@ -50,12 +50,14 @@ public class UserDao
 		this.dataSource = dataSource;
 	}		
 	
-	public int createUser(UserBean user)
-	{
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName(TABLE_USER)
-		.usingColumns(COLUMNS_USER)
-		.execute(new BeanPropertySqlParameterSource(user));
+	public int createUser(UserBean user) {
+		if (user.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+			return simpleJdbcInsert.withTableName(TABLE_USER)
+					.usingColumns(COLUMNS_USER)
+					.execute(new BeanPropertySqlParameterSource(user));
+		}
+		return 0;
 	}
 	
 	private static final String UPDATE = "UPDATE " + TABLE_USER + " SET "
@@ -75,10 +77,12 @@ public class UserDao
 			+ COLUMNS_USER[14] + "=:privilegeLevel " +
 			"WHERE " + COLUMNS_USER[COLUMN_USERID] + "=:userid;";	
 	
-	public int updateUser(UserBean user)
-	{
-		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(user));
+	public int updateUser(UserBean user) {
+		if (user.isValidForTableInsert()) {
+			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+			return jdbcTemplate.update(UPDATE, new BeanPropertySqlParameterSource(user));
+		}
+		return 0;
 	}
 	
 	private static final String DELETE_BY_ID = "DELETE FROM " + TABLE_USER + " WHERE " 
