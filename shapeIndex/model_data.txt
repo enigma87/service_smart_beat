@@ -84,12 +84,12 @@ training_session{
 
 	start_time:08:12 day 2
 	end_time:08:42
-	hrz1_time:00:04 speed 9.4 km/h
-	hrz2_time:00:06 speed 10.9 km/h
-	hrz3_time:00:05 speed 11.6 km/h
-	hrz4_time:00:12 speed 12.5 km/h
-	hrz5_time:00:03 speed 12.6 km/h
-	hrz6_time:00:00 speed 13.5 km/h
+	hrz1_time:00:04 speed 9.4 km/h  Distance  - 626.67
+	hrz2_time:00:06 speed 10.9 km/h  Distance - 1090.0
+	hrz3_time:00:05 speed 11.6 km/h  Distance -  966.67
+	hrz4_time:00:12 speed 12.5 km/h  Distance -  2500.0
+	hrz5_time:00:03 speed 12.6 km/h  Distance -  630.0
+	hrz6_time:00:00 speed 13.5 km/h  Distance -   
 
 	start_time:17:12 day 3
 	end_time:18:43
