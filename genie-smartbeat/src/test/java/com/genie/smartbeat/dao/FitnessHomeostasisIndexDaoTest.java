@@ -39,8 +39,6 @@ public class FitnessHomeostasisIndexDaoTest {
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
-		
-		
 	}
 	
 	@Test
@@ -96,4 +94,43 @@ public class FitnessHomeostasisIndexDaoTest {
 
 	}
 	
+	@Test
+	public void testGetTraineeClassificationByUserid() {
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		
+		Integer traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(fitnessHomeostasisIndexBean.getTraineeClassification(), traineeClassification);
+		
+		traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid("NONEXISTENT");
+		Assert.assertEquals(null, traineeClassification);
+		
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+	}
+
+	@Test
+	public void testDeleteHomeostasisIndexModelByUserid() {
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		FitnessHomeostasisIndexBean testBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(fitnessHomeostasisIndexBean.getUserid(), testBean.getUserid());
+		
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		testBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(null, testBean);
+		
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		testBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(null, testBean);
+	}
+	
+	@Test
+	public void testGetHomeostasisIndexModelByUserid() {
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		FitnessHomeostasisIndexBean testBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(fitnessHomeostasisIndexBean.getTraineeClassification(), testBean.getTraineeClassification());
+		Assert.assertEquals(fitnessHomeostasisIndexBean.getUserid(), testBean.getUserid());
+		
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		testBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		Assert.assertNull(testBean);
+	}
 }

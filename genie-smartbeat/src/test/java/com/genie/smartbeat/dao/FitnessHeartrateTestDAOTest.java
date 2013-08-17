@@ -126,6 +126,10 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
 		bean = fitnessHeartrateTestDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
 		assertNull(bean);
+
+		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		bean = fitnessHeartrateTestDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		assertNull(bean);
 	}
 	
 	@Test
@@ -247,5 +251,9 @@ public class FitnessHeartrateTestDAOTest {
 		Assert.assertNotNull(dayOfRecord);
 		Assert.assertEquals(fitnessHeartrateTestBean1.getDayOfRecord(), dayOfRecord);
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		
+		dayOfRecord = fitnessHeartrateTestDAO.getDayOfRecordForUser(fitnessHeartrateTestBean1.getUserid());
+		Assert.assertEquals(0, dayOfRecord.intValue());
+		
 	}
 } 
