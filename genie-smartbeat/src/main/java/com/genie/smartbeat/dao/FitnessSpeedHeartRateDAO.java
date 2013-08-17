@@ -33,10 +33,13 @@ public class FitnessSpeedHeartRateDAO {
 	}
 	
 	public int createSpeedHeartRateModel(FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean){
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName(TABLE_FITNESS_SPEED_HEARTRATE)
-		.usingColumns(COLUMNS_FITNESS_SPEED_HEARTRATE)
-		.execute(new BeanPropertySqlParameterSource(fitnessSpeedHeartRateBean));
+		if (fitnessSpeedHeartRateBean.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+			return simpleJdbcInsert.withTableName(TABLE_FITNESS_SPEED_HEARTRATE)
+					.usingColumns(COLUMNS_FITNESS_SPEED_HEARTRATE)
+					.execute(new BeanPropertySqlParameterSource(fitnessSpeedHeartRateBean));
+		}
+		return 0;
 	}
 	
 	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_SPEED_HEARTRATE + " WHERE " + COLUMNS_FITNESS_SPEED_HEARTRATE[COLUMN_USERID] + " =?";
@@ -64,8 +67,11 @@ public class FitnessSpeedHeartRateDAO {
 			+ COLUMNS_FITNESS_SPEED_HEARTRATE[2] + "=:previousVdot "				
 			+ "WHERE " + COLUMNS_FITNESS_SPEED_HEARTRATE[COLUMN_USERID] + "=:userid;";
 	public int updateSpeedHeartrateModel(FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean){
-		NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		return jdbcTemplate.update(UPDATE_SPEED_HEARTRATE_MODEL, new BeanPropertySqlParameterSource(fitnessSpeedHeartRateBean));
+		if (fitnessSpeedHeartRateBean.isValidForTableInsert()) {
+			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+			return jdbcTemplate.update(UPDATE_SPEED_HEARTRATE_MODEL, new BeanPropertySqlParameterSource(fitnessSpeedHeartRateBean));
+		}
+		return 0;
 	}
 }
 

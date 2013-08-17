@@ -213,5 +213,13 @@ public class FitnessTrainingSessionBean {
 		}
 		return speedDistributiOnofHrz;
 	}
-}
 
+	public boolean isValidForTableInsert() {
+		if (this.getUserid().isEmpty()
+				|| this.getTrainingSessionId().isEmpty()) {
+			
+			return false;
+		}
+		return true;
+	}
+}

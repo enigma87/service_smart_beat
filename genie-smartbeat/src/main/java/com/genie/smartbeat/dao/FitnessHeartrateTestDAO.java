@@ -48,10 +48,15 @@ public class FitnessHeartrateTestDAO {
 		// set nano seconds to 0 in Timestamp - MySQL doesn't support it
 		fitnessHeartrateTestBean.getTimeOfRecord().setNanos(0);
 		
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_TEST)
-		.usingColumns(COLUMNS_FITNESS_HEARTRATE_TEST)
-		.execute(new BeanPropertySqlParameterSource(fitnessHeartrateTestBean));
+		if (fitnessHeartrateTestBean.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+			
+			return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_TEST)
+					.usingColumns(COLUMNS_FITNESS_HEARTRATE_TEST)
+					.execute(new BeanPropertySqlParameterSource(fitnessHeartrateTestBean));
+		}
+
+		return 0;
 	}
 	
 	private static final String QUERY_ALL_USING_TEST_ID = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + " WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TEST_ID] + " =?";
@@ -207,4 +212,3 @@ public class FitnessHeartrateTestDAO {
 		return todaysHeartRateTestCount;
 	}
 }
-
