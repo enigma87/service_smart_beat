@@ -41,16 +41,17 @@ public class FitnessTrainingSessionDAO {
 		this.dataSource = dataSource;
 	}
 	
-	public Integer createFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean){
+	public int createFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		
-		Integer trainingSessionId = null;
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		if (1 == simpleJdbcInsert.withTableName(TABLE_FITNESS_TRAINING_SESSION)
+		if (fitnessTrainingSessionBean.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+			
+			return simpleJdbcInsert.withTableName(TABLE_FITNESS_TRAINING_SESSION)
 				.usingColumns(COLUMNS_FITNESS_TRAINING_SESSION)
-				.execute(new BeanPropertySqlParameterSource(fitnessTrainingSessionBean))){
+				.execute(new BeanPropertySqlParameterSource(fitnessTrainingSessionBean));
 			
 		}
-		return trainingSessionId;
+		return 0;
 	}
 	
 

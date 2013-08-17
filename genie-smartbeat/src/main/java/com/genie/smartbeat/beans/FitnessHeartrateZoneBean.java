@@ -159,7 +159,11 @@ public class FitnessHeartrateZoneBean {
 		
 		return heartrateZones;
 	}
+
+	public boolean isValidForTableInsert(){
+		if (this.getUserid().isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 }
-
-
-

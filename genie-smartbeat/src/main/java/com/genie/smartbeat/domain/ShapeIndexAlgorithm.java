@@ -143,19 +143,30 @@ private static final double RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[] = {0,2.5,3
 public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		Timestamp timeAtFullRecovery = null;	
 		double recoveryRate = RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];      
+
 		double timeToRecoverInHours = (Math.abs(recentMinimumOfHomeostasisIndex))/recoveryRate;
 	    long timeToRecoverInSeconds = new Double(timeToRecoverInHours*60*60).longValue();
 		Timestamp timestamp = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));
 		timeAtFullRecovery = timestamp;		
+
+
 		return timeAtFullRecovery;
 	}
-	
-	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+
+	private static double calculateTimeDifferenceInHours(Timestamp startTime, Timestamp endTime){
+		double timeDifferenceInHours = 0;
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat hourFormat = new DecimalFormat("###.##",symbols);
+		timeDifferenceInHours = (endTime.getTime() - startTime.getTime())/(new Long(1000*60*60).doubleValue());
+		return Double.valueOf(hourFormat.format(timeDifferenceInHours));
+	}
+	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){		
 		double timeToRecover = 0.0;
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
-			timeToRecover = (timeAtFullRecovery.getTime() - currentTime.getTime())/(1000*60*60);
+			timeToRecover = calculateTimeDifferenceInHours(currentTime, timeAtFullRecovery);
 		}
 		return timeToRecover;
 	}
@@ -165,7 +176,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
-			timeAfterRecovery = (currentTime.getTime() - timeAtFullRecovery.getTime())/(1000*60*60);
+			timeAfterRecovery = calculateTimeDifferenceInHours(timeAtFullRecovery, currentTime);
 		}
 		return timeAfterRecovery;
 	}
@@ -199,16 +210,17 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	}
 	
 	private static final double DETRAINING_THRESHOLD = 64;
-	private static final double DETRAINING_PENALTY_RATE[] = {0.1, 0.05};
+	private static final double[] DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION = {0,0.01,0.02,0.03,0.05,0.1};
 	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double detrainingPenalty = 0.0;
 		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
+			double basePenaltyRate = DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			if(DETRAINING_THRESHOLD < timeAfterRecovery){
-				detrainingPenalty += (DETRAINING_PENALTY_RATE[1]*(DETRAINING_THRESHOLD - timeAfterRecovery));
+				detrainingPenalty += ((basePenaltyRate/2)*(DETRAINING_THRESHOLD - timeAfterRecovery));
 				timeAfterRecovery -= DETRAINING_THRESHOLD;
 			}
-			detrainingPenalty += (DETRAINING_PENALTY_RATE[0]*timeAfterRecovery);
+			detrainingPenalty += (basePenaltyRate*timeAfterRecovery);
 		}
 		return detrainingPenalty;
 	}
@@ -229,19 +241,28 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	public static double calculateVdot(double[] speedDistributionOfHRZ, int runningSurface){
 		double[] VdotByZone = new double[7];
 		double Vdot = 0.0;
+		int validZoneCount = 0;
 		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat vdotFormat = new DecimalFormat("###.##",symbols);
+		
 		/*no contribution to vDot from zone 1*/
 		for(int i = 2; i<=6;i++){
 			if(0 < speedDistributionOfHRZ[i]){
 				VdotByZone[i] = (speedCorrectionFactor*speedDistributionOfHRZ[i] - SPEED_VDOT_CONSTANT_B_BY_HRZ[i])/SPEED_VDOT_CONSTANT_A_BY_HRZ[i];
+				validZoneCount++;
 			}
 		}		
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
-	        sum += VdotByZone[i];
+	    	if(0 <= VdotByZone[i]){
+	    		sum += VdotByZone[i];	    		
+	    	}
+	        
 	    }
-	    Vdot = sum / (VdotByZone.length-1);
-		return Vdot;
+	    Vdot = sum / validZoneCount;
+		return Double.valueOf(vdotFormat.format(Vdot));
 	}
 	
 	public static double calculateCompoundedVdot(double currentVdot, double previousVdot){

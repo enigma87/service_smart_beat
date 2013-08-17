@@ -1,6 +1,7 @@
 package com.genie.smartbeat.dao;
 
 import static org.junit.Assert.*;
+import junit.framework.Assert;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -60,6 +61,8 @@ public class FitnessHeartrateZoneDAOTest {
 		assertNotNull(testBean);
 		assertEquals(userid, testBean.getUserid());
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
+		testBean.setUserid("");
+		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
 	}
 
 	@Test
@@ -99,6 +102,9 @@ public class FitnessHeartrateZoneDAOTest {
 		assertEquals(updatedHeartrateZone1Start, testBean.getHeartrateZone1Start());
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
 		fitnessHeartrateZoneBean.setHeartrateZone1Start(heartrateZone1Start);
+		
+		testBean.setUserid("");
+		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
 	}
 
 }

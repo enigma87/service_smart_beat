@@ -33,5 +33,11 @@ public class FitnessSpeedHeartRateBean {
 	public void setPreviousVdot(Double previousVdot) {
 		this.previousVdot = previousVdot;
 	}
+	
+	public boolean isValidForTableInsert() {
+		if (this.getUserid().isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 }
-
