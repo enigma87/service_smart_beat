@@ -206,16 +206,17 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	}
 	
 	private static final double DETRAINING_THRESHOLD = 64;
-	private static final double DETRAINING_PENALTY_RATE[] = {0.1, 0.05};
+	private static final double[] DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION = {0,0.01,0.02,0.03,0.05,0.1};
 	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double detrainingPenalty = 0.0;
 		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
+			double basePenaltyRate = DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			if(DETRAINING_THRESHOLD < timeAfterRecovery){
-				detrainingPenalty += (DETRAINING_PENALTY_RATE[1]*(DETRAINING_THRESHOLD - timeAfterRecovery));
+				detrainingPenalty += ((basePenaltyRate/2)*(DETRAINING_THRESHOLD - timeAfterRecovery));
 				timeAfterRecovery -= DETRAINING_THRESHOLD;
 			}
-			detrainingPenalty += (DETRAINING_PENALTY_RATE[0]*timeAfterRecovery);
+			detrainingPenalty += (basePenaltyRate*timeAfterRecovery);
 		}
 		return detrainingPenalty;
 	}
