@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Test;
@@ -96,7 +97,15 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateTimeAfterRecovery() {
-		fail("Not yet implemented");
+		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DATE, -1);
+		calendar.add(Calendar.HOUR, -1);
+		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
+		double recentMinimumOfHomeostasisIndex = -86.5;
+		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.93),Math.round(timeAfterRecovery));
+		System.out.println(timeAfterRecovery);
 	}
 
 	@Test

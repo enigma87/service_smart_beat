@@ -148,13 +148,21 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	    timeAtFullRecovery = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));			
 		return timeAtFullRecovery;
 	}
-	
-	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+
+	private static double calculateTimeDifferenceInHours(Timestamp startTime, Timestamp endTime){
+		double timeDifferenceInHours = 0;
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat hourFormat = new DecimalFormat("###.##",symbols);
+		timeDifferenceInHours = (endTime.getTime() - startTime.getTime())/(new Long(1000*60*60).doubleValue());
+		return Double.valueOf(hourFormat.format(timeDifferenceInHours));
+	}
+	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){		
 		double timeToRecover = 0.0;
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
-			timeToRecover = (timeAtFullRecovery.getTime() - currentTime.getTime())/(1000*60*60);
+			timeToRecover = calculateTimeDifferenceInHours(currentTime, timeAtFullRecovery);
 		}
 		return timeToRecover;
 	}
@@ -164,7 +172,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		Timestamp currentTime = new Timestamp(new Date().getTime());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
-			timeAfterRecovery = (currentTime.getTime() - timeAtFullRecovery.getTime())/(1000*60*60);
+			timeAfterRecovery = calculateTimeDifferenceInHours(timeAtFullRecovery, currentTime);
 		}
 		return timeAfterRecovery;
 	}
