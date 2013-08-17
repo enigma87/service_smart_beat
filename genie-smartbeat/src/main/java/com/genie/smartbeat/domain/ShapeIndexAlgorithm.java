@@ -118,7 +118,7 @@ public class ShapeIndexAlgorithm
 		return regressedHomeostasisIndex - totalLoadOfExercise;
 	}
 			
-	public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+	/*public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		
 		Timestamp timeAtFullRecovery = null;
 		
@@ -136,6 +136,17 @@ public class ShapeIndexAlgorithm
 			Timestamp timestamp = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));
 			timeAtFullRecovery = timestamp;
 		}		
+		return timeAtFullRecovery;
+	}*/
+	
+private static final double RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[] = {0,2.5,3.125,3.75,4.375,5};		
+public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+		Timestamp timeAtFullRecovery = null;	
+		double recoveryRate = RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];      
+		double timeToRecoverInHours = recentMinimumOfHomeostasisIndex/recoveryRate;
+	    long timeToRecoverInSeconds = new Double(timeToRecoverInHours*60*60).longValue();
+		Timestamp timestamp = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));
+		timeAtFullRecovery = timestamp;		
 		return timeAtFullRecovery;
 	}
 	
