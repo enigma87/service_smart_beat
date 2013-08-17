@@ -168,6 +168,23 @@ public class FitnessShapeIndexDaoTest {
 		
 		fitnessShapeIndexDAO.deleteShapeIndexModel(fitnessShapeIndexBean1.getUserid());
 	}
+	
+	@Test
+	public void testUpdateShapeIndexModel() {
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
+		FitnessShapeIndexBean testBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(fitnessShapeIndexBean.getSessionOfRecord());
+		testBean.setShapeIndex(testBean.getShapeIndex() + 10);
+		fitnessShapeIndexDAO.updateShapeIndexModel(testBean);
+		
+		testBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(testBean.getSessionOfRecord());
+		Assert.assertTrue(testBean.getShapeIndex() > fitnessShapeIndexBean.getShapeIndex());
+		
+		fitnessShapeIndexDAO.updateShapeIndexModel(fitnessShapeIndexBean);
+		testBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(testBean.getSessionOfRecord());
+		Assert.assertEquals(testBean.getShapeIndex(), fitnessShapeIndexBean.getShapeIndex());
+	
+		fitnessShapeIndexDAO.deleteShapeIndexModel(testBean.getUserid());
+	}
 
 	@Test 
 	public void testDeleteShapeIndexModel() {

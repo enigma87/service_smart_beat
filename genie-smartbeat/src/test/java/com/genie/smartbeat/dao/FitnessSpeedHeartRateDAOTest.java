@@ -65,4 +65,30 @@ public class FitnessSpeedHeartRateDAOTest {
 		
 	}
 
+	@Test
+	public void testGetSpeedHeartRateModelByUserid() {
+		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
+		
+		FitnessSpeedHeartRateBean localFitnessHeartRateBean =  fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+		Assert.assertEquals(fitnessSpeedHeartRateBean.getUserid(), localFitnessHeartRateBean.getUserid());
+		Assert.assertEquals(fitnessSpeedHeartRateBean.getCurrentVdot(), localFitnessHeartRateBean.getCurrentVdot());
+		
+		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+		localFitnessHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+		Assert.assertEquals(null, localFitnessHeartRateBean);
+	}
+	
+	@Test
+	public void testDeleteSpeedHeartRateModelByUserid() {
+		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
+		FitnessSpeedHeartRateBean localFitnessHeartRateBean =  fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+		Assert.assertEquals(fitnessSpeedHeartRateBean.getUserid(), localFitnessHeartRateBean.getUserid());
+		Assert.assertEquals(fitnessSpeedHeartRateBean.getCurrentVdot(), localFitnessHeartRateBean.getCurrentVdot());
+		
+		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(localFitnessHeartRateBean.getUserid());
+		localFitnessHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+		Assert.assertEquals(null, localFitnessHeartRateBean);
+		
+		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(fitnessSpeedHeartRateBean.getUserid());
+	}
 }

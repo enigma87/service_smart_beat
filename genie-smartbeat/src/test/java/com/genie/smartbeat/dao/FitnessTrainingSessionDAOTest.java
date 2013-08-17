@@ -55,7 +55,19 @@ public class FitnessTrainingSessionDAOTest {
 		FitnessTrainingSessionBean localTrainingSessionBean = fitnessTrainingSessionDAO.getFitnessTrainingSessionById(trainingSessionId);
 		assertNotNull(localTrainingSessionBean);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
-	}	
+	}
+	
+	@Test 
+	public void testGetFitnessTrainingSessionById() {
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		FitnessTrainingSessionBean localTrainingSessionBean = fitnessTrainingSessionDAO.getFitnessTrainingSessionById(fitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(fitnessTrainingSessionBean.getUserid(), localTrainingSessionBean.getUserid());
+		
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(localTrainingSessionBean.getTrainingSessionId());
+		localTrainingSessionBean = fitnessTrainingSessionDAO.getFitnessTrainingSessionById(localTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(null, localTrainingSessionBean);
+	
+	}
 
 	@Test
 	public void testDeleteFitnessTrainingSessionById() {
