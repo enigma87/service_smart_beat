@@ -236,19 +236,28 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	public static double calculateVdot(double[] speedDistributionOfHRZ, int runningSurface){
 		double[] VdotByZone = new double[7];
 		double Vdot = 0.0;
+		int validZoneCount = 0;
 		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat vdotFormat = new DecimalFormat("###.##",symbols);
+		
 		/*no contribution to vDot from zone 1*/
 		for(int i = 2; i<=6;i++){
 			if(0 < speedDistributionOfHRZ[i]){
 				VdotByZone[i] = (speedCorrectionFactor*speedDistributionOfHRZ[i] - SPEED_VDOT_CONSTANT_B_BY_HRZ[i])/SPEED_VDOT_CONSTANT_A_BY_HRZ[i];
+				validZoneCount++;
 			}
 		}		
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
-	        sum += VdotByZone[i];
+	    	if(0 <= VdotByZone[i]){
+	    		sum += VdotByZone[i];	    		
+	    	}
+	        
 	    }
-	    Vdot = sum / (VdotByZone.length-1);
-		return Vdot;
+	    Vdot = sum / validZoneCount;
+		return Double.valueOf(vdotFormat.format(Vdot));
 	}
 	
 	public static double calculateCompoundedVdot(double currentVdot, double previousVdot){
