@@ -209,16 +209,19 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	private static final double[] DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION = {0,0.01,0.02,0.03,0.05,0.1};
 	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double detrainingPenalty = 0.0;
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat detrainingPenaltyFormat = new DecimalFormat("###.##",symbols);
 		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
 			double basePenaltyRate = DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			if(DETRAINING_THRESHOLD < timeAfterRecovery){
-				detrainingPenalty += ((basePenaltyRate/2)*(DETRAINING_THRESHOLD - timeAfterRecovery));
-				timeAfterRecovery -= DETRAINING_THRESHOLD;
+				detrainingPenalty += ((basePenaltyRate/2)*(timeAfterRecovery - DETRAINING_THRESHOLD));
+				timeAfterRecovery = DETRAINING_THRESHOLD;
 			}
 			detrainingPenalty += (basePenaltyRate*timeAfterRecovery);
 		}
-		return detrainingPenalty;
+		return Double.valueOf(detrainingPenaltyFormat.format(detrainingPenalty));
 	}
 	
 	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
@@ -252,10 +255,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		}		
 		double sum = 0;
 	    for (int i = 0; i < VdotByZone.length; i++) {
-	    	if(0 <= VdotByZone[i]){
 	    		sum += VdotByZone[i];	    		
-	    	}
-	        
 	    }
 	    Vdot = sum / validZoneCount;
 		return Double.valueOf(vdotFormat.format(Vdot));
