@@ -4,6 +4,8 @@
 package com.genie.smartbeat.impl;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Iterator;
 import java.util.List;
 
@@ -224,6 +226,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getShapeIndex(String recentTrainingSessionId) {
 		double newShapeIndex = 0;
 		
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat shapeIndexFormat = new DecimalFormat("###.##",symbols);
+		
 		if(null != recentTrainingSessionId){
 		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
 		newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
@@ -234,7 +240,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
 		}
 		
-		return newShapeIndex;
+         return Double.valueOf(shapeIndexFormat.format(newShapeIndex));
 	}
 
 	public double getFitnessSupercompensationPoints(String userid){
