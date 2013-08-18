@@ -150,7 +150,7 @@
 		<profile>
 		<id>regression</id>
 		<properties>
-		  <include.tests>**/*Regression*.java</include.tests>
+		  <include.tests>src/regression/java/*/*Regression*.java</include.tests>
 		</properties>
 	  </profile>
 	  		<profile>
