@@ -143,9 +143,13 @@ private static final double RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[] = {0,2.5,3
 public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		Timestamp timeAtFullRecovery = null;	
 		double recoveryRate = RECOVERY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];      
-		double timeToRecoverInHours = Math.abs(recentMinimumOfHomeostasisIndex)/recoveryRate;
-	    long timeToRecoverInSeconds = new Double(timeToRecoverInHours*60*60).longValue();	    
-	    timeAtFullRecovery = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));			
+
+		double timeToRecoverInHours = (Math.abs(recentMinimumOfHomeostasisIndex))/recoveryRate;
+	    long timeToRecoverInSeconds = new Double(timeToRecoverInHours*60*60).longValue();
+		Timestamp timestamp = new Timestamp(trainingSessionEndTime.getTime()+(timeToRecoverInSeconds*1000));
+		timeAtFullRecovery = timestamp;		
+
+
 		return timeAtFullRecovery;
 	}
 
