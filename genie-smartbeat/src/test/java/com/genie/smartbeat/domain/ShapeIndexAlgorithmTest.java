@@ -123,25 +123,158 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateSupercompensationPoints() {
-		double regressionMinimumOfHomeostasisIndex = -86.5;
 		
 		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED;
+		
+		double regressionMinimumOfHomeostasisIndex = -0.5;		
 		double supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -3;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -6;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -26;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.6*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -86.5;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(0.8*100), Math.round(supercompensationPoints*100));
 		
-		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED;		
+		regressionMinimumOfHomeostasisIndex = -106.5;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -156.5;				
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.6*100), Math.round(supercompensationPoints*100));
+		
+		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED;
+		
+		regressionMinimumOfHomeostasisIndex = -0.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -26.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -56.5;
 		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
 		
-		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;		
+		regressionMinimumOfHomeostasisIndex = -106.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.6*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -156.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.8*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -176.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -206.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.6*100), Math.round(supercompensationPoints*100));
+		
+		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
+		
+		regressionMinimumOfHomeostasisIndex = -26.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -66.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -86.5;
 		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
 		
-		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED;		
+		regressionMinimumOfHomeostasisIndex = -136.5;
 		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
-		assertEquals(Math.round(0*100), Math.round(supercompensationPoints*100));
+		assertEquals(Math.round(0.6*100), Math.round(supercompensationPoints*100));
 		
-		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE;		
+		regressionMinimumOfHomeostasisIndex = -176.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.8*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -206.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -236.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.6*100), Math.round(supercompensationPoints*100));
+		
+		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED;
+		
+		regressionMinimumOfHomeostasisIndex = -86.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -106.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -156.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -196.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.6*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -226.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.8*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -246.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -266.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.6*100), Math.round(supercompensationPoints*100));
+		
+		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE;
+		
+		regressionMinimumOfHomeostasisIndex = -156.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -186.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -206.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -226.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.6*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -246.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(0.8*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -266.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.2*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -286.5;
+		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
+		assertEquals(Math.round(1.6*100), Math.round(supercompensationPoints*100));
+		
+		regressionMinimumOfHomeostasisIndex = -350.5;
 		supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(traineeClassification, regressionMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(0*100), Math.round(supercompensationPoints*100));
 	}
@@ -187,9 +320,28 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testGetTraineeClassificationUsingVdot() {
-		Double vdot = 46.36;
+		
+		Double vdot = 26.36;
 		Integer traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED, traineeClassification);
+		
+		vdot = 36.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED, traineeClassification);
+		
+		vdot = 46.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, traineeClassification);
+		
+		vdot = 56.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED, traineeClassification);
+		
+		vdot = 66.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
+		
+		
 	}
 
 }
