@@ -62,5 +62,14 @@ public class FitnessHeartrateTestBean {
 	public void setDayOfRecord(Integer dayOfRecord) {
 		this.dayOfRecord = dayOfRecord;
 	}
+
+	public boolean isValidForTableInsert() {
+		if (this.getUserid().isEmpty()
+				|| this.getHeartrateTestId().isEmpty()) {
+			
+			return false;
+		}
+		return true;
+	}
 }
 

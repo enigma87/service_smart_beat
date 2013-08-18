@@ -40,10 +40,13 @@ public class FitnessSpeedHeartRateDAOTest {
 		
 		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(userid);
 		
+		fitnessSpeedHeartRateBean1.setUserid("");
+		Assert.assertEquals(0, fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean1));
+		
 	}
 	
 	@Test
-	public void testUpdateFitnessSpeedHeartRateDAO() {
+	public void testUpdateFitnessSpeedHeartRateModel() {
 		
 		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
 		
@@ -63,6 +66,8 @@ public class FitnessSpeedHeartRateDAOTest {
 		
 		fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(userid);
 		
+		fitnessSpeedHeartRateBean1.setUserid("");
+		Assert.assertEquals(0, fitnessSpeedHeartRateDAO.updateSpeedHeartrateModel(fitnessSpeedHeartRateBean1));
 	}
 
 	@Test

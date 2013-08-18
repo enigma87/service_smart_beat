@@ -90,5 +90,11 @@ public class FitnessHomeostasisIndexBean {
 		this.previousEndTime = previousEndTime;
 	}		
 	
+	public boolean isValidForTableInsert() {
+		if (this.getUserid().isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 }
 

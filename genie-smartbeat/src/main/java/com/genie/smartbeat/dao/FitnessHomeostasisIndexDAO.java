@@ -33,11 +33,15 @@ public class FitnessHomeostasisIndexDAO {
 	}
 	
 	public int createHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
-		
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-		return simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
-		.usingColumns(COLUMNS_FITNESS_HOMEOSTASIS_INDEX)
-		.execute(new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+
+		if (fitnessHomeostasisIndexBean.isValidForTableInsert()) {
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
+
+			return simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
+					.usingColumns(COLUMNS_FITNESS_HOMEOSTASIS_INDEX)
+					.execute(new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+		}
+		return 0;
 	}
 	
 	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_HOMEOSTASIS_INDEX + " WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + " =?";
@@ -74,8 +78,12 @@ public class FitnessHomeostasisIndexDAO {
 			+ "WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + "=:userid;";
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){		       
-       	NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-		return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+       	
+		if (fitnessHomeostasisIndexBean.isValidForTableInsert()) {
+			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+			return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+		}
+		return 0;	
 	}
 	
 	public Integer getTraineeClassificationByUserid(String userid){
@@ -86,6 +94,4 @@ public class FitnessHomeostasisIndexDAO {
 		}
 		return traineeClassification;
 	}
-
 }
-

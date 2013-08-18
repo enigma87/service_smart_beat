@@ -82,6 +82,8 @@ public class UserDaoTest {
 		Assert.assertEquals((byte) 1, user1.getPrivilegeLevel());
 		
 		userDao.deleteUser(user.getUserid());
+		
+		Assert.assertEquals(0, userDao.createUser(new UserBean()));
 	}
 	
 	@Test
@@ -96,6 +98,10 @@ public class UserDaoTest {
 		Assert.assertEquals("John", user2.getMiddleName());
 		Assert.assertEquals((byte) 2, user2.getPrivilegeLevel());
 		userDao.deleteUser(user1.getUserid());
+		
+		Assert.assertEquals(0, userDao.updateUser(new UserBean()));
+		user1.setAccessToken("");
+		Assert.assertEquals(0, userDao.updateUser(user1));
 	}
 	
 	@Test
@@ -145,7 +151,7 @@ public class UserDaoTest {
 		userDao.createUser(user);
 		isExistingUser = userDao.isExistingUser("abc@xyz.com");
 		Assert.assertTrue(isExistingUser);
-		userDao.deleteUser("12345");
+		userDao.deleteUser(user.getUserid());
 	}	
 }
 

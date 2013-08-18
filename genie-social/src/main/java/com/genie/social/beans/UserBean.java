@@ -192,7 +192,7 @@ public class UserBean implements Cloneable
 	    }
 	    return age;
 	}
-
+	
 	@Override
 	public String toString() {
 		return getFirstName() + " " + getLastName();
@@ -205,5 +205,19 @@ public class UserBean implements Cloneable
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
+	}
+	
+	public boolean isValidForTableInsert() {
+		if (null == this.getUserid()
+				|| null == this.getAccessToken() 
+				|| null == this.getAccessTokenType()
+				|| null == this.getFirstName()
+				|| null == this.getEmail()
+				|| 0 == this.getPrivilegeLevel()) {
+			
+			return false;
+		}
+		
+		return true;
 	}
 }
