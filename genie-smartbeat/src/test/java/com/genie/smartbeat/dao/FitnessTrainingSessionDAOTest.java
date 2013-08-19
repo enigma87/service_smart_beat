@@ -58,7 +58,14 @@ public class FitnessTrainingSessionDAOTest {
 		
 		localTrainingSessionBean.setUserid("");
 		Assert.assertEquals(0, fitnessTrainingSessionDAO.createFitnessTrainingSession(localTrainingSessionBean));
+		
 		localTrainingSessionBean.setTrainingSessionId("");
+		Assert.assertEquals(0, fitnessTrainingSessionDAO.createFitnessTrainingSession(localTrainingSessionBean));
+		
+		localTrainingSessionBean.setUserid(null);
+		Assert.assertEquals(0, fitnessTrainingSessionDAO.createFitnessTrainingSession(localTrainingSessionBean));
+		
+		localTrainingSessionBean.setTrainingSessionId(null);
 		Assert.assertEquals(0, fitnessTrainingSessionDAO.createFitnessTrainingSession(localTrainingSessionBean));
 		
 	}

@@ -206,18 +206,18 @@ public class UserBean implements Cloneable
 			return null;
 		}
 	}
-	
+	 
 	public boolean isValidForTableInsert() {
-		if (null == this.getUserid()
-				|| null == this.getAccessToken() 
-				|| null == this.getAccessTokenType()
-				|| null == this.getFirstName()
-				|| null == this.getEmail()
-				|| 0 == this.getPrivilegeLevel()) {
+		if ((null != this.getUserid() && !this.getUserid().isEmpty())
+				&& (null != this.getAccessToken() && !this.getAccessToken().isEmpty())
+				&& (null != this.getAccessTokenType() && !this.getAccessTokenType().isEmpty())
+				&& (null != this.getFirstName() && !this.getFirstName().isEmpty())
+				&& (null != this.getEmail() && !this.getEmail().isEmpty())
+				&& 0 != this.getPrivilegeLevel()) {
 			
-			return false;
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 }

@@ -63,6 +63,10 @@ public class FitnessHeartrateZoneDAOTest {
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
 		testBean.setUserid("");
 		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
+	
+		testBean.setUserid(null);
+		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
+	
 	}
 
 	@Test
@@ -105,6 +109,10 @@ public class FitnessHeartrateZoneDAOTest {
 		
 		testBean.setUserid("");
 		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
+	
+		testBean.setUserid(null);
+		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
+	
 	}
 
 }

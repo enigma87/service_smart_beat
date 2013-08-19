@@ -61,6 +61,9 @@ public class FitnessHomeostasisIndexDaoTest {
 
 	    fitnessHomeostasisIndexBean1.setUserid("");
 	    Assert.assertEquals(0, fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean1));
+	
+	    fitnessHomeostasisIndexBean1.setUserid(null);
+	    Assert.assertEquals(0, fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean1));
 	}
 	
 	@Test
@@ -95,6 +98,9 @@ public class FitnessHomeostasisIndexDaoTest {
 	    fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 
 	    fitnessHomeostasisIndexBean1.setUserid("");
+	    Assert.assertEquals(0, fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean1));
+	
+	    fitnessHomeostasisIndexBean1.setUserid(null);
 	    Assert.assertEquals(0, fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean1));
 	}
 	
