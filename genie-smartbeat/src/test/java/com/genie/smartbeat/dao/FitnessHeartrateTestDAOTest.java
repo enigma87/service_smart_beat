@@ -106,10 +106,19 @@ public class FitnessHeartrateTestDAOTest {
 		FitnessHeartrateTestBean bean = fitnessHeartrateTestDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
 		assertEquals(fitnessHeartrateTestBean1.getHeartrate(), bean.getHeartrate());
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
+		
 		bean.setUserid("");
 		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
+		
+		bean.setUserid(null);
+		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
+		
 		bean.setHeartrateTestId("");
 		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
+		
+		bean.setHeartrateTestId(null);
+		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
+
 	}
 
 	@Test
