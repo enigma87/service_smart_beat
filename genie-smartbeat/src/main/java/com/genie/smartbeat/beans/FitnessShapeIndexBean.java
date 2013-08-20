@@ -47,11 +47,11 @@ public class FitnessShapeIndexBean {
 	}				
 	
 	public boolean isValidForTableInsert() {
-		if (this.getUserid().isEmpty()
-				|| this.getSessionOfRecord().isEmpty()) {
+		if ((null != this.getUserid() && !this.getUserid().isEmpty())
+				&&  (null != this.getSessionOfRecord() && !this.getSessionOfRecord().isEmpty())) {
 
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 }

@@ -91,10 +91,10 @@ public class FitnessHomeostasisIndexBean {
 	}		
 	
 	public boolean isValidForTableInsert() {
-		if (this.getUserid().isEmpty()) {
-			return false;
+		if ((null != this.getUserid() && !this.getUserid().isEmpty())) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 }
 
