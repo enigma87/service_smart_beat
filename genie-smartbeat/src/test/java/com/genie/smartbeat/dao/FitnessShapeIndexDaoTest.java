@@ -68,8 +68,17 @@ public class FitnessShapeIndexDaoTest {
 		
 		fitnessShapeIndexBean1.setUserid("");
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1));
+		
+		fitnessShapeIndexBean1.setUserid(null);
+		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1));
+		
+		
 		fitnessShapeIndexBean1.setSessionOfRecord("");
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1));
+
+		fitnessShapeIndexBean1.setSessionOfRecord(null);
+		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1));
+
 	}
 	
 	@Test
@@ -191,7 +200,14 @@ public class FitnessShapeIndexDaoTest {
 		
 		testBean.setUserid("");
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(testBean));
+		
+		testBean.setUserid(null);
+		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(testBean));
+		
 		testBean.setSessionOfRecord("");
+		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(testBean));
+	
+		testBean.setSessionOfRecord(null);
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(testBean));
 	}
 

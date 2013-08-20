@@ -64,12 +64,12 @@ public class FitnessHeartrateTestBean {
 	}
 
 	public boolean isValidForTableInsert() {
-		if (this.getUserid().isEmpty()
-				|| this.getHeartrateTestId().isEmpty()) {
+		if ((null != this.getUserid() && !this.getUserid().isEmpty())
+				&& (null != this.getHeartrateTestId() && !this.getUserid().isEmpty())) {
 			
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 }
 

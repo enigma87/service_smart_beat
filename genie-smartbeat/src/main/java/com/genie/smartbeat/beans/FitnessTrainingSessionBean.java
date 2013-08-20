@@ -215,11 +215,11 @@ public class FitnessTrainingSessionBean {
 	}
 
 	public boolean isValidForTableInsert() {
-		if (this.getUserid().isEmpty()
-				|| this.getTrainingSessionId().isEmpty()) {
+		if ((null != this.getUserid() && !this.getUserid().isEmpty())
+				&& (null != this.getTrainingSessionId() && !this.getTrainingSessionId().isEmpty())) {
 			
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 }
