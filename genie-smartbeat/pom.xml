@@ -150,13 +150,13 @@
 		<profile>
 		<id>regression</id>
 		<properties>
-		  <include.tests>src/regression/java/*/*Regression*.java</include.tests>
+		  <include.tests>**/*Regression.java</include.tests>
 		</properties>
 	  </profile>
-	  		<profile>
+	  <profile>
 		<id>unit</id>
 		<properties>
-		  <include.tests>**/*Test.java</include.tests>
+		  <include.tests>**/FitnessHeartrateTestBeanTest.java</include.tests>
 		</properties>
 	  </profile>
 	</profiles>

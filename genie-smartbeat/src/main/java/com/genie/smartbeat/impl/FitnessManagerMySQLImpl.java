@@ -37,8 +37,8 @@ import com.genie.social.core.UserManager;
 public class FitnessManagerMySQLImpl implements FitnessManager 
 {
 
-	@Autowired
-	@Qualifier("userManagerMySQLImpl")
+	//@Autowired
+	//@Qualifier("userManagerMySQLImpl")
 	private UserManager userManager;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
