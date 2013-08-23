@@ -246,15 +246,20 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getFitnessSupercompensationPoints(String userid){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), 
-				fitnessHomeostasisIndexBean.getRecentEndTime(), 
-				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
-		/*Check condition for supercompensation*/ 
 		
-		if(0 == regressedHomeostasisIndex){			
-			supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), 
-					fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
-		}
+		if (null != fitnessHomeostasisIndexBean) {
+				double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(
+						fitnessHomeostasisIndexBean.getTraineeClassification(),
+						fitnessHomeostasisIndexBean.getRecentEndTime(),
+						fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		
+				/*Check condition for supercompensation*/ 
+		
+				if(0 == regressedHomeostasisIndex){			
+					supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), 
+							fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
+				}
+			}
 		return supercompensationPoints;
 	}
 		
