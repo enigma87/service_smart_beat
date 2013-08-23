@@ -44,7 +44,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="fitnessManagerMySQLImpl" class="com.genie.smartbeat.impl.FitnessManagerMySQLImpl">		
+	<bean id="fitnessManagerMySQLImpl" class="com.genie.smartbeat.impl.FitnessManagerMySQLImpl">
+	    <property name="userManager" ref="userManagerMySQLImpl" />		
 		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
 	    <property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />
