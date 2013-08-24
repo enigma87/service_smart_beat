@@ -1,8 +1,5 @@
 package com.genie.smartbeat.beans;
 
-import static org.junit.Assert.*;
-import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
-
 import org.junit.Assert;
 import org.junit.Test;
 

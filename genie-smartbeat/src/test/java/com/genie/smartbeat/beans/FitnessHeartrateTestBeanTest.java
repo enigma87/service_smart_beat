@@ -1,13 +1,9 @@
 package com.genie.smartbeat.beans;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Timestamp;
 import java.util.Date;
-
-import junit.framework.Assert;
-
-import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 
 import org.junit.Test;
 
@@ -32,12 +28,12 @@ public class FitnessHeartrateTestBeanTest {
 		fitnessHeartRateTestBean.setTimeOfRecord(timeOfRecord);
 		fitnessHeartRateTestBean.setDayOfRecord(dayOfRecord);
 		
-		Assert.assertEquals(userid, fitnessHeartRateTestBean.getUserid());
-		Assert.assertEquals(heartrateTestId,fitnessHeartRateTestBean.getHeartrateTestId());
-		Assert.assertEquals(heartrateType, fitnessHeartRateTestBean.getHeartrateType());
-		Assert.assertEquals(heartrate, fitnessHeartRateTestBean.getHeartrate());
-		Assert.assertEquals(timeOfRecord,fitnessHeartRateTestBean.getTimeOfRecord());
-		Assert.assertEquals(dayOfRecord,fitnessHeartRateTestBean.getDayOfRecord());
+		assertEquals(userid, fitnessHeartRateTestBean.getUserid());
+		assertEquals(heartrateTestId,fitnessHeartRateTestBean.getHeartrateTestId());
+		assertEquals(heartrateType, fitnessHeartRateTestBean.getHeartrateType());
+		assertEquals(heartrate, fitnessHeartRateTestBean.getHeartrate());
+		assertEquals(timeOfRecord,fitnessHeartRateTestBean.getTimeOfRecord());
+		assertEquals(dayOfRecord,fitnessHeartRateTestBean.getDayOfRecord());
 	}
 
 }

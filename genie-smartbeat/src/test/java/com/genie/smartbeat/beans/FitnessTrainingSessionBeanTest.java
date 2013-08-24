@@ -1,7 +1,5 @@
 package com.genie.smartbeat.beans;
 
-import static org.junit.Assert.*;
-import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import java.sql.Timestamp;
 import java.util.Date;
 
