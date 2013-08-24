@@ -29,6 +29,8 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
+	private Double percentageInclination;
+	private Double percentageDeclination;
 
 	
 	public String getUserid() {
@@ -159,6 +161,22 @@ public class SaveFitnessTrainingSessionRequestJson {
 		this.surfaceIndex = surfaceIndex;
 	}
 	
+	public Double getPercentageInclination() {
+		return percentageInclination;
+	}
+	
+	public void setPercentageInclination(Double percentageInclination) {
+		this.percentageInclination = percentageInclination;
+	}
+	
+	public Double getPercentageDeclination() {
+		return percentageDeclination;
+	}
+	
+	public void setPercentageDeclination(Double percentageDeclination) {
+		this.percentageDeclination = percentageDeclination;
+	}
+	
 	public FitnessTrainingSessionBean getAsTrainingSessionBean(){
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -189,6 +207,8 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
+		fitnessTrainingSessionBean.setPercentageInclination(getPercentageInclination());
+		fitnessTrainingSessionBean.setPercentageDeclination(getPercentageDeclination());
 		
 		return fitnessTrainingSessionBean;
 	}
