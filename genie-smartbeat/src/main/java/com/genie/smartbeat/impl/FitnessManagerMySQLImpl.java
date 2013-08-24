@@ -336,7 +336,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}
 		}
 	}
-
+ 
 	public double[][] getHeartrateZones(String userid) {
 		double[][] heartrateZones = null;
 		double restingHeartrate = 0.0, thresholdHeartrate = 0.0, maximalHeartrate = 0.0;
