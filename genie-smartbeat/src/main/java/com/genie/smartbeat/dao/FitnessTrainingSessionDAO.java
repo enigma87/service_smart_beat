@@ -112,6 +112,31 @@ public class FitnessTrainingSessionDAO {
 		}
 	}
 	
+	private static final String QUERY_ALL_BY_USERID = 	"SELECT * "  
+														+ " FROM "  + TABLE_FITNESS_TRAINING_SESSION 
+														+ " WHERE "	+ COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "= ?";	
+	public double[] getVdotHistory(String userid, int n){
+		double[] vdotHistory = null;
+		String QUERY_N_RECENT = QUERY_ALL_BY_USERID + 
+								" ORDER BY " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + " DESC" +
+								" LIMIT " + n;
+		List<FitnessTrainingSessionBean> nRecentTrainingSessions = new ArrayList<FitnessTrainingSessionBean>();
+		try{
+			nRecentTrainingSessions = new JdbcTemplate(dataSource).query(QUERY_N_RECENT, ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class), userid);
+			if(n == nRecentTrainingSessions.size()){
+				vdotHistory = new double[n];
+				int count = 0;
+				for(Iterator<FitnessTrainingSessionBean> i = nRecentTrainingSessions.iterator(); i.hasNext();){
+					FitnessTrainingSessionBean trainingSessionBean = i.next();
+					vdotHistory[count++] = trainingSessionBean.getVdot();
+				}
+			}
+		}catch(DataAccessException e){
+			
+		}
+		return vdotHistory;
+	}
+	
 	private static final String DELETE_TRAINING_SESSION_TEST_DATA = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + " like 'TEST%'";
 	
 	public void deleteTestData() {

@@ -159,6 +159,43 @@ public class FitnessTrainingSessionDAOTest {
 		}
 	}
 	
+	@Test
+	public void testGetVdotHistory(){
+		double[] vdotHistory = null;
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = null; 
+		fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100).toString());
+		fitnessTrainingSessionBean.setVdot(23.0);
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);				
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		assertNull(vdotHistory);
+		
+		for(int i=1; i<=3; i++){
+			fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100+i).toString());
+			fitnessTrainingSessionBean.setVdot(23.0);
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		}
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		Assert.assertEquals(4, vdotHistory.length);
+		
+		for(int i=4; i<=6; i++){
+			fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100+i).toString());
+			fitnessTrainingSessionBean.setVdot(23.0);
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		}
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		Assert.assertEquals(4, vdotHistory.length);
+		
+		for(int i=0; i<=6; i++){			
+			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById((new Integer(100+i).toString()));
+		}
+	}
+	
 	@AfterClass
 	public static void freeTestData () {
 		fitnessTrainingSessionDAO.deleteTestData();
