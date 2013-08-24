@@ -194,26 +194,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
 		
-		/*set default surfaceIndex if not present*/
-		if(null == fitnessTrainingSessionBean.getSurfaceIndex()){
-			fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED);
-		}
+		double vdot = 0.0;
+		int surfaceIndex = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
 		
-		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
-		/*backup last session's data*/
-		if(null != fitnessSpeedHeartRateBean ){
-			fitnessSpeedHeartRateBean.setPreviousVdot(fitnessSpeedHeartRateBean.getCurrentVdot());
-		}else{
-			/*Create Speed Heart Rate Model for the user*/
-			fitnessSpeedHeartRateBean = new FitnessSpeedHeartRateBean();
-			/*Setting the userid while the PreviousVdot value by default is set to null*/
-			fitnessSpeedHeartRateBean.setUserid(userid);
-			fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
-		}
-		
-		/*set last session's data*/
-		fitnessSpeedHeartRateBean.setCurrentVdot(ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(), fitnessTrainingSessionBean.getSurfaceIndex()));
-		fitnessSpeedHeartRateDAO.updateSpeedHeartrateModel(fitnessSpeedHeartRateBean);
+		if(null != fitnessTrainingSessionBean.getSurfaceIndex()){
+			surfaceIndex = fitnessTrainingSessionBean.getSurfaceIndex();
+		}		
+		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),surfaceIndex);
+		fitnessTrainingSessionBean.setVdot(vdot);
 	}
 	
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId){
@@ -271,10 +259,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public double getSpeedHeartrateFactor(String userid){
 		double speedHeartrateFactor = 0.0;
-		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
-		if(null != fitnessSpeedHeartRateBean.getCurrentVdot() && null != fitnessSpeedHeartRateBean.getPreviousVdot()){
-			speedHeartrateFactor = ShapeIndexAlgorithm.calculateCompoundedVdot(fitnessSpeedHeartRateBean.getCurrentVdot(), 
-					fitnessSpeedHeartRateBean.getPreviousVdot());
+		double[] vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, ShapeIndexAlgorithm.VDOT_HISTORY_LIMIT);		
+		if(null != vdotHistory){			
+			speedHeartrateFactor = ShapeIndexAlgorithm.calculateSpeedHeartrateFactor(vdotHistory);
 		}
 		return speedHeartrateFactor;
 	}

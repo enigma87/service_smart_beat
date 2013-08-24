@@ -265,8 +265,17 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		return Double.valueOf(vdotFormat.format(Vdot));
 	}
 	
-	public static double calculateCompoundedVdot(double currentVdot, double previousVdot){
-		return ((100*currentVdot)/previousVdot)-100;		
+	public static final int VDOT_HISTORY_LIMIT = 4;
+	private static final int SESSION_1 = 0;
+	private static final int SESSION_2 = 1;
+	private static final int SESSION_3 = 2;
+	private static final int SESSION_4 = 3;
+	public static double calculateSpeedHeartrateFactor(double[] vdotHistory){
+		double speedHeartrateFactor = 0;
+		if(VDOT_HISTORY_LIMIT == vdotHistory.length){
+			speedHeartrateFactor = (vdotHistory[SESSION_4]+vdotHistory[SESSION_3])/(vdotHistory[SESSION_2]+vdotHistory[SESSION_1]);
+		}
+		return speedHeartrateFactor;
 	}
 	
 	public static final int SOHR_STABILIZATION_LIMIT 		= 4;
