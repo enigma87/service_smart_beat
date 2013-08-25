@@ -32,4 +32,7 @@ public interface FitnessManager{
 	/*shape index*/
 	public double getShapeIndex(String recentTrainingSessionId);
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime);
+	
+	/*clear user*/
+	public void unregisterTrainee(String userid);
 }
