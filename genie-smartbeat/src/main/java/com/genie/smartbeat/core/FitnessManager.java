@@ -37,4 +37,6 @@ public interface FitnessManager{
 	public void unregisterTrainee(String userid);
 	
 	public void updateHeartrateZoneModel(String userid);
+	
+	public double getSpeedHeartrateFactor(String userid);
 }
