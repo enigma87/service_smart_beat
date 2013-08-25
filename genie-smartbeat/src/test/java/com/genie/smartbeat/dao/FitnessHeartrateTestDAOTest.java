@@ -288,14 +288,13 @@ public class FitnessHeartrateTestDAOTest {
 		heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");		
 		
 		Assert.assertEquals(3, heartrateTestBeans.size());
-			
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 	}
 	
-	 @Test
+	@Test
 	public void testDeleteAllHeartrateTestsForUser(){
-		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");        
-				
-		Assert.assertEquals(0, heartrateTestBeans.size());
+		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");
 				
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
