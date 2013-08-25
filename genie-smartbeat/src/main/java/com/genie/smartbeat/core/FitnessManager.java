@@ -42,4 +42,6 @@ public interface FitnessManager{
 	public double getFitnessDetrainingPenalty(String userid);
 	
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String trainingSessionId);
+	
+	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean);
 }
