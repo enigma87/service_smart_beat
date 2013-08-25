@@ -294,7 +294,7 @@ public class FitnessManagerMySQLImplTest {
 			
 			Assert.assertEquals(9, fitnessManager.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" , Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
 		
-			fitnessTrainingSessionDAO.deleteTestData();
+			fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e");;
 	}
 	
 	@Test 
