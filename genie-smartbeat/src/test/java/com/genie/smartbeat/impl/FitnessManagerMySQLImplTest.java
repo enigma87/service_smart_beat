@@ -402,4 +402,61 @@ public class FitnessManagerMySQLImplTest {
 		
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(newTrainingSession.getTrainingSessionId());
 	}
+
+	@Test
+	public void testUpdateHeartrateZoneModel() {
+		
+		Date today = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);		
+
+		long now = cal.getTime().getTime();
+		long oneHourBefore = now -(1 * 3600000);
+		long twoHoursBefore = now -(2 * 3600000);
+		long threeHoursBefore = now - (3 * 3600000);
+		
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO) smartbeatContext.getBean("fitnessHeartrateZoneDAO");
+		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean1.setUserid("user1");
+		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
+		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean1.setHeartrate(124.0);
+		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(threeHoursBefore));
+		fitnessHeartrateTestBean1.setDayOfRecord(1);
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean2.setUserid("user1");
+		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
+		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean2.setHeartrate(130.0);
+		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
+		fitnessHeartrateTestBean2.setDayOfRecord(3);
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean3.setUserid("user1");
+		fitnessHeartrateTestBean3.setHeartrateTestId("user1Test3");
+		fitnessHeartrateTestBean3.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean3.setHeartrate(146.0);
+		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(oneHourBefore));
+		fitnessHeartrateTestBean3.setDayOfRecord(8);
+		
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
+		
+		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		fitnessManager.updateHeartrateZoneModel("user1");
+		Assert.assertNotNull(fitnessHeartrateZoneDAO.getHeartrateZoneModelByUserid("user1"));
+		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		
+	}
 }
