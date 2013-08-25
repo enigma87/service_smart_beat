@@ -110,12 +110,12 @@ public class FitnessShapeIndexDAO {
 		return 0;
 	}
 
-	private static final String DELETE_SHAPE_INDEX_MODEL_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
-	public void deleteShapeIndexModel(String userid){
+	private static final String DELETE_SHAPE_INDEX_HISTORY_BY_USER_ID = "DELETE FROM " + TABLE_FITNESS_SHAPE_INDEX + " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =?";
+	public void deleteShapeIndexHistoryForUser(String userid){
 		FitnessShapeIndexBean fitnessShapeIndexBean = getRecentShapeIndexModel(userid);		
 		if (null != fitnessShapeIndexBean ){
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			jdbcTemplate.update(DELETE_SHAPE_INDEX_MODEL_BY_USER_ID ,userid );
+			jdbcTemplate.update(DELETE_SHAPE_INDEX_HISTORY_BY_USER_ID ,userid );
 		}
 	}
 }

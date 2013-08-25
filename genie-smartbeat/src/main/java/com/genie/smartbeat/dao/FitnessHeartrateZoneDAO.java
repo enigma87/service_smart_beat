@@ -100,6 +100,6 @@ public class FitnessHeartrateZoneDAO {
 			affectedRows =  jdbcTemplate.update(UPDATE_HEARTRATE_ZONE_MODEL, new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
 		}		
 		return affectedRows;
-	}
+	}		
 }
 
