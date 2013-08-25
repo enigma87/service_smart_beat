@@ -276,7 +276,7 @@ public class TraineeResourceTest extends JerseyTest {
 			/*Delete TestUser from Genie*/
 			userDao.deleteUser(genieUserID);
 			fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(genieUserID);
-			fitnessShapeIndexDAO.deleteShapeIndexModel(genieUserID);
+			fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(genieUserID);
 			fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(genieUserID);
 			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 			       
@@ -380,7 +380,7 @@ public class TraineeResourceTest extends JerseyTest {
 			/*Delete TestUser from Genie*/
 			userDao.deleteUser(genieUserID);
 			fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(genieUserID);
-			fitnessShapeIndexDAO.deleteShapeIndexModel(genieUserID);
+			fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(genieUserID);
 			fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(genieUserID);
 			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 			       

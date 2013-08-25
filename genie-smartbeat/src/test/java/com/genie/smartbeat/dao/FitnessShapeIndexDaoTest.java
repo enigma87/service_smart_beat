@@ -64,7 +64,7 @@ public class FitnessShapeIndexDaoTest {
 		Assert.assertNotNull(fitnessShapeIndexBean1.getTimeOfRecord());
 		Assert.assertEquals(trainingSessionId, fitnessShapeIndexBean1.getSessionOfRecord());
 		
-		fitnessShapeIndexDAO.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 		
 		fitnessShapeIndexBean1.setUserid("");
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1));
@@ -109,7 +109,7 @@ public class FitnessShapeIndexDaoTest {
 		
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById("20132");
-		fitnessShapeIndexDAO.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	}
 	
 	@Test
@@ -162,7 +162,7 @@ public class FitnessShapeIndexDaoTest {
 		shapeIndexBeans = fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startInterval, endInterval);		
 		Assert.assertEquals(3, shapeIndexBeans.size());
 		
-		fitnessShapeIndexDAO.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	}
 	
 	@Test
@@ -179,7 +179,7 @@ public class FitnessShapeIndexDaoTest {
 		Assert.assertEquals(fitnessShapeIndexBean1.getSessionOfRecord(), testShapeIndexBean.getSessionOfRecord());
 		Assert.assertEquals(fitnessShapeIndexBean1.getTimeOfRecord(), testShapeIndexBean.getTimeOfRecord());
 		
-		fitnessShapeIndexDAO.deleteShapeIndexModel(fitnessShapeIndexBean1.getUserid());
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(fitnessShapeIndexBean1.getUserid());
 	}
 	
 	@Test
@@ -196,7 +196,7 @@ public class FitnessShapeIndexDaoTest {
 		testBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(testBean.getSessionOfRecord());
 		Assert.assertEquals(testBean.getShapeIndex(), fitnessShapeIndexBean.getShapeIndex());
 	
-		fitnessShapeIndexDAO.deleteShapeIndexModel(testBean.getUserid());
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(testBean.getUserid());
 		
 		testBean.setUserid("");
 		Assert.assertEquals(0, fitnessShapeIndexDAO.createFitnessShapeIndexModel(testBean));
@@ -215,7 +215,7 @@ public class FitnessShapeIndexDaoTest {
 	public void testDeleteShapeIndexModel() {
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
 		Assert.assertNotNull(fitnessShapeIndexDAO.getRecentShapeIndexModel(fitnessShapeIndexBean.getUserid()));
-		fitnessShapeIndexDAO.deleteShapeIndexModel(fitnessShapeIndexBean.getUserid());
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(fitnessShapeIndexBean.getUserid());
 		Assert.assertNull(fitnessShapeIndexDAO.getRecentShapeIndexModel(fitnessShapeIndexBean.getUserid()));
 	}
 }
