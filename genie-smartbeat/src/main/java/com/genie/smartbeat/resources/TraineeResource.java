@@ -23,12 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
+import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
+import com.genie.smartbeat.json.SaveHeartrateTestResponseJson;
 import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
@@ -281,5 +284,37 @@ public class TraineeResource
 		}
 	}
 
-
+	@POST
+	@Path("id/{userid}/heartrateTest/save")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String saveHeartrateTest(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveHeartrateTestRequestJson saveHeartrateTestRequestJson){
+		FitnessHeartrateTestBean heartrateTestBean = saveHeartrateTestRequestJson.getAsHeartrateTestBean();
+		heartrateTestBean.setUserid(userid);
+		fitnessManager.saveHeartrateTest(heartrateTestBean);
+		
+		Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+		shapeIndexResponseJson.setUserid(userid);
+		shapeIndexResponseJson.setShapeIndex(shapeIndex);
+		
+		double[][] heartrateZones = fitnessManager.getHeartrateZones(userid);
+		HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
+		heartRateZoneJson.setUserid(userid);
+		heartRateZoneJson.setHeartrateZones(heartrateZones);
+		
+		SaveHeartrateTestResponseJson saveHeartrateTestResponseJson = new SaveHeartrateTestResponseJson();
+		saveHeartrateTestResponseJson.setHeartrateZones(heartRateZoneJson);
+		saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
+		try
+		{
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
 }
