@@ -22,6 +22,7 @@ import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
+import com.genie.smartbeat.dao.FitnessHeartrateTestDAOTest;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
@@ -117,11 +118,14 @@ public class FitnessManagerMySQLImplTest {
 		long twoDaysBefore = now - (48*3600000);
 		FitnessManager fitnessManager = new FitnessManagerMySQLImpl();
 		fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
-
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO) smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		
+		Assert.assertTrue(fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue() == 0);
+		
 		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
 		fitnessHeartrateTestBean1.setUserid("user1");
 		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
 		fitnessHeartrateTestBean1.setHeartrate(124.0);
 		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(twoDaysBefore));
 		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean1);
@@ -134,67 +138,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(now));
 		fitnessManager.saveHeartrateTest(fitnessHeartrateTestBean2);
 		
-	}
-	
-	@Test
-	public void testGetTraineeClassificationUsingVdot(){
+		System.out.println( ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC+ "-" + fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
+		Assert.assertEquals(1, fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
 		
-		long now = new Date().getTime();
-		long nowBeforeTwoDays = now - (2*24*3600000);
-		long nowBeforeOneDay = now - (24*3600000);
-		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
-
-	   
-		/*DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		Date date = null;
-		try {
-			date = dateFormat.parse("10/06/2012");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");
+		for (Iterator i = heartrateTestBeans.iterator();i.hasNext();) {
+			FitnessHeartrateTestBean testBean = (FitnessHeartrateTestBean) i.next();
+			fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(testBean.getHeartrateTestId());
 		}
-		long time = date.getTime();
-		currentnew Timestamp(time);*/
-		
-		/*Creating the Bean for the first Training Session*/	
-		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
-		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
-		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
-		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
-		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
-			
-        /*Saving the first Fitness training session for the user*/
-		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
-		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		String trainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-		
-		
-		/*Creating the DAOs for SpeedHeartRate, ShapeIndex and Homeostasis Models*/
-		FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO) smartbeatContext.getBean("fitnessSpeedHeartRateDAO");
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		
-		/*Getting the bean for SpeedHeartRate, ShapeIndex and Homeostasis Models for the user*/
-		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		
-		/*Asserting the Model data for Vdor and Trainee Classification*/
-
-		Assert.assertEquals(53.72886508310602, fitnessSpeedHeartRateBean.getCurrentVdot());
-    	Assert.assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED, fitnessHomeostasisIndexBean.getTraineeClassification());
-	
 	}
-	
+		
 	@Test
 	public void testGetHeartrateZones(){ 
 		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO)smartbeatContext.getBean("fitnessHeartrateZoneDAO");
@@ -296,16 +249,6 @@ public class FitnessManagerMySQLImplTest {
 		userDao.deleteUser(user.getUserid());
 	}
 	
-	@Test
-	public void testGetFitnessTrainingSessionIdsByTimeRange() {
-		FitnessManager fitnessManager = (FitnessManager)smartbeatContext.getBean("fitnessManagerMySQLImpl");
-		List<String> sessions =  fitnessManager.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
-		for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
-			String id = i.next();
-			System.out.println(id);
-		}
-	}
-	
 	@Test 
 	public void testGetTrainingSessionIdsInTimeInterval() {
 		
@@ -362,5 +305,40 @@ public class FitnessManagerMySQLImplTest {
 			FitnessShapeIndexBean shapeIndexBean = i.next();
 			System.out.println(shapeIndexBean.getShapeIndex().toString() + " -> "+ shapeIndexBean.getTimeOfRecord());
 		}
+	}
+
+	@Test
+	public void testGetRecentTrainingSessionId() {
+		
+		FitnessTrainingSessionBean newTrainingSession = new FitnessTrainingSessionBean();
+
+		long now = new Date().getTime();
+		
+		newTrainingSession.setUserid("jack_sparrow");
+		newTrainingSession.setTrainingSessionId("123456");
+		newTrainingSession.setStartTime(new Timestamp(now));
+		newTrainingSession.setEndTime(new Timestamp(now + 3600000));
+		newTrainingSession.setHrz1Time(1.0);
+		newTrainingSession.setHrz2Time(2.0);
+		newTrainingSession.setHrz3Time(3.0);
+		newTrainingSession.setHrz4Time(4.0);
+		newTrainingSession.setHrz5Time(5.0);
+		newTrainingSession.setHrz6Time(6.0);
+		newTrainingSession.setHrz1Distance(1.0);
+		newTrainingSession.setHrz1Distance(2.0);
+		newTrainingSession.setHrz1Distance(3.0);
+		newTrainingSession.setHrz1Distance(4.0);
+		newTrainingSession.setHrz1Distance(5.0);
+		newTrainingSession.setHrz1Distance(6.0);
+		newTrainingSession.setSurfaceIndex(16);
+	
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		
+		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		Assert.assertNull(fitnessManager.getRecentTrainingSessionId("jack_sparrow"));
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
+		Assert.assertNotNull(fitnessManager.getRecentTrainingSessionId("jack_sparrow"));
+		
+		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(newTrainingSession.getTrainingSessionId());
 	}
 }

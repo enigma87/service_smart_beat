@@ -54,7 +54,6 @@ public class FitnessTrainingSessionDAO {
 		return 0;
 	}
 	
-
 	private static final String QUERY_ALL_USING_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
 	public FitnessTrainingSessionBean getFitnessTrainingSessionById(String trainingSessionId){
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = null;
