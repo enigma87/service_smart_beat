@@ -215,9 +215,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		symbols.setDecimalSeparator('.');
 		DecimalFormat shapeIndexFormat = new DecimalFormat("###.##",symbols);
 		
-		if(null != recentTrainingSessionId){
-		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
-		newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
+		FitnessShapeIndexBean fitnessShapeIndexBean = null;
+		
+		if(null != recentTrainingSessionId && !recentTrainingSessionId.isEmpty()){
+			fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
+		}
+		
+		if (null != fitnessShapeIndexBean) {
+			newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
 				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())
 				+ getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid())
 				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid());
@@ -251,6 +256,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getFitnessDetrainingPenalty(String userid){
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
 		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
 				fitnessHomeostasisIndexBean.getRecentEndTime(), 
 				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());

@@ -18,8 +18,11 @@ public interface FitnessManager{
 	
 	/*training session*/
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
+	
 	public String getRecentTrainingSessionId(String userid);
+	
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId);
+	
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
 	
 	/*heart rate test*/
@@ -30,6 +33,7 @@ public interface FitnessManager{
 	
 	/*shape index*/
 	public double getShapeIndex(String recentTrainingSessionId);
+	
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime);
 	
 	/*clear user*/
