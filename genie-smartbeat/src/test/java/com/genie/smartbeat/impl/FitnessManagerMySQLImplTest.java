@@ -365,7 +365,7 @@ public class FitnessManagerMySQLImplTest {
 			FitnessShapeIndexBean shapeIndexBean = i.next();
 			System.out.println(shapeIndexBean.getShapeIndex().toString() + " -> "+ shapeIndexBean.getTimeOfRecord());
 		}
-		fitnessShapeIndexDAO.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	}
 
 	@Test
