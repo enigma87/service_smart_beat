@@ -1,7 +1,5 @@
 package com.genie.smartbeat.beans;
 
-import static org.junit.Assert.*;
-import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -39,6 +37,9 @@ public class FitnessTrainingSessionBeanTest {
 	    Double hrz4Speed = (hrz4Distance/hrz4Time)*0.06;
 	    Double hrz5Speed = (hrz5Distance/hrz5Time)*0.06;
 	    Double hrz6Speed = (hrz6Distance/hrz6Time)*0.06;
+	    Double percentageInclination = 25.0;
+	    Double percentageDeclination = 25.0;
+	    Double vdot = 23.0;
 	    
 	    FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	    fitnessTrainingSessionBean.setUserid(userid);
@@ -58,6 +59,9 @@ public class FitnessTrainingSessionBeanTest {
 	    fitnessTrainingSessionBean.setHrz4Distance(hrz4Distance);
 	    fitnessTrainingSessionBean.setHrz5Distance(hrz5Distance);
 	    fitnessTrainingSessionBean.setHrz6Distance(hrz6Distance);
+	    fitnessTrainingSessionBean.setPercentageInclination(percentageInclination);
+	    fitnessTrainingSessionBean.setPercentageDeclination(percentageDeclination);
+	    fitnessTrainingSessionBean.setVdot(vdot);
 	    
 	    Assert.assertEquals(userid,fitnessTrainingSessionBean.getUserid());
 	    Assert.assertEquals(trainingSessionId,fitnessTrainingSessionBean.getTrainingSessionId());
@@ -75,7 +79,10 @@ public class FitnessTrainingSessionBeanTest {
 	    Assert.assertEquals(hrz3Distance,fitnessTrainingSessionBean.getHrz3Distance());
 	    Assert.assertEquals(hrz4Distance,fitnessTrainingSessionBean.getHrz4Distance());
 	    Assert.assertEquals(hrz5Distance,fitnessTrainingSessionBean.getHrz5Distance());
-	    Assert.assertEquals(hrz6Distance,fitnessTrainingSessionBean.getHrz6Distance()); 
+	    Assert.assertEquals(hrz6Distance,fitnessTrainingSessionBean.getHrz6Distance());
+	    Assert.assertEquals(percentageInclination, fitnessTrainingSessionBean.getPercentageInclination());
+	    Assert.assertEquals(percentageDeclination, fitnessTrainingSessionBean.getPercentageDeclination());
+	    Assert.assertEquals(vdot, fitnessTrainingSessionBean.getVdot());
 	    
 	    double[] getTimeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
 	    Assert.assertEquals(hrz1Time,getTimeDistributionOfHRZ[0]);

@@ -24,6 +24,9 @@ public class FitnessTrainingSessionBean {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
+	private Double percentageInclination;
+	private Double percentageDeclination;
+	private Double vdot;
 	
 	public String getUserid() {
 		return userid;
@@ -159,6 +162,30 @@ public class FitnessTrainingSessionBean {
 	
 	public void setSurfaceIndex(Integer surfaceIndex) {
 		this.surfaceIndex = surfaceIndex;
+	}
+	
+	public Double getPercentageInclination() {
+		return percentageInclination;
+	}
+	
+	public void setPercentageInclination(Double percentageInclination) {
+		this.percentageInclination = percentageInclination;
+	}
+	
+	public Double getPercentageDeclination() {
+		return percentageDeclination;
+	}
+	
+	public void setPercentageDeclination(Double percentageDeclination) {
+		this.percentageDeclination = percentageDeclination;
+	}
+	
+	public Double getVdot() {
+		return vdot;
+	}
+	
+	public void setVdot(Double vdot) {
+		this.vdot = vdot;
 	}
 	
 	public double[] getTimeDistributionOfHRZ(){

@@ -1,6 +1,7 @@
 package com.genie.smartbeat.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -16,10 +17,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
-import com.genie.smartbeat.core.FitnessManager;
-import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
-import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 
 /**
  * @author dhasarathy
@@ -29,7 +27,6 @@ public class FitnessTrainingSessionDAOTest {
 	
 	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
-	private static FitnessManagerMySQLImpl fitnessTrainingSessionManager = new FitnessManagerMySQLImpl();
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -159,6 +156,43 @@ public class FitnessTrainingSessionDAOTest {
 			newTrainingSession.setSurfaceIndex(Integer.valueOf(row[16]));
 		
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
+		}
+	}
+	
+	@Test
+	public void testGetVdotHistory(){
+		double[] vdotHistory = null;
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = null; 
+		fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100).toString());
+		fitnessTrainingSessionBean.setVdot(23.0);
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);				
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		assertNull(vdotHistory);
+		
+		for(int i=1; i<=3; i++){
+			fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100+i).toString());
+			fitnessTrainingSessionBean.setVdot(23.0);
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		}
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		Assert.assertEquals(4, vdotHistory.length);
+		
+		for(int i=4; i<=6; i++){
+			fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setTrainingSessionId(new Integer(100+i).toString());
+			fitnessTrainingSessionBean.setVdot(23.0);
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		}
+		vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, 4);
+		Assert.assertEquals(4, vdotHistory.length);
+		
+		for(int i=0; i<=6; i++){			
+			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById((new Integer(100+i).toString()));
 		}
 	}
 	
