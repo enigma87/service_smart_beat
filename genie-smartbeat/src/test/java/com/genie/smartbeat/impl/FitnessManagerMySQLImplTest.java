@@ -459,4 +459,59 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		
 	}
+
+	@Test
+	public void testGetSpeedHeartrateFactor() {
+		long now = new Date().getTime();
+		long nowBeforeTwoDays = now - (2*24*3600000);
+		long nowBeforeOneDay = now - (24*3600000);
+		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
+		
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid("user1");
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(8.0);
+		fitnessTrainingSessionBean.setHrz3Time(11.0);
+		fitnessTrainingSessionBean.setHrz4Time(3.0);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz6Time(14.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
+		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
+		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
+		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
+		fitnessTrainingSessionBean.setVdot(23.0);
+		fitnessTrainingSessionBean.setTrainingSessionId("1001");
+		
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 24 * 2 * 3600000 - 3600000));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 24 * 2* 3600000));
+		fitnessTrainingSessionBean.setVdot(23.5);
+		fitnessTrainingSessionBean.setTrainingSessionId("1002");
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 24 * 3 * 3600000 - 3600000 ));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 24 * 3 *3600000));
+		fitnessTrainingSessionBean.setVdot(22.0);
+		fitnessTrainingSessionBean.setTrainingSessionId("1003");
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 24 * 4 * 3600000 - 3600000 ));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 24 * 4 *3600000));
+		fitnessTrainingSessionBean.setVdot(22.5);
+		fitnessTrainingSessionBean.setTrainingSessionId("1004");
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+
+		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		
+		double speedHeartrateFactor = fitnessManager.getSpeedHeartrateFactor("user1");
+		Assert.assertTrue(speedHeartrateFactor > 0.0);
+		
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("user1");
+	}
 }
