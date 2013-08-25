@@ -369,4 +369,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
+
+	public void unregisterTrainee(String userid) {
+		// TODO Auto-generated method stub
+		
+	}
 }

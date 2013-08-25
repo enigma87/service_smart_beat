@@ -1,9 +1,9 @@
 package com.genie.smartbeat.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +14,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessShapeIndexBean;
-import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 /**
@@ -289,5 +284,22 @@ public class FitnessHeartrateTestDAOTest {
 		
 		Assert.assertEquals(3, heartrateTestBeans.size());
 			
+	}
+	
+	@Test
+	public void testDeleteAllHeartrateTestsForUser(){
+		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");	
+		
+		Assert.assertEquals(0, heartrateTestBeans.size());
+		
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);			
+		heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");				
+		Assert.assertEquals(3, heartrateTestBeans.size());
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");				
+		Assert.assertEquals(0, heartrateTestBeans.size());
 	}
 } 
