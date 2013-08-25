@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 
 /**
  * @author dhasarathy
@@ -223,6 +222,16 @@ public class FitnessHeartrateTestDAO {
 		}
 		
 		return todaysHeartRateTestCount;
+	}
+	
+	private static final String DELETE_ALL_TESTS = 	"DELETE FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+													" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?";				
+	public void deleteAllHeartrateTestsForUser(String userid){
+		try{
+			new JdbcTemplate(dataSource).update(DELETE_ALL_TESTS, userid);
+		}catch(DataAccessException e){
+			
+		}
 	}
 	
 }
