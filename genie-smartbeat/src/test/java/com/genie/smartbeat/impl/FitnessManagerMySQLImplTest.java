@@ -42,6 +42,7 @@ public class FitnessManagerMySQLImplTest {
 
 	ApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
+	private long now = new Date().getTime();
 	
 	@Before
 	public void setUpBeforeClass() throws Exception 
@@ -529,7 +530,7 @@ public void testFitnessDetrainingPenalty() {
 		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		long now = new Date().getTime();
+		
 		long nowPastOneHour = now - 3600000;
 		long nowPastTwoHour = now - 7200000;
 		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
@@ -560,4 +561,28 @@ public void testFitnessDetrainingPenalty() {
 		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}
+
+@Test
+public void testDeleteFitnessTrainingSessionbyTrainingSessionId() {
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		
+		fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId("test9999");
+		
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setTrainingSessionId("test9999");
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 2 * 3600 * 1000 ));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 1 * 3600 * 1000));
+		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
+		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertNotNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById("test9999"));
+		
+		
+		fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId("test9999");
+		
+		Assert.assertNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById("test9999"));
+	}
+	
 }

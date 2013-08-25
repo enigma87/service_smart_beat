@@ -21,7 +21,6 @@ public interface FitnessManager{
 	public String getRecentTrainingSessionId(String userid);
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId);
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
-	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
 	
 	/*heart rate test*/
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);
@@ -41,4 +40,6 @@ public interface FitnessManager{
 	public double getSpeedHeartrateFactor(String userid);
 	
 	public double getFitnessDetrainingPenalty(String userid);
+	
+	public void deleteFitnessTrainingSessionbyTrainingSessionId(String trainingSessionId);
 }
