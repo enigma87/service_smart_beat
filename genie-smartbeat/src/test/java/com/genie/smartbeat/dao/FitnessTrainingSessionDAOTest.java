@@ -198,6 +198,6 @@ public class FitnessTrainingSessionDAOTest {
 	
 	@AfterClass
 	public static void freeTestData () {
-		fitnessTrainingSessionDAO.deleteTestData();
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e");
 	}
 }
