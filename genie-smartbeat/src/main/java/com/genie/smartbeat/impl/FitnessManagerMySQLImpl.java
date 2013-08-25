@@ -372,6 +372,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public void unregisterTrainee(String userid) {
 		// TODO Auto-generated method stub
-		
+		 
 	}
 }
