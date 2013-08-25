@@ -214,7 +214,7 @@ public class TrainingSessionRegression {
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		fitnessSpeedHeartRateDAO1.deleteSpeedHeartRateModelByUserid(userid);
-		fitnessShapeIndexDAO1.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO1.deleteShapeIndexHistoryForUser(userid);
 		fitnessHomeostasisIndexDAO1.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId1);
@@ -407,7 +407,7 @@ public class TrainingSessionRegression {
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		fitnessSpeedHeartRateDAO1.deleteSpeedHeartRateModelByUserid(userid);
-		fitnessShapeIndexDAO1.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO1.deleteShapeIndexHistoryForUser(userid);
 		fitnessHomeostasisIndexDAO1.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId1);
@@ -594,7 +594,7 @@ public class TrainingSessionRegression {
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		fitnessSpeedHeartRateDAO1.deleteSpeedHeartRateModelByUserid(userid);
-		fitnessShapeIndexDAO1.deleteShapeIndexModel(userid);
+		fitnessShapeIndexDAO1.deleteShapeIndexHistoryForUser(userid);
 		fitnessHomeostasisIndexDAO1.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId1);
