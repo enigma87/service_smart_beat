@@ -299,12 +299,73 @@ public class FitnessManagerMySQLImplTest {
 	
 	@Test 
 	public void testgetShapeIndexHistoryInTimeInterval() {
+		Date today = new Date();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		long now = cal.getTime().getTime();
+		long nowPastOneHour = now - 3600000;
+		long nowPastTwoHour = now - 7200000;
+		Timestamp nowTimeStamp = new Timestamp(now);
+		Timestamp nowPastOneHourTimeStamp = new Timestamp(nowPastOneHour);
+		Timestamp nowPastTwoHourTimeStamp = new Timestamp(nowPastTwoHour);
+		long nowPastOneDay 	= now - (24*3600000);
+		long nowPastTwoDays 	= now - (2*24*3600000);
+		long nowPastThreeDays 	= now - (3*24*3600000);
+		long nowPastFourDays 	= now - (4*24*3600000);
+		
+		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
+		List<FitnessShapeIndexBean> shapeIndexBeans = null;
+		
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		Timestamp endInterval = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.DATE, -3);
+		Timestamp startInterval = new Timestamp(cal.getTimeInMillis());
+				
+		FitnessShapeIndexBean  fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20135");
+		fitnessShapeIndexBean1.setShapeIndex(150.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(nowPastOneHourTimeStamp);
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20134");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(nowPastOneDay));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20133");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(nowPastTwoDays));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20132");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(nowPastThreeDays));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+
 		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
-		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e", Timestamp.valueOf("2013-07-03 18:23:11"), Timestamp.valueOf("2013-08-05 23:59:59"));
+		shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userid, startInterval, endInterval);
+		Assert.assertEquals(3, shapeIndexBeans.size());
+		
 		for (Iterator<FitnessShapeIndexBean> i = shapeIndexBeans.iterator(); i.hasNext();) {
 			FitnessShapeIndexBean shapeIndexBean = i.next();
 			System.out.println(shapeIndexBean.getShapeIndex().toString() + " -> "+ shapeIndexBean.getTimeOfRecord());
 		}
+		fitnessShapeIndexDAO.deleteShapeIndexModel(userid);
 	}
 
 	@Test
