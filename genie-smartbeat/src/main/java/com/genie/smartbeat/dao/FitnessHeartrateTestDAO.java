@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 
 /**
  * @author dhasarathy
@@ -101,6 +102,18 @@ public class FitnessHeartrateTestDAO {
 	private static final String QUERY_ALL_TESTS = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
 			" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?";			
 
+	public List<FitnessHeartrateTestBean> getAllHeartrateTestsByUser(String userid){
+		List<FitnessHeartrateTestBean> heartrateTestBeans = new ArrayList<FitnessHeartrateTestBean>();		
+		try{
+			heartrateTestBeans =  new JdbcTemplate(this.getDataSource()).query(QUERY_ALL_TESTS,
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid);			
+		}catch(DataAccessException e){
+			
+		}
+		return heartrateTestBeans;
+	}
+	
+	
 	private static final String COUNT_QUERY_ALL_TESTS = "SELECT COUNT(*) FROM ( " +
 					QUERY_ALL_TESTS +
 					" ) AS TEMP";
@@ -211,4 +224,5 @@ public class FitnessHeartrateTestDAO {
 		
 		return todaysHeartRateTestCount;
 	}
+	
 }
