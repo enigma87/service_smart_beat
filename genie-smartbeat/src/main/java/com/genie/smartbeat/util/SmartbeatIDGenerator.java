@@ -3,6 +3,8 @@ package com.genie.smartbeat.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.joda.time.DateTimeUtils;
+
 /**
  * @author dhasarathy
  **/
@@ -32,7 +34,7 @@ public class SmartbeatIDGenerator {
 		String nextId = null;
 		String[] parts = previousId.split(DELIMITER);
 		SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-		Date currentDate = new Date();
+		Date currentDate = new Date(DateTimeUtils.currentTimeMillis());
 		String currentYear = formatYear.format(currentDate);
 		Integer nextCount;
 		if(currentYear.equals(parts[INDEX_YEAR])){

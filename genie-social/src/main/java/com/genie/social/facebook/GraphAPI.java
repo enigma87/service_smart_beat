@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -167,6 +168,58 @@ public class GraphAPI {
 		
 		return user;
 	}
+	
+	public static String getTestUserAccessToken(String FacebookId) {
+		
+		String getFacebookTestUsersUrl = null;
+		String accessToken = null;
+		 
+		try{
+			getFacebookTestUsersUrl = URL_APP_GENIE_TEST_USERS + "?"
+					+ KEY_ACCESS_TOKEN + "=" + URLEncoder.encode(getAppGenieAccessToken(), ENCODING_ISO_8859_1);		
+			
+		}catch(UnsupportedEncodingException e){
+			return null;
+		}
+		
+		WebRequestor facebookAppWebRequestor = new DefaultWebRequestor();
+		String stringResponse;
+		JSONArray facebookTestUsers;
+		JSONObject facebookTestUser;
+		
+		try {
+			stringResponse = facebookAppWebRequestor.executeGet(getFacebookTestUsersUrl).getBody();
+		
+		} catch (IOException e1) {
+			return null;
+		}
+		
+		try {
+			JSONObject stringResponseJson  = new JSONObject(stringResponse);
+			facebookTestUsers = stringResponseJson.getJSONArray("data");
+			
+			
+		} catch (JSONException e1) {
+			return null;
+		}
+		
+		for (int i=0; i<facebookTestUsers.length(); i++){
+			try {
+				facebookTestUser = facebookTestUsers.getJSONObject(i);
+				if(FacebookId.equals(facebookTestUser.getString("id"))){
+					  accessToken = facebookTestUser.getString("access_token");
+					  break;
+					}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return accessToken;
+		
+	}
+	
 
 	public static void deleteTestUser(UserBean testUser) throws IOException {
 		

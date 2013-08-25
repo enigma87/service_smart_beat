@@ -113,6 +113,11 @@
 			<artifactId>genie-social</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+		    <groupId>joda-time</groupId>
+		    <artifactId>joda-time</artifactId>
+		    <version>2.3</version>
+	    </dependency>
   </dependencies>
   <repositories>
 	  <repository>
