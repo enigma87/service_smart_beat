@@ -585,4 +585,25 @@ public void testDeleteFitnessTrainingSessionbyTrainingSessionId() {
 		Assert.assertNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById("test9999"));
 	}
 	
+@Test
+public void testGetTrainingSessionById() {
+	FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+	FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+	FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+	
+	Assert.assertNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById(""));
+	
+	fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId("test9999");
+	Assert.assertNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById("test9999"));
+	
+	fitnessTrainingSessionBean.setUserid(userid);
+	fitnessTrainingSessionBean.setTrainingSessionId("test9999");
+	fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 2 * 3600 * 1000 ));
+	fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 1 * 3600 * 1000));
+	fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
+	
+	fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+	Assert.assertNotNull(fitnessTrainingSessionDAO.getFitnessTrainingSessionById("test9999"));
+	fitnessManager.deleteFitnessTrainingSessionbyTrainingSessionId("test9999");
+}
 }
