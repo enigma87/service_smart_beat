@@ -35,4 +35,6 @@ public interface FitnessManager{
 	
 	/*clear user*/
 	public void unregisterTrainee(String userid);
+	
+	public void updateHeartrateZoneModel(String userid);
 }
