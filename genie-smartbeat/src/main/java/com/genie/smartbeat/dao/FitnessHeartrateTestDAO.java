@@ -172,7 +172,7 @@ public class FitnessHeartrateTestDAO {
 										 " LIMIT " + n;				
 		List<FitnessHeartrateTestBean> nRecentHeartRateTests = new ArrayList<FitnessHeartrateTestBean>();
 		try{
-			nRecentHeartRateTests = new JdbcTemplate(dataSource).query(QUERY_N_RECENT_BY_TYPE, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class), userid, heartrateType);			
+			nRecentHeartRateTests = new JdbcTemplate(dataSource).query(QUERY_N_RECENT_BY_TYPE, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class), userid, heartrateType);
 		}catch(DataAccessException e){
 			
 		}

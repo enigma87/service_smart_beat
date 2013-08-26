@@ -243,8 +243,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 						fitnessHomeostasisIndexBean.getRecentEndTime(),
 						fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		
-				/*Check condition for supercompensation*/ 
-		
+				/*Check condition for supercompensation*/
 				if(0 == regressedHomeostasisIndex){			
 					supercompensationPoints = ShapeIndexAlgorithm.calculateSupercompensationPoints(fitnessHomeostasisIndexBean.getTraineeClassification(), 
 							fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());			
