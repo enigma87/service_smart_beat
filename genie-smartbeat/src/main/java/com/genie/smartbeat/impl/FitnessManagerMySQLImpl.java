@@ -215,9 +215,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		symbols.setDecimalSeparator('.');
 		DecimalFormat shapeIndexFormat = new DecimalFormat("###.##",symbols);
 		
-		if(null != recentTrainingSessionId){
-		FitnessShapeIndexBean fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
-		newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
+		FitnessShapeIndexBean fitnessShapeIndexBean = null;
+		
+		if(null != recentTrainingSessionId && !recentTrainingSessionId.isEmpty()){
+			fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
+		}
+		
+		if (null != fitnessShapeIndexBean) {
+			newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
 				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())
 				+ getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid())
 				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid());
@@ -251,6 +256,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public double getFitnessDetrainingPenalty(String userid){
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
 		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
 				fitnessHomeostasisIndexBean.getRecentEndTime(), 
 				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
@@ -299,7 +305,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) {
 		
 		String userid = fitnessHeartrateTestBean.getUserid();
-	    FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, fitnessHeartrateTestBean.getHeartrateType());
+	    FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(userid);
 		if(null != previousHeartrateTestBean){
 			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
 			Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
@@ -368,5 +374,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
+	}
+
+	public void unregisterTrainee(String userid) {
+		// TODO Auto-generated method stub
+		 
 	}
 }

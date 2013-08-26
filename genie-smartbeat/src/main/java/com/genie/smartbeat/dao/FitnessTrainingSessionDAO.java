@@ -54,7 +54,6 @@ public class FitnessTrainingSessionDAO {
 		return 0;
 	}
 	
-
 	private static final String QUERY_ALL_USING_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
 	public FitnessTrainingSessionBean getFitnessTrainingSessionById(String trainingSessionId){
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = null;
@@ -137,11 +136,15 @@ public class FitnessTrainingSessionDAO {
 		return vdotHistory;
 	}
 	
-	private static final String DELETE_TRAINING_SESSION_TEST_DATA = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + " like 'TEST%'";
+	private static final String DELETE_TRAINING_SESSIONS_FOR_USER = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "=?";
 	
-	public void deleteTestData() {
-		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-		jdbcTemplate.update(DELETE_TRAINING_SESSION_TEST_DATA);
+	public void deleteAllTrainingSessionsForUser(String userid) {
+		
+		try{
+			new JdbcTemplate(dataSource).update(DELETE_TRAINING_SESSIONS_FOR_USER, userid);
+		}catch(DataAccessException e){
+			
+		}
 	}
 }
 
