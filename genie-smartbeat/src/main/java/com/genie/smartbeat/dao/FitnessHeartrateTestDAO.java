@@ -3,10 +3,10 @@ package com.genie.smartbeat.dao;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.joda.time.DateTimeUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -200,9 +200,8 @@ public class FitnessHeartrateTestDAO {
 
 	public Integer getTodaysHeartRateTestCountForUser(String userid){
 		Integer todaysHeartRateTestCount = 0;
-		Date today = new Date();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(today);
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);

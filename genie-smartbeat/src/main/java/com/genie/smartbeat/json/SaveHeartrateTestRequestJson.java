@@ -5,12 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 
 /**
  * @author dhasarathy
  **/
-
+@XmlRootElement(name = "SaveHeartrateTestRequestJson")
 public class SaveHeartrateTestRequestJson {
 
 	private Integer heartrateType;

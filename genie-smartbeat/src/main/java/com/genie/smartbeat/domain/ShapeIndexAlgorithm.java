@@ -6,9 +6,9 @@ package com.genie.smartbeat.domain;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Date;
 
 import org.apache.commons.math.stat.regression.SimpleRegression;
+import org.joda.time.DateTimeUtils;
 
 /**
  * @author dhasarathy
@@ -103,9 +103,8 @@ public class ShapeIndexAlgorithm
 	public static double getRegressedHomeostasisIndex(Integer traineeClassification, Timestamp previousTrainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double regressedHomeostasisIndex = 0.0;
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, previousTrainingSessionEndTime, recentMinimumOfHomeostasisIndex);
-		Timestamp currentTime = new Timestamp(new Date().getTime());
-		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
-			double hoursElapsed = ((new Timestamp(new Date().getTime())).getTime() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
+		if(DateTimeUtils.currentTimeMillis() < timeAtFullRecovery.getTime()){
+			double hoursElapsed = (DateTimeUtils.currentTimeMillis() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
 			double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_C = recentMinimumOfHomeostasisIndex;
@@ -163,7 +162,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	}
 	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){		
 		double timeToRecover = 0.0;
-		Timestamp currentTime = new Timestamp(new Date().getTime());
+		Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(currentTime.getTime() < timeAtFullRecovery.getTime()){
 			timeToRecover = calculateTimeDifferenceInHours(currentTime, timeAtFullRecovery);
@@ -173,7 +172,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	
 	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
 		double timeAfterRecovery = 0.0;
-		Timestamp currentTime = new Timestamp(new Date().getTime());
+		Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
 			timeAfterRecovery = calculateTimeDifferenceInHours(timeAtFullRecovery, currentTime);
