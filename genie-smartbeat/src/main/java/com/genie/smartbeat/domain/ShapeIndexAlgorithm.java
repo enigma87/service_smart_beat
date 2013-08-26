@@ -6,12 +6,9 @@ package com.genie.smartbeat.domain;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Date;
 
 import org.apache.commons.math.stat.regression.SimpleRegression;
 import org.joda.time.DateTimeUtils;
-
-import com.restfb.util.DateUtils;
 
 /**
  * @author dhasarathy

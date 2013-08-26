@@ -3,7 +3,6 @@ package com.genie.smartbeat.dao;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
