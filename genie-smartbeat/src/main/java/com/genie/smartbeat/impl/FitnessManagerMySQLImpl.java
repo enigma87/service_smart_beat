@@ -143,7 +143,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void updateShapeIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, String previousTrainingSessionId){
 		double shapeIndex;
 		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
-		if(null != previousTrainingSessionId){
+		if(null != previousTrainingSessionId && !previousTrainingSessionId.isEmpty()){
 			/*update shape index*/
 			shapeIndex = getShapeIndex(previousTrainingSessionId);
 		}else{
@@ -256,9 +256,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		
-		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
+		if (null != fitnessHomeostasisIndexBean) {
+			detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
 				fitnessHomeostasisIndexBean.getRecentEndTime(), 
 				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		}
 		return detrainingPenalty;
 	}
 	

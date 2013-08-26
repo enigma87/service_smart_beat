@@ -309,7 +309,6 @@ public class FitnessManagerMySQLImplTest {
 	@Test 
 	public void testgetShapeIndexHistoryInTimeInterval() {
 		Date today = new Date();
-		
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
 		cal.set(Calendar.HOUR_OF_DAY, 12);
@@ -632,7 +631,6 @@ public class FitnessManagerMySQLImplTest {
 
 	@Test
 	public void testGetShapeIndex() {
-		long nowBeforeTwoDays = now - (2*24*3600000);
 		long nowBeforeOneDay = now - (24*3600000);
 		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
 		
@@ -767,4 +765,69 @@ public class FitnessManagerMySQLImplTest {
 	}
 */
 
+	@Test
+	public void testUpdateShapeIndexModel() {
+		long nowBeforeOneDay = now - (24*3600000);
+		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
+		
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(8.0);
+		fitnessTrainingSessionBean.setHrz3Time(11.0);
+		fitnessTrainingSessionBean.setHrz4Time(3.0);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz6Time(14.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
+		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
+		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
+		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
+		fitnessTrainingSessionBean.setTrainingSessionId("test12345");
+		
+		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, null);
+		Assert.assertEquals(100.0, fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12345").getShapeIndex());
+		
+		fitnessTrainingSessionBean.setTrainingSessionId("test12346");
+		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, "");
+		Assert.assertEquals(100.0, fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12346").getShapeIndex());
+		
+		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		
+		long nowPastOneHour = now - 3600000;
+		long nowPastTwoHour = now - 7200000;
+		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
+		Integer traineeClassification = 2;
+		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
+		Double recentMinimumOfHomeostasisIndex = 110.0;
+		Double recentTotalLoadOfExercise = 100.0;
+		Double previousTotalLoadOfExercise = 125.0;
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid(userid);
+		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
+		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
+		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
+		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
+		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+
+		fitnessTrainingSessionBean.setTrainingSessionId("test12347");
+		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, "test12346");
+		Assert.assertTrue(100.0 > fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12347").getShapeIndex());
+	
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+
+	}
 }
