@@ -120,7 +120,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			/*generate training session id from previous session id*/
 			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
 		}
-		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		
 		/*update shape index model*/
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
@@ -177,7 +176,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		}
 		/*set current session's data*/
-		fitnessHomeostasisIndexBean.setTraineeClassification(ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(fitnessSpeedHeartRateBean.getCurrentVdot()));
+		fitnessHomeostasisIndexBean.setTraineeClassification(ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(fitnessTrainingSessionBean.getVdot()));
 		Double recentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
 		recentMinimumOfHomeostasisIndex = regressedHomeostasisIndex - recentTotalLoadOfExercise;
 		if (recentMinimumOfHomeostasisIndex < localRegressionMinimumOfHomeostasisIndex || regressedHomeostasisIndex == 0.0){
