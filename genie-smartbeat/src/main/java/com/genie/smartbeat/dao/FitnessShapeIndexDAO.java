@@ -58,7 +58,7 @@ public class FitnessShapeIndexDAO {
 	
 	private static final String QUERY_RECENT_SHAPE_INDEX_MODEL = "SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX 
 	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + " = " + QUERY_SELECT_RECENT_TIME_OF_RECORD
-	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =? "+ ")";
+	+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + " =? "+ ") limit 1";
 	public FitnessShapeIndexBean getRecentShapeIndexModel(String userid){
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		try{

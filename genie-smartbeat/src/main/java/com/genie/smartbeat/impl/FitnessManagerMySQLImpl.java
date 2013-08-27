@@ -121,6 +121,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
 		}
 		
+		// set the generated id to bean 
+		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
+		
 		/*update shape index model*/
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
