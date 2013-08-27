@@ -163,7 +163,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		Double recentMinimumOfHomeostasisIndex = 0.0;
 		Double localRegressionMinimumOfHomeostasisIndex = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = fitnessSpeedHeartRateDAO.getSpeedHeartRateModelByUserid(userid);
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
 			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
