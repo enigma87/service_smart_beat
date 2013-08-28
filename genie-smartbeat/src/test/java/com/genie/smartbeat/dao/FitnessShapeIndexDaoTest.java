@@ -212,10 +212,66 @@ public class FitnessShapeIndexDaoTest {
 	}
 
 	@Test 
-	public void testDeleteShapeIndexModel() {
-		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
-		Assert.assertNotNull(fitnessShapeIndexDAO.getRecentShapeIndexModel(fitnessShapeIndexBean.getUserid()));
-		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(fitnessShapeIndexBean.getUserid());
-		Assert.assertNull(fitnessShapeIndexDAO.getRecentShapeIndexModel(fitnessShapeIndexBean.getUserid()));
+	public void testDeleteShapeIndexHistoryForUser() {
+		List<FitnessShapeIndexBean> shapeIndexBeans = null;
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY,23);
+		cal.set(Calendar.MINUTE,59);
+		cal.set(Calendar.SECOND,59);
+		Timestamp endInterval = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.DATE, -5);
+		Timestamp startInterval = new Timestamp(cal.getTimeInMillis());
+		shapeIndexBeans = fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startInterval,endInterval);
+		Assert.assertEquals(0, shapeIndexBeans.size());
+		cal.add(Calendar.DATE, 5);
+		
+		cal.add(Calendar.HOUR, -1);
+		FitnessShapeIndexBean  fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20135");
+		fitnessShapeIndexBean1.setShapeIndex(150.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		cal.add(Calendar.DATE, -1);
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20134");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		cal.add(Calendar.DATE, -1);
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20133");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		cal.add(Calendar.DATE, -1);
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20132");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+		
+		cal.add(Calendar.DATE, -1);
+		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean1.setUserid(userid);
+		fitnessShapeIndexBean1.setSessionOfRecord("20131");
+		fitnessShapeIndexBean1.setShapeIndex(130.0);
+		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+
+		cal.add(Calendar.DATE, -1);
+		startInterval = new Timestamp(cal.getTimeInMillis());
+		shapeIndexBeans = fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startInterval, endInterval);		
+		Assert.assertEquals(5, shapeIndexBeans.size());
+		
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
+		shapeIndexBeans = fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startInterval, endInterval);
+		Assert.assertEquals(0, shapeIndexBeans.size());
 	}
 }

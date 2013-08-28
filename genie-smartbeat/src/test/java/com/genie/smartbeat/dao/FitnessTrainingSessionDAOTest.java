@@ -196,6 +196,31 @@ public class FitnessTrainingSessionDAOTest {
 		}
 	}
 	
+	@Test
+	public void testGetTrainingSessionCountByUser(){
+		String userid = "TEST073a9e7d-9cf2-49a0-8926-f27362fd547e";
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		Integer numberOfTrainingSessions = fitnessTrainingSessionDAO.getTrainingSessionCountByUser(userid);
+		Assert.assertEquals(0, numberOfTrainingSessions.intValue());
+		setupTestData();
+		numberOfTrainingSessions = fitnessTrainingSessionDAO.getTrainingSessionCountByUser(userid);
+		Assert.assertEquals(9, numberOfTrainingSessions.intValue());
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+	}
+	
+	@Test
+	public void testDeleteAllTrainingSessionsForUser(){
+		String userid = "TEST073a9e7d-9cf2-49a0-8926-f27362fd547e";
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		Integer numberOfTrainingSessions = fitnessTrainingSessionDAO.getTrainingSessionCountByUser(userid);
+		Assert.assertEquals(0, numberOfTrainingSessions.intValue());
+		setupTestData();
+		numberOfTrainingSessions = fitnessTrainingSessionDAO.getTrainingSessionCountByUser(userid);
+		Assert.assertEquals(9, numberOfTrainingSessions.intValue());
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		numberOfTrainingSessions = fitnessTrainingSessionDAO.getTrainingSessionCountByUser(userid);
+		Assert.assertEquals(0, numberOfTrainingSessions.intValue());
+	}
 	@AfterClass
 	public static void freeTestData () {
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e");

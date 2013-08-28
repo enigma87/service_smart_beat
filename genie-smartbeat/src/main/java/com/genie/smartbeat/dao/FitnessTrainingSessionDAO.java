@@ -136,6 +136,19 @@ public class FitnessTrainingSessionDAO {
 		return vdotHistory;
 	}
 	
+	private static final String COUNT_QUERY_ALL_TESTS = "SELECT COUNT(*) FROM ( " +
+															QUERY_ALL_BY_USERID +
+														" ) AS TEMP";
+	public Integer getTrainingSessionCountByUser(String userid){
+		Integer numberOfTrainingSessions = 0;
+		try{
+			numberOfTrainingSessions = new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_ALL_TESTS,userid);
+		}catch(DataAccessException e){
+			
+		}
+		return numberOfTrainingSessions;
+	}
+	
 	private static final String DELETE_TRAINING_SESSIONS_FOR_USER = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "=?";
 	
 	public void deleteAllTrainingSessionsForUser(String userid) {
