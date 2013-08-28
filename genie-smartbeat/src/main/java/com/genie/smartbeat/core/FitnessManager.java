@@ -33,5 +33,5 @@ public interface FitnessManager{
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime);
 
 	/*clear user*/
-	public void unregisterTrainee(String userid);
+	public void clearTraineeData(String userid);
 }

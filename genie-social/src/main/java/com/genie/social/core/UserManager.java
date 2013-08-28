@@ -18,4 +18,5 @@ public interface UserManager {
 	public UserBean getUserInformation(String userid);
 	public UserBean getUserInformationByEmail(String email);
 	public void saveUserInformation(UserBean user);
+	public void deleteUserById(String userid);
 }

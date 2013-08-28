@@ -66,5 +66,9 @@ public class UserManagerMySQLImpl implements UserManager{
 		
 		return null;
 	}
+
+	public void deleteUserById(String userid) {
+		userDao.deleteUser(userid);		
+	}
 		
 }

@@ -86,7 +86,7 @@ public class UserManagerMySQLImplTest {
 		Assert.assertNotNull(user1.getLastUpdatedTs());
 		Assert.assertNotNull(user1.getLastLoginTs());
 		Assert.assertEquals(new Boolean(true), user1.getActive());
-		userDao.deleteUser(user1.getUserid());
+		usMgr.deleteUserById(user1.getUserid());
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class UserManagerMySQLImplTest {
 		usMgr.registerUser(user);
 		UserBean user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertNotNull(user1);
-		userDao.deleteUser(user1.getUserid());
+		usMgr.deleteUserById(user1.getUserid());
 	}
 	
 	@Test
@@ -110,7 +110,7 @@ public class UserManagerMySQLImplTest {
 		usMgr.registerUser(user);
 		UserBean user1 = usMgr.getUserInformationByEmail(user.getEmail());
 		Assert.assertNotNull(user1);
-		userDao.deleteUser(user1.getUserid());
+		usMgr.deleteUserById(user1.getUserid());
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class UserManagerMySQLImplTest {
 		
 		UserBean user1 = usMgr.getUserInformation(user.getUserid());
 		Assert.assertEquals("John",user1.getMiddleName());		
-		userDao.deleteUser(user1.getUserid());
+		usMgr.deleteUserById(user1.getUserid());
 		user.setMiddleName("Bob");
 	}
 	
@@ -183,5 +183,19 @@ public class UserManagerMySQLImplTest {
 		
 		GraphAPI.deleteTestUser(userFb);
 		
-	}		
+	}
+	
+	@Test
+	public void testDeleteUserById(){
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		usMgr.registerUser(user);
+		
+		UserBean userBean = usMgr.getUserInformation(user.getUserid());
+		Assert.assertNotNull(userBean);
+		usMgr.deleteUserById(user.getUserid());
+		userBean = usMgr.getUserInformation(user.getUserid());
+		Assert.assertNull(userBean);
+	}
 }

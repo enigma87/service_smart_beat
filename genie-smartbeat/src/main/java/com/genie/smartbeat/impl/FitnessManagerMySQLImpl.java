@@ -13,7 +13,6 @@ import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
-import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
@@ -378,8 +377,12 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
 
-	public void unregisterTrainee(String userid) {
-		// TODO Auto-generated method stub
-		 
+	public void clearTraineeData(String userid) {
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
+		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		userManager.deleteUserById(userid);
 	}
 }
