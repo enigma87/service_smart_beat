@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.util.SmartbeatIDGenerator;
 
 /**
  * @author dhasarathy
@@ -89,12 +90,32 @@ public class FitnessHeartrateTestDAO {
 	" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME;
 	public FitnessHeartrateTestBean getRecentHeartrateTestForUser(String userid){
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
+		FitnessHeartrateTestBean fitnessHeartrateTestBeanFromList = null;
+		List<FitnessHeartrateTestBean> heartrateTestBeans = new ArrayList<FitnessHeartrateTestBean>();
 		try{
-			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST, 
-					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid);
+			heartrateTestBeans =  new JdbcTemplate(dataSource).query(QUERY_RECENT_TEST, 
+					ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,userid);
 		}catch(DataAccessException e){
 			
 		}
+	
+	for(int i=0; i<heartrateTestBeans.size(); i++){
+		if(0 == i){
+			fitnessHeartrateTestBean = heartrateTestBeans.get(i);
+		}
+		fitnessHeartrateTestBeanFromList = heartrateTestBeans.get(i);
+		if(SmartbeatIDGenerator.getYearFromId(fitnessHeartrateTestBeanFromList.getHeartrateTestId()) >= SmartbeatIDGenerator.getYearFromId(fitnessHeartrateTestBean.getHeartrateTestId())){
+			if(SmartbeatIDGenerator.getYearFromId(fitnessHeartrateTestBeanFromList.getHeartrateTestId()) == SmartbeatIDGenerator.getYearFromId(fitnessHeartrateTestBean.getHeartrateTestId())){
+				if(SmartbeatIDGenerator.getCountFromId(fitnessHeartrateTestBeanFromList.getHeartrateTestId()) > SmartbeatIDGenerator.getCountFromId(fitnessHeartrateTestBean.getHeartrateTestId())){
+				fitnessHeartrateTestBean = fitnessHeartrateTestBeanFromList;
+				}
+			}else{
+			fitnessHeartrateTestBean = fitnessHeartrateTestBeanFromList;
+			}
+		}
+		
+	}
+		
 		return fitnessHeartrateTestBean;
 	}
 	

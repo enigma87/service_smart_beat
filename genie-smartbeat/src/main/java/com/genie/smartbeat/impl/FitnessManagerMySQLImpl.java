@@ -313,7 +313,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			Integer latestDayOfRecord = previousHeartrateTestBean.getDayOfRecord() + differenceInDays.intValue();
 			fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
 			if(fitnessHeartrateTestBean.getHeartrateType() != ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
-				fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(previousHeartrateTestBean.getHeartrateTestId());
+				FitnessHeartrateTestBean recentfitnessHeartrateTestBeanByType = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(fitnessHeartrateTestBean.getUserid(), fitnessHeartrateTestBean.getHeartrateType());
+				if (null != recentfitnessHeartrateTestBeanByType){
+					fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(recentfitnessHeartrateTestBeanByType.getHeartrateTestId());
+				}
 				/*update heartrate zone model*/
 				updateHeartrateZoneModel(fitnessHeartrateTestBean.getUserid());
 			}
@@ -322,6 +325,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessHeartrateTestBean.setDayOfRecord(1);
 		}
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
+	
 	}
 	
 	public void updateHeartrateZoneModel(String userid){
