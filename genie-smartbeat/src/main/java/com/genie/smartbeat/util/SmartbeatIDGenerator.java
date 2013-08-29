@@ -54,6 +54,11 @@ public class SmartbeatIDGenerator {
 		return new Integer(parts[INDEX_TEST_COUNT]).intValue();
 	}
 	
+	public static int getYearFromId(String id){
+		String[] parts = id.split(DELIMITER);
+		return new Integer(parts[INDEX_YEAR]).intValue();
+	}
+	
 	public static String getId(String userid, String marker, Integer majorIndex, Integer minorIndex){
 		String Id = userid+"_"+marker+"_"+majorIndex+"_"+minorIndex;
 		return Id;
