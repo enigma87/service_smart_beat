@@ -146,32 +146,28 @@ public class FitnessHeartrateTestDAO {
 		}
 		return numberofHeartRateTests;
 	}
+		
 	
-	private static final String QUERY_SELECT_RECENT_TIME_BY_TYPE = "(" + 
-																		"select max(" + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + ")" + 
-																		" FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-																		" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + " =?" + 
-																		" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + " =?" +														
-																	 ")";
-	private static final String QUERY_RECENT_TEST_BY_TYPE = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-															" WHERE "+ COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID]+ " = ?" + 
-															" AND "  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD]+ " = "+ QUERY_SELECT_RECENT_TIME_BY_TYPE;
-
+	private static final String QUERY_ALL_TESTS_BY_TYPE = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+															" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?" +
+															" AND "	  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + "=?";
+	
+	private static final String QUERY_1_RECENT_BY_TYPE =  QUERY_ALL_TESTS_BY_TYPE +
+														 " ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " DESC" +
+														 " LIMIT " + "1";				
 	public FitnessHeartrateTestBean getRecentHeartrateTestForUserByType(String userid, Integer heartrateType){
 		
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;		
 		try{
-			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TEST_BY_TYPE, 
-			ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid, userid,heartrateType);
+			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_1_RECENT_BY_TYPE, 
+			ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,heartrateType);
 		}catch(DataAccessException e){
 		
 		}		
 		return fitnessHeartrateTestBean;
 	}
  	
-	private static final String QUERY_ALL_TESTS_BY_TYPE = 	"SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
-															" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?" +
-															" AND "	  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + "=?";
+	
 	
 	private static final String COUNT_QUERY_ALL_TESTS_BY_TYPE = "SELECT COUNT(*) FROM ( " +
 																QUERY_ALL_TESTS_BY_TYPE +
