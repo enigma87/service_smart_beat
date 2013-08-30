@@ -101,20 +101,19 @@ public class TraineeChitraRegression extends JerseyTest{
 		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
 		cal.set(Calendar.HOUR_OF_DAY, 9);
 		cal.set(Calendar.MINUTE, 0);
-		Long timeOfRecordHRT = cal.getTime().getTime();
 		Client clientRestingHeartrateTest =  getClient();
 		WebResource saveRestingHeartrateTest =  clientRestingHeartrateTest.resource(saveHeartRateTestUrl);
 		JSONObject restingHeartRateTestReqJson = new JSONObject();
 		restingHeartRateTestReqJson.put("heartrateType", "0");
 		restingHeartRateTestReqJson.put("heartrate", "54.0");
-		restingHeartRateTestReqJson.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		restingHeartRateTestReqJson.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject heartRateZonesFromHRT = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson);
 		//JSONObject heartRateZonesFromHRT1 = heartRateZonesFromHRT.getJSONObject("heartrateZones");
 		
 		JSONObject orthoHeartRateTestReqJson = new JSONObject();
 		orthoHeartRateTestReqJson.put("heartrateType", "3");
 		orthoHeartRateTestReqJson.put("heartrate", "78.0");
-		orthoHeartRateTestReqJson.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		orthoHeartRateTestReqJson.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		Client clientOrthoHeartrateTest =  getClient();
 		WebResource saveOrthoHeartRateTest =  clientOrthoHeartrateTest.resource(saveHeartRateTestUrl);
     	JSONObject saveOrthoHRTResJson = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson);
@@ -178,7 +177,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject getShapeIndexResJson0 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson0);
 		
-		/*Get Shape Index after supercompensation*/
+		/*Get Shape Index after supercompensation on day 1*/
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 15);
@@ -186,14 +185,14 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject getShapeIndexResJson11 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson11);
 		
-		/*Get Shape Index jsut before the next training session*/
+		/*Get Shape Index just before the next training session*/
 		cal.set(Calendar.HOUR_OF_DAY, 19);
 		cal.set(Calendar.MINUTE, 0);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		JSONObject getShapeIndexResJson12 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson12);
 		
-		/*Save Training Session Data Day 1*/
+		/*Save Training Session Data on Day 1*/
 		sessionStartTime = cal.getTime().getTime();
 		cal.add(Calendar.MINUTE, 110);
 		sessionEndTime = cal.getTime().getTime();
@@ -229,13 +228,13 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject restingHeartRateTestReqJson1 = new JSONObject();
 		restingHeartRateTestReqJson1.put("heartrateType", "0");
 		restingHeartRateTestReqJson1.put("heartrate", "55.0");
-		restingHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		restingHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject heartRateZonesFromHRT1 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson1);
 		
 		JSONObject orthoHeartRateTestReqJson1 = new JSONObject();
 		orthoHeartRateTestReqJson1.put("heartrateType", "3");
 		orthoHeartRateTestReqJson1.put("heartrate", "76.0");
-		orthoHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		orthoHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject saveOrthoHRTResJson1 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson1);
 	
 		/*Get Shape Index on day 2*/
@@ -250,34 +249,35 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject restingHeartRateTestReqJson2 = new JSONObject();
 		restingHeartRateTestReqJson2.put("heartrateType", "0");
 		restingHeartRateTestReqJson2.put("heartrate", "58.0");
-		restingHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		restingHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject heartRateZonesFromHRT2 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson2);
 		
 		JSONObject orthoHeartRateTestReqJson2 = new JSONObject();
 		orthoHeartRateTestReqJson2.put("heartrateType", "3");
 		orthoHeartRateTestReqJson2.put("heartrate", "75.0");
-		orthoHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		orthoHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject saveOrthoHRTResJson2 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson2);
 		
-		/*Get Shape Index on day 3*/
+		/*Get Shape Index on day 4*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 13);
+		cal.set(Calendar.MINUTE, 00);
 		JSONObject getShapeIndexResJson3 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson3);
 		
 		/*Save Resting and Orthostatic Heart Rate test day 4*/
-		cal.add(Calendar.DATE, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 13);
 		cal.set(Calendar.MINUTE, 50);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		JSONObject restingHeartRateTestReqJson3 = new JSONObject();
 		restingHeartRateTestReqJson3.put("heartrateType", "0");
 		restingHeartRateTestReqJson3.put("heartrate", "55.0");
-		restingHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		restingHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject heartRateZonesFromHRT3 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson3);
 		
 		JSONObject orthoHeartRateTestReqJson3 = new JSONObject();
 		orthoHeartRateTestReqJson3.put("heartrateType", "3");
 		orthoHeartRateTestReqJson3.put("heartrate", "77.0");
-		orthoHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(timeOfRecordHRT));
+		orthoHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		JSONObject saveOrthoHRTResJson3 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson3);
 		
 		
@@ -307,7 +307,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject objSaveFitnessTrainingSessionReponse4 = saveFitnessTrainingSessionResJson.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSession1Reponse.getString("userid"));
 		//Assert.assertEquals(100.0, objSaveFitnessTrainingSession1Reponse.getDouble("shapeIndex"));
-		System.out.println(saveFitnessTrainingSession1ResJson);
+		System.out.println(saveFitnessTrainingSessionResJson4);
 		
 	}
 	
