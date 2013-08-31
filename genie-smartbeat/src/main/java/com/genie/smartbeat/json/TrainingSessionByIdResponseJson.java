@@ -175,6 +175,7 @@ public class TrainingSessionByIdResponseJson {
 		this.setHrz4Distance(trainingSessionBean.getHrz4Distance());
 		this.setHrz4Distance(trainingSessionBean.getHrz5Distance());
 		this.setHrz5Distance(trainingSessionBean.getHrz6Distance());
+		this.setHrz6Distance(trainingSessionBean.getHrz6Distance());
 		this.setStartTime(trainingSessionBean.getStartTime());
 		this.setEndTime(trainingSessionBean.getEndTime());
 		this.setUserid(trainingSessionBean.getUserid());
