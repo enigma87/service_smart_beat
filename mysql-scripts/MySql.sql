@@ -47,12 +47,10 @@ CREATE TABLE genie.`fitness_training_session` (
   `hrz_5_distance` DOUBLE DEFAULT NULL,
   `hrz_6_distance` DOUBLE DEFAULT NULL,
   `surface_index` INTEGER DEFAULT NULL,
-  `percentage_inclination` DOUBLE DEFAULT NULL,
-  `percentage_declination` DOUBLE DEFAULT NULL,
   `vdot` DOUBLE DEFAULT NULL,
-  `health_index` INTEGER DEFAULT NULL,
-  `muscle_index` INTEGER DEFAULT NULL,
-  `session_index` INTEGER DEFAULT NULL,
+  `health_perception_index` INTEGER DEFAULT NULL,
+  `muscle_state_perception_index` INTEGER DEFAULT NULL,
+  `session_stress_perception_index` INTEGER DEFAULT NULL,
   PRIMARY KEY(`training_session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 

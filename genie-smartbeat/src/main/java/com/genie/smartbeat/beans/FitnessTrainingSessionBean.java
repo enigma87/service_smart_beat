@@ -24,12 +24,10 @@ public class FitnessTrainingSessionBean {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
-	private Double percentageInclination;
-	private Double percentageDeclination;
 	private Double vdot;
-	private Integer healthIndex;
-	private Integer muscleIndex;
-	private Integer sessionIndex;
+	private Integer healthPerceptionIndex;
+	private Integer muscleStatePerceptionIndex;
+	private Integer sessionStressPerceptionIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -166,23 +164,7 @@ public class FitnessTrainingSessionBean {
 	public void setSurfaceIndex(Integer surfaceIndex) {
 		this.surfaceIndex = surfaceIndex;
 	}
-	
-	public Double getPercentageInclination() {
-		return percentageInclination;
-	}
-	
-	public void setPercentageInclination(Double percentageInclination) {
-		this.percentageInclination = percentageInclination;
-	}
-	
-	public Double getPercentageDeclination() {
-		return percentageDeclination;
-	}
-	
-	public void setPercentageDeclination(Double percentageDeclination) {
-		this.percentageDeclination = percentageDeclination;
-	}
-	
+
 	public Double getVdot() {
 		return vdot;
 	}
@@ -253,27 +235,28 @@ public class FitnessTrainingSessionBean {
 		return false;
 	}
 
-	public Integer getHealthIndex() {
-		return healthIndex;
+	public Integer getHealthPerceptionIndex() {
+		return healthPerceptionIndex;
 	}
 
-	public void setHealthIndex(Integer healthIndex) {
-		this.healthIndex = healthIndex;
+	public void setHealthPerceptionIndex(Integer healthPerceptionIndex) {
+		this.healthPerceptionIndex = healthPerceptionIndex;
 	}
 
-	public Integer getMuscleIndex() {
-		return muscleIndex;
+	public Integer getMuscleStatePerceptionIndex() {
+		return muscleStatePerceptionIndex;
 	}
 
-	public void setMuscleIndex(Integer muscleIndex) {
-		this.muscleIndex = muscleIndex;
+	public void setMuscleStatePerceptionIndex(Integer muscleStatePerceptionIndex) {
+		this.muscleStatePerceptionIndex = muscleStatePerceptionIndex;
 	}
 
-	public Integer getSessionIndex() {
-		return sessionIndex;
+	public Integer getSessionStressPerceptionIndex() {
+		return sessionStressPerceptionIndex;
 	}
 
-	public void setSessionIndex(Integer sessionIndex) {
-		this.sessionIndex = sessionIndex;
+	public void setSessionStressPerceptionIndex(
+			Integer sessionStressPerceptionIndex) {
+		this.sessionStressPerceptionIndex = sessionStressPerceptionIndex;
 	}
 }

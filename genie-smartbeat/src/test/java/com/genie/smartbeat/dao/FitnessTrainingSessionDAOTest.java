@@ -33,9 +33,9 @@ public class FitnessTrainingSessionDAOTest {
 	private static final long nowPastTwoHour = now - 7200000;
 	private static final String trainingSessionId = "20131";
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
-	private static final int muscleIndex = 2;
-	private static final int sessionIndex = 2;
-	private static final int healthIndex = 2;
+	private static final int muscleStatePerceptionIndex = 2;
+	private static final int sessionStressPerceptionIndex = 2;
+	private static final int healthPerceptionIndex = 2;
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
@@ -47,9 +47,9 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastTwoHour));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));
 		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
-		fitnessTrainingSessionBean.setSessionIndex(sessionIndex);
-		fitnessTrainingSessionBean.setMuscleIndex(muscleIndex);
-		fitnessTrainingSessionBean.setHealthIndex(healthIndex);
+		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(muscleStatePerceptionIndex);
+		fitnessTrainingSessionBean.setHealthPerceptionIndex(healthPerceptionIndex);;
+		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(sessionStressPerceptionIndex);
 	}
 
 	@Test
@@ -160,9 +160,9 @@ public class FitnessTrainingSessionDAOTest {
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[14]));
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[15]));
 			newTrainingSession.setSurfaceIndex(Integer.valueOf(row[16]));
-			newTrainingSession.setMuscleIndex(Integer.valueOf(row[17]));
-			newTrainingSession.setMuscleIndex(Integer.valueOf(row[18]));
-			newTrainingSession.setMuscleIndex(Integer.valueOf(row[19]));
+			newTrainingSession.setMuscleStatePerceptionIndex(Integer.valueOf(row[17]));
+			newTrainingSession.setHealthPerceptionIndex(Integer.valueOf(row[18]));
+			newTrainingSession.setSessionStressPerceptionIndex(Integer.valueOf(row[19]));
 		
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
 		}

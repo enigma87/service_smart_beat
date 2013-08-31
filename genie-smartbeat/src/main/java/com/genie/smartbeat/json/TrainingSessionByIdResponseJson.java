@@ -181,9 +181,9 @@ public class TrainingSessionByIdResponseJson {
 		this.setUserid(trainingSessionBean.getUserid());
 		this.setTrainingSessionId(trainingSessionBean.getTrainingSessionId());
 		this.setSurfaceIndex(trainingSessionBean.getSurfaceIndex());
-		this.setMuscleIndex(trainingSessionBean.getMuscleIndex());
-		this.setSessionIndex(trainingSessionBean.getSessionIndex());
-		this.setHealthIndex(trainingSessionBean.getHealthIndex());
+		this.setMuscleIndex(trainingSessionBean.getMuscleStatePerceptionIndex());
+		this.setSessionIndex(trainingSessionBean.getSessionStressPerceptionIndex());
+		this.setHealthIndex(trainingSessionBean.getHealthPerceptionIndex());
 	}
 
 	public Integer getMuscleIndex() {
