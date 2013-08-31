@@ -29,6 +29,9 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
+	private Integer muscleIndex;
+	private Integer sessionIndex;
+	private Integer healthIndex;
 	private Double percentageInclination;
 	private Double percentageDeclination;
 
@@ -207,9 +210,36 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
+		fitnessTrainingSessionBean.setMuslceIndex(getMuscleIndex());
+		fitnessTrainingSessionBean.setSessionIndex(getSessionIndex());
+		fitnessTrainingSessionBean.setHealthIndex(getHealthIndex());
 		fitnessTrainingSessionBean.setPercentageInclination(getPercentageInclination());
 		fitnessTrainingSessionBean.setPercentageDeclination(getPercentageDeclination());
 		
 		return fitnessTrainingSessionBean;
+	}
+
+	public Integer getMuscleIndex() {
+		return muscleIndex;
+	}
+
+	public void setMuscleIndex(Integer muscleIndex) {
+		this.muscleIndex = muscleIndex;
+	}
+
+	public Integer getSessionIndex() {
+		return sessionIndex;
+	}
+
+	public void setSessionIndex(Integer sessionIndex) {
+		this.sessionIndex = sessionIndex;
+	}
+
+	public Integer getHealthIndex() {
+		return healthIndex;
+	}
+
+	public void setHealthIndex(Integer healthIndex) {
+		this.healthIndex = healthIndex;
 	}
 }
