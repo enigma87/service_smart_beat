@@ -27,6 +27,9 @@ public class FitnessTrainingSessionBean {
 	private Double percentageInclination;
 	private Double percentageDeclination;
 	private Double vdot;
+	private Integer healthIndex;
+	private Integer muslceIndex;
+	private Integer sessionIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -248,5 +251,29 @@ public class FitnessTrainingSessionBean {
 			return true;
 		}
 		return false;
+	}
+
+	public Integer getHealthIndex() {
+		return healthIndex;
+	}
+
+	public void setHealthIndex(Integer healthIndex) {
+		this.healthIndex = healthIndex;
+	}
+
+	public Integer getMuslceIndex() {
+		return muslceIndex;
+	}
+
+	public void setMuslceIndex(Integer muslceIndex) {
+		this.muslceIndex = muslceIndex;
+	}
+
+	public Integer getSessionIndex() {
+		return sessionIndex;
+	}
+
+	public void setSessionIndex(Integer sessionIndex) {
+		this.sessionIndex = sessionIndex;
 	}
 }

@@ -40,6 +40,9 @@ public class FitnessTrainingSessionBeanTest {
 	    Double percentageInclination = 25.0;
 	    Double percentageDeclination = 25.0;
 	    Double vdot = 23.0;
+	    Integer sessionIndex = 3;
+	    Integer muscleIndex = 3;
+	    Integer healthIndex = 3;
 	    
 	    FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	    fitnessTrainingSessionBean.setUserid(userid);
@@ -62,6 +65,9 @@ public class FitnessTrainingSessionBeanTest {
 	    fitnessTrainingSessionBean.setPercentageInclination(percentageInclination);
 	    fitnessTrainingSessionBean.setPercentageDeclination(percentageDeclination);
 	    fitnessTrainingSessionBean.setVdot(vdot);
+	    fitnessTrainingSessionBean.setHealthIndex(healthIndex);
+	    fitnessTrainingSessionBean.setMuslceIndex(muscleIndex);
+	    fitnessTrainingSessionBean.setSessionIndex(sessionIndex);
 	    
 	    Assert.assertEquals(userid,fitnessTrainingSessionBean.getUserid());
 	    Assert.assertEquals(trainingSessionId,fitnessTrainingSessionBean.getTrainingSessionId());
@@ -83,6 +89,9 @@ public class FitnessTrainingSessionBeanTest {
 	    Assert.assertEquals(percentageInclination, fitnessTrainingSessionBean.getPercentageInclination());
 	    Assert.assertEquals(percentageDeclination, fitnessTrainingSessionBean.getPercentageDeclination());
 	    Assert.assertEquals(vdot, fitnessTrainingSessionBean.getVdot());
+	    Assert.assertEquals(sessionIndex, fitnessTrainingSessionBean.getSessionIndex());
+	    Assert.assertEquals(muscleIndex, fitnessTrainingSessionBean.getMuslceIndex());
+	    Assert.assertEquals(healthIndex, fitnessTrainingSessionBean.getHealthIndex());
 	    
 	    double[] getTimeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
 	    Assert.assertEquals(hrz1Time,getTimeDistributionOfHRZ[0]);
@@ -99,6 +108,8 @@ public class FitnessTrainingSessionBeanTest {
 	    Assert.assertEquals(hrz4Speed,getSpeedDistributionOfHRZ[4]);
 	    Assert.assertEquals(hrz5Speed,getSpeedDistributionOfHRZ[5]);
 	    Assert.assertEquals(hrz6Speed,getSpeedDistributionOfHRZ[6]);
+	    
+	    Assert.assertTrue(fitnessTrainingSessionBean.isValidForTableInsert());
 	    
 	}
 
