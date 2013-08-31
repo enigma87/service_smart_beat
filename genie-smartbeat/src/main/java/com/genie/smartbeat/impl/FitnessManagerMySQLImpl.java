@@ -222,10 +222,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		
 		if (null != fitnessShapeIndexBean) {
-			newShapeIndex = fitnessShapeIndexBean.getShapeIndex()
-				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())
-				+ getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid())
-				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid());
+			newShapeIndex = (fitnessShapeIndexBean.getShapeIndex()
+				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())				
+				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid()))
+				* getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid());
 		}else{
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
 		}
@@ -265,7 +265,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public double getSpeedHeartrateFactor(String userid){
-		double speedHeartrateFactor = 0.0;
+		double speedHeartrateFactor = 1.0;
 		double[] vdotHistory = fitnessTrainingSessionDAO.getVdotHistory(userid, ShapeIndexAlgorithm.VDOT_HISTORY_LIMIT);		
 		if(null != vdotHistory){			
 			speedHeartrateFactor = ShapeIndexAlgorithm.calculateSpeedHeartrateFactor(vdotHistory);
