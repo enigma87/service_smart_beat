@@ -51,7 +51,7 @@ CREATE TABLE genie.`fitness_training_session` (
   `percentage_declination` DOUBLE DEFAULT NULL,
   `vdot` DOUBLE DEFAULT NULL,
   `health_index` INTEGER DEFAULT NULL,
-  `muslce_index` INTEGER DEFAULT NULL,
+  `muscle_index` INTEGER DEFAULT NULL,
   `session_index` INTEGER DEFAULT NULL,
   PRIMARY KEY(`training_session_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
