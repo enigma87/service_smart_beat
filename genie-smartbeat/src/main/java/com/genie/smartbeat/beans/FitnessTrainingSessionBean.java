@@ -28,7 +28,7 @@ public class FitnessTrainingSessionBean {
 	private Double percentageDeclination;
 	private Double vdot;
 	private Integer healthIndex;
-	private Integer muslceIndex;
+	private Integer muscleIndex;
 	private Integer sessionIndex;
 	
 	public String getUserid() {
@@ -261,12 +261,12 @@ public class FitnessTrainingSessionBean {
 		this.healthIndex = healthIndex;
 	}
 
-	public Integer getMuslceIndex() {
-		return muslceIndex;
+	public Integer getMuscleIndex() {
+		return muscleIndex;
 	}
 
-	public void setMuslceIndex(Integer muslceIndex) {
-		this.muslceIndex = muslceIndex;
+	public void setMuscleIndex(Integer muscleIndex) {
+		this.muscleIndex = muscleIndex;
 	}
 
 	public Integer getSessionIndex() {

@@ -210,7 +210,7 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
-		fitnessTrainingSessionBean.setMuslceIndex(getMuscleIndex());
+		fitnessTrainingSessionBean.setMuscleIndex(getMuscleIndex());
 		fitnessTrainingSessionBean.setSessionIndex(getSessionIndex());
 		fitnessTrainingSessionBean.setHealthIndex(getHealthIndex());
 		fitnessTrainingSessionBean.setPercentageInclination(getPercentageInclination());

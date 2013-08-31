@@ -48,7 +48,7 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));
 		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
 		fitnessTrainingSessionBean.setSessionIndex(sessionIndex);
-		fitnessTrainingSessionBean.setMuslceIndex(muscleIndex);
+		fitnessTrainingSessionBean.setMuscleIndex(muscleIndex);
 		fitnessTrainingSessionBean.setHealthIndex(healthIndex);
 	}
 
@@ -160,9 +160,9 @@ public class FitnessTrainingSessionDAOTest {
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[14]));
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[15]));
 			newTrainingSession.setSurfaceIndex(Integer.valueOf(row[16]));
-			newTrainingSession.setMuslceIndex(Integer.valueOf(row[17]));
-			newTrainingSession.setMuslceIndex(Integer.valueOf(row[18]));
-			newTrainingSession.setMuslceIndex(Integer.valueOf(row[19]));
+			newTrainingSession.setMuscleIndex(Integer.valueOf(row[17]));
+			newTrainingSession.setMuscleIndex(Integer.valueOf(row[18]));
+			newTrainingSession.setMuscleIndex(Integer.valueOf(row[19]));
 		
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
 		}

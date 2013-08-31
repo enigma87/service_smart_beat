@@ -66,7 +66,7 @@ public class FitnessTrainingSessionBeanTest {
 	    fitnessTrainingSessionBean.setPercentageDeclination(percentageDeclination);
 	    fitnessTrainingSessionBean.setVdot(vdot);
 	    fitnessTrainingSessionBean.setHealthIndex(healthIndex);
-	    fitnessTrainingSessionBean.setMuslceIndex(muscleIndex);
+	    fitnessTrainingSessionBean.setMuscleIndex(muscleIndex);
 	    fitnessTrainingSessionBean.setSessionIndex(sessionIndex);
 	    
 	    Assert.assertEquals(userid,fitnessTrainingSessionBean.getUserid());
@@ -90,7 +90,7 @@ public class FitnessTrainingSessionBeanTest {
 	    Assert.assertEquals(percentageDeclination, fitnessTrainingSessionBean.getPercentageDeclination());
 	    Assert.assertEquals(vdot, fitnessTrainingSessionBean.getVdot());
 	    Assert.assertEquals(sessionIndex, fitnessTrainingSessionBean.getSessionIndex());
-	    Assert.assertEquals(muscleIndex, fitnessTrainingSessionBean.getMuslceIndex());
+	    Assert.assertEquals(muscleIndex, fitnessTrainingSessionBean.getMuscleIndex());
 	    Assert.assertEquals(healthIndex, fitnessTrainingSessionBean.getHealthIndex());
 	    
 	    double[] getTimeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
