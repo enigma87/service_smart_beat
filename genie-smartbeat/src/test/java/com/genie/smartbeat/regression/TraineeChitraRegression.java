@@ -157,6 +157,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj.put("hrz4Distance","2200.0");
 		trainingSessionDataJsonObj.put("hrz5Distance","0.0");
 		trainingSessionDataJsonObj.put("hrz6Distance","0.0");
+		trainingSessionDataJsonObj.put("surfaceIndex","0");
 		Client clientSaveFitnessTrainingSession =  getClient();
 		WebResource saveFitnessTrainingSession = clientSaveFitnessTrainingSession.resource(saveFitnessTrainingSessionUrl);
 		JSONObject saveFitnessTrainingSessionResJson = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);
@@ -212,6 +213,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj1.put("hrz4Distance","2133.33");
 		trainingSessionDataJsonObj1.put("hrz5Distance","2166.67");
 		trainingSessionDataJsonObj1.put("hrz6Distance","1410.0");
+		trainingSessionDataJsonObj1.put("surfaceIndex","2");
 		JSONObject saveFitnessTrainingSession1ResJson = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj1);
 		Assert.assertEquals("200", saveFitnessTrainingSession1ResJson.getString("status"));
 		Assert.assertEquals("OK", saveFitnessTrainingSession1ResJson.getString("message"));
@@ -260,7 +262,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		
 		/*Get Shape Index on day 4*/
 		cal.add(Calendar.DATE, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 13);
+		cal.set(Calendar.HOUR_OF_DAY, 15);
 		cal.set(Calendar.MINUTE, 00);
 		JSONObject getShapeIndexResJson3 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson3);
@@ -297,10 +299,11 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj4.put("hrz6Time","0.0");
 		trainingSessionDataJsonObj4.put("hrz1Distance","1000.0");
 		trainingSessionDataJsonObj4.put("hrz2Distance","4106.67");
-		trainingSessionDataJsonObj4.put("hrz3Distance","4363.33");
+		trainingSessionDataJsonObj4.put("hrz3Distance","793.33");
 		trainingSessionDataJsonObj4.put("hrz4Distance","1300.0");
 		trainingSessionDataJsonObj4.put("hrz5Distance","0.0");
 		trainingSessionDataJsonObj4.put("hrz6Distance","0.0");
+		trainingSessionDataJsonObj4.put("surfaceIndex","0");
 		JSONObject saveFitnessTrainingSessionResJson4 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj4);
 		Assert.assertEquals("200", saveFitnessTrainingSession1ResJson.getString("status"));
 		Assert.assertEquals("OK", saveFitnessTrainingSession1ResJson.getString("message"));
