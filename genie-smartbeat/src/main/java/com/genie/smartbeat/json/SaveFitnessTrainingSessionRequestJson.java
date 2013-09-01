@@ -29,9 +29,9 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
-	private Double percentageInclination;
-	private Double percentageDeclination;
-
+	private Integer healthPerceptionIndex;
+	private Integer muscleStatePerceptionIndex;
+	private Integer sessionStressPerceptionIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -161,22 +161,6 @@ public class SaveFitnessTrainingSessionRequestJson {
 		this.surfaceIndex = surfaceIndex;
 	}
 	
-	public Double getPercentageInclination() {
-		return percentageInclination;
-	}
-	
-	public void setPercentageInclination(Double percentageInclination) {
-		this.percentageInclination = percentageInclination;
-	}
-	
-	public Double getPercentageDeclination() {
-		return percentageDeclination;
-	}
-	
-	public void setPercentageDeclination(Double percentageDeclination) {
-		this.percentageDeclination = percentageDeclination;
-	}
-	
 	public FitnessTrainingSessionBean getAsTrainingSessionBean(){
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
@@ -207,9 +191,35 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
 		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
-		fitnessTrainingSessionBean.setPercentageInclination(getPercentageInclination());
-		fitnessTrainingSessionBean.setPercentageDeclination(getPercentageDeclination());
-		
+		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(getMuscleStatePerceptionIndex());
+		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(getSessionStressPerceptionIndex());;
+		fitnessTrainingSessionBean.setHealthPerceptionIndex(getHealthPerceptionIndex());;
+
 		return fitnessTrainingSessionBean;
+	}
+
+	public Integer getHealthPerceptionIndex() {
+		return healthPerceptionIndex;
+	}
+
+	public void setHealthPerceptionIndex(Integer healthPerceptionIndex) {
+		this.healthPerceptionIndex = healthPerceptionIndex;
+	}
+
+	public Integer getMuscleStatePerceptionIndex() {
+		return muscleStatePerceptionIndex;
+	}
+
+	public void setMuscleStatePerceptionIndex(Integer muscleStatePerceptionIndex) {
+		this.muscleStatePerceptionIndex = muscleStatePerceptionIndex;
+	}
+
+	public Integer getSessionStressPerceptionIndex() {
+		return sessionStressPerceptionIndex;
+	}
+
+	public void setSessionStressPerceptionIndex(
+			Integer sessionStressPerceptionIndex) {
+		this.sessionStressPerceptionIndex = sessionStressPerceptionIndex;
 	}
 }

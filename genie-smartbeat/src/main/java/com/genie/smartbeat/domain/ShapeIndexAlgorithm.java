@@ -276,17 +276,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		}
 		return speedHeartrateFactor;
 	}
-	
-	public static final int SOHR_STABILIZATION_LIMIT 		= 4;
-	public static final int SOHR_DAY_OF_RECORD_SERIES_LIMIT = 30;
-	public static double calculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate(double[][] dayOfRecordSOHRSeries){
-		double slopeOfTimeRegressionOfSHR = 0.0;		
-		SimpleRegression regressionModel = new SimpleRegression();
-		regressionModel.addData(dayOfRecordSOHRSeries);
-		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();		
-		return slopeOfTimeRegressionOfSHR;
-	}
-
+		
 	public static final double[][] VDOT_RANGE_FOR_TRAINEE_CLASSIFICATION = {{35.0,45.0},{45.0,52.0},{52.0,58.0}};
 	public static int getTraineeClassificationUsingVdot(Double Vdot){
 		Integer traineeClassification = TRAINEE_CLASSIFICATION_UNTRAINED;
@@ -300,5 +290,20 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 			traineeClassification = TRAINEE_CLASSIFICATION_ELITE;
 		}
 		return traineeClassification;
+	}
+	
+	public static final int SOHR_STABILIZATION_LIMIT 		= 4;
+	public static final int SOHR_DAY_OF_RECORD_SERIES_LIMIT = 30;	
+	public static double calculateOrthostaticHeartrateFactor(double[][] dayOfRecordSOHRSeries){
+		double slopeOfTimeRegressionOfSHR = 0.0;		
+		SimpleRegression regressionModel = new SimpleRegression();
+		regressionModel.addData(dayOfRecordSOHRSeries);
+		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
+		
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat heartrateZoneFormat = new DecimalFormat("###.####",symbols);
+		
+		return Double.valueOf(heartrateZoneFormat.format(slopeOfTimeRegressionOfSHR));
 	}
 }

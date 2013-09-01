@@ -22,6 +22,9 @@ public class TrainingSessionByIdResponseJson {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
+	private Integer muscleIndex;
+	private Integer sessionIndex;
+	private Integer healthIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -172,10 +175,38 @@ public class TrainingSessionByIdResponseJson {
 		this.setHrz4Distance(trainingSessionBean.getHrz4Distance());
 		this.setHrz4Distance(trainingSessionBean.getHrz5Distance());
 		this.setHrz5Distance(trainingSessionBean.getHrz6Distance());
+		this.setHrz6Distance(trainingSessionBean.getHrz6Distance());
 		this.setStartTime(trainingSessionBean.getStartTime());
 		this.setEndTime(trainingSessionBean.getEndTime());
 		this.setUserid(trainingSessionBean.getUserid());
 		this.setTrainingSessionId(trainingSessionBean.getTrainingSessionId());
 		this.setSurfaceIndex(trainingSessionBean.getSurfaceIndex());
+		this.setMuscleIndex(trainingSessionBean.getMuscleStatePerceptionIndex());
+		this.setSessionIndex(trainingSessionBean.getSessionStressPerceptionIndex());
+		this.setHealthIndex(trainingSessionBean.getHealthPerceptionIndex());
+	}
+
+	public Integer getMuscleIndex() {
+		return muscleIndex;
+	}
+
+	public void setMuscleIndex(Integer muscleIndex) {
+		this.muscleIndex = muscleIndex;
+	}
+
+	public Integer getSessionIndex() {
+		return sessionIndex;
+	}
+
+	public void setSessionIndex(Integer sessionIndex) {
+		this.sessionIndex = sessionIndex;
+	}
+
+	public Integer getHealthIndex() {
+		return healthIndex;
+	}
+
+	public void setHealthIndex(Integer healthIndex) {
+		this.healthIndex = healthIndex;
 	}
 }

@@ -33,6 +33,9 @@ public class FitnessTrainingSessionDAOTest {
 	private static final long nowPastTwoHour = now - 7200000;
 	private static final String trainingSessionId = "20131";
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
+	private static final int muscleStatePerceptionIndex = 2;
+	private static final int sessionStressPerceptionIndex = 2;
+	private static final int healthPerceptionIndex = 2;
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
@@ -44,6 +47,9 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowPastTwoHour));
 		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowPastOneHour));
 		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND);
+		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(muscleStatePerceptionIndex);
+		fitnessTrainingSessionBean.setHealthPerceptionIndex(healthPerceptionIndex);;
+		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(sessionStressPerceptionIndex);
 	}
 
 	@Test
@@ -123,15 +129,15 @@ public class FitnessTrainingSessionDAOTest {
 	public static void setupTestData() {
 
 		// throw in some dummy values to test
-		String [][] dummyValues = {{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","1","2013-07-03 18:23:10","2013-07-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","2","2013-07-04 18:23:10","2013-07-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","3","2013-07-05 18:23:10","2013-07-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","4","2013-08-03 18:23:10","2013-08-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","5","2013-08-04 18:23:10","2013-08-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","6","2013-08-05 18:23:10","2013-08-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","7","2013-08-06 18:23:10","2013-08-06 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","8","2013-08-07 18:23:10","2013-08-07 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
-			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","9","2013-08-08 18:23:10","2013-08-08 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"}};
+		String [][] dummyValues = {{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","1","2013-07-03 18:23:10","2013-07-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","2","2013-07-04 18:23:10","2013-07-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","3","2013-07-05 18:23:10","2013-07-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","4","2013-08-03 18:23:10","2013-08-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","5","2013-08-04 18:23:10","2013-08-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","6","2013-08-05 18:23:10","2013-08-05 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","7","2013-08-06 18:23:10","2013-08-06 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","8","2013-08-07 18:23:10","2013-08-07 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"},
+			{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","9","2013-08-08 18:23:10","2013-08-08 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1","2","2","2"}};
 
 		for (int i=0; i < dummyValues.length; i++) {
 			FitnessTrainingSessionBean newTrainingSession = new FitnessTrainingSessionBean();
@@ -154,6 +160,9 @@ public class FitnessTrainingSessionDAOTest {
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[14]));
 			newTrainingSession.setHrz1Distance(Double.valueOf(row[15]));
 			newTrainingSession.setSurfaceIndex(Integer.valueOf(row[16]));
+			newTrainingSession.setMuscleStatePerceptionIndex(Integer.valueOf(row[17]));
+			newTrainingSession.setHealthPerceptionIndex(Integer.valueOf(row[18]));
+			newTrainingSession.setSessionStressPerceptionIndex(Integer.valueOf(row[19]));
 		
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
 		}

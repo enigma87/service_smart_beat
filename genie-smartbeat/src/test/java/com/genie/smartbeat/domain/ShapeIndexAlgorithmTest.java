@@ -339,7 +339,13 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate() {
-		fail("Not yet implemented");
+		double[][] dayOfRecordSOHRSeries = {{4,87}, {5,89}, {6,84}, {7,75}, {8,93}, {9,85}, {10,91},
+											{11,101}, {12,76}, {13,83}, {14,82}, {15,77}, {16,75}, {17,87},
+											{18,73}, {19,72}, {20,81}, {21,78}, {22,72}, {23,73}, {24,71},
+											{25,66}, {26,82}, {27,74}, {28,74}, {29,81}, {30,80}, {31,71},
+											{32,77}, {13,66}, {34,68}};
+		double slope = ShapeIndexAlgorithm.calculateOrthostaticHeartrateFactor(dayOfRecordSOHRSeries);
+		System.out.println(slope);
 	}
 
 	@Test
@@ -366,7 +372,6 @@ public class ShapeIndexAlgorithmTest {
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
 		
 		
-	}
-
+	}	
 }
 

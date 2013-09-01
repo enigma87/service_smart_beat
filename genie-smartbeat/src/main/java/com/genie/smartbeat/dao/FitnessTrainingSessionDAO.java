@@ -22,7 +22,7 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 public class FitnessTrainingSessionDAO {
 	
 	private static final String TABLE_FITNESS_TRAINING_SESSION = "fitness_training_session";
-	private static final String[] COLUMNS_FITNESS_TRAINING_SESSION = {"userid", "training_session_id", "start_time", "end_time", "hrz_1_time", "hrz_2_time", "hrz_3_time", "hrz_4_time", "hrz_5_time", "hrz_6_time", "hrz_1_distance","hrz_2_distance","hrz_3_distance","hrz_4_distance","hrz_5_distance","hrz_6_distance","surface_index", "percentage_inclination", "percentage_declination", "vdot"};
+	private static final String[] COLUMNS_FITNESS_TRAINING_SESSION = {"userid", "training_session_id", "start_time", "end_time", "hrz_1_time", "hrz_2_time", "hrz_3_time", "hrz_4_time", "hrz_5_time", "hrz_6_time", "hrz_1_distance","hrz_2_distance","hrz_3_distance","hrz_4_distance","hrz_5_distance","hrz_6_distance","surface_index", "percentage_inclination", "percentage_declination", "vdot", "health_perception_index", "muscle_state_perception_index", "session_stress_perception_index"};
 	private static final int COLUMN_TRAINING_SESSION_ID = 1;
 	private static final int COLUMN_USERID = 0;
 	private static final int COLUMN_START_TIME = 2;

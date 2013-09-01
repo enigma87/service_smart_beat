@@ -24,9 +24,10 @@ public class FitnessTrainingSessionBean {
 	private Double hrz5Distance;
 	private Double hrz6Distance;
 	private Integer surfaceIndex;
-	private Double percentageInclination;
-	private Double percentageDeclination;
 	private Double vdot;
+	private Integer healthPerceptionIndex;
+	private Integer muscleStatePerceptionIndex;
+	private Integer sessionStressPerceptionIndex;
 	
 	public String getUserid() {
 		return userid;
@@ -163,23 +164,7 @@ public class FitnessTrainingSessionBean {
 	public void setSurfaceIndex(Integer surfaceIndex) {
 		this.surfaceIndex = surfaceIndex;
 	}
-	
-	public Double getPercentageInclination() {
-		return percentageInclination;
-	}
-	
-	public void setPercentageInclination(Double percentageInclination) {
-		this.percentageInclination = percentageInclination;
-	}
-	
-	public Double getPercentageDeclination() {
-		return percentageDeclination;
-	}
-	
-	public void setPercentageDeclination(Double percentageDeclination) {
-		this.percentageDeclination = percentageDeclination;
-	}
-	
+
 	public Double getVdot() {
 		return vdot;
 	}
@@ -248,5 +233,30 @@ public class FitnessTrainingSessionBean {
 			return true;
 		}
 		return false;
+	}
+
+	public Integer getHealthPerceptionIndex() {
+		return healthPerceptionIndex;
+	}
+
+	public void setHealthPerceptionIndex(Integer healthPerceptionIndex) {
+		this.healthPerceptionIndex = healthPerceptionIndex;
+	}
+
+	public Integer getMuscleStatePerceptionIndex() {
+		return muscleStatePerceptionIndex;
+	}
+
+	public void setMuscleStatePerceptionIndex(Integer muscleStatePerceptionIndex) {
+		this.muscleStatePerceptionIndex = muscleStatePerceptionIndex;
+	}
+
+	public Integer getSessionStressPerceptionIndex() {
+		return sessionStressPerceptionIndex;
+	}
+
+	public void setSessionStressPerceptionIndex(
+			Integer sessionStressPerceptionIndex) {
+		this.sessionStressPerceptionIndex = sessionStressPerceptionIndex;
 	}
 }
