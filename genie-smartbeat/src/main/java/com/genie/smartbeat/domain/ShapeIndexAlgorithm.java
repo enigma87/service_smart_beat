@@ -4,11 +4,11 @@
 package com.genie.smartbeat.domain;
 
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 
 import org.apache.commons.math.stat.regression.SimpleRegression;
 import org.joda.time.DateTimeUtils;
+
+import com.genie.smartbeat.util.DoubleValueFormatter;
 
 /**
  * @author dhasarathy
@@ -60,25 +60,21 @@ public class ShapeIndexAlgorithm
 		
 		double[] heartrateZones[] = new double[7][2];
 		double heartrateReserve = maximalHeartrate - restingHeartrate;
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat heartrateZoneFormat = new DecimalFormat("###.##",symbols);
 		
+		heartrateZones[1][ZONE_START_IDX] 	= DoubleValueFormatter.format3Dot2(restingHeartrate);
+		heartrateZones[1][ZONE_END_IDX] 	= DoubleValueFormatter.format3Dot2(restingHeartrate + ((thresholdHeartrate - restingHeartrate)/2));
 		
-		heartrateZones[1][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(restingHeartrate));
-		heartrateZones[1][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(restingHeartrate + ((thresholdHeartrate - restingHeartrate)/2)));
+		heartrateZones[2][ZONE_START_IDX] 	= DoubleValueFormatter.format3Dot2(heartrateZones[1][ZONE_END_IDX]);
+		heartrateZones[2][ZONE_END_IDX] 	= DoubleValueFormatter.format3Dot2(heartrateZones[1][ZONE_END_IDX] + ((thresholdHeartrate - heartrateZones[1][ZONE_END_IDX])/2));
 		
-		heartrateZones[2][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(heartrateZones[1][ZONE_END_IDX]));
-		heartrateZones[2][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(heartrateZones[1][ZONE_END_IDX] + ((thresholdHeartrate - heartrateZones[1][ZONE_END_IDX])/2)));
-		
-		heartrateZones[4][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(thresholdHeartrate - 0.04*heartrateReserve));
-		heartrateZones[4][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(thresholdHeartrate + 0.02*heartrateReserve));
+		heartrateZones[4][ZONE_START_IDX] 	= DoubleValueFormatter.format3Dot2(thresholdHeartrate - 0.04*heartrateReserve);
+		heartrateZones[4][ZONE_END_IDX] 	= DoubleValueFormatter.format3Dot2(thresholdHeartrate + 0.02*heartrateReserve);
 		
 		heartrateZones[3][ZONE_START_IDX] 	= heartrateZones[2][ZONE_END_IDX];
 		heartrateZones[3][ZONE_END_IDX] 	= heartrateZones[4][ZONE_START_IDX];
 		
-		heartrateZones[6][ZONE_START_IDX] 	= Double.valueOf(heartrateZoneFormat.format(maximalHeartrate - 0.06*heartrateReserve));
-		heartrateZones[6][ZONE_END_IDX] 	= Double.valueOf(heartrateZoneFormat.format(maximalHeartrate));
+		heartrateZones[6][ZONE_START_IDX] 	= DoubleValueFormatter.format3Dot2(maximalHeartrate - 0.06*heartrateReserve);
+		heartrateZones[6][ZONE_END_IDX] 	= DoubleValueFormatter.format3Dot2(maximalHeartrate);
 		
 		heartrateZones[5][ZONE_START_IDX] 	= heartrateZones[4][ZONE_END_IDX];
 		heartrateZones[5][ZONE_END_IDX] 	= heartrateZones[6][ZONE_START_IDX];
@@ -153,12 +149,8 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	}
 
 	private static double calculateTimeDifferenceInHours(Timestamp startTime, Timestamp endTime){
-		double timeDifferenceInHours = 0;
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat hourFormat = new DecimalFormat("###.##",symbols);
-		timeDifferenceInHours = (endTime.getTime() - startTime.getTime())/(new Long(1000*60*60).doubleValue());
-		return Double.valueOf(hourFormat.format(timeDifferenceInHours));
+		double timeDifferenceInHours = (endTime.getTime() - startTime.getTime())/(new Long(1000*60*60).doubleValue());
+		return DoubleValueFormatter.format3Dot2(timeDifferenceInHours);
 	}
 	public static double calculateTimeToRecover(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){		
 		double timeToRecover = 0.0;
@@ -211,10 +203,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	private static final double DETRAINING_THRESHOLD = 64;
 	private static final double[] DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION = {0,0.01,0.02,0.03,0.05,0.1};
 	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
-		double detrainingPenalty = 0.0;
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat detrainingPenaltyFormat = new DecimalFormat("###.##",symbols);
+		double detrainingPenalty = 0.0;		
 		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
 			double basePenaltyRate = DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
@@ -224,7 +213,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 			}
 			detrainingPenalty += (basePenaltyRate*timeAfterRecovery);
 		}
-		return Double.valueOf(detrainingPenaltyFormat.format(detrainingPenalty));
+		return DoubleValueFormatter.format3Dot2(detrainingPenalty);
 	}
 	
 	/*Speed-Vdot regression model of the form y = Ax + B with y as speed and x as Vdot*/
@@ -245,10 +234,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		double Vdot = 0.0;
 		int validZoneCount = 0;
 		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat vdotFormat = new DecimalFormat("###.##",symbols);
-		
+				
 		/*no contribution to vDot from zone 1*/
 		for(int i = 2; i<=6;i++){
 			if(0 < speedDistributionOfHRZ[i]){
@@ -261,7 +247,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	    		sum += VdotByZone[i];	    		
 	    }
 	    Vdot = sum / validZoneCount;
-		return Double.valueOf(vdotFormat.format(Vdot));
+		return DoubleValueFormatter.format3Dot2(Vdot);
 	}
 	
 	public static final int VDOT_HISTORY_LIMIT = 4;
@@ -298,12 +284,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		double slopeOfTimeRegressionOfSHR = 0.0;		
 		SimpleRegression regressionModel = new SimpleRegression();
 		regressionModel.addData(dayOfRecordSOHRSeries);
-		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
-		
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat heartrateZoneFormat = new DecimalFormat("###.####",symbols);
-		
-		return Double.valueOf(heartrateZoneFormat.format(slopeOfTimeRegressionOfSHR));
+		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();		
+		return DoubleValueFormatter.format3dot4(slopeOfTimeRegressionOfSHR);
 	}
 }

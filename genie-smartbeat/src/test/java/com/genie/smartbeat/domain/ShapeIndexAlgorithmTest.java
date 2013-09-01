@@ -333,11 +333,6 @@ public class ShapeIndexAlgorithmTest {
 	}
 
 	@Test
-	public void testCalculateCompoundedVdot() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testCalculateSlopeOfTimeRegressionOfStandingOrthostaticHeartRate() {
 		double[][] dayOfRecordSOHRSeries = {{4,87}, {5,89}, {6,84}, {7,75}, {8,93}, {9,85}, {10,91},
 											{11,101}, {12,76}, {13,83}, {14,82}, {15,77}, {16,75}, {17,87},
@@ -370,7 +365,6 @@ public class ShapeIndexAlgorithmTest {
 		vdot = 66.36;
 		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
-		
 		
 	}	
 }

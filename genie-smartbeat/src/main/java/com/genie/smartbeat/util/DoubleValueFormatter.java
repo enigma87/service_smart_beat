@@ -15,5 +15,13 @@ public class DoubleValueFormatter {
 		DecimalFormat formatter3Dot2 = new DecimalFormat("###.##",symbols);
 		return Double.valueOf(formatter3Dot2.format(unformattedValue));
 	}
+	
+	public static double format3dot4(double unformattedValue){
+		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+		symbols.setDecimalSeparator('.');
+		DecimalFormat formatter3Dot2 = new DecimalFormat("###.####",symbols);
+		return Double.valueOf(formatter3Dot2.format(unformattedValue));
+
+	}
 }
 
