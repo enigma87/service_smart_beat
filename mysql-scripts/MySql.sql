@@ -7,7 +7,7 @@ delimiter $$
 
 CREATE TABLE genie.`user` (
   `userid` varchar(128) NOT NULL,
-  `access_token` varchar(200) NOT NULL,
+  `access_token` varchar(300) NOT NULL,
   `access_token_type` text NOT NULL,
   `first_name` text NOT NULL,
   `middle_name` text,
