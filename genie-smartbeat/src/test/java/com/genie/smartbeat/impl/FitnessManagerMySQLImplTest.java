@@ -139,12 +139,14 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);		
 		
-		Double points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid());
+		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
+		Double points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid(), timeAtConsideration);
 		Assert.assertEquals(0.0, points);
 		
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-1.0);
 		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid());
+		
+		points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid(), timeAtConsideration);
 		Assert.assertTrue(points > 0.0);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
 	}

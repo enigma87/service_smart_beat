@@ -96,11 +96,11 @@ public class ShapeIndexAlgorithm
 	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
 	private static final double TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[] = {0,-0.0347, -0.0434, -0.0521, -0.0608, -0.0694};
 	private static final double TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[] = {0,4.1667, 5.2083, 6.25, 7.2917, 8.3333};	
-	public static double getRegressedHomeostasisIndex(Integer traineeClassification, Timestamp previousTrainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+	public static double getRegressedHomeostasisIndex(Integer traineeClassification, Timestamp previousTrainingSessionEndTime, Timestamp timeAtConsideration, double recentMinimumOfHomeostasisIndex){
 		double regressedHomeostasisIndex = 0.0;
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, previousTrainingSessionEndTime, recentMinimumOfHomeostasisIndex);
-		if(DateTimeUtils.currentTimeMillis() < timeAtFullRecovery.getTime()){
-			double hoursElapsed = (DateTimeUtils.currentTimeMillis() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
+		if(timeAtConsideration.getTime() < timeAtFullRecovery.getTime()){
+			double hoursElapsed = (timeAtConsideration.getTime() - previousTrainingSessionEndTime.getTime())/(1000*60*60);
 			double TTR_CONSTANT_A = TTR_CONSTANT_A_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_B = TTR_CONSTANT_B_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			double TTR_CONSTANT_C = recentMinimumOfHomeostasisIndex;

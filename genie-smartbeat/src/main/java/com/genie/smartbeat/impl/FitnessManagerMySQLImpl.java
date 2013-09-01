@@ -169,7 +169,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
 			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
-			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessHomeostasisIndexBean.getRecentEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+			regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(),
+										fitnessHomeostasisIndexBean.getRecentEndTime() ,
+										fitnessTrainingSessionBean.getStartTime(),
+										fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		}else{
 			/*creating Homeostasis Index Model for the user*/
 			fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
@@ -235,7 +238,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		if (null != fitnessShapeIndexBean) {			
 			newShapeIndex = (fitnessShapeIndexBean.getShapeIndex()
-				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())				
+				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid(), timeAtConsideration)				
 				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid(), timeAtConsideration))
 				* getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid());
 		}else{
@@ -244,7 +247,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return DoubleValueFormatter.format3Dot2(newShapeIndex);
 
 	}
-	public double getFitnessSupercompensationPoints(String userid){
+	public double getFitnessSupercompensationPoints(String userid, Timestamp timeAtConsideration){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		
@@ -252,6 +255,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(
 						fitnessHomeostasisIndexBean.getTraineeClassification(),
 						fitnessHomeostasisIndexBean.getRecentEndTime(),
+						timeAtConsideration,
 						fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		
 				/*Check condition for supercompensation*/
