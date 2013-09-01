@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
+import org.joda.time.DateTimeUtils;
+
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -145,7 +147,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		FitnessShapeIndexBean shapeIndexBean = new FitnessShapeIndexBean();
 		if(null != previousTrainingSessionId && !previousTrainingSessionId.isEmpty()){
 			/*update shape index*/
-			shapeIndex = getShapeIndex(previousTrainingSessionId);
+			shapeIndex = getShapeIndex(previousTrainingSessionId,fitnessTrainingSessionBean);
 		}else{
 			/*get initial shape index*/
 			shapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
@@ -207,25 +209,41 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
+	@Override
 	public double getShapeIndex(String recentTrainingSessionId) {
+		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
+		return getShapeIndexAtTime(recentTrainingSessionId, timeAtConsideration);
+	}
+	
+	public double getShapeIndex(String recentTrainingSessionId, FitnessTrainingSessionBean newlyArrivedTrainingSession) {
+		Timestamp timeAtConsideration = null;
+		if(null != newlyArrivedTrainingSession){
+			timeAtConsideration = newlyArrivedTrainingSession.getStartTime();
+		}else{
+			timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
+		}
+		return getShapeIndexAtTime(recentTrainingSessionId, timeAtConsideration);		
+	}
+
+	private double getShapeIndexAtTime(String recentTrainingSessionId, Timestamp timeAtConsideration){
 		double newShapeIndex = 0;
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		
 		if(null != recentTrainingSessionId && !recentTrainingSessionId.isEmpty()){
-			fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);
+			fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);			
 		}
 		
-		if (null != fitnessShapeIndexBean) {
+		if (null != fitnessShapeIndexBean) {			
 			newShapeIndex = (fitnessShapeIndexBean.getShapeIndex()
 				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid())				
-				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid()))
+				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid(), timeAtConsideration))
 				* getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid());
 		}else{
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
 		}					
 		return DoubleValueFormatter.format3Dot2(newShapeIndex);
-	}
 
+	}
 	public double getFitnessSupercompensationPoints(String userid){
 		double supercompensationPoints = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
@@ -245,13 +263,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return supercompensationPoints;
 	}
 		
-	public double getFitnessDetrainingPenalty(String userid){
+	public double getFitnessDetrainingPenalty(String userid, Timestamp timeAtConsideration){
 		double detrainingPenalty = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
 		
 		if (null != fitnessHomeostasisIndexBean) {
 			detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(fitnessHomeostasisIndexBean.getTraineeClassification(), 
-				fitnessHomeostasisIndexBean.getRecentEndTime(), 
+				fitnessHomeostasisIndexBean.getRecentEndTime(),
+				timeAtConsideration,
 				fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		}
 		return detrainingPenalty;

@@ -110,14 +110,15 @@ public class ShapeIndexAlgorithmTest {
 	public void testCalculateTimeAfterRecovery() {
 		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
 		Calendar calendar = Calendar.getInstance();
+		Timestamp timeAtConsideration = new Timestamp(calendar.getTimeInMillis());		
 		double recentMinimumOfHomeostasisIndex = -86.5;		
 		calendar.add(Calendar.HOUR, -1);
-		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
-		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());		
+		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
 		assertEquals(0,Math.round(100*timeAfterRecovery));		
 		calendar.add(Calendar.DATE, -1);
 		trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
-		timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(1.93),Math.round(timeAfterRecovery));		
 	}
 
@@ -284,19 +285,20 @@ public class ShapeIndexAlgorithmTest {
 		double recentMinimumOfHomeostasisIndex = -86.5;
 		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED;
 		Calendar calendar = Calendar.getInstance();	
+		Timestamp timeAtConsideration = new Timestamp(calendar.getTimeInMillis());
 		calendar.add(Calendar.HOUR, -1);
 		Timestamp trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
-		double detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		double detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
 		assertEquals(0, Math.round(detrainingPenalty*100));
 		
 		calendar.add(Calendar.HOUR, -31);		
 		trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
-		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
 		assertEquals(Math.round(0.27*100), Math.round(detrainingPenalty*100));
 		
 		calendar.add(Calendar.HOUR, -57);
 		trainingSessionEndTime = new Timestamp(calendar.getTimeInMillis());
-		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);		
+		detrainingPenalty = ShapeIndexAlgorithm.calculateDetrainingPenalty(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);		
 		assertEquals(Math.round(1.95*100), Math.round(detrainingPenalty*100));
 	}
 

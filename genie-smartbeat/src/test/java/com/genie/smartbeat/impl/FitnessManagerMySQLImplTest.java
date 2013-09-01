@@ -9,6 +9,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -569,14 +570,15 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
-		Assert.assertEquals(0.0, fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid));
+		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
+		Assert.assertEquals(0.0, fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration));
 		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
-		Assert.assertTrue(fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid) > 0.0);
+		Assert.assertTrue(fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration) > 0.0);
 		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}

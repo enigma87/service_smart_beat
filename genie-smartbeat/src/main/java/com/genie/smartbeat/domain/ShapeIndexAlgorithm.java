@@ -162,12 +162,11 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		return timeToRecover;
 	}
 	
-	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
-		double timeAfterRecovery = 0.0;
-		Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
+	public static double calculateTimeAfterRecovery(Integer traineeClassification, Timestamp trainingSessionEndTime, Timestamp timeAtConsideration, double recentMinimumOfHomeostasisIndex){
+		double timeAfterRecovery = 0.0;		
 		Timestamp timeAtFullRecovery = calculateTimeAtFullRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
-		if(timeAtFullRecovery.getTime() < currentTime.getTime()){
-			timeAfterRecovery = calculateTimeDifferenceInHours(timeAtFullRecovery, currentTime);
+		if(timeAtFullRecovery.getTime() < timeAtConsideration.getTime()){
+			timeAfterRecovery = calculateTimeDifferenceInHours(timeAtFullRecovery, timeAtConsideration);
 		}
 		return timeAfterRecovery;
 	}
@@ -202,9 +201,9 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	
 	private static final double DETRAINING_THRESHOLD = 64;
 	private static final double[] DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION = {0,0.01,0.02,0.03,0.05,0.1};
-	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, double recentMinimumOfHomeostasisIndex){
+	public static double calculateDetrainingPenalty(Integer traineeClassification, Timestamp trainingSessionEndTime, Timestamp timeAtConsideration, double recentMinimumOfHomeostasisIndex){
 		double detrainingPenalty = 0.0;		
-		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, recentMinimumOfHomeostasisIndex);
+		double timeAfterRecovery = ShapeIndexAlgorithm.calculateTimeAfterRecovery(traineeClassification, trainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
 		if(0 != timeAfterRecovery){
 			double basePenaltyRate = DETRAINING_BASE_PENALTY_RATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
 			if(DETRAINING_THRESHOLD < timeAfterRecovery){
