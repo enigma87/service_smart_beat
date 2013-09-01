@@ -4,8 +4,6 @@
 package com.genie.smartbeat.impl;
 
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +20,7 @@ import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+import com.genie.smartbeat.util.DoubleValueFormatter;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.UserManager;
@@ -210,11 +209,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public double getShapeIndex(String recentTrainingSessionId) {
 		double newShapeIndex = 0;
-		
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		DecimalFormat shapeIndexFormat = new DecimalFormat("###.##",symbols);
-		
 		FitnessShapeIndexBean fitnessShapeIndexBean = null;
 		
 		if(null != recentTrainingSessionId && !recentTrainingSessionId.isEmpty()){
@@ -228,9 +222,8 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				* getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid());
 		}else{
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
-		}
-		
-         return Double.valueOf(shapeIndexFormat.format(newShapeIndex));
+		}					
+		return DoubleValueFormatter.format3Dot2(newShapeIndex);
 	}
 
 	public double getFitnessSupercompensationPoints(String userid){
