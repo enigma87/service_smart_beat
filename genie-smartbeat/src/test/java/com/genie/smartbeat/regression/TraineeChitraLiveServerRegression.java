@@ -181,6 +181,12 @@ public class TraineeChitraLiveServerRegression{
 		JSONObject getShapeIndexResJson11 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson11);
 		
+		/*Clear the User Data*/
+		String clearUserDataUrl =  "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/id/"+userId+"/data/clear"; 
+		ClientConfig clientConfig = new DefaultClientConfig();
+		Client clientClearUserData = Client.create(clientConfig);
+		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
+		clearUserData.delete();
 	
 		
 	}
