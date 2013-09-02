@@ -349,23 +349,43 @@ public class ShapeIndexAlgorithmTest {
 	public void testGetTraineeClassificationUsingVdot() {
 		
 		Double vdot = 26.36;
-		Integer traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		Integer traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_FEMALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED, traineeClassification);
 		
 		vdot = 36.36;
-		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_FEMALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED, traineeClassification);
 		
 		vdot = 46.36;
-		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_FEMALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, traineeClassification);
 		
 		vdot = 56.36;
-		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_FEMALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED, traineeClassification);
 		
 		vdot = 66.36;
-		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(vdot);
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_FEMALE,vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
+		
+		vdot = 26.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED, traineeClassification);
+		
+		vdot = 36.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED, traineeClassification);
+		
+		vdot = 46.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, traineeClassification);
+		
+		vdot = 56.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
+		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_WELL_TRAINED, traineeClassification);
+		
+		vdot = 66.36;
+		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
 		
 	}	
