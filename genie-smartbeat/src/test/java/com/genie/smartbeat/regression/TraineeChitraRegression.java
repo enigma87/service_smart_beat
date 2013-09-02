@@ -14,10 +14,15 @@ import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
+import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.social.beans.UserBean;
+import com.genie.social.core.UserManager;
 import com.genie.social.facebook.GraphAPI;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -37,7 +42,7 @@ public class TraineeChitraRegression extends JerseyTest{
 	String chitraFbId = "100006485698211";
 	String userId = null;
 	String accessToken = null;
-	
+
 	public static final String HOST_LOCALHOST = "localhost";
 	public static final String HOST_GENIE_LIVE_VIDHUN = "localhost";
 	public static final String HOST = HOST_LOCALHOST;
@@ -49,6 +54,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		accessToken = GraphAPI.getTestUserAccessToken(chitraFbId);
 		chithra.setAccessToken(accessToken);
 		chithra.setAccessTokenType("facebook");
+		
 	}
 	
 	@Override
@@ -318,6 +324,14 @@ public class TraineeChitraRegression extends JerseyTest{
 		Assert.assertEquals(userId, objSaveFitnessTrainingSession1Reponse.getString("userid"));
 		//Assert.assertEquals(100.0, objSaveFitnessTrainingSession1Reponse.getDouble("shapeIndex"));
 		System.out.println(saveFitnessTrainingSessionResJson4);
+		
+		/*Delete Trainee Data*/
+		
+		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+userId+"/data/clear"; 
+		ClientConfig clientConfig = new DefaultClientConfig();
+		Client clientClearUserData = Client.create(clientConfig);
+		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
+		clearUserData.delete();
 		
 	}
 	

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -308,6 +309,24 @@ public class TraineeResource
 		saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
+		try
+		{
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
+	@DELETE
+	@Path("id/{userid}/data/clear")
+	@Consumes({MediaType.TEXT_HTML})
+	@Produces(MediaType.TEXT_HTML)
+	public String clearTraineeData(@PathParam("userid") String userid){
+
+		fitnessManager.clearTraineeData(userid);
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
 		try
 		{
 			return Formatter.getAsJson(gro, false);

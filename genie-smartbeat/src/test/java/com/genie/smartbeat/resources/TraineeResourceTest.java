@@ -67,7 +67,7 @@ public class TraineeResourceTest extends JerseyTest {
 	    }
 	    
 		
-		@Test
+		//@Test
 		public void testRegisterUser() throws Exception{
 						
 			/*Get App Access Token from facebook*/
@@ -121,7 +121,7 @@ public class TraineeResourceTest extends JerseyTest {
 		}
 
 		
-		@Test
+		//@Test
 		public void testGetUserInfo() throws Exception{
 					
 			/*Get App Access Token from facebook*/
@@ -190,7 +190,7 @@ public class TraineeResourceTest extends JerseyTest {
 			userDao.deleteUser(genieUserID);
 	}
 		
-		@Test
+		//@Test
 		public void testSaveFitnessTrainingSession() throws Exception{
 			
 			long now = new Date().getTime();
@@ -327,7 +327,7 @@ public class TraineeResourceTest extends JerseyTest {
 			String genieUserID = objRegister.getString("userid");
 			
 			/*Save fitness training Session for the user*/
-			String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/"+genieUserID+"/fitnessTrainingSession/save?accessToken="+userAccessToken+"&accessTokenType=facebook";
+			String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/id/"+genieUserID+"/trainingSession/save?accessToken="+userAccessToken+"&accessTokenType=facebook";
 			JSONObject trainingSessionDataJsonObj = new JSONObject();
 			trainingSessionDataJsonObj.put("startTime", new Timestamp (nowBeforeOneHour));
 			trainingSessionDataJsonObj.put("endTime", new Timestamp (nowBeforeTwentyMinutes) );
@@ -356,7 +356,7 @@ public class TraineeResourceTest extends JerseyTest {
 			String trainingSessionId =  objSaveFitnessTrainingSessionReponse.getString("trainingSessionId");
 			
 			/*Get Shape Index*/
-			String getShapeIndexUrl = "http://localhost:9998/trainee/"+genieUserID+"/shapeIndex?accessToken="+userAccessToken+"&accessTokenType=facebook";
+			String getShapeIndexUrl = "http://localhost:9998/trainee/id/"+genieUserID+"/shapeIndex?accessToken="+userAccessToken+"&accessTokenType=facebook";
 			ClientConfig clientConfigGetShapeIndex = new DefaultClientConfig();
 			clientConfigGetShapeIndex.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 			Client clientGetShapeIndex = Client.create(clientConfigGetShapeIndex);
@@ -378,15 +378,22 @@ public class TraineeResourceTest extends JerseyTest {
 			deleteFacebookTestUser.post();
 				
 			/*Delete TestUser from Genie*/
-			userDao.deleteUser(genieUserID);
+			/*userDao.deleteUser(genieUserID);
 			fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(genieUserID);
 			fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(genieUserID);
 			fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(genieUserID);
-			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);
+			fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(trainingSessionId);*/
+			
+			String DeleteGenieUser = "http://localhost:9998/trainee/id/"+genieUserID+"/data/clear";
+			ClientConfig clientConfigDeleteGenieUser = new DefaultClientConfig();
+			//clientConfigDeleteGenieUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
+			Client clientDeleteGenieUser = Client.create(clientConfigDeleteGenieUser);
+			WebResource deleteGenieUser = clientDeleteGenieUser.resource(DeleteGenieUser);
+			deleteGenieUser.delete();
 			       
 		}
 		
-		@Test
+		//@Test
 		public void testGetHeartrateZones() {
 			String userid = "073a9e7d-9cf2-49a0-8926-f27362fd547e";
 			String accessToken = "CAACEdEose0cBAPlsgswFasGRgCIKYexcP5NKCKApuumRV0O2NsO1o1AJrcGFZCD08E74dNsyz6q2mYPRGmjHj0By2gSPQTvmvsH9uiwtBoIueRCpL3cwhBm40PsYCEPVZC9rRWmHZCOor3WMZBgrb59jU9qSRBgZD";
@@ -399,7 +406,7 @@ public class TraineeResourceTest extends JerseyTest {
 			
 		}
 		
-		@Test
+		//@Test
 		public void tempTest() throws JSONException{
 			String userAccessToken = "CAAEvclnXOesBAH2q1LYuZCcbUsfui60bWyeiZB4KAh38aUqBP0D0M5LmHyC03TiMP7BbNEZA7gtkkaVlxWZC8twZAg9fwUB54zZATTdcczkIuRCpSMGyt5CoioOtN3q5E8z0UzZB24JwZCzaF6bMorEYj5AwuD1DVluppPs5s55WygZDZD";
 			String getUserInfoByEmailUrl = "http://localhost:9998/trainee/email/"+"dhasarathy@gmail.com"+"?accessToken="+userAccessToken+"&accessTokenType=facebook";		
@@ -410,5 +417,6 @@ public class TraineeResourceTest extends JerseyTest {
 			JSONObject getUserInfoResponse = webresource.get(JSONObject.class);
 			System.out.println(getUserInfoResponse);			
 		}
+		
 
 }
