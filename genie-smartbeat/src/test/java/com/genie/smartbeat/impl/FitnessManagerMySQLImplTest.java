@@ -866,6 +866,17 @@ public class FitnessManagerMySQLImplTest {
 		long nowBeforeOneDay = now - (24*3600000);
 		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
 		
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");
+		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(userid);
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
