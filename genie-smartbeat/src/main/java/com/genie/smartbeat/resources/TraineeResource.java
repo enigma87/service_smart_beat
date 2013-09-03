@@ -86,7 +86,8 @@ public class TraineeResource
 	public String getUserInfo(@PathParam("email") String email, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro;
-		if(AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus())) {
+		if(null != authStatus 
+				&& AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus())) {
 			UserBean user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
