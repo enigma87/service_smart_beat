@@ -28,7 +28,4 @@ public class RegisterRequestJSON {
 	public void setAccessTokenType(String accessTokenType) {
 		this.accessTokenType = accessTokenType;
 	}
-	
-	
-
 }

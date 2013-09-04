@@ -27,7 +27,11 @@ import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.dao.UserDao;
+import com.genie.social.facebook.GraphAPI;
 import com.genie.social.impl.UserManagerMySQLImpl;
+import com.genie.social.json.RegisterRequestJSON;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -76,57 +80,37 @@ public class TraineeResourceTest {
 		}
 		
 		@Test
-		public void testRegisterUser() throws Exception{
-						
-			/*Get App Access Token from facebook*/
-		    /*String getAppAccessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id="+appID+"&client_secret=bd8fa4961cb1c2a284cbe8486707b73a&grant_type=client_credentials";
-			ClientConfig clientConfigGetAppAccessToken = new DefaultClientConfig();
-			clientConfigGetAppAccessToken.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-			Client clientGetAppToken = Client.create(clientConfigGetAppAccessToken);
-			WebResource getAppAccessToken = clientGetAppToken.resource(getAppAccessTokenUrl);
-			String appAccessTokenResponse = getAppAccessToken.get(String.class);
-			String[] appAccessToken = appAccessTokenResponse.split("=");
-			String appAccessTokenValue = appAccessToken[1];
-			*/
-			/*Get test user from facebook*/
-			/*String getFacebookTestUserUrl = "https://graph.facebook.com/"+appID+"/accounts/test-users?installed=true&permissions=email&method=post&access_token="+URLEncoder.encode(appAccessTokenValue,"ISO-8859-1");
-			ClientConfig clientConfigGetFacebookTestUser = new DefaultClientConfig();
-			clientConfigGetFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-			Client clientGetFacebookTestUser = Client.create(clientConfigGetFacebookTestUser);
-			WebResource getFacebookTestUser = clientGetFacebookTestUser.resource(getFacebookTestUserUrl);
-			JSONObject FacebookTestUser = getFacebookTestUser.type(MediaType.APPLICATION_FORM_URLENCODED).post(JSONObject.class);
-			*/		
-			/*Parsing User Details*/
-			//String userID = FacebookTestUser.getString("id");
-			//String userAccessToken = FacebookTestUser.getString("access_token");
-				
-			/*Register the User*/
-		    /*String registerUserUrl = "http://localhost:9998/trainee/register";
-			JSONObject inputJsonObj = new JSONObject();
-			inputJsonObj.put("accessToken", userAccessToken );
-			inputJsonObj.put("accessTokenType", "facebook" );
-			ClientConfig clientConfigRegisterUser = new DefaultClientConfig();
-			clientConfigRegisterUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-			Client clientRegisterUser = Client.create(clientConfigRegisterUser);
-			WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
-			JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
-			JSONObject objRegister = registerResJson.getJSONObject("obj");
-			Assert.assertEquals("200", registerResJson.getString("status"));
-			Assert.assertEquals("OK", registerResJson.getString("message"));
-			String genieUserID = objRegister.getString("userid");
-			*/				
-			/*Delete Facebook TestUser*/
-			/*String DeleteFbTestUserUrl = "https://graph.facebook.com/"+userID+"?method=delete&access_token="+userAccessToken;
-			ClientConfig clientConfigDeleteFacebookTestUser = new DefaultClientConfig();
-			clientConfigDeleteFacebookTestUser.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
-			Client clientDeleteFacebookTestUser = Client.create(clientConfigDeleteFacebookTestUser);
-			WebResource deleteFacebookTestUser = clientDeleteFacebookTestUser.resource(DeleteFbTestUserUrl);
-			deleteFacebookTestUser.post();
-			*/	
-			/*Delete TestUser from Genie*/
-			//userDao.deleteUser(genieUserID);
-			  
-						
+		public void testRegisterUser() throws JSONException {			
+			UserBean testUser = GraphAPI.getTestUser();
+			testUser.setFirstName("jack");
+			testUser.setLastName("sparrow");
+			testUser.setPrivilegeLevel((byte) 1);
+			testUser.setGender((byte) 1);
+			RegisterRequestJSON newUserJSON = new RegisterRequestJSON();
+			newUserJSON.setAccessToken(testUser.getAccessToken());
+			newUserJSON.setAccessTokenType(testUser.getAccessTokenType());
+			Assert.assertNull(userDao.getUserInfoByEmail(testUser.getEmail()));
+			String registerResponse = traineeResource.registerUser(newUserJSON);
+			Assert.assertNotNull(userDao.getUserInfoByEmail(testUser.getEmail()));
+			JSONObject jsonResponse = new JSONObject(registerResponse);
+			Assert.assertEquals(Status.OK.getStatusCode(), Integer.parseInt(jsonResponse.get("status").toString()));
+	
+			registerResponse = traineeResource.registerUser(newUserJSON);
+			jsonResponse = new JSONObject(registerResponse);
+			Assert.assertEquals(Status.NOT_ACCEPTABLE.getStatusCode(), Integer.parseInt(jsonResponse.getString("status").toString()));
+
+			userDao.deleteUser(userDao.getUserInfoByEmail(testUser.getEmail()).getUserid());
+			
+			FacebookClient fbClient = new DefaultFacebookClient(testUser.getAccessToken());
+			fbClient.deleteObject(testUser.getUserid() + "/permissions/email");
+			registerResponse = traineeResource.registerUser(newUserJSON);
+			jsonResponse = new JSONObject(registerResponse);
+			Assert.assertEquals(Status.NOT_ACCEPTABLE.getStatusCode(), Integer.parseInt(jsonResponse.getString("status").toString()));
+
+			newUserJSON.setAccessToken("ASDfasDFASDFaSDFAd");
+			registerResponse = traineeResource.registerUser(newUserJSON);
+			jsonResponse = new JSONObject(registerResponse);
+			Assert.assertEquals(Status.NOT_ACCEPTABLE.getStatusCode(), Integer.parseInt(jsonResponse.getString("status").toString()));
 		}
 
 		
