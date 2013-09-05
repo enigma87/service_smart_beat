@@ -74,6 +74,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.set(Calendar.HOUR_OF_DAY, 1);
 		
 		/*Register the User*/
 	    String registerUserUrl = "http://localhost:9998/trainee/register";
@@ -83,72 +84,94 @@ public class TraineeChitraRegression extends JerseyTest{
 		Client clientRegisterUser = getClient();
 		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
 		JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
-		System.out.println(registerResJson);
 		JSONObject objRegister = registerResJson.getJSONObject("obj");
 		Assert.assertEquals("200", registerResJson.getString("status"));
 		Assert.assertEquals("OK", registerResJson.getString("message"));
 		userId = objRegister.getString("userid");
 		chithra.setUserid(userId);
 		
-		/*Get Default HeartrateZones for the User*/
+		/*Save Heart rate tests for the user for RMT*/
+		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
+		
+		Client clientRestingHeartrateTest =  getClient();
+		WebResource saveRestingHeartrateTest =  clientRestingHeartrateTest.resource(saveHeartRateTestUrl);
+		JSONObject restingHeartRateTestReqJson0 = new JSONObject();
+		restingHeartRateTestReqJson0.put("heartrateType", "0");
+		restingHeartRateTestReqJson0.put("heartrate", "60.0");
+		restingHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson0);
+
+	    Client clientThresholdHeartrateTest =  getClient();
+		WebResource saveThresholdHeartrateTest =  clientThresholdHeartrateTest.resource(saveHeartRateTestUrl);
+		JSONObject thresholdtHeartRateTestReqJson0 = new JSONObject();
+		thresholdtHeartRateTestReqJson0.put("heartrateType", "1");
+		thresholdtHeartRateTestReqJson0.put("heartrate", "147.0");
+		thresholdtHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveThresholdHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class, thresholdtHeartRateTestReqJson0);
+
+		Client clientMaximalHeartrateTest =  getClient();
+		WebResource saveMaximalHeartrateTest =  clientMaximalHeartrateTest.resource(saveHeartRateTestUrl);
+		JSONObject maximaltHeartRateTestReqJson0 = new JSONObject();
+		maximaltHeartRateTestReqJson0.put("heartrateType", "2");
+		maximaltHeartRateTestReqJson0.put("heartrate", "189.0");
+		maximaltHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveMaximalHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class, maximaltHeartRateTestReqJson0);
+		
+		/*Get Heart Rate Zones for the user*/
 		String getHeartRateZoneUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateZones?accessToken="+accessToken+"&accessTokenType=facebook";
 		Client clientGetUserHrz =  getClient();
 		WebResource getUserHrz = clientGetUserHrz.resource(getHeartRateZoneUrl);
-		JSONObject getHrzResJsonObj = getUserHrz.get(JSONObject.class);
-		JSONObject getHrzResJson = getHrzResJsonObj.getJSONObject("obj");
-		assertEquals(userId, getHrzResJson.getString("userid"));
-		/*Assert.assertEquals(78.0, getHrzResJson.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(98.46, getHrzResJson.getDouble("heartrateZone1End"));
-		Assert.assertEquals(98.46, getHrzResJson.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(108.69, getHrzResJson.getDouble("heartrateZone2End"));
-		Assert.assertEquals(108.69, getHrzResJson.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(114.48, getHrzResJson.getDouble("heartrateZone3End"));
-		Assert.assertEquals(114.48, getHrzResJson.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(121.13, getHrzResJson.getDouble("heartrateZone4End"));
-		Assert.assertEquals(121.13, getHrzResJson.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(182.11, getHrzResJson.getDouble("heartrateZone5End"));
-		Assert.assertEquals(182.11, getHrzResJson.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(188.75, getHrzResJson.getDouble("heartrateZone6End"));*/
+		JSONObject getHrzResJson = getUserHrz.get(JSONObject.class);
+		JSONObject heartrateZones0 = getHrzResJson.getJSONObject("obj");
+		assertEquals(userId, heartrateZones0.getString("userid"));
+		Assert.assertEquals(60.0,  heartrateZones0.getDouble("heartrateZone1Start"));
+		Assert.assertEquals(103.5, heartrateZones0.getDouble("heartrateZone1End"));
+		Assert.assertEquals(103.5, heartrateZones0.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(125.25, heartrateZones0.getDouble("heartrateZone2End"));
+		Assert.assertEquals(125.25, heartrateZones0.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(141.84, heartrateZones0.getDouble("heartrateZone3End"));
+		Assert.assertEquals(141.84, heartrateZones0.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(149.58, heartrateZones0.getDouble("heartrateZone4End"));
+		Assert.assertEquals(149.58, heartrateZones0.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(181.26, heartrateZones0.getDouble("heartrateZone5End"));
+		Assert.assertEquals(181.26, heartrateZones0.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(189.0, heartrateZones0.getDouble("heartrateZone6End"));
 		
 		/*Save Resting and Ortho Static Heart Rate test day 0*/
-		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
 		cal.set(Calendar.HOUR_OF_DAY, 9);
 		cal.set(Calendar.MINUTE, 0);
-		Client clientRestingHeartrateTest =  getClient();
-		WebResource saveRestingHeartrateTest =  clientRestingHeartrateTest.resource(saveHeartRateTestUrl);
-		JSONObject restingHeartRateTestReqJson = new JSONObject();
-		restingHeartRateTestReqJson.put("heartrateType", "0");
-		restingHeartRateTestReqJson.put("heartrate", "54.0");
-		restingHeartRateTestReqJson.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject heartRateZonesFromHRT = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson);
-		//JSONObject heartRateZonesFromHRT1 = heartRateZonesFromHRT.getJSONObject("heartrateZones");
+		JSONObject restingHeartRateTestReqJson1 = new JSONObject();
+		restingHeartRateTestReqJson1.put("heartrateType", "0");
+		restingHeartRateTestReqJson1.put("heartrate", "54.0");
+		restingHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson1);
 		
-		JSONObject orthoHeartRateTestReqJson = new JSONObject();
-		orthoHeartRateTestReqJson.put("heartrateType", "3");
-		orthoHeartRateTestReqJson.put("heartrate", "78.0");
-		orthoHeartRateTestReqJson.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		JSONObject orthoHeartRateTestReqJson0 = new JSONObject();
+		orthoHeartRateTestReqJson0.put("heartrateType", "3");
+		orthoHeartRateTestReqJson0.put("heartrate", "78.0");
+		orthoHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		Client clientOrthoHeartrateTest =  getClient();
 		WebResource saveOrthoHeartRateTest =  clientOrthoHeartrateTest.resource(saveHeartRateTestUrl);
-    	JSONObject saveOrthoHRTResJson = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson);
-    	//heartRateZonesFromHRT = saveOrthoHRTResJson.getJSONObject("heartrateZones");
-    	/*Assert.assertEquals(78.0, heartRateZonesFromHRT.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(98.46, heartRateZonesFromHRT.getDouble("heartrateZone1End"));
-		Assert.assertEquals(98.46, heartRateZonesFromHRT.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(108.69, heartRateZonesFromHRT.getDouble("heartrateZone2End"));
-		Assert.assertEquals(108.69, heartRateZonesFromHRT.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(114.48, heartRateZonesFromHRT.getDouble("heartrateZone3End"));
-		Assert.assertEquals(114.48, heartRateZonesFromHRT.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(121.13, heartRateZonesFromHRT.getDouble("heartrateZone4End"));
-		Assert.assertEquals(121.13, heartRateZonesFromHRT.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(182.11, heartRateZonesFromHRT.getDouble("heartrateZone5End"));
-		Assert.assertEquals(182.11, heartRateZonesFromHRT.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(188.75, heartRateZonesFromHRT.getDouble("heartrateZone6End"));*/
+    	JSONObject saveHeartrateTestRes0 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson0);
+    	JSONObject saveHeartrateTestResObj0 = saveHeartrateTestRes0.getJSONObject("obj");
+    	JSONObject heartRateZones1 = saveHeartrateTestResObj0.getJSONObject("heartrateZones");
+    	Assert.assertEquals(54.0, heartRateZones1.getDouble("heartrateZone1Start"));
+		Assert.assertEquals(100.5, heartRateZones1.getDouble("heartrateZone1End"));
+		Assert.assertEquals(100.5, heartRateZones1.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(123.75, heartRateZones1.getDouble("heartrateZone2End"));
+		Assert.assertEquals(123.75, heartRateZones1.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(141.6, heartRateZones1.getDouble("heartrateZone3End"));
+		Assert.assertEquals(141.6, heartRateZones1.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(149.7, heartRateZones1.getDouble("heartrateZone4End"));
+		Assert.assertEquals(149.7, heartRateZones1.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(180.9, heartRateZones1.getDouble("heartrateZone5End"));
+		Assert.assertEquals(180.9, heartRateZones1.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(189.0, heartRateZones1.getDouble("heartrateZone6End"));
 		
-		
-		
+				
 		/*Save Training Session for the user in Day 0*/
 		String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/id/"+userId+"/trainingSession/save?accessToken="+accessToken+"&accessTokenType=facebook";
-		JSONObject trainingSessionDataJsonObj = new JSONObject();
+		JSONObject trainingSessionDataJsonObj0 = new JSONObject();
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 0);
 		Long sessionStartTime = cal.getTime().getTime();
@@ -156,27 +179,27 @@ public class TraineeChitraRegression extends JerseyTest{
 		Long sessionEndTime = cal.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
 		
-		trainingSessionDataJsonObj.put("startTime", new Timestamp(sessionStartTime));
-		trainingSessionDataJsonObj.put("endTime", new Timestamp(sessionEndTime) );
-		trainingSessionDataJsonObj.put("hrz1Time","4.0");
-		trainingSessionDataJsonObj.put("hrz2Time","32.0");
-		trainingSessionDataJsonObj.put("hrz3Time","14.0");
-		trainingSessionDataJsonObj.put("hrz4Time","10.0");
-		trainingSessionDataJsonObj.put("hrz5Time","0.0");
-		trainingSessionDataJsonObj.put("hrz6Time","0.0");
-		trainingSessionDataJsonObj.put("hrz1Distance","1000.0");
-		trainingSessionDataJsonObj.put("hrz2Distance","5920.0");
-		trainingSessionDataJsonObj.put("hrz3Distance","2753.33");
-		trainingSessionDataJsonObj.put("hrz4Distance","2200.0");
-		trainingSessionDataJsonObj.put("hrz5Distance","0.0");
-		trainingSessionDataJsonObj.put("hrz6Distance","0.0");
-		trainingSessionDataJsonObj.put("surfaceIndex","0");
+		trainingSessionDataJsonObj0.put("startTime", new Timestamp(sessionStartTime));
+		trainingSessionDataJsonObj0.put("endTime", new Timestamp(sessionEndTime) );
+		trainingSessionDataJsonObj0.put("hrz1Time","4.0");
+		trainingSessionDataJsonObj0.put("hrz2Time","32.0");
+		trainingSessionDataJsonObj0.put("hrz3Time","14.0");
+		trainingSessionDataJsonObj0.put("hrz4Time","10.0");
+		trainingSessionDataJsonObj0.put("hrz5Time","0.0");
+		trainingSessionDataJsonObj0.put("hrz6Time","0.0");
+		trainingSessionDataJsonObj0.put("hrz1Distance","1000.0");
+		trainingSessionDataJsonObj0.put("hrz2Distance","5920.0");
+		trainingSessionDataJsonObj0.put("hrz3Distance","2753.33");
+		trainingSessionDataJsonObj0.put("hrz4Distance","2200.0");
+		trainingSessionDataJsonObj0.put("hrz5Distance","0.0");
+		trainingSessionDataJsonObj0.put("hrz6Distance","0.0");
+		trainingSessionDataJsonObj0.put("surfaceIndex","0");
 		Client clientSaveFitnessTrainingSession =  getClient();
 		WebResource saveFitnessTrainingSession = clientSaveFitnessTrainingSession.resource(saveFitnessTrainingSessionUrl);
-		JSONObject saveFitnessTrainingSessionResJson = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);
-		Assert.assertEquals("200", saveFitnessTrainingSessionResJson.getString("status"));
-		Assert.assertEquals("OK", saveFitnessTrainingSessionResJson.getString("message"));
-		JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionResJson.getJSONObject("obj");
+		JSONObject saveFitnessTrainingSessionRes0 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj0);
+		Assert.assertEquals("200", saveFitnessTrainingSessionRes0.getString("status"));
+		Assert.assertEquals("OK", saveFitnessTrainingSessionRes0.getString("message"));
+		JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionRes0.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionReponse.getString("userid"));
 		Assert.assertEquals(100.0, objSaveFitnessTrainingSessionReponse.getDouble("shapeIndex"));
 		
@@ -187,24 +210,32 @@ public class TraineeChitraRegression extends JerseyTest{
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		String getShapeIndexUrl = "http://localhost:9998/trainee/id/"+userId+"/shapeIndex?accessToken="+accessToken+"&accessTokenType=facebook";
 		Client clientGetShapeIndex =  getClient();
-		WebResource getShapeIndex = clientGetShapeIndex.resource(getShapeIndexUrl);
-		JSONObject getShapeIndexResJson0 = getShapeIndex.get(JSONObject.class);
-		System.out.println(getShapeIndexResJson0);
+		WebResource getShapeIndex = clientGetShapeIndex.resource(getShapeIndexUrl);	
+		JSONObject getShapeIndexObj0 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex0 = getShapeIndexObj0.getJSONObject("obj");
+		System.out.println(getShapeIndex0);
+		Assert.assertEquals(userId, getShapeIndex0.getString("userid"));
+		Assert.assertEquals(100.0, getShapeIndex0.getDouble("shapeIndex"));
+		
 		
 		/*Get Shape Index after supercompensation on day 1*/
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 15);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
-		JSONObject getShapeIndexResJson11 = getShapeIndex.get(JSONObject.class);
-		System.out.println(getShapeIndexResJson11);
+		JSONObject getShapeIndexObj1 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex1 = getShapeIndexObj1.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex1.getString("userid"));
+		Assert.assertEquals(100.39, getShapeIndex1.getDouble("shapeIndex"));
 		
 		/*Get Shape Index just before the next training session*/
 		cal.set(Calendar.HOUR_OF_DAY, 19);
 		cal.set(Calendar.MINUTE, 0);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
-		JSONObject getShapeIndexResJson12 = getShapeIndex.get(JSONObject.class);
-		System.out.println(getShapeIndexResJson12);
+		JSONObject getShapeIndexObj2 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex2 = getShapeIndexObj2.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex2.getString("userid"));
+		Assert.assertEquals(100.13, getShapeIndex2.getDouble("shapeIndex"));
 		
 		/*Save Training Session Data on Day 1*/
 		sessionStartTime = cal.getTime().getTime();
@@ -227,73 +258,77 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj1.put("hrz5Distance","2166.67");
 		trainingSessionDataJsonObj1.put("hrz6Distance","1410.0");
 		trainingSessionDataJsonObj1.put("surfaceIndex","2");
-		JSONObject saveFitnessTrainingSession1ResJson = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj1);
-		Assert.assertEquals("200", saveFitnessTrainingSession1ResJson.getString("status"));
-		Assert.assertEquals("OK", saveFitnessTrainingSession1ResJson.getString("message"));
-		JSONObject objSaveFitnessTrainingSession1Reponse = saveFitnessTrainingSessionResJson.getJSONObject("obj");
-		Assert.assertEquals(userId, objSaveFitnessTrainingSession1Reponse.getString("userid"));
-		//Assert.assertEquals(100.0, objSaveFitnessTrainingSession1Reponse.getDouble("shapeIndex"));
-		System.out.println(saveFitnessTrainingSession1ResJson);
-		
+		JSONObject saveFitnessTrainingSessionRes1 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj1);
+		Assert.assertEquals("200", saveFitnessTrainingSessionRes1.getString("status"));
+		Assert.assertEquals("OK",  saveFitnessTrainingSessionRes1.getString("message"));
+		JSONObject objSaveFitnessTrainingSessionRes1 = saveFitnessTrainingSessionRes1.getJSONObject("obj");
+		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes1.getString("userid"));
+		Assert.assertEquals(100.13, objSaveFitnessTrainingSessionRes1.getDouble("shapeIndex"));
+				
 		/*Save Resting and Orthostatic Heart Rate test day 2*/
-		cal.add(Calendar.DATE, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 12);
-		cal.set(Calendar.MINUTE, 50);
-		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
-		JSONObject restingHeartRateTestReqJson1 = new JSONObject();
-		restingHeartRateTestReqJson1.put("heartrateType", "0");
-		restingHeartRateTestReqJson1.put("heartrate", "55.0");
-		restingHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject heartRateZonesFromHRT1 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson1);
-		
-		JSONObject orthoHeartRateTestReqJson1 = new JSONObject();
-		orthoHeartRateTestReqJson1.put("heartrateType", "3");
-		orthoHeartRateTestReqJson1.put("heartrate", "76.0");
-		orthoHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject saveOrthoHRTResJson1 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson1);
-	
-		/*Get Shape Index on day 2*/
-		JSONObject getShapeIndexResJson2 = getShapeIndex.get(JSONObject.class);
-		System.out.println(getShapeIndexResJson2);
-		
-		/*Save Resting and Orthostatic Heart Rate test day 3*/
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 12);
 		cal.set(Calendar.MINUTE, 50);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		JSONObject restingHeartRateTestReqJson2 = new JSONObject();
 		restingHeartRateTestReqJson2.put("heartrateType", "0");
-		restingHeartRateTestReqJson2.put("heartrate", "58.0");
+		restingHeartRateTestReqJson2.put("heartrate", "55.0");
 		restingHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject heartRateZonesFromHRT2 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson2);
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson2);
+		
+		JSONObject orthoHeartRateTestReqJson1 = new JSONObject();
+		orthoHeartRateTestReqJson1.put("heartrateType", "3");
+		orthoHeartRateTestReqJson1.put("heartrate", "76.0");
+		orthoHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson1);
+	
+		/*Get Shape Index on day 2*/
+		cal.set(Calendar.MINUTE, 55);
+		JSONObject getShapeIndexObj3 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex3 = getShapeIndexObj3.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex3.getString("userid"));
+		Assert.assertEquals(100.13, getShapeIndex3.getDouble("shapeIndex"));
+		
+		/*Save Resting and Orthostatic Heart Rate test day 3*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 12);
+		cal.set(Calendar.MINUTE, 50);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson3 = new JSONObject();
+		restingHeartRateTestReqJson3.put("heartrateType", "0");
+		restingHeartRateTestReqJson3.put("heartrate", "58.0");
+		restingHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson3);
 		
 		JSONObject orthoHeartRateTestReqJson2 = new JSONObject();
 		orthoHeartRateTestReqJson2.put("heartrateType", "3");
 		orthoHeartRateTestReqJson2.put("heartrate", "75.0");
 		orthoHeartRateTestReqJson2.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject saveOrthoHRTResJson2 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson2);
+		saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson2);
 		
 		/*Get Shape Index on day 4*/
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 15);
 		cal.set(Calendar.MINUTE, 00);
-		JSONObject getShapeIndexResJson3 = getShapeIndex.get(JSONObject.class);
-		System.out.println(getShapeIndexResJson3);
+		JSONObject getShapeIndexObj4 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex4 = getShapeIndexObj4.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex4.getString("userid"));
+		Assert.assertEquals(100.13, getShapeIndex4.getDouble("shapeIndex"));
 		
 		/*Save Resting and Orthostatic Heart Rate test day 4*/
 		cal.set(Calendar.MINUTE, 50);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
-		JSONObject restingHeartRateTestReqJson3 = new JSONObject();
-		restingHeartRateTestReqJson3.put("heartrateType", "0");
-		restingHeartRateTestReqJson3.put("heartrate", "55.0");
-		restingHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject heartRateZonesFromHRT3 = saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson3);
+		JSONObject restingHeartRateTestReqJson4 = new JSONObject();
+		restingHeartRateTestReqJson4.put("heartrateType", "0");
+		restingHeartRateTestReqJson4.put("heartrate", "55.0");
+		restingHeartRateTestReqJson4.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson4);
 		
 		JSONObject orthoHeartRateTestReqJson3 = new JSONObject();
 		orthoHeartRateTestReqJson3.put("heartrateType", "3");
 		orthoHeartRateTestReqJson3.put("heartrate", "77.0");
 		orthoHeartRateTestReqJson3.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		JSONObject saveOrthoHRTResJson3 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson3);
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson3);
 		
 		
 		/*Save Training Session Data Day 4*/
@@ -317,16 +352,144 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj4.put("hrz5Distance","0.0");
 		trainingSessionDataJsonObj4.put("hrz6Distance","0.0");
 		trainingSessionDataJsonObj4.put("surfaceIndex","0");
-		JSONObject saveFitnessTrainingSessionResJson4 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj4);
-		Assert.assertEquals("200", saveFitnessTrainingSession1ResJson.getString("status"));
-		Assert.assertEquals("OK", saveFitnessTrainingSession1ResJson.getString("message"));
-		JSONObject objSaveFitnessTrainingSessionReponse4 = saveFitnessTrainingSessionResJson.getJSONObject("obj");
-		Assert.assertEquals(userId, objSaveFitnessTrainingSession1Reponse.getString("userid"));
-		//Assert.assertEquals(100.0, objSaveFitnessTrainingSession1Reponse.getDouble("shapeIndex"));
-		System.out.println(saveFitnessTrainingSessionResJson4);
+		JSONObject saveFitnessTrainingSessionRes4 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj4);
+		Assert.assertEquals("200", saveFitnessTrainingSessionRes4.getString("status"));
+		Assert.assertEquals("OK", saveFitnessTrainingSessionRes4.getString("message"));
+		JSONObject objSaveFitnessTrainingSessionRes4 = saveFitnessTrainingSessionRes4.getJSONObject("obj");
+		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes4.getString("userid"));
+		Assert.assertEquals(101.6, objSaveFitnessTrainingSessionRes4.getDouble("shapeIndex"));
 		
-		/*Delete Trainee Data*/
 		
+		/*Save Resting and Orthostatic Heart Rate test day 5*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson5 = new JSONObject();
+		restingHeartRateTestReqJson5.put("heartrateType", "0");
+		restingHeartRateTestReqJson5.put("heartrate", "57.0");
+		restingHeartRateTestReqJson5.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson5);
+		
+		JSONObject orthoHeartRateTestReqJson4 = new JSONObject();
+		orthoHeartRateTestReqJson4.put("heartrateType", "3");
+		orthoHeartRateTestReqJson4.put("heartrate", "73.0");
+		orthoHeartRateTestReqJson4.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson4);
+		
+	    /*Save Training Session Data on day 5*/	    
+		cal.set(Calendar.HOUR_OF_DAY, 16);
+		cal.set(Calendar.MINUTE, 0);
+		sessionStartTime = cal.getTime().getTime();
+		cal.add(Calendar.MINUTE, 65);
+		sessionEndTime = cal.getTime().getTime();
+		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+		JSONObject trainingSessionDataJsonObj5 = new JSONObject();
+		trainingSessionDataJsonObj5.put("startTime", new Timestamp(sessionStartTime));
+		trainingSessionDataJsonObj5.put("endTime", new Timestamp(sessionEndTime) );
+		trainingSessionDataJsonObj5.put("hrz1Time","2.0");
+		trainingSessionDataJsonObj5.put("hrz2Time","32.0");
+		trainingSessionDataJsonObj5.put("hrz3Time","8.0");
+		trainingSessionDataJsonObj5.put("hrz4Time","23.0");
+		trainingSessionDataJsonObj5.put("hrz5Time","0.0");
+		trainingSessionDataJsonObj5.put("hrz6Time","0.0");
+		trainingSessionDataJsonObj5.put("hrz1Distance","1000.0");
+		trainingSessionDataJsonObj5.put("hrz2Distance","5493.33");
+		trainingSessionDataJsonObj5.put("hrz3Distance","1466.67");
+		trainingSessionDataJsonObj5.put("hrz4Distance","4638.33");
+		trainingSessionDataJsonObj5.put("hrz5Distance","0.0");
+		trainingSessionDataJsonObj5.put("hrz6Distance","0.0");
+		trainingSessionDataJsonObj5.put("surfaceIndex","3");
+		JSONObject saveFitnessTrainingSessionRes5 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj5);
+		Assert.assertEquals("200", saveFitnessTrainingSessionRes5.getString("status"));
+		Assert.assertEquals("OK", saveFitnessTrainingSessionRes5.getString("message"));
+		JSONObject objSaveFitnessTrainingSessionRes5 = saveFitnessTrainingSessionRes5.getJSONObject("obj");
+		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes5.getString("userid"));
+		Assert.assertEquals(98.21, objSaveFitnessTrainingSessionRes5.getDouble("shapeIndex"));
+		
+		/*Save Resting and Orthostatic Heart Rate test day 6*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson6 = new JSONObject();
+		restingHeartRateTestReqJson6.put("heartrateType", "0");
+		restingHeartRateTestReqJson6.put("heartrate", "57.0");
+		restingHeartRateTestReqJson6.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson6);
+		
+		JSONObject orthoHeartRateTestReqJson5 = new JSONObject();
+		orthoHeartRateTestReqJson5.put("heartrateType", "3");
+		orthoHeartRateTestReqJson5.put("heartrate", "73.0");
+		orthoHeartRateTestReqJson5.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson5);
+		
+	    /*Get Shape Index on day 6*/
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 45);
+		JSONObject getShapeIndexObj5 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex5 = getShapeIndexObj5.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex5.getString("userid"));
+		Assert.assertEquals(98.61, getShapeIndex5.getDouble("shapeIndex"));
+	    
+		/*Save Resting and Orthostatic Heart Rate test day 7*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson7 = new JSONObject();
+		restingHeartRateTestReqJson7.put("heartrateType", "0");
+		restingHeartRateTestReqJson7.put("heartrate", "57.0");
+		restingHeartRateTestReqJson7.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson7);
+		
+		JSONObject orthoHeartRateTestReqJson6 = new JSONObject();
+		orthoHeartRateTestReqJson6.put("heartrateType", "3");
+		orthoHeartRateTestReqJson6.put("heartrate", "73.0");
+		orthoHeartRateTestReqJson6.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson6);
+	    
+		/*Save Resting and Orthostatic Heart Rate test day 8*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson8 = new JSONObject();
+		restingHeartRateTestReqJson8.put("heartrateType", "0");
+		restingHeartRateTestReqJson8.put("heartrate", "57.0");
+		restingHeartRateTestReqJson8.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson8);
+		
+		JSONObject orthoHeartRateTestReqJson7 = new JSONObject();
+		orthoHeartRateTestReqJson7.put("heartrateType", "3");
+		orthoHeartRateTestReqJson7.put("heartrate", "73.0");
+		orthoHeartRateTestReqJson7.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson7);
+	    
+	    /*Save Resting and Orthostatic Heart Rate test day 9*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		JSONObject restingHeartRateTestReqJson9 = new JSONObject();
+		restingHeartRateTestReqJson9.put("heartrateType", "0");
+		restingHeartRateTestReqJson9.put("heartrate", "57.0");
+		restingHeartRateTestReqJson9.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson9);
+		
+		JSONObject orthoHeartRateTestReqJson8 = new JSONObject();
+		orthoHeartRateTestReqJson8.put("heartrateType", "3");
+		orthoHeartRateTestReqJson8.put("heartrate", "73.0");
+		orthoHeartRateTestReqJson8.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson8);
+	    
+	    /*Get Shape Index on day 9*/
+	    JSONObject getShapeIndexObj6 = getShapeIndex.get(JSONObject.class);
+		JSONObject getShapeIndex6 = getShapeIndexObj6.getJSONObject("obj");
+		Assert.assertEquals(userId, getShapeIndex6.getString("userid"));
+		Assert.assertEquals(99.21, getShapeIndex6.getDouble("shapeIndex"));
+	    
+		/*Delete Trainee Data*/	
 		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+userId+"/data/clear"; 
 		ClientConfig clientConfig = new DefaultClientConfig();
 		Client clientClearUserData = Client.create(clientConfig);
