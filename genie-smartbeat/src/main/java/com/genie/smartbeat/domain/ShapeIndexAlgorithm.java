@@ -295,12 +295,55 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	}
 	
 	public static final int SOHR_STABILIZATION_LIMIT 		= 4;
-	public static final int SOHR_DAY_OF_RECORD_SERIES_LIMIT = 30;	
+	public static final int SOHR_DAY_OF_RECORD_SERIES_LIMIT = 30;
+	public static final double[][] SOHR_TIME_REGRESSION_RANGE = { 	{-4,-3},{-3,-2},{-2,-1},{-1,-0.8}, {-0.8,-0.6},{-0.6,-0.4},{-0.4,-0.2},{-0.2,0.2},
+																	{0.2,0.4},{0.4,0.6},{0.6,0.8},{0.8,1},{1,2},{2,3},{3,4}};
+	public static final double[] SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP = {1.2,1,0.8,0.6,0.5,0.4,0.3,0.2,0,-0.2,-0.3,-0.4,-0.5,-0.6,-0.8,-1,-1.2};
+	
 	public static double calculateOrthostaticHeartrateFactor(double[][] dayOfRecordSOHRSeries){
-		double slopeOfTimeRegressionOfSHR = 0.0;		
+		double slopeOfTimeRegressionOfSHR = 0.0;
+		double orthostaticHeartrateFactor;
 		SimpleRegression regressionModel = new SimpleRegression();
 		regressionModel.addData(dayOfRecordSOHRSeries);
-		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();		
-		return DoubleValueFormatter.format3dot4(slopeOfTimeRegressionOfSHR);
+		slopeOfTimeRegressionOfSHR = regressionModel.getSlope();
+		if(SOHR_TIME_REGRESSION_RANGE[0][0] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[0];
+		}else if(SOHR_TIME_REGRESSION_RANGE[0][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[0][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[1];
+		}else if(SOHR_TIME_REGRESSION_RANGE[1][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[1][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[2];
+		}else if(SOHR_TIME_REGRESSION_RANGE[2][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[2][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[3];
+		}else if(SOHR_TIME_REGRESSION_RANGE[3][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[3][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[4];
+		}else if(SOHR_TIME_REGRESSION_RANGE[4][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[4][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[5];
+		}else if(SOHR_TIME_REGRESSION_RANGE[5][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[5][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[6];
+		}else if(SOHR_TIME_REGRESSION_RANGE[6][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[6][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[7];
+		}else if(SOHR_TIME_REGRESSION_RANGE[7][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[7][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[8];
+		}else if(SOHR_TIME_REGRESSION_RANGE[8][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[8][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[9];
+		}else if(SOHR_TIME_REGRESSION_RANGE[9][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[9][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[10];
+		}else if(SOHR_TIME_REGRESSION_RANGE[10][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[10][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[11];
+		}else if(SOHR_TIME_REGRESSION_RANGE[11][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[11][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[12];
+		}else if(SOHR_TIME_REGRESSION_RANGE[12][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[12][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[13];
+		}else if(SOHR_TIME_REGRESSION_RANGE[13][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[13][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[14];
+		}else if(SOHR_TIME_REGRESSION_RANGE[14][0] <= slopeOfTimeRegressionOfSHR && SOHR_TIME_REGRESSION_RANGE[14][1] > slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[15];
+		}
+		else if(SOHR_TIME_REGRESSION_RANGE[14][1] < slopeOfTimeRegressionOfSHR){
+			orthostaticHeartrateFactor = SOHR_TIME_REGRESSION_TO_OHR_FACTOR_MAP[16];
+		}else{
+			orthostaticHeartrateFactor = 0.0;
+		}
+		return orthostaticHeartrateFactor;
 	}
 }
