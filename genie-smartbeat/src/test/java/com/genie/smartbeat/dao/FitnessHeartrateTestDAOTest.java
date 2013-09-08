@@ -207,29 +207,89 @@ public class FitnessHeartrateTestDAOTest {
 	}
 	
 	@Test
-	public void testGetNRecentHeartRateTestsForUserByType(){
+public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 		
-		List<FitnessHeartrateTestBean> nRecentHeartRateTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType(), 2);
-		assertEquals(0, nRecentHeartRateTests.size());
+		Calendar cal = Calendar.getInstance();		
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO) smartbeatContext.getBean("fitnessHeartrateZoneDAO");
+		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		
+		List<FitnessHeartrateTestBean> ohrTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByTypeWithOffset("user1", 
+				ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+				ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT, 
+				2);
+		assertEquals(0, ohrTests.size());
+	
+		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean1.setUserid("user1");
+		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
+		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean1.setHeartrate(101.0);
+		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean1.setDayOfRecord(6);
+	
+		cal.add(Calendar.DATE, -1);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean2.setUserid("user1");
+		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
+		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean2.setHeartrate(99.0);
+		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean2.setDayOfRecord(5);
+	
+		cal.add(Calendar.DATE, -1);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean3.setUserid("user1");
+		fitnessHeartrateTestBean3.setHeartrateTestId("user1Test3");
+		fitnessHeartrateTestBean3.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean3.setHeartrate(100.0);
+		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean3.setDayOfRecord(4);
+	
+		cal.add(Calendar.DATE, -1);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean4 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean4.setUserid("user1");
+		fitnessHeartrateTestBean4.setHeartrateTestId("user1Test4");
+		fitnessHeartrateTestBean4.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean4.setHeartrate(97.0);
+		fitnessHeartrateTestBean4.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean4.setDayOfRecord(3);
+	
+		cal.add(Calendar.DATE, -1);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean5 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean5.setUserid("user1");
+		fitnessHeartrateTestBean5.setHeartrateTestId("user1Test5");
+		fitnessHeartrateTestBean5.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean5.setHeartrate(102.0);
+		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean5.setDayOfRecord(2);
+		
+		cal.add(Calendar.DATE, -1);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean6 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean6.setUserid("user1");
+		fitnessHeartrateTestBean6.setHeartrateTestId("user1Test6");
+		fitnessHeartrateTestBean6.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean6.setHeartrate(96.0);
+		fitnessHeartrateTestBean6.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+		fitnessHeartrateTestBean6.setDayOfRecord(1);
+	
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean4);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean5);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean6);
 		
-		nRecentHeartRateTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType(), 2);
-		assertEquals(2, nRecentHeartRateTests.size());
+		ohrTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByTypeWithOffset("user1", 
+																			ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+																			ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT, 
+																			2);
 		
-		nRecentHeartRateTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType(), 4);
-		assertEquals(3, nRecentHeartRateTests.size());
-		
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean4.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean5.getHeartrateTestId());
+		assertEquals(2, ohrTests.size());
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 	}
+
 	 
 	@Test
 	public void testGetTodaysHeartRateTestCountForUser(){

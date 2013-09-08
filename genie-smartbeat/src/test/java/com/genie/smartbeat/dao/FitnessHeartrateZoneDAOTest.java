@@ -1,6 +1,8 @@
 package com.genie.smartbeat.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import junit.framework.Assert;
 
 import org.junit.BeforeClass;
@@ -9,7 +11,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
-import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 
 /**
  * @author dhasarathy
@@ -113,7 +114,6 @@ public class FitnessHeartrateZoneDAOTest {
 		testBean.setUserid(null);
 		Assert.assertEquals(0, fitnessHeartrateZoneDAO.createHeartrateZoneModel(testBean));
 	
-	}
-
+	}	
 }
 

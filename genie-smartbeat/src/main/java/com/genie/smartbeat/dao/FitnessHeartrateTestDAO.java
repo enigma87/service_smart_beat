@@ -183,10 +183,10 @@ public class FitnessHeartrateTestDAO {
 		return numberofHeartRateTests;
 	}
 		
-	public List<FitnessHeartrateTestBean> getNRecentHeartRateTestsForUserByType(String userid, Integer heartrateType, Integer n){
+	public List<FitnessHeartrateTestBean> getNRecentHeartRateTestsForUserByTypeWithOffset(String userid, Integer heartrateType, Integer offset, Integer n){
 		String QUERY_N_RECENT_BY_TYPE =  QUERY_ALL_TESTS_BY_TYPE +
 										 " ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " DESC" +
-										 " LIMIT " + n;				
+										 " LIMIT " + offset + "," + n;				
 		List<FitnessHeartrateTestBean> nRecentHeartRateTests = new ArrayList<FitnessHeartrateTestBean>();
 		try{
 			nRecentHeartRateTests = new JdbcTemplate(dataSource).query(QUERY_N_RECENT_BY_TYPE, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class), userid, heartrateType);

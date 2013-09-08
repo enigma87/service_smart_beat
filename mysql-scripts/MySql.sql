@@ -1,30 +1,123 @@
-org.codehaus.jettison.json.JSONException: JSONObject["userid"] not found.
-	at org.codehaus.jettison.json.JSONObject.get(JSONObject.java:360)
-	at org.codehaus.jettison.json.JSONObject.getString(JSONObject.java:487)
-	at com.genie.smartbeat.regression.TraineeChitraRegression.traineeChitraRegressionTest(TraineeChitraRegression.java:215)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:45)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
-	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:42)
-	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
-	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
-	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:30)
-	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:263)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:68)
-	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:47)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:231)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:60)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:229)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:50)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:222)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:300)
-	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
-	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
-	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:467)
-	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:683)
-	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:390)
-	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:197)
+delimiter $$
 
+CREATE DATABASE `genie` /*!40100 DEFAULT CHARACTER SET utf8 */$$
+
+
+delimiter $$
+
+CREATE TABLE genie.`user` (
+  `userid` varchar(128) NOT NULL,
+  `access_token` varchar(300) NOT NULL,
+  `access_token_type` text NOT NULL,
+  `first_name` text NOT NULL,
+  `middle_name` text,
+  `last_name` text,
+  `dob` date DEFAULT NULL,
+  `gender` TINYINT UNSIGNED NOT NULL, 
+  `email` varchar(100) NOT NULL,  
+  `image_url` text,  
+  `created_ts` timestamp NULL DEFAULT NULL,
+  `last_updated_ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_login_ts` timestamp NULL DEFAULT NULL,
+  `active` tinyint(1) DEFAULT '1',
+  `privilege_level` TINYINT UNSIGNED NOT NULL DEFAULT 1, 
+  PRIMARY KEY (`userid`),
+  UNIQUE KEY `uniq_user_email` (`email`) USING BTREE,
+  UNIQUE KEY `userid_UNIQUE` (`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_training_session` (
+  `userid` varchar(128) NOT NULL,
+  `training_session_id` varchar(128) NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `hrz_1_time` DOUBLE DEFAULT NULL,
+  `hrz_2_time` DOUBLE DEFAULT NULL,
+  `hrz_3_time` DOUBLE DEFAULT NULL,
+  `hrz_4_time` DOUBLE DEFAULT NULL,
+  `hrz_5_time` DOUBLE DEFAULT NULL,
+  `hrz_6_time` DOUBLE DEFAULT NULL,
+  `hrz_1_distance` DOUBLE DEFAULT NULL,
+  `hrz_2_distance` DOUBLE DEFAULT NULL,
+  `hrz_3_distance` DOUBLE DEFAULT NULL,
+  `hrz_4_distance` DOUBLE DEFAULT NULL,
+  `hrz_5_distance` DOUBLE DEFAULT NULL,
+  `hrz_6_distance` DOUBLE DEFAULT NULL,
+  `surface_index` INTEGER DEFAULT NULL,
+  `vdot` DOUBLE DEFAULT NULL,
+  `health_perception_index` INTEGER DEFAULT NULL,
+  `muscle_state_perception_index` INTEGER DEFAULT NULL,
+  `session_stress_perception_index` INTEGER DEFAULT NULL,
+  PRIMARY KEY(`training_session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_shape_index_model` (
+  `userid` varchar(128) NOT NULL,  
+  `shape_index` DOUBLE DEFAULT NULL,
+  `time_of_record` timestamp NULL DEFAULT NULL,  
+  `session_of_record` varchar(128) NOT NULL,
+  PRIMARY KEY(`session_of_record`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_homeostasis_index_model` (
+  `userid` varchar(128) NOT NULL,
+  `trainee_classification` INTEGER DEFAULT NULL,
+  `local_regression_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
+  `recent_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
+  `recent_total_load_of_exercise` DOUBLE DEFAULT NULL,
+  `recent_end_time` timestamp NULL DEFAULT NULL,
+  `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
+  `previous_end_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_speed_heartrate_model` (
+  `userid` varchar(128) NOT NULL,
+  `current_vdot` DOUBLE DEFAULT NULL,
+  `previous_vdot` DOUBLE DEFAULT NULL,   
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_heartrate_test` (
+  `userid` varchar(128) NOT NULL,
+  `heartrate_test_id` varchar(128) NOT NULL,
+  `heartrate_type` int(3) DEFAULT NULL,  
+  `heartrate` DOUBLE DEFAULT NULL,
+  `time_of_record` timestamp NULL DEFAULT NULL,
+  `day_of_record` INTEGER DEFAULT NULL,
+  UNIQUE KEY `userid_UNIQUE` (`heartrate_test_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$
+
+CREATE TABLE genie.`fitness_heartrate_zone_model` (
+  `userid` varchar(128) NOT NULL,
+  `heartrate_zone_1_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_1_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_2_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_2_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_3_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_3_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_4_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_4_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_5_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_5_end` DOUBLE DEFAULT NULL,
+  `heartrate_zone_6_start` DOUBLE DEFAULT NULL,
+  `heartrate_zone_6_end` DOUBLE DEFAULT NULL,
+  PRIMARY KEY(`userid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
+
+delimiter $$

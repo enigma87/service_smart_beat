@@ -237,11 +237,14 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessShapeIndexBean = fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId(recentTrainingSessionId);			
 		}
 		
-		if (null != fitnessShapeIndexBean) {			
-			newShapeIndex = (fitnessShapeIndexBean.getShapeIndex()
-				+ getFitnessSupercompensationPoints(fitnessShapeIndexBean.getUserid(), timeAtConsideration)				
-				- getFitnessDetrainingPenalty(fitnessShapeIndexBean.getUserid(), timeAtConsideration))
-				* getSpeedHeartrateFactor(fitnessShapeIndexBean.getUserid());
+		if (null != fitnessShapeIndexBean) {
+			String userid = fitnessShapeIndexBean.getUserid();
+			newShapeIndex = (
+				fitnessShapeIndexBean.getShapeIndex()
+				+ getFitnessSupercompensationPoints(userid, timeAtConsideration)
+				+ getOrthostaticHeartrateFactor(userid)
+				- getFitnessDetrainingPenalty(userid, timeAtConsideration)				
+				)* getSpeedHeartrateFactor(userid);
 		}else{
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
 		}					
@@ -301,8 +304,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}else{
 				recentTestsToQuery = numberOfSOHRTests - ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT;
 			}
-			List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByType(userid, 
+			List<FitnessHeartrateTestBean> sohrTimeSeries = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByTypeWithOffset(userid, 
 					ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, 
+					ShapeIndexAlgorithm.SOHR_STABILIZATION_LIMIT,
 					recentTestsToQuery);
 			double[][] dayOfRecordSOHRSeries = new double[sohrTimeSeries.size()][2];
 			int index = 0;

@@ -731,69 +731,36 @@ public class FitnessManagerMySQLImplTest {
 	/*
 	 *  THE METHOD ISN'T USABLE YET, LETS KEEP THIS COMMENTED UNTIL ITS DONE
 	 * 
-	 * 
+	 * */
 	@Test
 	public void testGetOrthostaticHeartrateFactor() {
-		long oneHourBefore = now -(1 * 3600000);
-		long twoHoursBefore = now -(2 * 3600000);
-		long threeHoursBefore = now - (3 * 3600000);
+		Calendar cal = Calendar.getInstance();
 	
 		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
 		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO) smartbeatContext.getBean("fitnessHeartrateZoneDAO");
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
-	
-		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean1.setUserid("user1");
-		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean1.setHeartrate(124.0);
-		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(threeHoursBefore));
-		fitnessHeartrateTestBean1.setDayOfRecord(1);
-	
-		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean2.setUserid("user1");
-		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
-		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean2.setHeartrate(130.0);
-		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
-		fitnessHeartrateTestBean2.setDayOfRecord(3);
-	
-		FitnessHeartrateTestBean fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean3.setUserid("user1");
-		fitnessHeartrateTestBean3.setHeartrateTestId("user1Test3");
-		fitnessHeartrateTestBean3.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean3.setHeartrate(146.0);
-		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(oneHourBefore));
-		fitnessHeartrateTestBean3.setDayOfRecord(8);
-	
-		FitnessHeartrateTestBean fitnessHeartrateTestBean4 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean4.setUserid("user1");
-		fitnessHeartrateTestBean4.setHeartrateTestId("user1Test4");
-		fitnessHeartrateTestBean4.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean4.setHeartrate(146.0);
-		fitnessHeartrateTestBean4.setTimeOfRecord(new Timestamp(oneHourBefore));
-		fitnessHeartrateTestBean4.setDayOfRecord(8);
-	
-		FitnessHeartrateTestBean fitnessHeartrateTestBean5 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean5.setUserid("user1");
-		fitnessHeartrateTestBean5.setHeartrateTestId("user1Test5");
-		fitnessHeartrateTestBean5.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean5.setHeartrate(140.0);
-		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(oneHourBefore));
-		fitnessHeartrateTestBean5.setDayOfRecord(8);
-	
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean4);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean5);
-	
-		FitnessManager fitnessManager = (FitnessManager) smartbeatContext.getBean("fitnessManagerMySQLImpl");
-		System.out.println(fitnessManager.getOrthostaticHeartrateFactor("user1"));
+		
+		double[] ohrtValues = {101.0,99.0,100.0,97.0,102.0,96.0,98.0,92.0,95.0,91.0};
+		FitnessHeartrateTestBean bean = null;
+		for(int i=10; i>=1; i--){
+			cal.add(Calendar.DATE, -1);
+			bean = new FitnessHeartrateTestBean();
+			bean.setUserid("user1");
+			bean.setHeartrateTestId("user1Test"+i);
+			bean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+			bean.setHeartrate(ohrtValues[i-1]);
+			bean.setTimeOfRecord(new Timestamp(cal.getTimeInMillis()));
+			bean.setDayOfRecord(i);
+			fitnessHeartrateTestDAO.createHeartrateTest(bean);
+			
+		}				
+		FitnessManagerMySQLImpl fitnessManager = (FitnessManagerMySQLImpl) smartbeatContext.getBean("fitnessManagerMySQLImpl");
+		double ohrFactor = fitnessManager.getOrthostaticHeartrateFactor("user1");
+		Assert.assertEquals(Math.round(0.3*10), Math.round(ohrFactor*10));
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 	}
-*/
+
 
 	@Test
 	public void testUpdateShapeIndexModel() {
