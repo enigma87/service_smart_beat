@@ -213,7 +213,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessTrainingSessionDAO.deleteFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
 
-	@Override
 	public double getShapeIndex(String recentTrainingSessionId) {
 		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
 		return getShapeIndexAtTime(recentTrainingSessionId, timeAtConsideration);

@@ -42,7 +42,9 @@ public class FitnessTrainingSessionDAO {
 																		"vdot", 
 																		"health_perception_index", 
 																		"muscle_state_perception_index", 
-																		"session_stress_perception_index" };
+																		"session_stress_perception_index",
+																		"average_altitude",
+																		"extra_load"};
 	private static final int COLUMN_TRAINING_SESSION_ID = 1;
 	private static final int COLUMN_USERID = 0;
 	private static final int COLUMN_START_TIME = 2;
