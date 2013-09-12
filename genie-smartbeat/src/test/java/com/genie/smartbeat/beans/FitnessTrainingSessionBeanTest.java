@@ -42,6 +42,8 @@ public class FitnessTrainingSessionBeanTest {
 	    Integer sessionStressPerceptionIndex = 3;
 	    Integer muscleStatePerceptionIndex = 3;
 	    Integer healthPerceptionIndex = 3;
+	    Double averageAltitude = 10.0;
+	    Double extraLoad = 3.0;
 	    
 	    FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	    fitnessTrainingSessionBean.setUserid(userid);
@@ -65,6 +67,8 @@ public class FitnessTrainingSessionBeanTest {
 	    fitnessTrainingSessionBean.setHealthPerceptionIndex(healthPerceptionIndex);
 	    fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(muscleStatePerceptionIndex);
 	    fitnessTrainingSessionBean.setSessionStressPerceptionIndex(sessionStressPerceptionIndex);
+	    fitnessTrainingSessionBean.setExtraLoad(extraLoad);
+	    fitnessTrainingSessionBean.setAverageAltitude(averageAltitude);
 	    
 	    Assert.assertEquals(userid,fitnessTrainingSessionBean.getUserid());
 	    Assert.assertEquals(trainingSessionId,fitnessTrainingSessionBean.getTrainingSessionId());
@@ -87,6 +91,7 @@ public class FitnessTrainingSessionBeanTest {
 	    Assert.assertEquals(sessionStressPerceptionIndex, fitnessTrainingSessionBean.getSessionStressPerceptionIndex());
 	    Assert.assertEquals(muscleStatePerceptionIndex, fitnessTrainingSessionBean.getMuscleStatePerceptionIndex());
 	    Assert.assertEquals(healthPerceptionIndex, fitnessTrainingSessionBean.getHealthPerceptionIndex());
+	    Assert.assertEquals(extraLoad, fitnessTrainingSessionBean.getExtraLoad());
 	    
 	    double[] getTimeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
 	    Assert.assertEquals(hrz1Time,getTimeDistributionOfHRZ[0]);

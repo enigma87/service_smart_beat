@@ -32,6 +32,8 @@ public class SaveFitnessTrainingSessionRequestJson {
 	private Integer healthPerceptionIndex;
 	private Integer muscleStatePerceptionIndex;
 	private Integer sessionStressPerceptionIndex;
+	private Double averageAltitude;
+	private Double extraLoad;
 	
 	public String getUserid() {
 		return userid;
@@ -194,6 +196,8 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(getMuscleStatePerceptionIndex());
 		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(getSessionStressPerceptionIndex());;
 		fitnessTrainingSessionBean.setHealthPerceptionIndex(getHealthPerceptionIndex());;
+		fitnessTrainingSessionBean.setAverageAltitude(getAverageAltitude());
+		fitnessTrainingSessionBean.setExtraLoad(getExtraLoad());
 
 		return fitnessTrainingSessionBean;
 	}
@@ -221,5 +225,21 @@ public class SaveFitnessTrainingSessionRequestJson {
 	public void setSessionStressPerceptionIndex(
 			Integer sessionStressPerceptionIndex) {
 		this.sessionStressPerceptionIndex = sessionStressPerceptionIndex;
+	}
+
+	public Double getExtraLoad() {
+		return extraLoad;
+	}
+
+	public void setExtraLoad(Double extraLoad) {
+		this.extraLoad = extraLoad;
+	}
+
+	public Double getAverageAltitude() {
+		return averageAltitude;
+	}
+
+	public void setAverageAltitude(Double averageAltitude) {
+		this.averageAltitude = averageAltitude;
 	}
 }

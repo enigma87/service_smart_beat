@@ -119,12 +119,12 @@
 		    <version>2.3</version>
 	    </dependency>
   </dependencies>
-  <repositories>
+  <!--<repositories>
 	  <repository>
 		<id>repo</id>
 		<url>file://${project.basedir}/lib</url>
 	  </repository>
-  </repositories>
+  </repositories>-->
 	<build>
 		<finalName>smartbeat</finalName>
 		<pluginManagement>

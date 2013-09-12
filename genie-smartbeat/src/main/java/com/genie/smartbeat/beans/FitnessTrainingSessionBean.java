@@ -28,6 +28,8 @@ public class FitnessTrainingSessionBean {
 	private Integer healthPerceptionIndex;
 	private Integer muscleStatePerceptionIndex;
 	private Integer sessionStressPerceptionIndex;
+	private double averageAltitude;
+	private double extraLoad;
 	
 	public String getUserid() {
 		return userid;
@@ -258,5 +260,21 @@ public class FitnessTrainingSessionBean {
 	public void setSessionStressPerceptionIndex(
 			Integer sessionStressPerceptionIndex) {
 		this.sessionStressPerceptionIndex = sessionStressPerceptionIndex;
+	}
+
+	public double getAverageAltitude() {
+		return averageAltitude;
+	}
+
+	public void setAverageAltitude(double averageAltitude) {
+		this.averageAltitude = averageAltitude;
+	}
+
+	public double getExtraLoad() {
+		return extraLoad;
+	}
+
+	public void setExtraLoad(double extraLoad) {
+		this.extraLoad = extraLoad;
 	}
 }
