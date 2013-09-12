@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.ws.rs.core.MediaType;
 
@@ -14,15 +13,10 @@ import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import com.genie.smartbeat.core.FitnessManager;
-import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.social.beans.UserBean;
-import com.genie.social.core.UserManager;
 import com.genie.social.facebook.GraphAPI;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
@@ -36,10 +30,10 @@ import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
 import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
 
-public class TraineeChitraRegression extends JerseyTest{
-	
-	UserBean chithra = new UserBean();
-	String chitraFbId = "100006485698211";
+public class TraineeSureshRegression extends JerseyTest{
+
+	UserBean suresh = new UserBean();
+	String sureshFbId = "100006632888318";
 	String userId = null;
 	String accessToken = null;
 
@@ -51,9 +45,9 @@ public class TraineeChitraRegression extends JerseyTest{
 	@Before
 	public void setUpBeforeClass() throws Exception 
 	{
-		accessToken = GraphAPI.getTestUserAccessToken(chitraFbId);
-		chithra.setAccessToken(accessToken);
-		chithra.setAccessTokenType("facebook");
+		accessToken = GraphAPI.getTestUserAccessToken(sureshFbId);
+		suresh.setAccessToken(accessToken);
+		suresh.setAccessTokenType("facebook");
 		
 	}
 	
@@ -70,7 +64,7 @@ public class TraineeChitraRegression extends JerseyTest{
     }
 	
 	@Test
-	public void traineeChitraRegressionTest() throws Exception {
+	public void traineeSureshRegressionTest() throws Exception {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
@@ -79,8 +73,8 @@ public class TraineeChitraRegression extends JerseyTest{
 		/*Register the User*/
 	    String registerUserUrl = "http://localhost:9998/trainee/register";
 		JSONObject inputJsonObj = new JSONObject();
-		inputJsonObj.put("accessToken", chithra.getAccessToken());
-		inputJsonObj.put("accessTokenType", chithra.getAccessTokenType() );
+		inputJsonObj.put("accessToken", suresh.getAccessToken());
+		inputJsonObj.put("accessTokenType", suresh.getAccessTokenType() );
 		Client clientRegisterUser = getClient();
 		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
 		JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
@@ -88,34 +82,8 @@ public class TraineeChitraRegression extends JerseyTest{
 		Assert.assertEquals("200", registerResJson.getString("status"));
 		Assert.assertEquals("OK", registerResJson.getString("message"));
 		userId = objRegister.getString("userid");
-		chithra.setUserid(userId);
+		suresh.setUserid(userId);
 		
-		/*Save Heart rate tests for the user for RMT*/
-		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
-		
-		Client clientRestingHeartrateTest =  getClient();
-		WebResource saveRestingHeartrateTest =  clientRestingHeartrateTest.resource(saveHeartRateTestUrl);
-		JSONObject restingHeartRateTestReqJson0 = new JSONObject();
-		restingHeartRateTestReqJson0.put("heartrateType", "0");
-		restingHeartRateTestReqJson0.put("heartrate", "60.0");
-		restingHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson0);
-
-	    Client clientThresholdHeartrateTest =  getClient();
-		WebResource saveThresholdHeartrateTest =  clientThresholdHeartrateTest.resource(saveHeartRateTestUrl);
-		JSONObject thresholdtHeartRateTestReqJson0 = new JSONObject();
-		thresholdtHeartRateTestReqJson0.put("heartrateType", "1");
-		thresholdtHeartRateTestReqJson0.put("heartrate", "147.0");
-		thresholdtHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		saveThresholdHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class, thresholdtHeartRateTestReqJson0);
-
-		Client clientMaximalHeartrateTest =  getClient();
-		WebResource saveMaximalHeartrateTest =  clientMaximalHeartrateTest.resource(saveHeartRateTestUrl);
-		JSONObject maximaltHeartRateTestReqJson0 = new JSONObject();
-		maximaltHeartRateTestReqJson0.put("heartrateType", "2");
-		maximaltHeartRateTestReqJson0.put("heartrate", "189.0");
-		maximaltHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		saveMaximalHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class, maximaltHeartRateTestReqJson0);
 		
 		/*Get Heart Rate Zones for the user*/
 		String getHeartRateZoneUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateZones?accessToken="+accessToken+"&accessTokenType=facebook";
@@ -124,74 +92,77 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject getHrzResJson = getUserHrz.get(JSONObject.class);
 		JSONObject heartrateZones0 = getHrzResJson.getJSONObject("obj");
 		assertEquals(userId, heartrateZones0.getString("userid"));
-		Assert.assertEquals(60.0,  heartrateZones0.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(103.5, heartrateZones0.getDouble("heartrateZone1End"));
-		Assert.assertEquals(103.5, heartrateZones0.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(125.25, heartrateZones0.getDouble("heartrateZone2End"));
-		Assert.assertEquals(125.25, heartrateZones0.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(141.84, heartrateZones0.getDouble("heartrateZone3End"));
-		Assert.assertEquals(141.84, heartrateZones0.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(149.58, heartrateZones0.getDouble("heartrateZone4End"));
-		Assert.assertEquals(149.58, heartrateZones0.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(181.26, heartrateZones0.getDouble("heartrateZone5End"));
-		Assert.assertEquals(181.26, heartrateZones0.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(189.0, heartrateZones0.getDouble("heartrateZone6End"));
+		Assert.assertEquals(72.0,  heartrateZones0.getDouble("heartrateZone1Start"));
+		Assert.assertEquals(96.0, heartrateZones0.getDouble("heartrateZone1End"));
+		Assert.assertEquals(96.0, heartrateZones0.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(108.0, heartrateZones0.getDouble("heartrateZone2End"));
+		Assert.assertEquals(108.0, heartrateZones0.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(116.0, heartrateZones0.getDouble("heartrateZone3End"));
+		Assert.assertEquals(116.0, heartrateZones0.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(122.0, heartrateZones0.getDouble("heartrateZone4End"));
+		Assert.assertEquals(122.0, heartrateZones0.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(166.0, heartrateZones0.getDouble("heartrateZone5End"));
+		Assert.assertEquals(166.0, heartrateZones0.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(172.0, heartrateZones0.getDouble("heartrateZone6End"));
 		
 		/*Save Resting and Ortho Static Heart Rate test day 0*/
-		cal.set(Calendar.HOUR_OF_DAY, 9);
+		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
+		Client clientRestingHeartrateTest =  getClient();
+		WebResource saveRestingHeartrateTest =  clientRestingHeartrateTest.resource(saveHeartRateTestUrl);
+		cal.set(Calendar.HOUR_OF_DAY,11);
 		cal.set(Calendar.MINUTE, 0);
-		JSONObject restingHeartRateTestReqJson1 = new JSONObject();
-		restingHeartRateTestReqJson1.put("heartrateType", "0");
-		restingHeartRateTestReqJson1.put("heartrate", "54.0");
-		restingHeartRateTestReqJson1.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
-		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson1);
+		JSONObject restingHeartRateTestReqJson0 = new JSONObject();
+		restingHeartRateTestReqJson0.put("heartrateType", "0");
+		restingHeartRateTestReqJson0.put("heartrate", "66.0");
+		restingHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson0);
 		
 		JSONObject orthoHeartRateTestReqJson0 = new JSONObject();
 		orthoHeartRateTestReqJson0.put("heartrateType", "3");
-		orthoHeartRateTestReqJson0.put("heartrate", "78.0");
+		orthoHeartRateTestReqJson0.put("heartrate", "72.0");
 		orthoHeartRateTestReqJson0.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
 		Client clientOrthoHeartrateTest =  getClient();
 		WebResource saveOrthoHeartRateTest =  clientOrthoHeartrateTest.resource(saveHeartRateTestUrl);
     	JSONObject saveHeartrateTestRes0 = saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson0);
     	JSONObject saveHeartrateTestResObj0 = saveHeartrateTestRes0.getJSONObject("obj");
     	JSONObject heartRateZones1 = saveHeartrateTestResObj0.getJSONObject("heartrateZones");
-    	Assert.assertEquals(54.0, heartRateZones1.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(100.5, heartRateZones1.getDouble("heartrateZone1End"));
-		Assert.assertEquals(100.5, heartRateZones1.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(123.75, heartRateZones1.getDouble("heartrateZone2End"));
-		Assert.assertEquals(123.75, heartRateZones1.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(141.6, heartRateZones1.getDouble("heartrateZone3End"));
-		Assert.assertEquals(141.6, heartRateZones1.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(149.7, heartRateZones1.getDouble("heartrateZone4End"));
-		Assert.assertEquals(149.7, heartRateZones1.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(180.9, heartRateZones1.getDouble("heartrateZone5End"));
-		Assert.assertEquals(180.9, heartRateZones1.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(189.0, heartRateZones1.getDouble("heartrateZone6End"));
+    	Assert.assertEquals(66.0, heartRateZones1.getDouble("heartrateZone1Start"));
+		Assert.assertEquals(93.0, heartRateZones1.getDouble("heartrateZone1End"));
+		Assert.assertEquals(93.0, heartRateZones1.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(107.0, heartRateZones1.getDouble("heartrateZone2End"));
+		Assert.assertEquals(107.0, heartRateZones1.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(116.0, heartRateZones1.getDouble("heartrateZone3End"));
+		Assert.assertEquals(116.0, heartRateZones1.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(123.0, heartRateZones1.getDouble("heartrateZone4End"));
+		Assert.assertEquals(123.0, heartRateZones1.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(166.0, heartRateZones1.getDouble("heartrateZone5End"));
+		Assert.assertEquals(166.0, heartRateZones1.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(172.0, heartRateZones1.getDouble("heartrateZone6End"));
 		
 				
 		/*Save Training Session for the user in Day 0*/
 		String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/id/"+userId+"/trainingSession/save?accessToken="+accessToken+"&accessTokenType=facebook";
 		JSONObject trainingSessionDataJsonObj0 = new JSONObject();
-		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.HOUR_OF_DAY, 12);
 		cal.set(Calendar.MINUTE, 0);
 		Long sessionStartTime = cal.getTime().getTime();
-		cal.add(Calendar.HOUR, 1);
+		cal.add(Calendar.MINUTE, 28);
 		Long sessionEndTime = cal.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
 		
 		trainingSessionDataJsonObj0.put("startTime", new Timestamp(sessionStartTime));
 		trainingSessionDataJsonObj0.put("endTime", new Timestamp(sessionEndTime) );
-		trainingSessionDataJsonObj0.put("hrz1Time","4.0");
-		trainingSessionDataJsonObj0.put("hrz2Time","32.0");
+		trainingSessionDataJsonObj0.put("hrz1Time","0.0");
+		trainingSessionDataJsonObj0.put("hrz2Time","3.0");
 		trainingSessionDataJsonObj0.put("hrz3Time","14.0");
 		trainingSessionDataJsonObj0.put("hrz4Time","10.0");
-		trainingSessionDataJsonObj0.put("hrz5Time","0.0");
+		trainingSessionDataJsonObj0.put("hrz5Time","1.0");
 		trainingSessionDataJsonObj0.put("hrz6Time","0.0");
-		trainingSessionDataJsonObj0.put("hrz1Distance","1000.0");
-		trainingSessionDataJsonObj0.put("hrz2Distance","5920.0");
-		trainingSessionDataJsonObj0.put("hrz3Distance","2753.33");
-		trainingSessionDataJsonObj0.put("hrz4Distance","2200.0");
-		trainingSessionDataJsonObj0.put("hrz5Distance","0.0");
+		trainingSessionDataJsonObj0.put("hrz1Distance","0.0");
+		trainingSessionDataJsonObj0.put("hrz2Distance","365.0");
+		trainingSessionDataJsonObj0.put("hrz3Distance","1960.0");
+		trainingSessionDataJsonObj0.put("hrz4Distance","1500.0");
+		trainingSessionDataJsonObj0.put("hrz5Distance","158.33");
 		trainingSessionDataJsonObj0.put("hrz6Distance","0.0");
 		trainingSessionDataJsonObj0.put("surfaceIndex","0");
 		Client clientSaveFitnessTrainingSession =  getClient();
@@ -205,8 +176,9 @@ public class TraineeChitraRegression extends JerseyTest{
 		
 		
 		
-		/*Get Shape Index one hour after the training session is over*/
-		cal.set(Calendar.HOUR_OF_DAY, 12);
+		/*Get Shape Index three hours after the training session is over*/
+		cal.set(Calendar.HOUR_OF_DAY, 15);
+		cal.set(Calendar.MINUTE, 0);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		String getShapeIndexUrl = "http://localhost:9998/trainee/id/"+userId+"/shapeIndex?accessToken="+accessToken+"&accessTokenType=facebook";
 		Client clientGetShapeIndex =  getClient();
@@ -217,40 +189,56 @@ public class TraineeChitraRegression extends JerseyTest{
 		Assert.assertEquals(userId, getShapeIndex0.getString("userid"));
 		Assert.assertEquals(100.0, getShapeIndex0.getDouble("shapeIndex"));
 		
+		/*Save Second Resting and Ortho Static Heart Rate test day 0*/
+		cal.set(Calendar.HOUR_OF_DAY,19);
+		cal.set(Calendar.MINUTE, 0);
+		JSONObject restingHeartRateTestReqJson01 = new JSONObject();
+		restingHeartRateTestReqJson01.put("heartrateType", "0");
+		restingHeartRateTestReqJson01.put("heartrate", "66.0");
+		restingHeartRateTestReqJson01.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+		saveRestingHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,restingHeartRateTestReqJson01);
+		
+		JSONObject orthoHeartRateTestReqJson01 = new JSONObject();
+		orthoHeartRateTestReqJson01.put("heartrateType", "3");
+		orthoHeartRateTestReqJson01.put("heartrate", "72.0");
+		orthoHeartRateTestReqJson01.put("timeOfRecord", new Timestamp(cal.getTime().getTime()));
+    	saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson01);
 		
 		/*Get Shape Index after supercompensation on day 1*/
 		cal.add(Calendar.DATE, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 10);
-		cal.set(Calendar.MINUTE, 15);
+		cal.set(Calendar.HOUR_OF_DAY, 14);
+		cal.set(Calendar.MINUTE, 28);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		JSONObject getShapeIndexObj1 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex1 = getShapeIndexObj1.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex1.getString("userid"));
-		Assert.assertEquals(100.39, getShapeIndex1.getDouble("shapeIndex"));
+		Assert.assertEquals(100.79, getShapeIndex1.getDouble("shapeIndex"));
 		
-		/*Get Shape Index just before the next training session*/
-		cal.set(Calendar.HOUR_OF_DAY, 19);
+		/*Get Shape Index on Day 2*/
+		cal.add(Calendar.DATE,1);
+		cal.set(Calendar.HOUR_OF_DAY, 16);
 		cal.set(Calendar.MINUTE, 0);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
 		JSONObject getShapeIndexObj2 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex2 = getShapeIndexObj2.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex2.getString("userid"));
-		Assert.assertEquals(100.13, getShapeIndex2.getDouble("shapeIndex"));
+		Assert.assertEquals(100.53, getShapeIndex2.getDouble("shapeIndex"));
 		
-		/*Save Training Session Data on Day 1*/
+		/*Save Training Session Data on Day 2*/
+		cal.set(Calendar.HOUR_OF_DAY, 17);
 		sessionStartTime = cal.getTime().getTime();
-		cal.add(Calendar.MINUTE, 110);
+		cal.add(Calendar.MINUTE, 42);
 		sessionEndTime = cal.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
 		JSONObject trainingSessionDataJsonObj1 = new JSONObject();
 		trainingSessionDataJsonObj1.put("startTime", new Timestamp(sessionStartTime));
 		trainingSessionDataJsonObj1.put("endTime", new Timestamp(sessionEndTime) );
-		trainingSessionDataJsonObj1.put("hrz1Time","8.0");
-		trainingSessionDataJsonObj1.put("hrz2Time","42.0");
-		trainingSessionDataJsonObj1.put("hrz3Time","34.0");
-		trainingSessionDataJsonObj1.put("hrz4Time","10.0");
-		trainingSessionDataJsonObj1.put("hrz5Time","10.0");
-		trainingSessionDataJsonObj1.put("hrz6Time","6.0");
+		trainingSessionDataJsonObj1.put("hrz1Time","2.0");
+		trainingSessionDataJsonObj1.put("hrz2Time","12.0");
+		trainingSessionDataJsonObj1.put("hrz3Time","14.0");
+		trainingSessionDataJsonObj1.put("hrz4Time","8.0");
+		trainingSessionDataJsonObj1.put("hrz5Time","4.0");
+		trainingSessionDataJsonObj1.put("hrz6Time","2.0");
 		trainingSessionDataJsonObj1.put("hrz1Distance","1000.0");
 		trainingSessionDataJsonObj1.put("hrz2Distance","7420.0");
 		trainingSessionDataJsonObj1.put("hrz3Distance","6460.0");
@@ -508,5 +496,6 @@ public class TraineeChitraRegression extends JerseyTest{
 		Client client = Client.create(clientConfig);	
 		return client;
 	}
+
 
 }
