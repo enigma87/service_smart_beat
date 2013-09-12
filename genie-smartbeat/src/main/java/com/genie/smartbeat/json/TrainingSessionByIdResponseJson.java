@@ -25,6 +25,8 @@ public class TrainingSessionByIdResponseJson {
 	private Integer muscleIndex;
 	private Integer sessionIndex;
 	private Integer healthIndex;
+	private Double averageAltitude;
+	private Double extraLoad;
 	
 	public String getUserid() {
 		return userid;
@@ -184,6 +186,8 @@ public class TrainingSessionByIdResponseJson {
 		this.setMuscleIndex(trainingSessionBean.getMuscleStatePerceptionIndex());
 		this.setSessionIndex(trainingSessionBean.getSessionStressPerceptionIndex());
 		this.setHealthIndex(trainingSessionBean.getHealthPerceptionIndex());
+		this.setAverageAltitude(trainingSessionBean.getAverageAltitude());
+		this.setExtraLoad(trainingSessionBean.getExtraLoad());
 	}
 
 	public Integer getMuscleIndex() {
@@ -208,5 +212,21 @@ public class TrainingSessionByIdResponseJson {
 
 	public void setHealthIndex(Integer healthIndex) {
 		this.healthIndex = healthIndex;
+	}
+
+	public Double getAverageAltitude() {
+		return averageAltitude;
+	}
+
+	public void setAverageAltitude(Double averageAltitude) {
+		this.averageAltitude = averageAltitude;
+	}
+
+	public Double getExtraLoad() {
+		return extraLoad;
+	}
+
+	public void setExtraLoad(Double extraLoad) {
+		this.extraLoad = extraLoad;
 	}
 }
