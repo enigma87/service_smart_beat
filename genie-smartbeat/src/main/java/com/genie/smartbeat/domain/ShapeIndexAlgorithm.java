@@ -245,7 +245,9 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	    for (int i = 0; i < VdotByZone.length; i++) {
 	    		sum += VdotByZone[i];	    		
 	    }
-	    Vdot = sum / validZoneCount;
+	    if(0 < validZoneCount){
+	    	Vdot = sum / validZoneCount;
+	    }
 		return DoubleValueFormatter.format3Dot2(Vdot);
 	}
 	
@@ -259,7 +261,7 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 		if(VDOT_HISTORY_LIMIT == vdotHistory.length){
 			speedHeartrateFactor = (vdotHistory[SESSION_4]+vdotHistory[SESSION_3])/(vdotHistory[SESSION_2]+vdotHistory[SESSION_1]);
 		}
-		return speedHeartrateFactor;
+		return DoubleValueFormatter.format3dot4(speedHeartrateFactor);
 	}
 		
 	public static final double[][] VDOT_RANGE_FOR_FEMALE_TRAINEE_BY_CLASSIFICATION 	= {{34.0,41.0},{41.0,48.0},{48.0,58.0}};

@@ -332,6 +332,11 @@ public class ShapeIndexAlgorithmTest {
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_WET_MUD_DEEP_SNOW;
 		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
 		assertEquals(Math.round(75.92*100), Math.round(vdot*100));
+		
+		speedDistributionOfHRZ = new double[]{0,0.0,0.0,0.0,0.0,0.0,0.0};
+		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
+		assertEquals(Math.round(0*100), Math.round(vdot*100));
 	}
 
 	@Test
@@ -384,6 +389,19 @@ public class ShapeIndexAlgorithmTest {
 		traineeClassification = ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(ShapeIndexAlgorithm.GENDER_MALE,vdot);
 		assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_ELITE, traineeClassification);
 		
-	}	
+	}
+	
+	@Test
+	public void testcalculateSpeedHeartrateFactor(){
+		double[] vdotHistory = new double[]{45.4,44.6,45.8,46.1,50.2};
+		double speedHeartrateFactor = 0.0;
+		
+		speedHeartrateFactor = ShapeIndexAlgorithm.calculateSpeedHeartrateFactor(vdotHistory);
+		assertEquals(0, Math.round(speedHeartrateFactor*1000));
+		
+		vdotHistory = new double[]{45.4,44.6,45.8,46.1};
+		speedHeartrateFactor = ShapeIndexAlgorithm.calculateSpeedHeartrateFactor(vdotHistory);
+		assertEquals(Math.round(1.0211*1000), Math.round(speedHeartrateFactor*1000));
+	}
 }
 
