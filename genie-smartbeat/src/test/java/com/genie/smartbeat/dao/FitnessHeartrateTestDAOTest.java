@@ -98,6 +98,9 @@ public class FitnessHeartrateTestDAOTest {
 		fitnessHeartrateTestBean5.setHeartrate(160.0);
 		fitnessHeartrateTestBean5.setTimeOfRecord(new Timestamp(now));
 		fitnessHeartrateTestBean5.setDayOfRecord(10);
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user2");
 	}
 	
 	@Test
@@ -191,6 +194,7 @@ public class FitnessHeartrateTestDAOTest {
 	
 	@Test
 	public void testGetNumberOfHeartRateTestsForUserByType(){
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(fitnessHeartrateTestBean1.getUserid());
 		Integer numberOfHeartrateTests = 0;
 		numberOfHeartrateTests = fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType(fitnessHeartrateTestBean1.getUserid(), fitnessHeartrateTestBean1.getHeartrateType());
 		assertEquals(new Integer(0), numberOfHeartrateTests);
@@ -293,7 +297,7 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 	 
 	@Test
 	public void testGetTodaysHeartRateTestCountForUser(){
-		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(fitnessHeartrateTestBean1.getUserid());
 		Integer todaysHRTCount = fitnessHeartrateTestDAO.getTodaysHeartRateTestCountForUser(fitnessHeartrateTestBean1.getUserid());
 		assertEquals(new Integer(0), todaysHRTCount);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
