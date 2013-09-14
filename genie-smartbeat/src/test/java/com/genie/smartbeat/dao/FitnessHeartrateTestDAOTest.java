@@ -318,6 +318,7 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 	
 	@Test
 	public void testGetDayOfRecordForUser() {
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		fitnessHeartrateTestBean1.setDayOfRecord(3);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 		Integer dayOfRecord = fitnessHeartrateTestDAO.getDayOfRecordForUser(fitnessHeartrateTestBean1.getUserid());
@@ -349,6 +350,7 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 	
 	@Test
 	public void testDeleteAllHeartrateTestsForUser(){
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");
 				
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
