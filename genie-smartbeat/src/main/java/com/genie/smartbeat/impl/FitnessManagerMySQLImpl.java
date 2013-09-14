@@ -166,6 +166,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		Double recentMinimumOfHomeostasisIndex = 0.0;
 		Double localRegressionMinimumOfHomeostasisIndex = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
 			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
@@ -182,7 +183,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		/*set current session's data*/
 		UserBean user = userManager.getUserInformation(userid);
-		System.out.println(fitnessHomeostasisIndexBean.getUserid());
 		fitnessHomeostasisIndexBean.setTraineeClassification(ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(user.getGender(),fitnessTrainingSessionBean.getVdot()));
 		Double recentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
 		recentMinimumOfHomeostasisIndex = regressedHomeostasisIndex - recentTotalLoadOfExercise;

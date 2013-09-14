@@ -67,6 +67,20 @@ public class FitnessManagerMySQLImplTest {
 		long nowBeforeTwoDays = now - (2*24*3600000);
 		long nowBeforeOneDay = now - (24*3600000);
 		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
+
+		UserManager userManager = (UserManager)smartbeatContext.getBean("userManagerMySQLImpl");
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setAccessToken("accessToken1");
+		user.setAccessTokenType("facebook");
+		user.setFirstName("Jane");
+		user.setEmail("jane@acme.com");
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -25);
+		user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+		user.setGender(UserManager.GENDER_FEMALE);
+		userManager.registerUser(user);
+
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
@@ -130,6 +144,8 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+		UserDao userDao = (UserDao) smartbeatContext.getBean("userDao");
+		userDao.deleteUser(user.getUserid());
 	}
 	
 	@Test
@@ -190,7 +206,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(now));
 		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean2);
 		
-		System.out.println( ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC+ "-" + fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
+		//System.out.println( ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC+ "-" + fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
 		Assert.assertEquals(1, fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
 		
 		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");
@@ -251,7 +267,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		Assert.assertNotNull(heartrateZones[1][0]);
 		Assert.assertNotNull(heartrateZones[6][1]);
-		System.out.println(Arrays.deepToString(heartrateZones));
+		//System.out.println(Arrays.deepToString(heartrateZones));
 		
 		long now = cal.getTime().getTime();
 		long oneHourBefore = now -(1 * 3600000);
@@ -290,7 +306,7 @@ public class FitnessManagerMySQLImplTest {
 		
 		Assert.assertNotNull(heartrateZones[1][0]);
 		Assert.assertNotNull(heartrateZones[6][1]);
-		System.out.println(Arrays.deepToString(heartrateZones));
+		//System.out.println(Arrays.deepToString(heartrateZones));
 		
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(user.getUserid());
 		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
@@ -529,7 +545,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("user1");
 		
 		speedHeartrateFactor = fitnessManagerMySQLImpl.getSpeedHeartrateFactor("user1");
-		Assert.assertTrue(speedHeartrateFactor == 0.0);
+		Assert.assertTrue(speedHeartrateFactor == 1.0);
 		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
@@ -917,5 +933,6 @@ public class FitnessManagerMySQLImplTest {
 		
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+		userDao.deleteUser(user.getUserid());
 	}
 }
