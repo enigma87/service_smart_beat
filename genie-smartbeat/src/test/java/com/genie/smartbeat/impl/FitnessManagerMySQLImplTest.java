@@ -651,11 +651,15 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
 		
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean);
+		FitnessTrainingSessionBean previousTrainingSessionBean = new FitnessTrainingSessionBean();
+		previousTrainingSessionBean.setUserid(userid);
+		previousTrainingSessionBean.setVdot(46.4);
+		
+		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,previousTrainingSessionBean);
 		Assert.assertNotNull(fitnessTrainingSessionBean.getVdot());
 		
 		fitnessTrainingSessionBean.setSurfaceIndex(1);
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean);
+		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,previousTrainingSessionBean);
 		Assert.assertNotNull(fitnessTrainingSessionBean.getVdot());
 	}
 
@@ -861,7 +865,11 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
 		fitnessTrainingSessionBean.setTrainingSessionId("test12345");
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean); // for getting Vdot
+		FitnessTrainingSessionBean previousTrainingSessionBean = new FitnessTrainingSessionBean();
+		previousTrainingSessionBean.setUserid(userid);
+		previousTrainingSessionBean.setVdot(46.4);
+		
+		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean,previousTrainingSessionBean); // for getting Vdot
 		
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		Assert.assertNull(fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid));
