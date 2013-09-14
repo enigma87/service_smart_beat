@@ -182,6 +182,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		/*set current session's data*/
 		UserBean user = userManager.getUserInformation(userid);
+		System.out.println(fitnessHomeostasisIndexBean.getUserid());
 		fitnessHomeostasisIndexBean.setTraineeClassification(ShapeIndexAlgorithm.getTraineeClassificationUsingVdot(user.getGender(),fitnessTrainingSessionBean.getVdot()));
 		Double recentTotalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(fitnessTrainingSessionBean.getTimeDistributionOfHRZ());
 		recentMinimumOfHomeostasisIndex = regressedHomeostasisIndex - recentTotalLoadOfExercise;
@@ -408,6 +409,13 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
 
+	public FitnessHomeostasisIndexBean getHomeostasisIndexModelForUser(String userid) {
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = null;
+		if (userid != null && !userid.isEmpty()) {
+			fitnessHomeostasisIndexModel = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		}
+		return fitnessHomeostasisIndexModel;
+	}
 	public void clearTraineeData(String userid) {
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);

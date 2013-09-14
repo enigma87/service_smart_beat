@@ -88,6 +88,12 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
 		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
+		fitnessTrainingSessionBean.setAverageAltitude(3.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(2);
+		fitnessTrainingSessionBean.setHealthPerceptionIndex(3);
+		fitnessTrainingSessionBean.setExtraLoad(2.0);
+		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(2);
+		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(3);
 		
 		
 		Assert.assertNull(fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid));
@@ -111,6 +117,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
 		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
+		fitnessTrainingSessionBean.setAverageAltitude(3.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(2);
+		fitnessTrainingSessionBean.setHealthPerceptionIndex(3);
+		fitnessTrainingSessionBean.setExtraLoad(2.0);
+		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(2);
+		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(3);
+		
 		
 		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		

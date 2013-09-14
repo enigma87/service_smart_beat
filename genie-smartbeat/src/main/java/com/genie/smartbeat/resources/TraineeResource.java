@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
@@ -274,6 +275,12 @@ public class TraineeResource
 		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
 		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
 		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
+		saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
+			
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
+		saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
+		saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
+		saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try

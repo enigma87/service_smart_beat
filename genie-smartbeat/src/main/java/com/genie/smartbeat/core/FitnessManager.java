@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 
@@ -28,6 +29,9 @@ public interface FitnessManager{
 	/*heart rate zones*/
 	public double[][] getHeartrateZones(String userid);
 
+	/*homeostasis index model*/
+	public FitnessHomeostasisIndexBean getHomeostasisIndexModelForUser(String userid);
+	
 	/*shape index*/
 	public double getShapeIndex(String recentTrainingSessionId);
 	public double getShapeIndex(String recentTrainingSessionId, FitnessTrainingSessionBean newlyArrivedTrainingSession);
