@@ -228,16 +228,22 @@ public static Timestamp calculateTimeAtFullRecovery(Integer traineeClassificatio
 	public static final int RUNNING_SURFACE_MUD_SNOW_SAND			= 6;
 	public static final int RUNNING_SURFACE_WET_MUD_DEEP_SNOW		= 7;
 	
-	public static double calculateVdot(double[] speedDistributionOfHRZ, int runningSurface){
+	/*averageAltitude in m and extraLoad in kg*/
+	public static double calculateVdot(double[] speedDistributionOfHRZ, int runningSurface, double averageAltitude, double extraLoad, double previousVdot){
 		double[] VdotByZone = new double[7];
 		double Vdot = 0.0;
-		int validZoneCount = 0;
-		double speedCorrectionFactor = SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
+		int validZoneCount = 0;		
+		double surfaceSpeedCorrectionFactor 	= SPEED_CORRECTION_FACTOR_BY_SURFACE[runningSurface];
+		double altitudeSpeedCorrectionFactor 	= 1.0;
+		if(0 < averageAltitude){
+			altitudeSpeedCorrectionFactor = 1 + (((-1*0.000175*previousVdot*averageAltitude) + 0.0067686)/100); 
+		}
+		double speedCorrectionFactor = surfaceSpeedCorrectionFactor*altitudeSpeedCorrectionFactor;
 				
 		/*no contribution to vDot from zone 1*/
 		for(int i = 2; i<=6;i++){
 			if(0 < speedDistributionOfHRZ[i]){
-				VdotByZone[i] = (speedCorrectionFactor*speedDistributionOfHRZ[i] - SPEED_VDOT_CONSTANT_B_BY_HRZ[i])/SPEED_VDOT_CONSTANT_A_BY_HRZ[i];
+				VdotByZone[i] = ((speedCorrectionFactor*speedDistributionOfHRZ[i]) - SPEED_VDOT_CONSTANT_B_BY_HRZ[i])/SPEED_VDOT_CONSTANT_A_BY_HRZ[i];
 				validZoneCount++;
 			}
 		}		

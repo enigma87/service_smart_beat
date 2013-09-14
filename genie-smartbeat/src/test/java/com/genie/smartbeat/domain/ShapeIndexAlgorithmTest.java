@@ -304,38 +304,41 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateVdot() {
-		double[] speedDistributionOfHRZ = {0,0,11.1,11.8,13.2,0,0};
-		int runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
-		double vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);
-		assertEquals(Math.round(46.36*100), Math.round(vdot*100));
+		double[] speedDistributionOfHRZ = {0,0,10.3,11.0,12.1,0,0};
+		double averageAltitude = 432;
+		double extraLoad = 0.0;
+		int runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_MEDIOCRE_SHORT_GRASS;
+		double previousVdot = 46.4;
+		double vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(43.74*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_GOOD_DIRT_TRACK_WET;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(48.13*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(41.63*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_GOOD_FOREST_PATH;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(49.32*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(42.68*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_MEDIOCRE_SHORT_GRASS;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(50.5*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(43.74*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_ROUGH_PATH;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(52.27*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(45.32*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_MUD_SNOW_SAND;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(67.05*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(58.53*100), Math.round(vdot*100));
 		
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_WET_MUD_DEEP_SNOW;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
-		assertEquals(Math.round(75.92*100), Math.round(vdot*100));
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
+		assertEquals(Math.round(66.45*100), Math.round(vdot*100));
 		
 		speedDistributionOfHRZ = new double[]{0,0.0,0.0,0.0,0.0,0.0,0.0};
 		runningSurface = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
-		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface);		
+		vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ, runningSurface,averageAltitude, extraLoad, previousVdot);		
 		assertEquals(Math.round(0*100), Math.round(vdot*100));
 	}
 

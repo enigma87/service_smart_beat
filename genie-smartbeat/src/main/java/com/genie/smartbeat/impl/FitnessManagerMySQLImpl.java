@@ -128,7 +128,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
 		/*update speed-heartrate model*/				
-		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
 		
 		/*update homeostasis index model*/
 		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
@@ -198,15 +198,24 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	
-	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
+	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, FitnessTrainingSessionBean previousTrainingSessionBean){
 		
 		double vdot = 0.0;
+		double previousVdot = 0.0;
 		int surfaceIndex = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
 		
 		if(null != fitnessTrainingSessionBean.getSurfaceIndex()){
 			surfaceIndex = fitnessTrainingSessionBean.getSurfaceIndex();
-		}		
-		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),surfaceIndex);
+		}
+		
+		if(null != previousTrainingSessionBean){
+			previousVdot = previousTrainingSessionBean.getVdot();
+		}
+		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
+												surfaceIndex,
+												fitnessTrainingSessionBean.getAverageAltitude(),
+												fitnessTrainingSessionBean.getExtraLoad(),
+												previousVdot);
 		fitnessTrainingSessionBean.setVdot(vdot);
 	}
 	
