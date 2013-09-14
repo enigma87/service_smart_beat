@@ -53,6 +53,7 @@ public class FitnessManagerMySQLImplTest {
 		cal.set(Calendar.MILLISECOND, 0);		
 
 		now = cal.getTime().getTime();
+		fitnessManagerMySQLImpl.clearTraineeData(userid);
 	}
 		
 	@Test 

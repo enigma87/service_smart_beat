@@ -5,6 +5,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -39,6 +40,11 @@ public class FitnessHomeostasisIndexDaoTest {
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
+	}
+	
+	@Before
+	public void setUpBeforeTest() throws Exception{
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}
 	
 	@Test
