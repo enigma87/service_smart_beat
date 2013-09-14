@@ -107,8 +107,17 @@ public class FitnessTrainingSessionDAO {
 			+ COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "= ?"
 			+ " and " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_START_TIME] + " >= timestamp(?) "
 			+ " and " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + "< timestamp(?)" ;
-	
-	public List<String>  getFitnessTrainingSessionByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+
+	public List<FitnessTrainingSessionBean>  getFitnessTrainingSessionsByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+		
+		List<FitnessTrainingSessionBean>  trainingSessions = new JdbcTemplate(this.getDataSource()).query(QUERY_SELECT_TIME_RANGE,
+				ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),
+				userID, startTimestamp.toString(), endTimestamp.toString());
+		
+		 return trainingSessions;
+	}
+
+	public List<String>  getFitnessTrainingSessionIdsByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
 		List <String> trainingSessionIDs = new ArrayList<String>();
 		
 		List<FitnessTrainingSessionBean>  trainingSessions = new JdbcTemplate(this.getDataSource()).query(QUERY_SELECT_TIME_RANGE,

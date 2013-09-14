@@ -123,7 +123,7 @@ public class FitnessTrainingSessionDAOTest {
 	@Test
 	public void testGetFitnessTrainingSessionByRange() {
 		
-			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
+			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
 			for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
 				String id = i.next();
 				System.out.println(id);
