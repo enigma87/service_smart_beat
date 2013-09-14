@@ -38,6 +38,7 @@ import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
+import com.genie.smartbeat.json.TrainingSessionsByRangeResponseJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
@@ -219,14 +220,33 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSession/inTimeInterval")
+	@Path("id/{userid}/trainingSessionId/inTimeInterval")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		TrainingSessionIdsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionIdsByRangeResponseJson();
+		TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
+		trainingSessionIdRangeJson.setUserID(userID);
+		trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+
+	@GET
+	@Path("id/{userid}/trainingSession/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getFitnessTrainingSessions(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
-		trainingSessionRangeJson.setTrainingSessionIDs(sessionIDs);
+		trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
 		
@@ -236,7 +256,7 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
-	
+
 	@GET
 	@Path("id/{userid}/trainingSession")
 	@Consumes(MediaType.TEXT_HTML)
