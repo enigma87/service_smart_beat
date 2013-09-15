@@ -8,9 +8,11 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.UserBean;
@@ -22,7 +24,7 @@ import com.genie.social.core.UserManager;
 
 public class UserDaoTest {
 
-	private static ApplicationContext applicationContext;
+	private static AbstractApplicationContext applicationContext;
 	private static UserDao userDao;
 	private static UserBean user;
 	private static Date Dob = null;
@@ -33,6 +35,7 @@ public class UserDaoTest {
 	@BeforeClass
 	public static void setupUserDaoTestCases(){
 		applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		applicationContext.registerShutdownHook();
 		userDao = (UserDao)applicationContext.getBean("userDao");
 		String Dateformat = "MM/dd/yyyy";
 		timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
