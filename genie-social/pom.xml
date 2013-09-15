@@ -22,8 +22,9 @@
   
   <scm>
         <connection>scm:git:git://github.com/Smartbeat/genie.git</connection>
-        <developerConnection>scm:git:https://github.com/Smartbeat/genie.git</developerConnection>
+        <developerConnection>scm:git:ssh://rkmanoj1987@github.com/Smartbeat/genie.git</developerConnection>
         <url>scm:git:git//github.com/Smartbeat/genie.git</url>
+        <tag>HEAD</tag>
   </scm>
   
   <dependencies>
