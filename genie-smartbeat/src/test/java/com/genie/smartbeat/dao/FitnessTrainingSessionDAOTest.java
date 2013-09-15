@@ -27,7 +27,7 @@ import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 public class FitnessTrainingSessionDAOTest {
 	
 	private static AbstractApplicationContext appContext;
-	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
+	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -45,6 +45,7 @@ public class FitnessTrainingSessionDAOTest {
 		
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		appContext.registerShutdownHook();
+		fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 		//set up test data
 		setupTestData();
 		

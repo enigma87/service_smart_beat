@@ -21,8 +21,8 @@ import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 public class FitnessShapeIndexDaoTest {
 	
 	private static AbstractApplicationContext appContext;
-    private static FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO)appContext.getBean("fitnessShapeIndexDAO");
-	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
+    private static FitnessShapeIndexDAO fitnessShapeIndexDAO;
+	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static FitnessShapeIndexBean fitnessShapeIndexBean = new FitnessShapeIndexBean();
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
@@ -44,6 +44,9 @@ public class FitnessShapeIndexDaoTest {
 	public static void setupBeforeClass(){
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		appContext.registerShutdownHook();
+		fitnessShapeIndexDAO = (FitnessShapeIndexDAO)appContext.getBean("fitnessShapeIndexDAO");
+		fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
+		
 		fitnessTrainingSessionBean.setUserid(userid);
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		fitnessTrainingSessionBean.setStartTime(nowPastTwoHourTimeStamp);

@@ -18,7 +18,7 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 public class FitnessHomeostasisIndexDaoTest {
 
 	private static AbstractApplicationContext appContext;
-	private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+	private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private static FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -34,6 +34,7 @@ public class FitnessHomeostasisIndexDaoTest {
 	public static void setupBeforeClass(){
 	
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 		appContext.registerShutdownHook();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);

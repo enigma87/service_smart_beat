@@ -13,7 +13,7 @@ import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 public class FitnessSpeedHeartRateDAOTest {
 	
 	private static AbstractApplicationContext appContext;
-	private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");
+	private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private static FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = new FitnessSpeedHeartRateBean();
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	private static final Double currentVdot = 90.5;
@@ -23,6 +23,7 @@ public class FitnessSpeedHeartRateDAOTest {
 	public static void setupBeforeClass(){
 		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		appContext.registerShutdownHook();
+		fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");
 		fitnessSpeedHeartRateBean.setUserid(userid);
 		fitnessSpeedHeartRateBean.setCurrentVdot(currentVdot);
 		fitnessSpeedHeartRateBean.setPreviousVdot(previouVdot);
