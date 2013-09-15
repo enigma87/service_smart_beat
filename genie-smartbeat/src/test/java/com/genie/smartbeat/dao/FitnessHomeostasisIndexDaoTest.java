@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -16,7 +17,7 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 
 public class FitnessHomeostasisIndexDaoTest {
 
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+	private static AbstractApplicationContext appContext;
 	private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
 	private static FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 	private static final long now = new Date().getTime();
@@ -32,6 +33,8 @@ public class FitnessHomeostasisIndexDaoTest {
 	@BeforeClass
 	public static void setupBeforeClass(){
 	
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		appContext.registerShutdownHook();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);

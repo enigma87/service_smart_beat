@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
@@ -25,7 +26,7 @@ import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 public class FitnessTrainingSessionDAOTest {
 	
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+	private static AbstractApplicationContext appContext;
 	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
@@ -41,6 +42,9 @@ public class FitnessTrainingSessionDAOTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
+		
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		appContext.registerShutdownHook();
 		//set up test data
 		setupTestData();
 		

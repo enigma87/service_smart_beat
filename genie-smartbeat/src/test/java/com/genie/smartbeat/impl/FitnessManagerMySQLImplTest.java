@@ -12,6 +12,7 @@ import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
@@ -35,7 +36,7 @@ import com.genie.social.dao.UserDao;
 
 public class FitnessManagerMySQLImplTest {
 
-	ApplicationContext smartbeatContext;	
+	AbstractApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	private long now;
 	FitnessManagerMySQLImpl fitnessManagerMySQLImpl;
@@ -43,6 +44,7 @@ public class FitnessManagerMySQLImplTest {
 	public void setUpBeforeClass() throws Exception 
 	{
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		smartbeatContext.registerShutdownHook();
 		fitnessManagerMySQLImpl = (FitnessManagerMySQLImpl) smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		Date today = new Date();
 		Calendar cal = Calendar.getInstance();

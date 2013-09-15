@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
@@ -19,7 +20,7 @@ import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 
 public class FitnessShapeIndexDaoTest {
 	
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+	private static AbstractApplicationContext appContext;
     private static FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO)appContext.getBean("fitnessShapeIndexDAO");
 	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
@@ -41,6 +42,8 @@ public class FitnessShapeIndexDaoTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		appContext.registerShutdownHook();
 		fitnessTrainingSessionBean.setUserid(userid);
 		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		fitnessTrainingSessionBean.setStartTime(nowPastTwoHourTimeStamp);
