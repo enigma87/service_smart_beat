@@ -210,11 +210,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		if(null != previousTrainingSessionBean){
 			previousVdot = previousTrainingSessionBean.getVdot();
-		}
+		}				
 		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
 												surfaceIndex,
-												fitnessTrainingSessionBean.getAverageAltitude(),
-												fitnessTrainingSessionBean.getExtraLoad(),
+												fitnessTrainingSessionBean.getAsDoubleValueAverageAltitude(),
+												fitnessTrainingSessionBean.getAsDoubleValueExtraLoad(),
 												previousVdot);
 		fitnessTrainingSessionBean.setVdot(vdot);
 	}
