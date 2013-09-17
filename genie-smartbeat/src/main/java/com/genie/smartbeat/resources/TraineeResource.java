@@ -265,10 +265,14 @@ public class TraineeResource
 		
 		TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
 		FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
-		trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
-		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
-	
+		GoodResponseObject gro;
+		if (null != trainingSessionBean) {
+			trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
+		} else {
+			gro = new GoodResponseObject(Status.NOT_FOUND.getStatusCode(), Status.NOT_FOUND.getReasonPhrase(), null);
+		}
+			
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
