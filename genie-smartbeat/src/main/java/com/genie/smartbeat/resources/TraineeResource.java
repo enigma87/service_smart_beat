@@ -270,7 +270,7 @@ public class TraineeResource
 			trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
 		} else {
-			gro = new GoodResponseObject(Status.NOT_FOUND.getStatusCode(), Status.NOT_FOUND.getReasonPhrase(), null);
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), Status.NOT_ACCEPTABLE.getReasonPhrase(), null);
 		}
 			
 		try {
