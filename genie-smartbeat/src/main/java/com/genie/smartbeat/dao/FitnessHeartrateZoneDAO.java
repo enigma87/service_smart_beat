@@ -2,6 +2,7 @@ package com.genie.smartbeat.dao;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -44,14 +45,19 @@ public class FitnessHeartrateZoneDAO {
 	}
 	
 	public int createHeartrateZoneModel(FitnessHeartrateZoneBean fitnessHeartrateZoneBean){
+		int createStatus = 0;
 		if (fitnessHeartrateZoneBean.isValidForTableInsert()) {
 			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 		
-			return simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_ZONE)
+			try{
+			createStatus =  simpleJdbcInsert.withTableName(TABLE_FITNESS_HEARTRATE_ZONE)
 					.usingColumns(COLUMNS_FITNESS_HEARTRATE_ZONE)
 					.execute(new BeanPropertySqlParameterSource(fitnessHeartrateZoneBean));
+			}catch(DuplicateKeyException e){
+				createStatus = DAOOperationStatus.DUPLICATE_KEY_EXCEPTION;
+			}
 		}
-		return 0;
+		return createStatus;
 	}
 	
 	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_ZONE + " WHERE " + COLUMNS_FITNESS_HEARTRATE_ZONE[COLUMN_USERID] + " =?";
@@ -60,7 +66,7 @@ public class FitnessHeartrateZoneDAO {
 		try{
 			fitnessHeartrateZoneBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_USERID, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateZoneBean.class),userid);
 		}catch(DataAccessException e){
-			
+			fitnessHeartrateZoneBean = null;
 		}
 		
 		return fitnessHeartrateZoneBean;

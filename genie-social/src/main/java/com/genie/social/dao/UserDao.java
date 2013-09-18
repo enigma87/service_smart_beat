@@ -4,6 +4,7 @@
 package com.genie.social.dao;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -51,13 +52,18 @@ public class UserDao
 	}		
 	
 	public int createUser(UserBean user) {
+		int createStatus = 0;
 		if (user.isValidForTableInsert()) {
 			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-			return simpleJdbcInsert.withTableName(TABLE_USER)
-					.usingColumns(COLUMNS_USER)
-					.execute(new BeanPropertySqlParameterSource(user));
+			try{
+				createStatus = simpleJdbcInsert.withTableName(TABLE_USER)
+						.usingColumns(COLUMNS_USER)
+						.execute(new BeanPropertySqlParameterSource(user));
+			}catch(DataAccessException e){
+				createStatus = 1;
+			}
 		}
-		return 0;
+		return createStatus;
 	}
 	
 	private static final String UPDATE = "UPDATE " + TABLE_USER + " SET "

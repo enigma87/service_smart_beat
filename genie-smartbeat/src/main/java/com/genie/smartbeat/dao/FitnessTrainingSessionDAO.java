@@ -11,6 +11,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.glassfish.grizzly.utils.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
@@ -67,16 +68,18 @@ public class FitnessTrainingSessionDAO {
 	}
 	
 	public int createFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean){
-		
+		int createStatus = 0;
 		if (fitnessTrainingSessionBean.isValidForTableInsert()) {
-			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-			
-			return simpleJdbcInsert.withTableName(TABLE_FITNESS_TRAINING_SESSION)
+			try{
+			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);			
+			createStatus = simpleJdbcInsert.withTableName(TABLE_FITNESS_TRAINING_SESSION)
 				.usingColumns(COLUMNS_FITNESS_TRAINING_SESSION)
 				.execute(new BeanPropertySqlParameterSource(fitnessTrainingSessionBean));
-			
+			}catch(DuplicateKeyException e){
+				createStatus = DAOOperationStatus.DUPLICATE_KEY_EXCEPTION;
+			}			
 		}
-		return 0;
+		return createStatus;
 	}
 	
 	private static final String QUERY_ALL_USING_TRAINING_SESSION_ID = "SELECT * FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";
@@ -86,7 +89,7 @@ public class FitnessTrainingSessionDAO {
 			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_TRAINING_SESSION_ID, 
 					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),trainingSessionId);
 		} catch (DataAccessException e) {
-			// TODO Auto-generated catch block			
+			fitnessTrainingSessionBean = null;			
 		}
 		return fitnessTrainingSessionBean;
 	}
@@ -99,7 +102,7 @@ public class FitnessTrainingSessionDAO {
 			fitnessTrainingSessionBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_TRAINING_SESSION_ID, 
 					ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),userid);
 		} catch (DataAccessException e) {
-			// TODO Auto-generated catch block			
+			fitnessTrainingSessionBean = null;			
 		}
 		return fitnessTrainingSessionBean;
 	}
@@ -168,7 +171,7 @@ public class FitnessTrainingSessionDAO {
 	
 			}
 		}catch(DataAccessException e){
-			
+			vdotHistory = null;
 		}
 		return vdotHistory;
 	}
@@ -181,7 +184,7 @@ public class FitnessTrainingSessionDAO {
 		try{
 			numberOfTrainingSessions = new JdbcTemplate(dataSource).queryForInt(COUNT_QUERY_ALL_TESTS,userid);
 		}catch(DataAccessException e){
-			
+			numberOfTrainingSessions = 0;
 		}
 		return numberOfTrainingSessions;
 	}

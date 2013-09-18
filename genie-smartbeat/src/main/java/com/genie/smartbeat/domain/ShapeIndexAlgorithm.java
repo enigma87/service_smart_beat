@@ -90,7 +90,7 @@ public class ShapeIndexAlgorithm
 				TRAINING_IMPACT_BY_ZONE[4]*timeDistributionOfHeartRateZones[3] +
 				TRAINING_IMPACT_BY_ZONE[5]*timeDistributionOfHeartRateZones[4] +
 				TRAINING_IMPACT_BY_ZONE[6]*timeDistributionOfHeartRateZones[5];
-		return totalLoadOfExercise;
+		return DoubleValueFormatter.format3Dot2(totalLoadOfExercise);
 	}
 	
 	/*Quadratic equation form Ax^2 + Bx + C = 0*/	
@@ -106,7 +106,7 @@ public class ShapeIndexAlgorithm
 			double TTR_CONSTANT_C = recentMinimumOfHomeostasisIndex;
 			regressedHomeostasisIndex = TTR_CONSTANT_A*Math.pow(hoursElapsed, 2.0) + TTR_CONSTANT_B*hoursElapsed + TTR_CONSTANT_C;
 		}
-		return regressedHomeostasisIndex;
+		return DoubleValueFormatter.format3dot4(regressedHomeostasisIndex);
 	}
 	
 	public static final double getRegressionMinimumOfHomeostasisIndex(double regressedHomeostasisIndex, double totalLoadOfExercise){
