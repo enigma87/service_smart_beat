@@ -39,7 +39,7 @@ public class TraineeChitraLiveServerRegression{
 
 	public static final String HOST_GENIE_LIVE_VIDHUN = "ec2-54-229-146-226.eu-west-1.compute.amazonaws.com";
 	public static final String HOST_LOCAL = "localhost";
-	public static final String HOST = HOST_LOCAL;
+	public static final String HOST = HOST_GENIE_LIVE_VIDHUN ;
 	public static String PORT = "8080";
 	
 	@Before

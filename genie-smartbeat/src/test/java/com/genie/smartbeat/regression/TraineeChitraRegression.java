@@ -12,6 +12,7 @@ import junit.framework.Assert;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -48,6 +49,7 @@ public class TraineeChitraRegression extends JerseyTest{
 	public static final String HOST = HOST_LOCALHOST;
 	public static String PORT;
 	public static String BASE_URL;
+	
 	@Before
 	public void setUpBeforeClass() throws Exception 
 	{
@@ -402,12 +404,13 @@ public class TraineeChitraRegression extends JerseyTest{
 		trainingSessionDataJsonObj5.put("hrz5Distance","0.0");
 		trainingSessionDataJsonObj5.put("hrz6Distance","0.0");
 		trainingSessionDataJsonObj5.put("surfaceIndex","3");
+		trainingSessionDataJsonObj5.put("averageAltitude","432");
 		JSONObject saveFitnessTrainingSessionRes5 = saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj5);
 		Assert.assertEquals("200", saveFitnessTrainingSessionRes5.getString("status"));
 		Assert.assertEquals("OK", saveFitnessTrainingSessionRes5.getString("message"));
 		JSONObject objSaveFitnessTrainingSessionRes5 = saveFitnessTrainingSessionRes5.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes5.getString("userid"));
-		Assert.assertEquals(98.21, objSaveFitnessTrainingSessionRes5.getDouble("shapeIndex"));
+		Assert.assertEquals(97.73, objSaveFitnessTrainingSessionRes5.getDouble("shapeIndex"));
 		
 		/*Save Resting and Orthostatic Heart Rate test day 6*/
 		cal.add(Calendar.DATE, 1);
@@ -492,12 +495,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		Assert.assertEquals(userId, getShapeIndex9.getString("userid"));
 		Assert.assertEquals(99.21, getShapeIndex9.getDouble("shapeIndex"));
 	    
-		/*Delete Trainee Data*/	
-		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+userId+"/data/clear"; 
-		ClientConfig clientConfig = new DefaultClientConfig();
-		Client clientClearUserData = Client.create(clientConfig);
-		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
-		clearUserData.delete();
+
 		
 	}
 	
@@ -507,6 +505,17 @@ public class TraineeChitraRegression extends JerseyTest{
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client client = Client.create(clientConfig);	
 		return client;
+	}
+	
+	@After
+	public void cleanUpAfterClass() throws Exception 
+	{
+		/*Delete Trainee Data*/	
+		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+userId+"/data/clear"; 
+		ClientConfig clientConfig = new DefaultClientConfig();
+		Client clientClearUserData = Client.create(clientConfig);
+		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
+		clearUserData.delete();
 	}
 
 }

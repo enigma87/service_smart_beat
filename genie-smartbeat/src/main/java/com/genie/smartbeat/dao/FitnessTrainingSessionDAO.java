@@ -2,10 +2,13 @@ package com.genie.smartbeat.dao;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.glassfish.grizzly.utils.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -146,6 +149,7 @@ public class FitnessTrainingSessionDAO {
 														+ " FROM "  + TABLE_FITNESS_TRAINING_SESSION 
 														+ " WHERE "	+ COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "= ?";	
 	public double[] getVdotHistory(String userid, int n){
+		
 		double[] vdotHistory = null;
 		String QUERY_N_RECENT = QUERY_ALL_BY_USERID + 
 								" ORDER BY " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + " DESC" +
@@ -153,6 +157,7 @@ public class FitnessTrainingSessionDAO {
 		List<FitnessTrainingSessionBean> nRecentTrainingSessions = new ArrayList<FitnessTrainingSessionBean>();
 		try{
 			nRecentTrainingSessions = new JdbcTemplate(dataSource).query(QUERY_N_RECENT, ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class), userid);
+			Collections.reverse(nRecentTrainingSessions);
 			if(n == nRecentTrainingSessions.size()){
 				vdotHistory = new double[n];
 				int count = 0;
@@ -160,6 +165,7 @@ public class FitnessTrainingSessionDAO {
 					FitnessTrainingSessionBean trainingSessionBean = i.next();
 					vdotHistory[count++] = trainingSessionBean.getVdot();
 				}
+	
 			}
 		}catch(DataAccessException e){
 			
