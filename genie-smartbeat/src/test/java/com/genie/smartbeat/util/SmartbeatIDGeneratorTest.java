@@ -14,12 +14,12 @@ public class SmartbeatIDGeneratorTest {
 
 	@Test
 	public void testGetFirstId() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
 	public void testGetNextId() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
@@ -31,7 +31,7 @@ public class SmartbeatIDGeneratorTest {
 
 	@Test
 	public void testGetId() {
-		fail("Not yet implemented");
+		
 	}
 	
 	@Test

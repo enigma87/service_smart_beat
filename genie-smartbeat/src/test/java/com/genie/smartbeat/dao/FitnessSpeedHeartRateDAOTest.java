@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
@@ -11,8 +12,8 @@ import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 
 public class FitnessSpeedHeartRateDAOTest {
 	
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-	private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");
+	private static AbstractApplicationContext appContext;
+	private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private static FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean = new FitnessSpeedHeartRateBean();
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	private static final Double currentVdot = 90.5;
@@ -20,7 +21,9 @@ public class FitnessSpeedHeartRateDAOTest {
     
 	@BeforeClass
 	public static void setupBeforeClass(){
-		
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		appContext.registerShutdownHook();
+		fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");
 		fitnessSpeedHeartRateBean.setUserid(userid);
 		fitnessSpeedHeartRateBean.setCurrentVdot(currentVdot);
 		fitnessSpeedHeartRateBean.setPreviousVdot(previouVdot);

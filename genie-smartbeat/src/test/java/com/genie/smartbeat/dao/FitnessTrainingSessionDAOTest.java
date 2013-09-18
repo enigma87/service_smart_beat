@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
@@ -25,8 +26,8 @@ import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 public class FitnessTrainingSessionDAOTest {
 	
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
+	private static AbstractApplicationContext appContext;
+	private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private static FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -41,6 +42,10 @@ public class FitnessTrainingSessionDAOTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
+		
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		appContext.registerShutdownHook();
+		fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 		//set up test data
 		setupTestData();
 		
@@ -123,7 +128,7 @@ public class FitnessTrainingSessionDAOTest {
 	@Test
 	public void testGetFitnessTrainingSessionByRange() {
 		
-			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
+			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
 			for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
 				String id = i.next();
 				System.out.println(id);

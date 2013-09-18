@@ -128,7 +128,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
 		/*update speed-heartrate model*/				
-		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean);
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
 		
 		/*update homeostasis index model*/
 		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
@@ -166,6 +166,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		Double recentMinimumOfHomeostasisIndex = 0.0;
 		Double localRegressionMinimumOfHomeostasisIndex = 0.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
 		if (null != fitnessHomeostasisIndexBean){
 			/*backup last session's data*/
 			localRegressionMinimumOfHomeostasisIndex = fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex();
@@ -197,15 +198,24 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	
-	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
+	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, FitnessTrainingSessionBean previousTrainingSessionBean){
 		
 		double vdot = 0.0;
+		double previousVdot = 0.0;
 		int surfaceIndex = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
 		
 		if(null != fitnessTrainingSessionBean.getSurfaceIndex()){
 			surfaceIndex = fitnessTrainingSessionBean.getSurfaceIndex();
-		}		
-		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),surfaceIndex);
+		}
+		
+		if(null != previousTrainingSessionBean){
+			previousVdot = previousTrainingSessionBean.getVdot();
+		}				
+		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
+												surfaceIndex,
+												fitnessTrainingSessionBean.getAsDoubleValueAverageAltitude(),
+												fitnessTrainingSessionBean.getAsDoubleValueExtraLoad(),
+												previousVdot);
 		fitnessTrainingSessionBean.setVdot(vdot);
 	}
 	
@@ -401,13 +411,24 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
-		return fitnessTrainingSessionDAO.getFitnessTrainingSessionByTimeRange(userID, startTimestamp, endTimestamp);
+		return fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
 	}
 
+	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+		return fitnessTrainingSessionDAO.getFitnessTrainingSessionsByTimeRange(userID, startTimestamp, endTimestamp);
+	}
+	
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
 
+	public FitnessHomeostasisIndexBean getHomeostasisIndexModelForUser(String userid) {
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = null;
+		if (userid != null && !userid.isEmpty()) {
+			fitnessHomeostasisIndexModel = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		}
+		return fitnessHomeostasisIndexModel;
+	}
 	public void clearTraineeData(String userid) {
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
 		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);

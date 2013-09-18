@@ -20,6 +20,13 @@
 		<junit-version>4.10</junit-version>
   </properties>
   
+  <scm>
+        <connection>scm:git:git://github.com/Smartbeat/genie.git</connection>
+        <developerConnection>scm:git:git@github.com/Smartbeat/genie.git</developerConnection>
+        <url>https://github.com/Smartbeat/genie</url>
+        <tag>HEAD</tag>
+  </scm>
+  
   <dependencies>
     <dependency>
 			<groupId>junit</groupId>
@@ -110,17 +117,28 @@
 			<version>${com.restfb-version}</version>
 		</dependency>		
   </dependencies>
-	<build>
+  	<build>
+	  	<plugins>
+	      		<plugin>
+	        		<groupId>org.apache.maven.plugins</groupId>
+	        		<artifactId>maven-release-plugin</artifactId>
+	        		<configuration>
+	          			<tagNameFormat>${project.artifactId}-${project.version}</tagNameFormat>
+	        		</configuration>
+	      		</plugin>
+	    	</plugins>
+	    </build>
+	<!--<build>
 		<finalName>genie-social</finalName>
 		<pluginManagement>
 			<plugins>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>2.3.2</version>
-					<!--<configuration>
+					<configuration>
 						<source>1.7</source>
 						<target>1.7</target>
-					</configuration>-->
+					</configuration>
 				</plugin>
 		   <plugin>
              <groupId>org.apache.maven.plugins</groupId>
@@ -129,5 +147,5 @@
            </plugin> 
 			</plugins>
 		</pluginManagement> 
-	</build>
+	</build>-->
 </project>

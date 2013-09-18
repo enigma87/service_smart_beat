@@ -17,6 +17,7 @@ import org.codehaus.jettison.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -40,7 +41,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 
 public class TraineeResourceTest {
 
-		private static ApplicationContext applicationContext;
+		private static AbstractApplicationContext applicationContext;
 		private static UserDao userDao;
 		private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 		private static FitnessShapeIndexDAO fitnessShapeIndexDAO;
@@ -55,7 +56,8 @@ public class TraineeResourceTest {
 		@Before
 		public void setupUserDao(){
 			applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-
+			applicationContext.registerShutdownHook();
+			
 			Date today = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(today);

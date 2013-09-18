@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -24,14 +25,15 @@ import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 public class TrainingSessionRegression {
   
 	
-	@Autowired ApplicationContext smartbeatContext;	
+	@Autowired AbstractApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	
 	
 	@Before
 	public void setUpBeforeClass() throws Exception 
 	{
-		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");	
+		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		smartbeatContext.registerShutdownHook();
 	}
 	
 	@Test

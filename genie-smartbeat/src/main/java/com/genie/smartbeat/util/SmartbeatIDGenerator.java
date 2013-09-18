@@ -13,6 +13,7 @@ public class SmartbeatIDGenerator {
 
 	private static final String DELIMITER 	= "_";
 	
+	private static final int NUMBER_OF_PARTS 	= 4;
 	private static final int INDEX_USERID 		= 0;
 	private static final int INDEX_MARKER	 	= 1;
 	private static final int INDEX_YEAR 		= 2;
@@ -33,30 +34,40 @@ public class SmartbeatIDGenerator {
 	public static String getNextId(String previousId){
 		String nextId = null;
 		String[] parts = previousId.split(DELIMITER);
-		SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-		Date currentDate = new Date(DateTimeUtils.currentTimeMillis());
-		String currentYear = formatYear.format(currentDate);
-		Integer nextCount;
-		if(currentYear.equals(parts[INDEX_YEAR])){
-			nextCount = Integer.parseInt(parts[INDEX_TEST_COUNT]) + 1;			
-		}else{
-			nextCount = 1;
+		if(NUMBER_OF_PARTS == parts.length){			
+			SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+			Date currentDate = new Date(DateTimeUtils.currentTimeMillis());
+			String currentYear = formatYear.format(currentDate);
+			Integer nextCount;
+			if(currentYear.equals(parts[INDEX_YEAR])){
+				nextCount = Integer.parseInt(parts[INDEX_TEST_COUNT]) + 1;			
+			}else{
+				nextCount = 1;
+			}
+			nextId = parts[INDEX_USERID] + DELIMITER +
+									parts[INDEX_MARKER] + DELIMITER +
+									currentYear + DELIMITER + 
+									nextCount;
 		}
-		nextId = parts[INDEX_USERID] + DELIMITER +
-								parts[INDEX_MARKER] + DELIMITER +
-								currentYear + DELIMITER + 
-								nextCount;
 		return nextId;
 	}
 	
 	public static int getCountFromId(String id){
+		int count = 0;
 		String[] parts = id.split(DELIMITER);
-		return new Integer(parts[INDEX_TEST_COUNT]).intValue();
+		if(NUMBER_OF_PARTS == parts.length){
+			count = new Integer(parts[INDEX_TEST_COUNT]).intValue();
+		}
+		return count;
 	}
 	
 	public static int getYearFromId(String id){
+		int year = 0;
 		String[] parts = id.split(DELIMITER);
-		return new Integer(parts[INDEX_YEAR]).intValue();
+		if(NUMBER_OF_PARTS == parts.length){
+			year = new Integer(parts[INDEX_YEAR]).intValue();
+		}
+		return year;
 	}
 	
 	public static String getId(String userid, String marker, Integer majorIndex, Integer minorIndex){

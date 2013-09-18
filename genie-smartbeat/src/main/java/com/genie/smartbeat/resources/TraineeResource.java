@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
@@ -37,6 +38,7 @@ import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
+import com.genie.smartbeat.json.TrainingSessionsByRangeResponseJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
@@ -218,14 +220,33 @@ public class TraineeResource
 	}
 	
 	@GET
-	@Path("id/{userid}/trainingSession/inTimeInterval")
+	@Path("id/{userid}/trainingSessionId/inTimeInterval")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		TrainingSessionIdsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionIdsByRangeResponseJson();
+		TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
+		trainingSessionIdRangeJson.setUserID(userID);
+		trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+
+	@GET
+	@Path("id/{userid}/trainingSession/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getFitnessTrainingSessions(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
-		trainingSessionRangeJson.setTrainingSessionIDs(sessionIDs);
+		trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
 		
@@ -235,7 +256,7 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
-	
+
 	@GET
 	@Path("id/{userid}/trainingSession")
 	@Consumes(MediaType.TEXT_HTML)
@@ -244,10 +265,14 @@ public class TraineeResource
 		
 		TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
 		FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
-		trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
-		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
-	
+		GoodResponseObject gro;
+		if (null != trainingSessionBean) {
+			trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
+		} else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), Status.NOT_ACCEPTABLE.getReasonPhrase(), null);
+		}
+			
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
@@ -274,6 +299,12 @@ public class TraineeResource
 		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
 		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
 		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
+		saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
+			
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
+		saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
+		saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
+		saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
 		
 		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
 		try

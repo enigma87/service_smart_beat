@@ -9,7 +9,7 @@ import java.text.DecimalFormatSymbols;
 
 public class DoubleValueFormatter {
 
-	public static double format3Dot2(double unformattedValue){
+	public static double format3Dot2(double unformattedValue){			
 		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
 		symbols.setDecimalSeparator('.');
 		DecimalFormat formatter3Dot2 = new DecimalFormat("###.##",symbols);

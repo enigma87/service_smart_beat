@@ -8,6 +8,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
@@ -18,7 +19,7 @@ import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 
 public class FitnessHeartrateZoneDAOTest {
 
-	private static ApplicationContext smartbeatContext;
+	private static AbstractApplicationContext smartbeatContext;
 	private static FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO;
 	private static FitnessHeartrateZoneBean fitnessHeartrateZoneBean;
 	private static String userid = "user-1";
@@ -38,6 +39,7 @@ public class FitnessHeartrateZoneDAOTest {
 	@BeforeClass
 	public static void setupBeforeClass(){
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		smartbeatContext.registerShutdownHook();
 		fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO)smartbeatContext.getBean("fitnessHeartrateZoneDAO");
 		fitnessHeartrateZoneBean = new FitnessHeartrateZoneBean();
 		fitnessHeartrateZoneBean.setUserid(userid);

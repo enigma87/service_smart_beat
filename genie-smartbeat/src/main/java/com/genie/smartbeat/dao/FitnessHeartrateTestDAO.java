@@ -200,7 +200,7 @@ public class FitnessHeartrateTestDAO {
 	public Integer getDayOfRecordForUser(String userid){
 		Integer recentDayofRecord = 0;
 		FitnessHeartrateTestBean fitnessHeartRateTestBean = null;
-		fitnessHeartRateTestBean = getRecentHeartrateTestForUser(userid);
+		fitnessHeartRateTestBean = this.getRecentHeartrateTestForUser(userid);
 		if(null != fitnessHeartRateTestBean){
 			recentDayofRecord = fitnessHeartRateTestBean.getDayOfRecord();
 		}

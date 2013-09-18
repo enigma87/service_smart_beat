@@ -5,9 +5,11 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -15,8 +17,8 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 
 public class FitnessHomeostasisIndexDaoTest {
 
-	private static ApplicationContext appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-	private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+	private static AbstractApplicationContext appContext;
+	private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private static FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 	private static final long now = new Date().getTime();
 	private static final long nowPastOneHour = now - 3600000;
@@ -31,6 +33,9 @@ public class FitnessHomeostasisIndexDaoTest {
 	@BeforeClass
 	public static void setupBeforeClass(){
 	
+		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) appContext.getBean("fitnessHomeostasisIndexDAO");
+		appContext.registerShutdownHook();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
@@ -39,6 +44,11 @@ public class FitnessHomeostasisIndexDaoTest {
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
+	}
+	
+	@Before
+	public void setUpBeforeTest() throws Exception{
+		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}
 	
 	@Test

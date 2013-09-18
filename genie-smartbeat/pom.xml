@@ -137,7 +137,7 @@
 						<target>1.7</target>
 					</configuration>-->
 				</plugin>
-		    <plugin>
+		    <!-- <plugin>
 				 <groupId>org.apache.maven.plugins</groupId>
 				 <artifactId>maven-surefire-plugin</artifactId>
 				 <version>2.15</version>
@@ -146,11 +146,11 @@
 					 <include>${include.tests}</include>
 				   </includes>
 			   </configuration>
-			</plugin> 
+			</plugin> --> 
 		</plugins>
 		</pluginManagement> 
 	</build>
-			<profiles>
+		<!-- <profiles>
 		<profile>
 		<id>regression</id>
 		<properties>
@@ -163,5 +163,5 @@
 		  <include.tests>**/FitnessHeartrateTestBeanTest.java</include.tests>
 		</properties>
 	  </profile>
-	</profiles>
+	</profiles> -->
 </project>

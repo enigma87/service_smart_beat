@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.UserBean;
@@ -27,7 +28,7 @@ import com.restfb.FacebookClient;
 
 public class UserManagerMySQLImplTest {
 
-	private static ApplicationContext applicationContext;
+	private static AbstractApplicationContext applicationContext;
 	private static UserDao userDao;
 	private static UserManager userManagerMySQLImpl;
 	private static UserBean user;
@@ -37,6 +38,7 @@ public class UserManagerMySQLImplTest {
 	@BeforeClass
 	public static void setupUserDaoTestCases(){
 		applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
+		applicationContext.registerShutdownHook();
 		userDao = (UserDao)applicationContext.getBean("userDao");
 		userManagerMySQLImpl = (UserManager)applicationContext.getBean("userManagerMySQLImpl");
 		String Dateformat = "MM/dd/yyyy";
