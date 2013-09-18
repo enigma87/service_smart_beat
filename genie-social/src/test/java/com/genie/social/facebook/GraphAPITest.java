@@ -61,15 +61,13 @@ public class GraphAPITest {
 	@Test
 	public void testGetAppGenieAppToken(){
 		String appAccessToken = GraphAPI.getAppGenieAccessToken();
-		assertNotNull(appAccessToken);
-		System.out.println(appAccessToken);
+		assertNotNull(appAccessToken);		
 	}
 	
 	@Test
 	public void testGetTestUser(){
 		UserBean userFb = GraphAPI.getTestUser();
-		assertNotNull(userFb);
-		System.out.println(userFb.getGender());
+		assertNotNull(userFb);		
 	}
 	
 	public void testDeleteTestUser() throws IOException {

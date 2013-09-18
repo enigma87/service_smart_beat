@@ -39,16 +39,21 @@ public class FitnessShapeIndexDAO {
 	
 	public int createFitnessShapeIndexModel(FitnessShapeIndexBean fitnessShapeIndexBean){
 
+		int createStatus = 0;
 		if (fitnessShapeIndexBean.isValidForTableInsert()) {
 			// set nanos to 0, MySQL doesn't support it
 			fitnessShapeIndexBean.getTimeOfRecord().setNanos(0);
 
 			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-			return simpleJdbcInsert.withTableName(TABLE_FITNESS_SHAPE_INDEX)
-				.usingColumns(COLUMNS_FITNESS_SHAPE_INDEX)
-				.execute(new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
+			try{
+				createStatus = simpleJdbcInsert.withTableName(TABLE_FITNESS_SHAPE_INDEX)
+					.usingColumns(COLUMNS_FITNESS_SHAPE_INDEX)
+					.execute(new BeanPropertySqlParameterSource(fitnessShapeIndexBean));
+			}catch(DataAccessException e){
+				createStatus = DAOOperationStatus.DUPLICATE_KEY_EXCEPTION;
+			}
 		}
-		return 0;
+		return createStatus;
 	}
 
 	private static final String QUERY_SELECT_RECENT_TIME_OF_RECORD = "(" 
@@ -64,7 +69,7 @@ public class FitnessShapeIndexDAO {
 		try{
 			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_MODEL, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class),userid);
 		}catch(DataAccessException e){
-			// TODO Auto-generated catch block
+			fitnessShapeIndexBean = null;
 		}
 		return fitnessShapeIndexBean;
 	}
@@ -76,7 +81,7 @@ public class FitnessShapeIndexDAO {
 		try{
 			fitnessShapeIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_RECENT_SHAPE_INDEX_TRAINING_SESSION, ParameterizedBeanPropertyRowMapper.newInstance(FitnessShapeIndexBean.class),trainingSessionId);
 		}catch(DataAccessException e){
-			// TODO Auto-generated catch block
+			fitnessShapeIndexBean = null;
 		}
 		return fitnessShapeIndexBean;
 	}

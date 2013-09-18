@@ -2,6 +2,7 @@ package com.genie.smartbeat.dao;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,15 +34,20 @@ public class FitnessHomeostasisIndexDAO {
 	}
 	
 	public int createHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){
-
+		int createStatus = 0;
 		if (fitnessHomeostasisIndexBean.isValidForTableInsert()) {
 			SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
 
-			return simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
+			try{
+			createStatus = simpleJdbcInsert.withTableName(TABLE_FITNESS_HOMEOSTASIS_INDEX)
 					.usingColumns(COLUMNS_FITNESS_HOMEOSTASIS_INDEX)
 					.execute(new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
+			}
+			catch(DuplicateKeyException e){
+				createStatus = DAOOperationStatus.DUPLICATE_KEY_EXCEPTION;
+			}
 		}
-		return 0;
+		return createStatus;
 	}
 	
 	private static final String QUERY_ALL_USING_USERID = "SELECT * FROM " + TABLE_FITNESS_HOMEOSTASIS_INDEX + " WHERE " + COLUMNS_FITNESS_HOMEOSTASIS_INDEX[COLUMN_USERID] + " =?";
@@ -51,7 +57,7 @@ public class FitnessHomeostasisIndexDAO {
 		try{
 			fitnessHomeostasisIndexBean = new JdbcTemplate(dataSource).queryForObject(QUERY_ALL_USING_USERID, ParameterizedBeanPropertyRowMapper.newInstance(FitnessHomeostasisIndexBean.class),userid);
 		}catch(DataAccessException ex){
-			// TODO Auto-generated catch block			
+			fitnessHomeostasisIndexBean = null;			
 		}		
 		return fitnessHomeostasisIndexBean;
 		
@@ -79,7 +85,7 @@ public class FitnessHomeostasisIndexDAO {
 	
 	public int updateHomeostasisIndexModel(FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean){		       
        	
-		if (fitnessHomeostasisIndexBean.isValidForTableInsert()) {
+		if ((null!= getHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid())) &&fitnessHomeostasisIndexBean.isValidForTableInsert()) {
 			NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 			return jdbcTemplate.update(UPDATE_HOMEOSTASIS_INDEX_MODEL, new BeanPropertySqlParameterSource(fitnessHomeostasisIndexBean));
 		}
