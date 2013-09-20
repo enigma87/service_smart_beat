@@ -280,7 +280,7 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
-	
+
 	@POST
 	@Path("id/{userid}/trainingSession/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
@@ -289,12 +289,12 @@ public class TraineeResource
 
 		saveTrainingSessionRequestJson.setUserid(userid);
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
-		fitnessManager.setTrainingSessionBeanValidity(fitnessTrainingSessionBean);
+		
 		GoodResponseObject gro = null;
 		
-		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
-			fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
+		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
 			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
 		
@@ -310,7 +310,8 @@ public class TraineeResource
 			saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
 			saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString() ,saveFitnessTrainingSessionResponseJson);
-		} else {
+		}
+		else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode().toString());
 		}
 		

@@ -109,37 +109,40 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
 		
-		String userid = fitnessTrainingSessionBean.getUserid();		
-		String trainingSessionId = null, previousTrainingSessionId = null;		
-		FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
-		if(null != previousTrainingSession){
-			/*generate first training session id*/
-			trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
-			/*save previous training session id for updating shape index*/
-			previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
-		}else{
-			/*generate training session id from previous session id*/
-			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
+		CheckTrainingSessionValidity(fitnessTrainingSessionBean);
+		
+		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
+			String userid = fitnessTrainingSessionBean.getUserid();		
+			String trainingSessionId = null, previousTrainingSessionId = null;		
+			FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
+			if(null != previousTrainingSession){
+				/*generate first training session id*/
+				trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
+				/*save previous training session id for updating shape index*/
+				previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
+			}else{
+				/*generate training session id from previous session id*/
+				trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
+			}
+		
+			// set the generated id to bean 
+			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
+		
+			/*update shape index model*/
+			updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
+		
+			/*update speed-heartrate model*/				
+			updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
+		
+			/*update homeostasis index model*/
+			updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+		
+			/*save training session*/		
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		}
-		
-		// set the generated id to bean 
-		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
-		
-		/*update shape index model*/
-		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
-		
-		/*update speed-heartrate model*/				
-		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
-		
-		/*update homeostasis index model*/
-		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		
-		/*save training session*/		
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-
 	}
 	
-	public FitnessTrainingSessionBean setTrainingSessionBeanValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+	private void CheckTrainingSessionValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
 		
 		TrainingSessionValidityStatus validityStatus = new TrainingSessionValidityStatus();
 		validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED);
@@ -160,7 +163,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		
 		fitnessTrainingSessionBean.setValidityStatus(validityStatus);
-		return fitnessTrainingSessionBean;
 	}
 	
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
