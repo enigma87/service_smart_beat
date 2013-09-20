@@ -2,6 +2,8 @@ package com.genie.smartbeat.beans;
 
 import java.sql.Timestamp;
 
+import com.genie.smartbeat.core.TrainingSessionValidityStatus;
+
 /**
  * @author dhasarathy
  **/
@@ -30,6 +32,7 @@ public class FitnessTrainingSessionBean {
 	private Integer sessionStressPerceptionIndex;
 	private Double averageAltitude;
 	private Double extraLoad;
+	private TrainingSessionValidityStatus validityStatus;
 	
 	public String getUserid() {
 		return userid;
@@ -292,5 +295,13 @@ public class FitnessTrainingSessionBean {
 
 	public void setExtraLoad(Double extraLoad) {
 		this.extraLoad = extraLoad;
+	}
+
+	public TrainingSessionValidityStatus getValidityStatus() {
+		return validityStatus;
+	}
+
+	public void setValidityStatus(TrainingSessionValidityStatus validityStatus) {
+		this.validityStatus = validityStatus;
 	}
 }

@@ -23,7 +23,8 @@ public interface FitnessManager{
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
 	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
-
+	public FitnessTrainingSessionBean setTrainingSessionBeanValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean);
+	
 	/*heart rate test*/
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);
 

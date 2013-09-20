@@ -1,7 +1,5 @@
 package com.genie.smartbeat.core;
 
-import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
-
 public class TrainingSessionValidityStatus {
 	public enum Status {
 		APPROVED_VALID(0),
@@ -29,18 +27,15 @@ public class TrainingSessionValidityStatus {
 		}	
 	}
 	
-	private Status validityStatus;
-	private FitnessTrainingSessionBean validTrainingSessionBean;
-	public Status getValidityStatus() {
-		return validityStatus;
+	private Status validityStatusCode;
+
+	public Status getValidityStatusCode() {
+		return validityStatusCode;
 	}
-	public void setValidityStatus(Status validityStatus) {
-		this.validityStatus = validityStatus;
+
+	public void setValidityStatusCode(Status validityStatusCode) {
+		this.validityStatusCode = validityStatusCode;
 	}
-	public FitnessTrainingSessionBean getValidTrainingSessionBean() {
-		return validTrainingSessionBean;
-	}
-	public void setValidTrainingSessionBean(FitnessTrainingSessionBean validTrainingSessionBean) {
-		this.validTrainingSessionBean = validTrainingSessionBean;
-	}
+	
+	
 }

@@ -54,8 +54,7 @@ public class SaveFitnessTrainingSessionResponseJson {
 		return recentMinimumOfHomeostasisIndex;
 	}
 
-	public void setRecentMinimumOfHomeostasisIndex(
-			Double recentMinimumOfHomeostasisIndex) {
+	public void setRecentMinimumOfHomeostasisIndex(Double recentMinimumOfHomeostasisIndex) {
 		this.recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
 	}
 

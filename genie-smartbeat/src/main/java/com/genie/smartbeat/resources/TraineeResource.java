@@ -29,6 +29,7 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
@@ -288,27 +289,32 @@ public class TraineeResource
 
 		saveTrainingSessionRequestJson.setUserid(userid);
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
+		fitnessManager.setTrainingSessionBeanValidity(fitnessTrainingSessionBean);
+		GoodResponseObject gro = null;
 		
-		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
+			fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-		Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
+			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
 		
-		SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
-		saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
-		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
-		saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
-		saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
-		saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
+			SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
+			saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
+			saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
+			saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
+			saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
+			saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
 			
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
-		saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
-		saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
-		saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
+			FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
+			saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
+			saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
+			saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString() ,saveFitnessTrainingSessionResponseJson);
+		} else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString(), fitnessTrainingSessionBean);
+		}
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveFitnessTrainingSessionResponseJson);
-		try
-		{
+		try {
 			return Formatter.getAsJson(gro, false);
 		}
 		catch(Exception ex)

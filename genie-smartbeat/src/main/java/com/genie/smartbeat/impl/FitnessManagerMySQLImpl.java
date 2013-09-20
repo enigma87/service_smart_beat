@@ -15,6 +15,7 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -136,6 +137,28 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		/*save training session*/		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 
+	}
+	
+	public FitnessTrainingSessionBean setTrainingSessionBeanValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+		
+		TrainingSessionValidityStatus validityStatus = new TrainingSessionValidityStatus();
+		validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED);
+		
+		FitnessTrainingSessionBean recentTrainingSessionBean = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(fitnessTrainingSessionBean.getUserid());
+
+		if (null != fitnessTrainingSessionBean.getEndTime() 
+				&& null != fitnessTrainingSessionBean.getStartTime()) {
+			
+			if (fitnessTrainingSessionBean.getStartTime().after(recentTrainingSessionBean.getEndTime())) {
+				validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.APPROVED_VALID);
+				
+			} else {
+				validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED_INVALID_IN_CHRONOLOGY);
+			}
+		}
+		
+		fitnessTrainingSessionBean.setValidityStatus(validityStatus);
+		return fitnessTrainingSessionBean;
 	}
 	
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
