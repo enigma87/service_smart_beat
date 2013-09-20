@@ -149,7 +149,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		if (null != fitnessTrainingSessionBean.getEndTime() 
 				&& null != fitnessTrainingSessionBean.getStartTime()) {
 			
-			if (fitnessTrainingSessionBean.getStartTime().after(recentTrainingSessionBean.getEndTime())) {
+			if (null == recentTrainingSessionBean 
+					|| fitnessTrainingSessionBean.getStartTime().after(recentTrainingSessionBean.getEndTime())) {
+				
 				validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.APPROVED_VALID);
 				
 			} else {

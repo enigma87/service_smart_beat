@@ -311,7 +311,7 @@ public class TraineeResource
 			saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString() ,saveFitnessTrainingSessionResponseJson);
 		} else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString(), fitnessTrainingSessionBean);
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode().toString());
 		}
 		
 		try {
