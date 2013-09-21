@@ -1,13 +1,9 @@
 package com.genie.smartbeat.resources;
 
-import java.net.URLEncoder;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 
 import junit.framework.Assert;
@@ -15,10 +11,8 @@ import junit.framework.Assert;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -27,19 +21,14 @@ import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
+import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.social.beans.UserBean;
-import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.dao.UserDao;
 import com.genie.social.facebook.GraphAPI;
 import com.genie.social.impl.UserManagerMySQLImpl;
 import com.genie.social.json.RegisterRequestJSON;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.FacebookClient;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 
 public class TraineeResourceTest {
 
@@ -54,6 +43,7 @@ public class TraineeResourceTest {
 		private static FitnessManagerMySQLImpl fitnessManager;
 		private static String appID = "333643156765163";
 		private static long now;
+		private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 		
 		@BeforeClass
 		public static void setupUserDao(){
@@ -173,7 +163,24 @@ public class TraineeResourceTest {
 		
 		@Test
 		public void testSaveFitnessTrainingSession() throws Exception{
-			       
+		
+			SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson = new SaveFitnessTrainingSessionRequestJson();			
+			String response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			JSONObject responseJSON = new JSONObject(response);
+			Assert.assertEquals("406", responseJSON.getString("status"));			
+			saveTrainingSessionRequestJson.setHrz1Time(8.0);
+			saveTrainingSessionRequestJson.setHrz1Distance(1000.0);
+			saveTrainingSessionRequestJson.setHrz2Time(42.0);
+			saveTrainingSessionRequestJson.setHrz2Distance(7420.0);
+			saveTrainingSessionRequestJson.setHrz3Time(34.0);
+			saveTrainingSessionRequestJson.setHrz3Distance(6460.0);
+			saveTrainingSessionRequestJson.setHrz4Time(10.0);
+			saveTrainingSessionRequestJson.setHrz4Distance(2133.33);
+			saveTrainingSessionRequestJson.setHrz5Time(10.0);
+			saveTrainingSessionRequestJson.setHrz5Distance(2166.67);
+			saveTrainingSessionRequestJson.setHrz6Time(6.0);
+			saveTrainingSessionRequestJson.setHrz6Distance(1410.0);
+			
 		}
 		
 		@Test

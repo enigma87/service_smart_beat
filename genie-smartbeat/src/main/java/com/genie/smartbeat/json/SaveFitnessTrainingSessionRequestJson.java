@@ -169,8 +169,12 @@ public class SaveFitnessTrainingSessionRequestJson {
         Date startTimeInDate = null;
         Date endTimeInDate = null;
 		try {
-			startTimeInDate = dateFormat.parse(getStartTime());
+			if(null != getStartTime()){
+				startTimeInDate = dateFormat.parse(getStartTime());
+			}
+			if(null != getEndTime()){
 			endTimeInDate = dateFormat.parse(getEndTime());
+			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -190,8 +194,12 @@ public class SaveFitnessTrainingSessionRequestJson {
 		fitnessTrainingSessionBean.setHrz4Time(getHrz4Time());
 		fitnessTrainingSessionBean.setHrz5Time(getHrz5Time());
 		fitnessTrainingSessionBean.setHrz6Time(getHrz6Time());
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
+		if(null != startTimeInDate){
+			fitnessTrainingSessionBean.setStartTime(new Timestamp(startTimeInDate.getTime()));
+		}
+		if(null!= endTimeInDate){
+			fitnessTrainingSessionBean.setEndTime(new Timestamp(endTimeInDate.getTime()));
+		}
 		fitnessTrainingSessionBean.setSurfaceIndex(getSurfaceIndex());
 		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(getMuscleStatePerceptionIndex());
 		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(getSessionStressPerceptionIndex());;
