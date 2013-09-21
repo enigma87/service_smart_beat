@@ -7,16 +7,14 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
-import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
-import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 
 public class FitnessShapeIndexDaoTest {
 	
@@ -56,6 +54,12 @@ public class FitnessShapeIndexDaoTest {
 		fitnessShapeIndexBean.setTimeOfRecord(nowPastOneHourTimeStamp);
 		fitnessShapeIndexBean.setSessionOfRecord(trainingSessionId);
 			
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		appContext.close();
 	}
 
 	@Test

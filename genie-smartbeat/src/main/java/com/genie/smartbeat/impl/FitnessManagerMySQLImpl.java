@@ -491,6 +491,10 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 	}
 
+	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
+		return fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval(userid, heartrateType, startTimestamp, endTimestamp);
+	}
+	
 	public FitnessHomeostasisIndexBean getHomeostasisIndexModelForUser(String userid) {
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = null;
 		if (userid != null && !userid.isEmpty()) {

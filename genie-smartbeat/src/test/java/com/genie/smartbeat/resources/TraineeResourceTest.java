@@ -14,7 +14,9 @@ import junit.framework.Assert;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -48,13 +50,13 @@ public class TraineeResourceTest {
 		private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 		private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 		private static TraineeResource traineeResource;
-		private UserManagerMySQLImpl userManager;
+		private static UserManagerMySQLImpl userManager;
 		private static FitnessManagerMySQLImpl fitnessManager;
 		private static String appID = "333643156765163";
-		private long now;
+		private static long now;
 		
-		@Before
-		public void setupUserDao(){
+		@BeforeClass
+		public static void setupUserDao(){
 			applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 			applicationContext.registerShutdownHook();
 			
@@ -79,6 +81,12 @@ public class TraineeResourceTest {
 			userManager = (UserManagerMySQLImpl) traineeResource.getUserManager();
 			fitnessManager = (FitnessManagerMySQLImpl) traineeResource.getFitnessManager();
 			
+		}
+		
+		@AfterClass
+		public static void tearDown()
+		{
+			applicationContext.close();
 		}
 		
 		@Test

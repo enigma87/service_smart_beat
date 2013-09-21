@@ -240,6 +240,21 @@ public class FitnessHeartrateTestDAO {
 		
 		return todaysHeartRateTestCount;
 	}
+
+	private static final String QUERY_HEARTRATE_TEST_IN_TIME_RANGE = "SELECT * FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
+			" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?" +
+			" AND "	  + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE_TYPE] + "=?" +
+			" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " >= ?" +
+			" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " < ?";
+	
+	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userID, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
+		
+		List<FitnessHeartrateTestBean>  heartrateTests = new JdbcTemplate(this.getDataSource()).query(QUERY_HEARTRATE_TEST_IN_TIME_RANGE,
+				ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),
+				userID, heartrateType, startTimestamp.toString(), endTimestamp.toString());
+
+		return heartrateTests;
+	}
 	
 	private static final String DELETE_ALL_TESTS = 	"DELETE FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
 													" WHERE " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_USERID] + "=?";				

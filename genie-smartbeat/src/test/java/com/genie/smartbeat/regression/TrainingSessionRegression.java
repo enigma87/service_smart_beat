@@ -5,7 +5,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,15 +27,21 @@ import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 public class TrainingSessionRegression {
   
 	
-	@Autowired AbstractApplicationContext smartbeatContext;	
+	private static AbstractApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	
 	
-	@Before
+	@BeforeClass
 	public void setUpBeforeClass() throws Exception 
 	{
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		smartbeatContext.registerShutdownHook();
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		smartbeatContext.close();
 	}
 	
 	@Test

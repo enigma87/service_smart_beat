@@ -26,6 +26,7 @@ public interface FitnessManager{
 	
 	/*heart rate test*/
 	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);
+	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp);
 
 	/*heart rate zones*/
 	public double[][] getHeartrateZones(String userid);

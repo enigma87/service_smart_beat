@@ -10,9 +10,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -42,8 +42,7 @@ public class FitnessHeartrateTestDAOTest {
 	private static long threeHoursBefore; //= now - (3*3600000);
 	
 	@BeforeClass
-	public static void beforeClass(){
-		
+	public static void beforeClass(){		
 		Date today = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
@@ -124,6 +123,12 @@ public class FitnessHeartrateTestDAOTest {
 		bean.setHeartrateTestId(null);
 		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
 
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		smartbeatContext.close();
 	}
 
 	@Test
@@ -369,5 +374,25 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 		heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");                               
 		Assert.assertEquals(0, heartrateTestBeans.size());
 	}
-		
-} 
+	
+	@Test
+	public void testGetFitnessHeartrateTestsByTypeAndRange() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(Calendar.DATE, -2);
+		Timestamp startTimestamp = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.DATE, +2);
+		Timestamp endTimestamp = new Timestamp(cal.getTimeInMillis());
+
+		Assert.assertEquals(0, fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp).size());
+
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
+
+		List<FitnessHeartrateTestBean> heartrateTests =  fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp);
+		Assert.assertEquals(3, heartrateTests.size());
+
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+	}
+}
