@@ -109,7 +109,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
 		
-		CheckTrainingSessionValidity(fitnessTrainingSessionBean);
+		checkTSBTimeValidity(fitnessTrainingSessionBean);
 		
 		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
 			String userid = fitnessTrainingSessionBean.getUserid();		
@@ -142,7 +142,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 	}
 	
-	private void CheckTrainingSessionValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+	private void checkTSBTimeValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
 		
 		TrainingSessionValidityStatus validityStatus = new TrainingSessionValidityStatus();
 		validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED);
