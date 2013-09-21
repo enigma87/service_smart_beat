@@ -384,13 +384,13 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 		cal.add(Calendar.DATE, +2);
 		Timestamp endTimestamp = new Timestamp(cal.getTimeInMillis());
 
-		Assert.assertEquals(0, fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeAndRange("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp).size());
+		Assert.assertEquals(0, fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp).size());
 
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
 		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
 
-		List<FitnessHeartrateTestBean> heartrateTests =  fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeAndRange("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp);
+		List<FitnessHeartrateTestBean> heartrateTests =  fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp);
 		Assert.assertEquals(3, heartrateTests.size());
 
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");

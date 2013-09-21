@@ -1,7 +1,6 @@
 package com.genie.smartbeat.domain;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.sql.Timestamp;
 import java.util.Calendar;

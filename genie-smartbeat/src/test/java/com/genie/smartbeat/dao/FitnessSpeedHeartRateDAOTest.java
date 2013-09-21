@@ -4,12 +4,10 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
-import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 
 public class FitnessSpeedHeartRateDAOTest {
 	

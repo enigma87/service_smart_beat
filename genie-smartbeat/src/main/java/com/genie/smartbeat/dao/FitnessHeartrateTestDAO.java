@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
 
 /**
@@ -248,7 +247,7 @@ public class FitnessHeartrateTestDAO {
 			" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " >= ?" +
 			" AND " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_TIME_OF_RECORD] + " < ?";
 	
-	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeAndRange(String userID, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
+	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userID, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
 		
 		List<FitnessHeartrateTestBean>  heartrateTests = new JdbcTemplate(this.getDataSource()).query(QUERY_HEARTRATE_TEST_IN_TIME_RANGE,
 				ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),

@@ -9,12 +9,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
-import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 
 public class FitnessHomeostasisIndexDaoTest {
 

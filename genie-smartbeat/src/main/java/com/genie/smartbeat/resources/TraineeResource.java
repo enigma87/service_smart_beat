@@ -30,7 +30,9 @@ import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.TrainingSessionValidityStatus;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
+import com.genie.smartbeat.json.HeartrateTestByRangeResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
@@ -243,7 +245,7 @@ public class TraineeResource
 	@Path("id/{userid}/trainingSession/inTimeInterval")
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getFitnessTrainingSessions(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+	public String getFitnessTrainingSessionsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 		List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
 		TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
@@ -324,6 +326,90 @@ public class TraineeResource
 		}
 	}
 
+	@GET
+	@Path("id/{userid}/heartrateTest/resting/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRestingHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		
+		GoodResponseObject gro = null;
+		if (null != startTimeStamp
+				&& null != endTimeStamp) {
+
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, startTimeStamp, endTimeStamp);
+			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			heartrateTestsJson.setUserId(userID);
+			heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		} else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid Time Interval");
+		}
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}		
+	}
+
+	@GET
+	@Path("id/{userid}/heartrateTest/maximal/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getMaximalHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
+		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		heartrateTestsJson.setUserId(userID);
+		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}		
+	}
+	
+	@GET
+	@Path("id/{userid}/heartrateTest/threshold/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getThresholdHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
+		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		heartrateTestsJson.setUserId(userID);
+		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}		
+	}
+	
+	@GET
+	@Path("id/{userid}/heartrateTest/orthostatic/inTimeInterval")
+	@Consumes(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getOrthostaticHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
+		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		heartrateTestsJson.setUserId(userID);
+		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		
+		try {
+			return Formatter.getAsJson(gro, true);
+		} catch (Exception ex) {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}		
+	}
+	
 	@POST
 	@Path("id/{userid}/heartrateTest/save")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
