@@ -1,14 +1,17 @@
 package com.genie.smartbeat.core;
 
-public class TrainingSessionValidityStatus {
-	public enum Status {
-		APPROVED_VALID(0),
-		DENIED(1),
-		DENIED_INVALID_IN_CHRONOLOGY(2);
+public enum TrainingSessionValidityStatus {
+	
+		VALID(0),
+		INVALID(1),
+		INVALID_TIMESTAMP(2),		
+		INVALID_IN_CHRONOLOGY(3),
+		INVALID_SPEED_DISTRIBUTION(4),
+		INVALID_TIME_DISTRIBUTION(5);
 		
 		private int statusval;
 		
-		private  Status(int val) {
+		private  TrainingSessionValidityStatus(int val) {
 			this.statusval = val;
 		}
 		
@@ -19,23 +22,13 @@ public class TrainingSessionValidityStatus {
 		@Override
 		public String toString() {
 			switch (this) {
-			  case APPROVED_VALID: return "Training session valid!"; 
-			  case DENIED: return "Training session invalid.";
-			  case DENIED_INVALID_IN_CHRONOLOGY: return "Training session invalid: Chronology";
+			  case VALID: return "OK"; 
+			  case INVALID: return "training session invalid";
+			  case INVALID_TIMESTAMP: return "invalid timestamp";			  
+			  case INVALID_IN_CHRONOLOGY: return "session invalid in chronology";
+			  case INVALID_SPEED_DISTRIBUTION: return "invalid speed distribution";
+			  case INVALID_TIME_DISTRIBUTION: return "invalid time distribution";
 			}
 			return null;
 		}	
-	}
-	
-	private Status validityStatusCode;
-
-	public Status getValidityStatusCode() {
-		return validityStatusCode;
-	}
-
-	public void setValidityStatusCode(Status validityStatusCode) {
-		this.validityStatusCode = validityStatusCode;
-	}
-	
-	
 }

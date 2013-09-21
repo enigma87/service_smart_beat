@@ -23,6 +23,10 @@ import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+import com.genie.smartbeat.impl.exceptions.InvalidSpeedDistributionException;
+import com.genie.smartbeat.impl.exceptions.InvalidTimeDistributionException;
+import com.genie.smartbeat.impl.exceptions.InvalidTimestampException;
+import com.genie.smartbeat.impl.exceptions.TimestampInvalidInChronologyException;
 import com.genie.smartbeat.util.DoubleValueFormatter;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
 import com.genie.social.beans.UserBean;
@@ -108,14 +112,20 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
-		
-		CheckTrainingSessionValidity(fitnessTrainingSessionBean);
-		
-		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
-			String userid = fitnessTrainingSessionBean.getUserid();		
-			String trainingSessionId = null, previousTrainingSessionId = null;		
+		String userid = fitnessTrainingSessionBean.getUserid();		
+		String trainingSessionId = null, previousTrainingSessionId = null;		
+
+		try{
+			if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
+				throw new InvalidTimestampException();
+			}
 			FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
 			if(null != previousTrainingSession){
+				/*check validity of new session in chronology */
+				if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){
+					fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
+					throw new TimestampInvalidInChronologyException();
+				}
 				/*generate first training session id*/
 				trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
 				/*save previous training session id for updating shape index*/
@@ -123,8 +133,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}else{
 				/*generate training session id from previous session id*/
 				trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
-			}
-		
+			}						
 			// set the generated id to bean 
 			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
 		
@@ -134,37 +143,25 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			/*update speed-heartrate model*/				
 			updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
 		
+			/*always update SH model before HI model as HI model needs incoming session's vdot*/
 			/*update homeostasis index model*/
 			updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
 		
-			/*save training session*/		
+			/*save training session*/			
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-		}
-	}
+			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.VALID);
 	
-	private void CheckTrainingSessionValidity(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
-		
-		TrainingSessionValidityStatus validityStatus = new TrainingSessionValidityStatus();
-		validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED);
-		
-		FitnessTrainingSessionBean recentTrainingSessionBean = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(fitnessTrainingSessionBean.getUserid());
-
-		if (null != fitnessTrainingSessionBean.getEndTime() 
-				&& null != fitnessTrainingSessionBean.getStartTime()) {
+		}catch(InvalidTimestampException e){
+			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIMESTAMP);
+		}catch(TimestampInvalidInChronologyException e){
+			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
+		}catch(InvalidSpeedDistributionException e){
+			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION);
+		}catch(InvalidTimeDistributionException e){
+			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIME_DISTRIBUTION);
+		}		
+	}
 			
-			if (null == recentTrainingSessionBean 
-					|| fitnessTrainingSessionBean.getStartTime().after(recentTrainingSessionBean.getEndTime())) {
-				
-				validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.APPROVED_VALID);
-				
-			} else {
-				validityStatus.setValidityStatusCode(TrainingSessionValidityStatus.Status.DENIED_INVALID_IN_CHRONOLOGY);
-			}
-		}
-		
-		fitnessTrainingSessionBean.setValidityStatus(validityStatus);
-	}
-	
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
 		return fitnessTrainingSessionDAO.getFitnessTrainingSessionById(fitnessTrainingSessionId);
 	}
@@ -187,7 +184,28 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(shapeIndexBean);
 	}
 	
-	public void updateHomeostasisIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean){
+	public void updateHomeostasisIndexModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean) throws InvalidTimeDistributionException{
+		
+		/* check time distribution validity*/
+		double[] timeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
+		boolean distributionValid = false;
+		if(null != timeDistributionOfHRZ){
+			int nullZoneCount = 0;			
+			int invalidZoneCount = 0;
+			for(int i = 0; i< (FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1); i++){
+				if(0 >= timeDistributionOfHRZ[i]){
+					nullZoneCount++;
+				}else if(timeDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_TIME){
+					invalidZoneCount++;
+				}				
+			}
+			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1)  > nullZoneCount && 0 == invalidZoneCount){
+				distributionValid = true;
+			}
+		}		
+		if(false == distributionValid){
+			throw new InvalidTimeDistributionException();			
+		}
 		
 		double regressedHomeostasisIndex = 0.0;
 		Double recentMinimumOfHomeostasisIndex = 0.0;
@@ -225,20 +243,44 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	
-	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, FitnessTrainingSessionBean previousTrainingSessionBean){
+	public void updateSpeedHeartRateModel(String userid, FitnessTrainingSessionBean fitnessTrainingSessionBean, FitnessTrainingSessionBean previousTrainingSessionBean) throws InvalidSpeedDistributionException{
+				
+		/*check validity of speed distribution*/
+		double[] speedDistributionOfHRZ = fitnessTrainingSessionBean.getSpeedDistributionOfHRZ();		
+		boolean distributionValid = false;
+		if(null != speedDistributionOfHRZ){			
+			int nullZoneCount = 0;
+			int invalidZoneCount = 0;
+			for(int i = 0; i< (FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1); i++){
+				if(0.0 >= speedDistributionOfHRZ[i]){
+					nullZoneCount++;
+				}else if(speedDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_SPEED || 
+						speedDistributionOfHRZ[i] > ShapeIndexAlgorithm.MAXIMUM_ZONE_SPEED){
+					invalidZoneCount++;
+				}
+			}
+			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1) > nullZoneCount && 0 == invalidZoneCount){
+				distributionValid = true;
+			}
+		}		
+		if(false == distributionValid){
+			throw new InvalidSpeedDistributionException();			
+		}
 		
-		double vdot = 0.0;
-		double previousVdot = 0.0;
-		int surfaceIndex = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;
-		
+		/*get surface index*/
+		int surfaceIndex = ShapeIndexAlgorithm.RUNNING_SURFACE_TRACK_PAVED;				
 		if(null != fitnessTrainingSessionBean.getSurfaceIndex()){
 			surfaceIndex = fitnessTrainingSessionBean.getSurfaceIndex();
 		}
 		
+		/*get previous session's vdot for altitude speed correction factor calculation*/
+		double previousVdot = 0.0;
 		if(null != previousTrainingSessionBean){
 			previousVdot = previousTrainingSessionBean.getVdot();
-		}				
-		vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
+		}
+		
+		/*get and set this session's vdot*/
+		double vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
 												surfaceIndex,
 												fitnessTrainingSessionBean.getAsDoubleValueAverageAltitude(),
 												fitnessTrainingSessionBean.getAsDoubleValueExtraLoad(),

@@ -9,16 +9,19 @@ import com.genie.smartbeat.core.TrainingSessionValidityStatus;
  **/
 
 public class FitnessTrainingSessionBean {
+	public static final int NUMBER_OF_ZONES = 6;	
 	private String userid;
 	private String trainingSessionId;
 	private Timestamp startTime;
-	private Timestamp endTime;	
+	private Timestamp endTime;
+	/*time in minutes*/
 	private Double hrz1Time;
 	private Double hrz2Time;
 	private Double hrz3Time;
 	private Double hrz4Time;
 	private Double hrz5Time;
 	private Double hrz6Time;
+	/*distance in m*/
 	private Double hrz1Distance;
 	private Double hrz2Distance;
 	private Double hrz3Distance;
@@ -30,7 +33,9 @@ public class FitnessTrainingSessionBean {
 	private Integer healthPerceptionIndex;
 	private Integer muscleStatePerceptionIndex;
 	private Integer sessionStressPerceptionIndex;
+	/*altitude in m*/
 	private Double averageAltitude;
+	/*load in kg*/
 	private Double extraLoad;
 	private TrainingSessionValidityStatus validityStatus;
 	
@@ -66,6 +71,15 @@ public class FitnessTrainingSessionBean {
 		this.endTime = endTime;
 	}	
 	
+	public Double getSessionDuration(){
+		Double sessionDurationInMinutes = 0.0;
+		if(null != getStartTime() && null != getEndTime()){
+			if(getEndTime().getTime() > getStartTime().getTime()){
+				sessionDurationInMinutes = new Double((getEndTime().getTime() - getStartTime().getTime())/(1000*60));
+			}
+		}
+		return sessionDurationInMinutes;
+	}
 	public Double getHrz1Time() {
 		return hrz1Time;
 	}
@@ -179,59 +193,95 @@ public class FitnessTrainingSessionBean {
 	}
 	
 	public double[] getTimeDistributionOfHRZ(){
-		double[] timeDistributionOfHrz = new double[6];
-		timeDistributionOfHrz[0] = getHrz1Time();
-		timeDistributionOfHrz[1] = getHrz2Time();
-		timeDistributionOfHrz[2] = getHrz3Time();
-		timeDistributionOfHrz[3] = getHrz4Time();
-		timeDistributionOfHrz[4] = getHrz5Time();
-		timeDistributionOfHrz[5] = getHrz6Time();
+		double[] timeDistributionOfHrz = new double[7];
+		int nullZoneCount = 0;
 		
+		if(null != getHrz1Time() && 0.0 < getHrz1Time()){
+			timeDistributionOfHrz[1] = getHrz1Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(null != getHrz2Time() && 0.0 < getHrz2Time()){
+			timeDistributionOfHrz[2] = getHrz2Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(null != getHrz3Time() && 0.0 < getHrz3Time()){
+			timeDistributionOfHrz[3] = getHrz3Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(null != getHrz4Time() && 0.0 < getHrz4Time()){
+			timeDistributionOfHrz[4] = getHrz4Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(null != getHrz5Time() && 0.0 < getHrz5Time()){
+			timeDistributionOfHrz[5] = getHrz5Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(null != getHrz6Time() && 0.0 < getHrz6Time()){
+			timeDistributionOfHrz[6] = getHrz6Time().doubleValue();
+		}else{
+			nullZoneCount++;
+		}
+		
+		if(NUMBER_OF_ZONES == nullZoneCount){
+			timeDistributionOfHrz = null;
+		}
 		return timeDistributionOfHrz;
 	}
 
 	public double[] getSpeedDistributionOfHRZ(){
-		double[] speedDistributiOnofHrz = new double[7];
+		double[] speedDistributiOnofHrz = null;
+		if(null != getTimeDistributionOfHRZ()){
+			speedDistributiOnofHrz = new double[7];
+			if (0.0 < getHrz1Time() ){
+				speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[1] = 0.0;
+			}
+			
+			if (0.0 < getHrz2Time()){
+				speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[2] = 0.0;
+			}
 		
-		if (0.0 != getHrz1Time() ){
-			speedDistributiOnofHrz[1] = (getHrz1Distance()/getHrz1Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[1] = 0.0;
+			if(0.0 < getHrz3Time()){
+				speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[3] = 0.0;
+			}
+			
+			if(0.0 < getHrz4Time()){
+				speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[4] = 0.0;
+			}
+			
+			if(0.0 < getHrz5Time()){
+				speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[5] = 0.0;
+			}
+			
+			if (0.0 < getHrz6Time()){
+				speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
+			}else{
+				speedDistributiOnofHrz[6] = 0.0;
+			}		
 		}
-		
-		if (0.0 != getHrz2Time()){
-			speedDistributiOnofHrz[2] = (getHrz2Distance()/getHrz2Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[2] = 0.0;
-		}
-	
-		if(0.0 != getHrz3Time()){
-			speedDistributiOnofHrz[3] = (getHrz3Distance()/getHrz3Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[3] = 0.0;
-		}
-		
-		if(0.0 != getHrz4Time()){
-			speedDistributiOnofHrz[4] = (getHrz4Distance()/getHrz4Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[4] = 0.0;
-		}
-		
-		if(0.0 != getHrz5Time()){
-			speedDistributiOnofHrz[5] = (getHrz5Distance()/getHrz5Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[5] = 0.0;
-		}
-		
-		if (0.0 != getHrz6Time()){
-			speedDistributiOnofHrz[6] = (getHrz6Distance()/getHrz6Time())*0.06;
-		}else{
-			speedDistributiOnofHrz[6] = 0.0;
-		}
-		return speedDistributiOnofHrz;
+			return speedDistributiOnofHrz;
 	}
 
-	public boolean isValidForTableInsert() {
+	public boolean isValidForTableInsert() {		
 		if ((null != this.getUserid() && !this.getUserid().isEmpty())
 				&& (null != this.getTrainingSessionId() && !this.getTrainingSessionId().isEmpty())) {
 			
@@ -303,5 +353,5 @@ public class FitnessTrainingSessionBean {
 
 	public void setValidityStatus(TrainingSessionValidityStatus validityStatus) {
 		this.validityStatus = validityStatus;
-	}
+	}		
 }

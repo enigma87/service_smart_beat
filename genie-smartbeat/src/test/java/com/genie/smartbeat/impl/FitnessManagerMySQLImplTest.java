@@ -10,7 +10,9 @@ import junit.framework.Assert;
 
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -20,12 +22,16 @@ import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
+import com.genie.smartbeat.impl.exceptions.InvalidSpeedDistributionException;
+import com.genie.smartbeat.impl.exceptions.InvalidTimeDistributionException;
+import com.genie.smartbeat.util.SmartbeatIDGenerator;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -40,6 +46,7 @@ public class FitnessManagerMySQLImplTest {
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 	private long now;
 	FitnessManagerMySQLImpl fitnessManagerMySQLImpl;
+	
 	@Before
 	public void setUpBeforeClass() throws Exception 
 	{
@@ -61,89 +68,123 @@ public class FitnessManagerMySQLImplTest {
 	@Test 
 	public void testSaveFitnessTrainingSession() {
 		
-		long nowBeforeTwoDays = now - (2*24*3600000);
-		long nowBeforeOneDay = now - (24*3600000);
-		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
-
-		UserManager userManager = (UserManager)smartbeatContext.getBean("userManagerMySQLImpl");
-		UserBean user = new UserBean();
-		user.setUserid(userid);
-		user.setAccessToken("accessToken1");
-		user.setAccessTokenType("facebook");
-		user.setFirstName("Jane");
-		user.setEmail("jane@acme.com");
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -25);
-		user.setDob(new java.sql.Date(cal.getTimeInMillis()));
-		user.setGender(UserManager.GENDER_FEMALE);
-		userManager.registerUser(user);
-
-		
-		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
-		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 4 * 24 * 3600 * 1000 - 1 * 3600 * 1000));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 4 * 24 * 3600 * 1000));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
-		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
-		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
-		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
-		fitnessTrainingSessionBean.setAverageAltitude(3.0);
-		fitnessTrainingSessionBean.setSurfaceIndex(2);
-		fitnessTrainingSessionBean.setHealthPerceptionIndex(3);
-		fitnessTrainingSessionBean.setExtraLoad(2.0);
-		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(2);
-		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(3);
 		
-		
-		Assert.assertNull(fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid));
-		
+		/*covering exceptions*/
+		/*invalid duration of 5 min*/
+		Calendar cal = Calendar.getInstance();
+		Timestamp startTime = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE, 5);
+		Timestamp endTime = new Timestamp(cal.getTimeInMillis());
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);
 		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_TIMESTAMP, fitnessTrainingSessionBean.getValidityStatus());
 		
-		Assert.assertNotNull(fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid).getUserid());
-		
-		
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(now - 2 * 24 * 3600 * 1000 - 1 * 3600 * 1000));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(now - 2 * 24 * 3600 * 1000));
+		/*setting a valid duration*/
+		cal.set(Calendar.HOUR, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		startTime = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE,60);
+		endTime = new Timestamp(cal.getTimeInMillis());
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);
+				
+		/*invalid speed distribution */
+		/*zone 2 under min speed limit*/
 		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
-		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
-		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
-		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
-		fitnessTrainingSessionBean.setAverageAltitude(3.0);
-		fitnessTrainingSessionBean.setSurfaceIndex(2);
-		fitnessTrainingSessionBean.setHealthPerceptionIndex(3);
-		fitnessTrainingSessionBean.setExtraLoad(2.0);
-		fitnessTrainingSessionBean.setMuscleStatePerceptionIndex(2);
-		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(3);
-		
-		
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(200.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
 		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION, fitnessTrainingSessionBean.getValidityStatus());
 		
-		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-		UserDao userDao = (UserDao) smartbeatContext.getBean("userDao");
-		userDao.deleteUser(user.getUserid());
-	}
+		/*setting a first session*/
+		/*creating a user for context*/
+		/*Valid user bean needed for age and gender*/
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		/*Sandra scenario 2*/
+		fitnessTrainingSessionBean.setHrz1Time(5.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertEquals(TrainingSessionValidityStatus.VALID, fitnessTrainingSessionBean.getValidityStatus());
+		FitnessTrainingSessionDAO ftsDAO = (FitnessTrainingSessionDAO)smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		Assert.assertNotNull(ftsDAO.getFitnessTrainingSessionById(fitnessTrainingSessionBean.getTrainingSessionId()));
+		Assert.assertEquals(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID), fitnessTrainingSessionBean.getTrainingSessionId());
+		
+		
+		/*invalid timestamp - overlaps with previous training session*/
+		cal.add(Calendar.MINUTE,-1);
+		startTime = new Timestamp(cal.getTimeInMillis());
+		startTime.setNanos(0);
+		cal.add(Calendar.MINUTE,40);
+		endTime = new Timestamp(cal.getTimeInMillis());
+		endTime.setNanos(0);
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);
+		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY, fitnessTrainingSessionBean.getValidityStatus());
+		
+		/*creating a valid second session*/
+		/*Sandra scenario 7*/
+		cal.set(Calendar.HOUR, 19);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		startTime = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE,110);
+		endTime = new Timestamp(cal.getTimeInMillis());
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);		
+		fitnessTrainingSessionBean.setHrz1Time(8.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);
+		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
+		String firstSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		Assert.assertEquals(TrainingSessionValidityStatus.VALID, fitnessTrainingSessionBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(firstSessionId), fitnessTrainingSessionBean.getTrainingSessionId());
+		
+		fitnessManagerMySQLImpl.clearTraineeData(userid);
+		userDao.deleteUser(userid);
+	}	
 	
 	@Test
 	public void testGetFitnessSupercompensationPoints(){
@@ -656,20 +697,24 @@ public class FitnessManagerMySQLImplTest {
 	
 	@Test
 	public void testUpdateSpeedHeartRateModel() {
-		long nowBeforeTwoDays = now - (2*24*3600000);
-		long nowBeforeOneDay = now - (24*3600000);
-		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
-		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE,-1);
+		Timestamp endTimestamp = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE, -50);
+		Timestamp startTimestamp = new Timestamp(cal.getTimeInMillis());		
+				
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
+		fitnessTrainingSessionBean.setStartTime(startTimestamp);
+		fitnessTrainingSessionBean.setEndTime(endTimestamp);
+		
+		/*invalid time distribution*/
+		fitnessTrainingSessionBean.setHrz1Time(0.0);
+		fitnessTrainingSessionBean.setHrz2Time(0.0);
+		fitnessTrainingSessionBean.setHrz3Time(0.0);
+		fitnessTrainingSessionBean.setHrz4Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
 		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
 		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
 		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
@@ -677,16 +722,204 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
 		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
+			Assert.fail("No InvalidSpeedDistributionException");
+		}catch(InvalidSpeedDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*invalid speed distribution */
+		/*zones exceed max speed limit*/
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz1Distance(3000.0);
+		fitnessTrainingSessionBean.setHrz2Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz3Time(4.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz4Time(4.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz5Time(4.0);
+		fitnessTrainingSessionBean.setHrz5Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz6Time(4.0);
+		fitnessTrainingSessionBean.setHrz6Distance(2000.0);		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
+			Assert.fail("No InvalidSpeedDistributionException");
+		}catch(InvalidSpeedDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*invalid speed distribution */
+		/*zones under max speed limit*/
+		fitnessTrainingSessionBean.setHrz1Time(200.0);
+		fitnessTrainingSessionBean.setHrz1Distance(5920.67);
+		fitnessTrainingSessionBean.setHrz2Time(200.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.67);
+		fitnessTrainingSessionBean.setHrz3Time(200.0);
+		fitnessTrainingSessionBean.setHrz3Distance(5920.67);
+		fitnessTrainingSessionBean.setHrz4Time(200.0);
+		fitnessTrainingSessionBean.setHrz4Distance(5920.67);
+		fitnessTrainingSessionBean.setHrz5Time(200.0);
+		fitnessTrainingSessionBean.setHrz5Distance(5920.67);
+		fitnessTrainingSessionBean.setHrz6Time(200.0);
+		fitnessTrainingSessionBean.setHrz6Distance(5920.67);		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
+			Assert.fail("No InvalidSpeedDistributionException");
+		}catch(InvalidSpeedDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*invalid speed distribution */
+		/*zone 1 exceeds max speed limit*/
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz1Distance(3000.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
+			Assert.fail("No InvalidSpeedDistributionException");
+		}catch(InvalidSpeedDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*invalid speed distribution */
+		/*zone 2 under min speed limit*/
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(200.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
+			Assert.fail("No InvalidSpeedDistributionException");
+		}catch(InvalidSpeedDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*valid speed distribution */
+		/*no previous vdot and no surface index*/
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(	fitnessTrainingSessionBean.getUserid(), 
+																fitnessTrainingSessionBean,
+																null);
+			/*expected vdot 46.36*/
+			Assert.assertEquals(Math.round(46.36*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
+		}catch(InvalidSpeedDistributionException e){
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
+		}
+		
+		/*valid speed distribution */
+		/*no altitude and no surface index*/
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(	fitnessTrainingSessionBean.getUserid(), 
+																fitnessTrainingSessionBean,
+																null);
+			/*expected vdot 46.36*/
+			Assert.assertEquals(Math.round(46.36*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
+		}catch(InvalidSpeedDistributionException e){
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
+		}
+		
+		/*valid speed distribution */
+		/*no altitude and surface index - good forest path*/
+		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_GOOD_FOREST_PATH);
+		fitnessTrainingSessionBean.setHrz1Time(8.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);
+		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
+		
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(	fitnessTrainingSessionBean.getUserid(), 
+																fitnessTrainingSessionBean,
+																null);
+			/*expected vdot 47.07*/			
+			Assert.assertEquals(Math.round(47.07*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
+		}catch(InvalidSpeedDistributionException e){
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
+		}
+		
+		/*valid speed distribution */
+		/*altitude 432m and surface index - short grass path*/
+		/*needs previous vDot - 46.4*/
 		FitnessTrainingSessionBean previousTrainingSessionBean = new FitnessTrainingSessionBean();
 		previousTrainingSessionBean.setUserid(userid);
 		previousTrainingSessionBean.setVdot(46.4);
 		
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,previousTrainingSessionBean);
-		Assert.assertNotNull(fitnessTrainingSessionBean.getVdot());
+		fitnessTrainingSessionBean.setSurfaceIndex(ShapeIndexAlgorithm.RUNNING_SURFACE_MEDIOCRE_SHORT_GRASS);
+		fitnessTrainingSessionBean.setAverageAltitude(432.0);
+		fitnessTrainingSessionBean.setHrz1Time(0.0);
+		fitnessTrainingSessionBean.setHrz1Distance(0.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5493.33);
+		fitnessTrainingSessionBean.setHrz3Time(8.0);
+		fitnessTrainingSessionBean.setHrz3Distance(1466.67);
+		fitnessTrainingSessionBean.setHrz4Time(23.0);
+		fitnessTrainingSessionBean.setHrz4Distance(4638.33);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
 		
-		fitnessTrainingSessionBean.setSurfaceIndex(1);
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,previousTrainingSessionBean);
-		Assert.assertNotNull(fitnessTrainingSessionBean.getVdot());
+		try{
+			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(	fitnessTrainingSessionBean.getUserid(), 
+																fitnessTrainingSessionBean,
+																previousTrainingSessionBean);
+			/*expected vdot 43.74*/			
+			Assert.assertEquals(Math.round(43.74*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
+		}catch(InvalidSpeedDistributionException e){
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
+		}
 	}
 
 	@Test
@@ -794,142 +1027,207 @@ public class FitnessManagerMySQLImplTest {
 
 	@Test
 	public void testUpdateShapeIndexModel() {
-		long nowBeforeOneDay = now - (24*3600000);
-		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
-		
+		Calendar cal = Calendar.getInstance();
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
-		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
+		/*Sandra scenario 1*/
+		cal.set(Calendar.HOUR, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Timestamp startTime = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE,60);
+		Timestamp endTime = new Timestamp(cal.getTimeInMillis());
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);
+		fitnessTrainingSessionBean.setTrainingSessionId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID));
+		fitnessTrainingSessionBean.setHrz1Time(5.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		
+		fitnessManagerMySQLImpl.updateShapeIndexModel(	userid, 
+														fitnessTrainingSessionBean, 
+														null);
+		FitnessShapeIndexDAO fsiDAO = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");
+		FitnessShapeIndexBean fitnessShapeIndexBean = fsiDAO.getShapeIndexModelByTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertNotNull(fitnessShapeIndexBean);
+		Assert.assertEquals(Math.round(ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE), Math.round(fitnessShapeIndexBean.getShapeIndex()));
+		Assert.assertEquals(fitnessTrainingSessionBean.getEndTime().toString(), fitnessShapeIndexBean.getTimeOfRecord().toString());
+		Assert.assertEquals(fitnessTrainingSessionBean.getTrainingSessionId(), fitnessShapeIndexBean.getSessionOfRecord());
+		
+		
+		/*Sandra scenario 7*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR, 19);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		startTime = new Timestamp(cal.getTimeInMillis());
+		cal.add(Calendar.MINUTE,110);
+		endTime = new Timestamp(cal.getTimeInMillis());
+		fitnessTrainingSessionBean.setStartTime(startTime);
+		fitnessTrainingSessionBean.setEndTime(endTime);
+		String previousSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+		fitnessTrainingSessionBean.setTrainingSessionId(SmartbeatIDGenerator.getNextId(previousSessionId));
+		fitnessTrainingSessionBean.setHrz1Time(8.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2133.33);
 		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
-		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
-		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
-		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
-		fitnessTrainingSessionBean.setTrainingSessionId("test12345");
+		fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);
+		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
 		
-		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
-		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
-		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-		
-		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, null);
-		Assert.assertEquals(100.0, fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12345").getShapeIndex());
-		
-		fitnessTrainingSessionBean.setTrainingSessionId("test12346");
-		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, "");
-		Assert.assertEquals(100.0, fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12346").getShapeIndex());
-		
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
-		Integer traineeClassification = 2;
-		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
-		Double recentMinimumOfHomeostasisIndex = 110.0;
-		Double recentTotalLoadOfExercise = 100.0;
-		Double previousTotalLoadOfExercise = 125.0;
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		fitnessHomeostasisIndexBean.setUserid(userid);
-		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
-		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		fitnessManagerMySQLImpl.updateShapeIndexModel(	userid, 
+														fitnessTrainingSessionBean, 
+														null);
+		fsiDAO = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");
+		fitnessShapeIndexBean = fsiDAO.getShapeIndexModelByTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertNotNull(fitnessShapeIndexBean);
 
-		fitnessTrainingSessionBean.setTrainingSessionId("test12347");
-		fitnessManagerMySQLImpl.updateShapeIndexModel(userid, fitnessTrainingSessionBean, "test12346");
-		Assert.assertTrue(100.0 > fitnessShapeIndexDAO.getShapeIndexModelByTrainingSessionId("test12347").getShapeIndex());
-	
-		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
-		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-
+		fitnessManagerMySQLImpl.clearTraineeData(userid);
 	}
 
 	@Test
 	public void testUpdateHomeostasisIndexModel() {
-
-		long nowBeforeOneDay = now - (24*3600000);
-		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
 		
+		
+				
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+
+		
+		/*invalid time distribution*/
+		fitnessTrainingSessionBean.setHrz1Time(0.0);
+		fitnessTrainingSessionBean.setHrz2Time(0.0);
+		fitnessTrainingSessionBean.setHrz3Time(0.0);
+		fitnessTrainingSessionBean.setHrz4Time(0.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+
+		try{
+			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+			Assert.fail("No InvalidTimeDistributionException");
+		}catch(InvalidTimeDistributionException e){
+			Assert.assertTrue(true);
+		}
+		
+		/*invalid time distribution*/
+		/*zone 1 below min time limit*/
+		fitnessTrainingSessionBean.setHrz1Time(1.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+
+		try{
+			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+			Assert.fail("No InvalidTimeDistributionException");
+		}catch(InvalidTimeDistributionException e){
+			Assert.assertTrue(true);
+		}
+
+		/*Sandra scenario 7*/
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 19);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Timestamp startTimestamp = new Timestamp(cal.getTimeInMillis());
+		startTimestamp.setNanos(0);
+		cal.add(Calendar.MINUTE, 110);
+		Timestamp endTimestamp = new Timestamp(cal.getTimeInMillis());		
+		endTimestamp.setNanos(0);
+		fitnessTrainingSessionBean.setStartTime(startTimestamp);
+		fitnessTrainingSessionBean.setEndTime(endTimestamp);
+		
+		/*valid time distribution*/		
+		fitnessTrainingSessionBean.setHrz1Time(8.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);		
+		/*HI functionality needs vdot*/
+		fitnessTrainingSessionBean.setVdot(47.0);
+		
+		/*No HI model in DB*/
+		FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessHomeostasisIndexBean hiBean = hiDAO.getHomeostasisIndexModelByUserid(userid);
+		Assert.assertNull(hiBean);
+		
+		/*Valid user bean needed for age and gender*/
 		UserBean user = new UserBean();
 		user.setUserid(userid);
 		user.setEmail("abc@xyz.com");
 		user.setFirstName("Jane");
 		user.setGender(UserManager.GENDER_FEMALE);
 		user.setAccessToken("atoken");
-		user.setAccessTokenType("facebook");
-		
+		user.setAccessTokenType("facebook");		
 		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
-		userDao.createUser(user);
+		userDao.createUser(user);		
+		try{
+			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+			hiBean = hiDAO.getHomeostasisIndexModelByUserid(userid);
+			Assert.assertNotNull(hiBean);
+			/*expected TLE 235.5*/
+			Assert.assertEquals(Math.round(235.5*100), Math.round(hiBean.getRecentTotalLoadOfExercise()*100));
+			Assert.assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, hiBean.getTraineeClassification());
+			Assert.assertEquals(fitnessTrainingSessionBean.getEndTime().toString(), hiBean.getRecentEndTime().toString());
+			Assert.assertEquals(Math.round(-235.5*100), Math.round(hiBean.getRecentMinimumOfHomeostasisIndex()*100));
+			Assert.assertEquals(Math.round(-235.5*100), Math.round(hiBean.getLocalRegressionMinimumOfHomeostasisIndex()*100));			
+		}catch(InvalidTimeDistributionException e){
+			Assert.fail("Unexpected InvalidTimeDistributionException");
+		}
 		
-		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
-		fitnessTrainingSessionBean.setUserid(userid);
-		fitnessTrainingSessionBean.setStartTime(new Timestamp(nowBeforeOneDayFiftyMinutes));
-		fitnessTrainingSessionBean.setEndTime(new Timestamp(nowBeforeOneDay));
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Time(8.0);
-		fitnessTrainingSessionBean.setHrz3Time(11.0);
-		fitnessTrainingSessionBean.setHrz4Time(3.0);
-		fitnessTrainingSessionBean.setHrz5Time(10.0);
-		fitnessTrainingSessionBean.setHrz6Time(14.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1660.0);
-		fitnessTrainingSessionBean.setHrz2Distance(1426.67);
-		fitnessTrainingSessionBean.setHrz3Distance(2090.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2605.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2133.33);
-		fitnessTrainingSessionBean.setHrz6Distance(2126.67);
-		fitnessTrainingSessionBean.setTrainingSessionId("test12345");
-		FitnessTrainingSessionBean previousTrainingSessionBean = new FitnessTrainingSessionBean();
-		previousTrainingSessionBean.setUserid(userid);
-		previousTrainingSessionBean.setVdot(46.4);
+		/*Sandra scenario 13*/
+		cal.add(Calendar.DATE, 3);
+		cal.set(Calendar.HOUR,12);
+		cal.set(Calendar.MINUTE,50);
+		cal.set(Calendar.SECOND,00);
+		cal.set(Calendar.MILLISECOND,00);
+		startTimestamp = new Timestamp(cal.getTimeInMillis());
+		startTimestamp.setNanos(0);
+		cal.add(Calendar.MINUTE,40);
+		endTimestamp = new Timestamp(cal.getTimeInMillis());		
+		endTimestamp.setNanos(0);		
+		fitnessTrainingSessionBean.setStartTime(startTimestamp);
+		fitnessTrainingSessionBean.setEndTime(endTimestamp);
 		
-		fitnessManagerMySQLImpl.updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean,previousTrainingSessionBean); // for getting Vdot
-		
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		Assert.assertNull(fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid));
-		fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		Assert.assertNotNull(fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid));
-		
-		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
-		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-		
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
-		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
-		Integer traineeClassification = 2;
-		Double localRegressionMinimumOfHomeostasisIndex = -130.0;
-		Double recentMinimumOfHomeostasisIndex = -110.0;
-		Double recentTotalLoadOfExercise = 100.0;
-		Double previousTotalLoadOfExercise = 125.0;
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		fitnessHomeostasisIndexBean.setUserid(userid);
-		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
-
-		fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		
-		Assert.assertTrue(fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex() > fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid).getLocalRegressionMinimumOfHomeostasisIndex());
-		
-		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-		userDao.deleteUser(user.getUserid());
+		fitnessTrainingSessionBean.setHrz1Time(8.0);
+		fitnessTrainingSessionBean.setHrz2Time(22.0);
+		fitnessTrainingSessionBean.setHrz3Time(5.0);
+		fitnessTrainingSessionBean.setHrz4Time(6.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		/*HI functionality needs vdot*/
+		fitnessTrainingSessionBean.setVdot(46.4);
+		try{
+			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+			hiBean = hiDAO.getHomeostasisIndexModelByUserid(userid);
+			Assert.assertEquals(Math.round(48.75*100), Math.round(hiBean.getRecentTotalLoadOfExercise()*100));
+			Assert.assertEquals(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, hiBean.getTraineeClassification());
+			Assert.assertEquals(fitnessTrainingSessionBean.getEndTime().toString(), hiBean.getRecentEndTime().toString());
+			Assert.assertEquals(Math.round(-48.75*100), Math.round(hiBean.getRecentMinimumOfHomeostasisIndex()*100));
+			Assert.assertEquals(Math.round(-48.75*100), Math.round(hiBean.getLocalRegressionMinimumOfHomeostasisIndex()*100));			
+		}catch(InvalidTimeDistributionException e){
+			Assert.fail("Unexpected InvalidTimeDistributionException");
+		}		
+		/*clean up hi model and user*/
+		hiDAO.deleteHomeostasisIndexModelByUserid(userid);
+		userDao.deleteUser(userid);
 	}
 }

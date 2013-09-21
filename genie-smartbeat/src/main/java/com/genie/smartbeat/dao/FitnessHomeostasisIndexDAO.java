@@ -18,7 +18,14 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 public class FitnessHomeostasisIndexDAO {
 	
 	private static final String TABLE_FITNESS_HOMEOSTASIS_INDEX = "fitness_homeostasis_index_model";
-	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {"userid", "trainee_classification", "local_regression_minimum_of_homeostasis_index","recent_minimum_of_homeostasis_index","recent_total_load_of_exercise", "recent_end_time", "previous_total_load_of_exercise", "previous_end_time"};
+	private static final String[] COLUMNS_FITNESS_HOMEOSTASIS_INDEX = {	"userid", 
+																		"trainee_classification", 
+																		"local_regression_minimum_of_homeostasis_index",
+																		"recent_minimum_of_homeostasis_index",
+																		"recent_total_load_of_exercise", 
+																		"recent_end_time", 
+																		"previous_total_load_of_exercise", 
+																		"previous_end_time"};
 	private static final int COLUMN_USERID = 0;
 	
 	private BasicDataSource dataSource;

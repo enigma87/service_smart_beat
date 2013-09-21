@@ -1,7 +1,6 @@
 package com.genie.smartbeat.domain;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -66,7 +65,7 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testCalculateTotalLoadofExercise() {
-		double[] timeDistributionOfHeartRateZones = {4,32,14,10,0,0};
+		double[] timeDistributionOfHeartRateZones = {0,4,32,14,10,0,0};
 		double totalLoadOfExercise = ShapeIndexAlgorithm.calculateTotalLoadofExercise(timeDistributionOfHeartRateZones);
 		assertEquals(Math.round(86.5), Math.round(totalLoadOfExercise));
 	}

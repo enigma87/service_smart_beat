@@ -18,6 +18,13 @@ public class ShapeIndexAlgorithm
 {
 	public static final double SHAPE_INDEX_INITIAL_VALUE 					= 100.0;
 	
+	/*Session limits*/
+	public static final double  MINIMUM_SESSION_DURATION					= 10.0;
+	public static final double  MINIMUM_ZONE_TIME 							= 2.0;
+	public static final double  MINIMUM_ZONE_SPEED 							= 3.0;
+	public static final double  MAXIMUM_ZONE_SPEED 							= 30.0;
+	
+	
 	public static final Integer TRAINEE_CLASSIFICATION_UNTRAINED 			= 1;
 	public static final Integer TRAINEE_CLASSIFICATION_LIGHTLY_TRAINED 		= 2;
 	public static final Integer TRAINEE_CLASSIFICATION_MODERATELY_TRAINED 	= 3;
@@ -84,12 +91,12 @@ public class ShapeIndexAlgorithm
 	
 	private static final double TRAINING_IMPACT_BY_ZONE[] = {0,0,1,1.75,3,5,9};	
 	public static double calculateTotalLoadofExercise(double[] timeDistributionOfHeartRateZones){
-		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*timeDistributionOfHeartRateZones[0] +
-				TRAINING_IMPACT_BY_ZONE[2]*timeDistributionOfHeartRateZones[1] +
-				TRAINING_IMPACT_BY_ZONE[3]*timeDistributionOfHeartRateZones[2] +
-				TRAINING_IMPACT_BY_ZONE[4]*timeDistributionOfHeartRateZones[3] +
-				TRAINING_IMPACT_BY_ZONE[5]*timeDistributionOfHeartRateZones[4] +
-				TRAINING_IMPACT_BY_ZONE[6]*timeDistributionOfHeartRateZones[5];
+		double totalLoadOfExercise = TRAINING_IMPACT_BY_ZONE[1]*timeDistributionOfHeartRateZones[1] +
+				TRAINING_IMPACT_BY_ZONE[2]*timeDistributionOfHeartRateZones[2] +
+				TRAINING_IMPACT_BY_ZONE[3]*timeDistributionOfHeartRateZones[3] +
+				TRAINING_IMPACT_BY_ZONE[4]*timeDistributionOfHeartRateZones[4] +
+				TRAINING_IMPACT_BY_ZONE[5]*timeDistributionOfHeartRateZones[5] +
+				TRAINING_IMPACT_BY_ZONE[6]*timeDistributionOfHeartRateZones[6];
 		return DoubleValueFormatter.format3Dot2(totalLoadOfExercise);
 	}
 	

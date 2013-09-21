@@ -294,7 +294,7 @@ public class TraineeResource
 		
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		if (TrainingSessionValidityStatus.Status.APPROVED_VALID.equals(fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode())) {
+		if (TrainingSessionValidityStatus.VALID.equals(fitnessTrainingSessionBean.getValidityStatus())) {
 			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
 		
@@ -312,7 +312,7 @@ public class TraineeResource
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString() ,saveFitnessTrainingSessionResponseJson);
 		}
 		else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().getValidityStatusCode().toString());
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString());
 		}
 		
 		try {
