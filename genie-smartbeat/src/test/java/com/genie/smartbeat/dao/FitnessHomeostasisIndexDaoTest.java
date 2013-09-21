@@ -5,6 +5,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,6 +45,12 @@ public class FitnessHomeostasisIndexDaoTest {
 		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
 		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		appContext.close();
 	}
 	
 	@Before

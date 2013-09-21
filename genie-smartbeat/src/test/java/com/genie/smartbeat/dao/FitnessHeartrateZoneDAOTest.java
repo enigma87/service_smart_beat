@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -55,6 +56,12 @@ public class FitnessHeartrateZoneDAOTest {
 		fitnessHeartrateZoneBean.setHeartrateZone5End(heartrateZone5End);
 		fitnessHeartrateZoneBean.setHeartrateZone6Start(heartrateZone6Start);
 		fitnessHeartrateZoneBean.setHeartrateZone6End(heartrateZone6End);
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		smartbeatContext.close();
 	}
 	
 	@Test

@@ -9,7 +9,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.DateTimeUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -36,12 +38,13 @@ import com.genie.social.dao.UserDao;
 
 public class FitnessManagerMySQLImplTest {
 
-	AbstractApplicationContext smartbeatContext;	
+	private static AbstractApplicationContext smartbeatContext;	
 	private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
-	private long now;
-	FitnessManagerMySQLImpl fitnessManagerMySQLImpl;
-	@Before
-	public void setUpBeforeClass() throws Exception 
+	private static long now;
+	private static FitnessManagerMySQLImpl fitnessManagerMySQLImpl;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception 
 	{
 		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
 		smartbeatContext.registerShutdownHook();
@@ -56,6 +59,12 @@ public class FitnessManagerMySQLImplTest {
 
 		now = cal.getTime().getTime();
 		fitnessManagerMySQLImpl.clearTraineeData(userid);
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		smartbeatContext.close();
 	}
 		
 	@Test 
