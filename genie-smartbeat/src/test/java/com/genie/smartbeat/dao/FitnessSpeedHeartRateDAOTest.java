@@ -1,5 +1,6 @@
 package com.genie.smartbeat.dao;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,6 +29,12 @@ public class FitnessSpeedHeartRateDAOTest {
 		fitnessSpeedHeartRateBean.setCurrentVdot(currentVdot);
 		fitnessSpeedHeartRateBean.setPreviousVdot(previouVdot);
 		
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		appContext.close();
 	}
 			
     

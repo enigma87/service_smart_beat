@@ -10,6 +10,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -124,6 +125,12 @@ public class FitnessHeartrateTestDAOTest {
 		bean.setHeartrateTestId(null);
 		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
 
+	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		smartbeatContext.close();
 	}
 
 	@Test

@@ -60,6 +60,12 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setAverageAltitude(averageAltitude);
 		fitnessTrainingSessionBean.setExtraLoad(extraLoad);
 	}
+	
+	@AfterClass
+	public static void tearDown()
+	{
+		appContext.close();
+	}
 
 	@Test
 	public void testCreateAndGetFitnessTrainingSession() {
