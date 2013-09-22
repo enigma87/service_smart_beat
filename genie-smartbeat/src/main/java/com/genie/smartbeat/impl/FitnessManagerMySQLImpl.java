@@ -472,6 +472,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			restingHeartrate 	= restingHeartrateTestBean.getHeartrate();
 		}
 		
+		/*maximal needs to be calculated before threshold as default threshold depends on maximal*/
 		if(null == maximalHeartrateTestBean){
 			UserBean user = userManager.getUserInformation(userid);
 			maximalHeartrate 	= ShapeIndexAlgorithm.getDefaultMaximalHeartrate(user.getGender(), user.getAge());
