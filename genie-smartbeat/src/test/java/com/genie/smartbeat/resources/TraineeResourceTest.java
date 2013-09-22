@@ -85,7 +85,7 @@ public class TraineeResourceTest {
 			applicationContext.close();
 		}
 		
-		@Test
+		//@Test
 		public void testRegisterUser() throws JSONException {			
 			UserBean testUser = GraphAPI.getTestUser();
 			testUser.setFirstName("jack");
