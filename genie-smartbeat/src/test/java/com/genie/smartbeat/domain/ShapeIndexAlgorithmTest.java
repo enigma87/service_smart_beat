@@ -28,6 +28,41 @@ public class ShapeIndexAlgorithmTest {
 		assertEquals(141, Math.round(defaultHRZs[1]));
 		assertEquals(188, Math.round(defaultHRZs[2]));				
 	}
+	
+	@Test
+	public void testGetDefaultRestingHeartrate(){
+		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, gender = ShapeIndexAlgorithm.GENDER_FEMALE;
+		double restingHeartrate = ShapeIndexAlgorithm.getDefaultRestingHeartrate(traineeClassification, gender);
+		assertEquals(60, Math.round(restingHeartrate));
+		
+		gender = ShapeIndexAlgorithm.GENDER_MALE;
+		restingHeartrate = ShapeIndexAlgorithm.getDefaultRestingHeartrate(traineeClassification, gender);
+		assertEquals(55, Math.round(restingHeartrate));
+	}
+	
+	@Test
+	public void testGetDefaultMaximalHeartrate(){
+		int age = 25, gender = ShapeIndexAlgorithm.GENDER_FEMALE;
+		double maximalHeartrate = ShapeIndexAlgorithm.getDefaultMaximalHeartrate(gender, age);
+		assertEquals(189, Math.round(maximalHeartrate));
+		
+		gender = ShapeIndexAlgorithm.GENDER_MALE;
+		maximalHeartrate = ShapeIndexAlgorithm.getDefaultMaximalHeartrate(gender, age);
+		assertEquals(188, Math.round(maximalHeartrate));
+	}
+	
+	@Test
+	public void testGetDefaultThresholdHeartrate(){
+		int traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED, gender = ShapeIndexAlgorithm.GENDER_FEMALE;
+		double maximalHeartrate = 189.0;
+		double thresholdHeartrate = ShapeIndexAlgorithm.getDefaultThresholdHeartrate(traineeClassification, gender, maximalHeartrate);
+		assertEquals(147, Math.round(thresholdHeartrate));
+		
+		gender = ShapeIndexAlgorithm.GENDER_MALE;
+		maximalHeartrate = 188.0;
+		thresholdHeartrate = ShapeIndexAlgorithm.getDefaultThresholdHeartrate(traineeClassification, gender, maximalHeartrate);
+		assertEquals(141, Math.round(thresholdHeartrate));
+	}
 
 	@Test
 	public void testCalculateHeartrateZones() {

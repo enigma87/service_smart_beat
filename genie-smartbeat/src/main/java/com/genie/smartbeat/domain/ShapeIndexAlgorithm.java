@@ -43,7 +43,36 @@ public class ShapeIndexAlgorithm
 	public static final double[] DEFAULT_MALE_RESTING_HEARTRATE_BY_TRAINEE_CLASSIFICATION 					= {0.0,72.0,65.0,55.0,48.0,40.0};
 	public static final double[] DEFAULT_FEMALE_THRESHOLD_HEARTRATE_COEFFICIENT_BY_TRAINEE_CLASSIFICATION 	= {0.0,0.63,0.7,0.78,0.85,0.92};
 	public static final double[] DEFAULT_MALE_THRESHOLD_HEARTRATE_COEFFICIENT_BY_TRAINEE_CLASSIFICATION 	= {0.0,0.6,0.67,0.75,0.82,0.9};
-		public static double[] getDefaultRMTHeartrates(int traineeClassification, int age, int gender){
+	public static double getDefaultRestingHeartrate(int traineeClassification, int gender){
+		double r = 0.0;
+		if(GENDER_FEMALE == gender){
+			r = DEFAULT_FEMALE_RESTING_HEARTRATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
+		}else{
+			r = DEFAULT_MALE_RESTING_HEARTRATE_BY_TRAINEE_CLASSIFICATION[traineeClassification];
+		}
+		return r;
+	}
+	
+	public static double getDefaultMaximalHeartrate(int gender, int age){
+		double m = 0.0;
+		if(GENDER_FEMALE == gender){
+			m = 216.0 - (1.09*age);
+		}else{
+			m = 202.0 - (0.55*age);
+		}
+		return m;
+	}
+	
+	public static double getDefaultThresholdHeartrate(int traineeClassification, int gender, double maximalHeartrate){
+		double t = 0.0;
+		if(GENDER_FEMALE == gender){
+			t = maximalHeartrate*DEFAULT_FEMALE_THRESHOLD_HEARTRATE_COEFFICIENT_BY_TRAINEE_CLASSIFICATION[traineeClassification];
+		}else{
+			t = maximalHeartrate*DEFAULT_MALE_THRESHOLD_HEARTRATE_COEFFICIENT_BY_TRAINEE_CLASSIFICATION[traineeClassification];
+		}
+		return t;
+	}
+	public static double[] getDefaultRMTHeartrates(int traineeClassification, int age, int gender){
 		double[] rmtHeartrates = new double[3];
 		double r = 0.0, m = 0.0, t = 0.0;
 		if(GENDER_FEMALE == gender){

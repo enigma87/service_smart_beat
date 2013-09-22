@@ -455,26 +455,42 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
  
 	public double[][] getHeartrateZones(String userid) {
-		double[][] heartrateZones = null;
+		double[][] heartrateZones = null;		
 		double restingHeartrate = 0.0, thresholdHeartrate = 0.0, maximalHeartrate = 0.0;
 		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
 		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
-			restingHeartrate 	= restingHeartrateTestBean.getHeartrate();
-			thresholdHeartrate 	= thresholdHeartrateTestBean.getHeartrate();
-			maximalHeartrate 	= maximalHeartrateTestBean.getHeartrate();			
+		
+		if(null == restingHeartrateTestBean){
+			Integer traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid(userid);
+			if(null == traineeClassification){
+				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
+			}
+			UserBean user = userManager.getUserInformation(userid);		
+			restingHeartrate = ShapeIndexAlgorithm.getDefaultRestingHeartrate(traineeClassification, user.getGender());
 		}else{
+			restingHeartrate 	= restingHeartrateTestBean.getHeartrate();
+		}
+		
+		if(null == maximalHeartrateTestBean){
+			UserBean user = userManager.getUserInformation(userid);
+			maximalHeartrate 	= ShapeIndexAlgorithm.getDefaultMaximalHeartrate(user.getGender(), user.getAge());
+		}
+		else{
+			maximalHeartrate 	= maximalHeartrateTestBean.getHeartrate();
+		}
+		
+		if(null == thresholdHeartrateTestBean){
 			Integer traineeClassification = fitnessHomeostasisIndexDAO.getTraineeClassificationByUserid(userid);
 			if(null == traineeClassification){
 				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
 			}
 			UserBean user = userManager.getUserInformation(userid);
-			double[] rmtHeartrates = ShapeIndexAlgorithm.getDefaultRMTHeartrates(traineeClassification, user.getAge(), user.getGender());
-			restingHeartrate 	= rmtHeartrates[0];
-			thresholdHeartrate 	= rmtHeartrates[1];
-			maximalHeartrate 	= rmtHeartrates[2];
+			thresholdHeartrate 	= ShapeIndexAlgorithm.getDefaultThresholdHeartrate(traineeClassification, user.getGender(), maximalHeartrate);
+		}else{
+			thresholdHeartrate 	= thresholdHeartrateTestBean.getHeartrate();
 		}
+		
 		heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrate, thresholdHeartrate, maximalHeartrate);
 		return heartrateZones;
 	}
