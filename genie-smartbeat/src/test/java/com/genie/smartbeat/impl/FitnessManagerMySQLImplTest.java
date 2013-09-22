@@ -21,6 +21,7 @@ import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.HeartrateTestValidityStatus;
 import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
@@ -225,38 +226,166 @@ public class FitnessManagerMySQLImplTest {
 	
 	@Test
 	public void testSaveHeartRateTest(){
+		FitnessHeartrateTestDAO hrtDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean.setUserid(userid);		
 		
-		long now = new Date().getTime();
-		long oneDayBefore = now - (24*3600000);
-		long twoDaysBefore = now - (48*3600000);
-		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO) smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		/*invalid timestamp*/
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_TIMESTAMP, fitnessHeartrateTestBean.getValidityStatus());
 		
-		Assert.assertTrue(fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue() == 0);
+		/*valid timestamp but invalid heartrate*/
+		Calendar cal = Calendar.getInstance();
+		Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
 		
-		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean1.setUserid("user1");
-		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		fitnessHeartrateTestBean1.setHeartrate(124.0);
-		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(twoDaysBefore));
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean1);
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
 		
-		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean2.setUserid("user1");
-		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
-		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
-		fitnessHeartrateTestBean2.setHeartrate(114.0);
-		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(now));
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean2);
 		
-		//System.out.println( ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC+ "-" + fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
-		Assert.assertEquals(1, fitnessHeartrateTestDAO.getNumberOfHeartRateTestsForUserByType("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
+		/*invalid resting heartrate*/
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(15.0);
 		
-		List<FitnessHeartrateTestBean> heartrateTestBeans = fitnessHeartrateTestDAO.getAllHeartrateTestsByUser("user1");
-		for (Iterator i = heartrateTestBeans.iterator();i.hasNext();) {
-			FitnessHeartrateTestBean testBean = (FitnessHeartrateTestBean) i.next();
-			fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(testBean.getHeartrateTestId());
-		}
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
+		
+		/*valid first resting heartrate*/
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(60.0);
+		
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(1, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		
+		/*second resting heartrate invalid in chronology*/
+		cal.add(Calendar.HOUR, -1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(60.0);
+		
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_IN_CHRONOLOGY, fitnessHeartrateTestBean.getValidityStatus());
+		
+		/*valid second resting heartrate*/
+		cal.add(Calendar.HOUR, 1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(55.0);
+		
+		String previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(1, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		
+		/*valid third resting heartrate*/
+		/*one day ahead to check day of record*/
+		cal.add(Calendar.DATE, 1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(52.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(2, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		
+		/*valid first maximal heartrate*/
+		/*one day ahead to check day of record*/		
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean.setHeartrate(189.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(2, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL).intValue());
+		
+		/*invalid first threshold heartrate*/
+		/*greater than the maximal heartrate*/		
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean.setHeartrate(195.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
+		
+		/*valid first threshold heartrate*/
+		/*one day ahead to check day of record*/
+		cal.add(Calendar.DATE, 1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean.setHeartrate(147.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(3, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD).intValue());
+		
+		
+		/*valid first orthostatic heartrate*/
+		/*one day ahead to check day of record*/
+		cal.add(Calendar.DATE, 1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean.setHeartrate(78.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(4, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
+		
+		/*valid second orthostatic heartrate to check non-deletion of SOHR tests*/
+		/*one day ahead to check day of record*/
+		cal.add(Calendar.DATE, 1);
+		timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean.setHeartrate(78.0);
+		
+		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
+		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
+		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
+		Assert.assertEquals(5, fitnessHeartrateTestBean.getDayOfRecord().intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL).intValue());
+		Assert.assertEquals(1, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD).intValue());
+		Assert.assertEquals(2, hrtDAO.getNumberOfHeartRateTestsForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC).intValue());
+		
+		hrtDAO.deleteAllHeartrateTestsForUser(userid);
 	}
 		
 	@Test
