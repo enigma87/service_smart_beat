@@ -132,7 +132,7 @@ public class UserManagerMySQLImplTest {
 		user.setMiddleName("Bob");
 	}
 	
-	@Test
+	//@Test
 	public void testAuthenticateRequest() throws Exception{
 		/*
 		 * 1. Get test user from facebook and verify if valid/invalid accessToken grants appropriate access permissions
