@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.context.ContextLoaderListener;
@@ -33,7 +34,7 @@ import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestCo
 public class TraineeSureshRegression extends JerseyTest{
 
 	UserBean suresh = new UserBean();
-	String sureshFbId = "100006493012865";
+	String sureshFbId = "100006828780611";
 	String userId = null;
 	String accessToken = null;
 
@@ -95,17 +96,17 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject heartrateZones0 = getHrzResJson.getJSONObject("obj");
 		assertEquals(userId, heartrateZones0.getString("userid"));
 		Assert.assertEquals(72.0,  heartrateZones0.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(96.0, heartrateZones0.getDouble("heartrateZone1End"));
-		Assert.assertEquals(96.0, heartrateZones0.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(108.0, heartrateZones0.getDouble("heartrateZone2End"));
-		Assert.assertEquals(108.0, heartrateZones0.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(116.0, heartrateZones0.getDouble("heartrateZone3End"));
-		Assert.assertEquals(116.0, heartrateZones0.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(122.0, heartrateZones0.getDouble("heartrateZone4End"));
-		Assert.assertEquals(122.0, heartrateZones0.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(166.0, heartrateZones0.getDouble("heartrateZone5End"));
-		Assert.assertEquals(166.0, heartrateZones0.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(172.0, heartrateZones0.getDouble("heartrateZone6End"));
+		Assert.assertEquals(87.52, heartrateZones0.getDouble("heartrateZone1End"));
+		Assert.assertEquals(87.52, heartrateZones0.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(95.28, heartrateZones0.getDouble("heartrateZone2End"));
+		Assert.assertEquals(95.28, heartrateZones0.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(99.06, heartrateZones0.getDouble("heartrateZone3End"));
+		Assert.assertEquals(99.06, heartrateZones0.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(105.04, heartrateZones0.getDouble("heartrateZone4End"));
+		Assert.assertEquals(105.04, heartrateZones0.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(165.76, heartrateZones0.getDouble("heartrateZone5End"));
+		Assert.assertEquals(165.76, heartrateZones0.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(171.75, heartrateZones0.getDouble("heartrateZone6End"));
 		
 		/*Save Resting and Ortho Static Heart Rate test day 0*/
 		String saveHeartRateTestUrl = "http://localhost:9998/trainee/id/"+userId+"/heartrateTest/save?accessToken="+accessToken+"&accessTokenType=facebook";
@@ -129,17 +130,17 @@ public class TraineeSureshRegression extends JerseyTest{
     	JSONObject saveHeartrateTestResObj0 = saveHeartrateTestRes0.getJSONObject("obj");
     	JSONObject heartRateZones1 = saveHeartrateTestResObj0.getJSONObject("heartrateZones");
     	Assert.assertEquals(66.0, heartRateZones1.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(93.0, heartRateZones1.getDouble("heartrateZone1End"));
-		Assert.assertEquals(93.0, heartRateZones1.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(107.0, heartRateZones1.getDouble("heartrateZone2End"));
-		Assert.assertEquals(107.0, heartRateZones1.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(116.0, heartRateZones1.getDouble("heartrateZone3End"));
-		Assert.assertEquals(116.0, heartRateZones1.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(123.0, heartRateZones1.getDouble("heartrateZone4End"));
-		Assert.assertEquals(123.0, heartRateZones1.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(166.0, heartRateZones1.getDouble("heartrateZone5End"));
-		Assert.assertEquals(166.0, heartRateZones1.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(172.0, heartRateZones1.getDouble("heartrateZone6End"));
+		Assert.assertEquals(84.52, heartRateZones1.getDouble("heartrateZone1End"));
+		Assert.assertEquals(84.52, heartRateZones1.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(93.78, heartRateZones1.getDouble("heartrateZone2End"));
+		Assert.assertEquals(93.78, heartRateZones1.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(98.82, heartRateZones1.getDouble("heartrateZone3End"));
+		Assert.assertEquals(98.82, heartRateZones1.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(105.16, heartRateZones1.getDouble("heartrateZone4End"));
+		Assert.assertEquals(105.16, heartRateZones1.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(165.4, heartRateZones1.getDouble("heartrateZone5End"));
+		Assert.assertEquals(165.4, heartRateZones1.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(171.75, heartRateZones1.getDouble("heartrateZone6End"));
 		
 				
 		/*Save Training Session for the user in Day 0*/
@@ -148,7 +149,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		cal.set(Calendar.HOUR_OF_DAY, 12);
 		cal.set(Calendar.MINUTE, 0);
 		Long sessionStartTime = cal.getTime().getTime();
-		cal.add(Calendar.MINUTE, 28);
+		cal.add(Calendar.MINUTE, 29);
 		Long sessionEndTime = cal.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
 		
@@ -158,13 +159,13 @@ public class TraineeSureshRegression extends JerseyTest{
 		trainingSessionDataJsonObj0.put("hrz2Time","3.0");
 		trainingSessionDataJsonObj0.put("hrz3Time","14.0");
 		trainingSessionDataJsonObj0.put("hrz4Time","10.0");
-		trainingSessionDataJsonObj0.put("hrz5Time","1.0");
+		trainingSessionDataJsonObj0.put("hrz5Time","2.0");
 		trainingSessionDataJsonObj0.put("hrz6Time","0.0");
 		trainingSessionDataJsonObj0.put("hrz1Distance","0.0");
 		trainingSessionDataJsonObj0.put("hrz2Distance","365.0");
 		trainingSessionDataJsonObj0.put("hrz3Distance","1960.0");
 		trainingSessionDataJsonObj0.put("hrz4Distance","1500.0");
-		trainingSessionDataJsonObj0.put("hrz5Distance","158.33");
+		trainingSessionDataJsonObj0.put("hrz5Distance","316.67");
 		trainingSessionDataJsonObj0.put("hrz6Distance","0.0");
 		trainingSessionDataJsonObj0.put("surfaceIndex","0");
 		Client clientSaveFitnessTrainingSession =  getClient();
@@ -175,6 +176,9 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject objSaveFitnessTrainingSessionReponse = saveFitnessTrainingSessionRes0.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionReponse.getString("userid"));
 		Assert.assertEquals(100.0, objSaveFitnessTrainingSessionReponse.getDouble("shapeIndex"));
+		Assert.assertEquals(67.5, objSaveFitnessTrainingSessionReponse.getDouble("recentTotalLoadOfExercise"));
+		Assert.assertEquals(27.75, objSaveFitnessTrainingSessionReponse.getDouble("vDot"));
+
 		
 		
 		
@@ -214,7 +218,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject getShapeIndexObj1 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex1 = getShapeIndexObj1.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex1.getString("userid"));
-		Assert.assertEquals(100.79, getShapeIndex1.getDouble("shapeIndex"));
+		Assert.assertEquals(100.69, getShapeIndex1.getDouble("shapeIndex"));
 		
 		/*Get Shape Index on Day 2*/
 		cal.add(Calendar.DATE,1);
@@ -224,7 +228,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject getShapeIndexObj2 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex2 = getShapeIndexObj2.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex2.getString("userid"));
-		Assert.assertEquals(100.53, getShapeIndex2.getDouble("shapeIndex"));
+		Assert.assertEquals(100.43, getShapeIndex2.getDouble("shapeIndex"));
 		
 		/*Save Training Session Data on Day 2*/
 		cal.set(Calendar.HOUR_OF_DAY, 17);
@@ -241,7 +245,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		trainingSessionDataJsonObj1.put("hrz4Time","8.0");
 		trainingSessionDataJsonObj1.put("hrz5Time","4.0");
 		trainingSessionDataJsonObj1.put("hrz6Time","2.0");
-		trainingSessionDataJsonObj1.put("hrz1Distance","1000.0");
+		trainingSessionDataJsonObj1.put("hrz1Distance","100.0");
 		trainingSessionDataJsonObj1.put("hrz2Distance","1500.0");
 		trainingSessionDataJsonObj1.put("hrz3Distance","2006.67");
 		trainingSessionDataJsonObj1.put("hrz4Distance","1213.33");
@@ -253,8 +257,10 @@ public class TraineeSureshRegression extends JerseyTest{
 		Assert.assertEquals("OK",  saveFitnessTrainingSessionRes1.getString("message"));
 		JSONObject objSaveFitnessTrainingSessionRes1 = saveFitnessTrainingSessionRes1.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes1.getString("userid"));
-		Assert.assertEquals(100.52, objSaveFitnessTrainingSessionRes1.getDouble("shapeIndex"));
-				
+		Assert.assertEquals(100.42, objSaveFitnessTrainingSessionRes1.getDouble("shapeIndex"));
+		Assert.assertEquals(98.5, objSaveFitnessTrainingSessionRes1.getDouble("recentTotalLoadOfExercise"));
+		Assert.assertEquals(30.86, objSaveFitnessTrainingSessionRes1.getDouble("vDot"));
+		
 		/*Save Resting and Orthostatic Heart Rate test day 2*/
 		cal.set(Calendar.HOUR_OF_DAY, 21);
 		cal.set(Calendar.MINUTE, 50);
@@ -290,17 +296,17 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject saveHeartrateTestResObj3 = saveHeartrateTestRes3.getJSONObject("obj");
     	JSONObject heartRateZones3 = saveHeartrateTestResObj3.getJSONObject("heartrateZones");
     	Assert.assertEquals(62.0, heartRateZones3.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(91.0, heartRateZones3.getDouble("heartrateZone1End"));
-		Assert.assertEquals(91.0, heartRateZones3.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(106.0, heartRateZones3.getDouble("heartrateZone2End"));
-		Assert.assertEquals(106.0, heartRateZones3.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(116.0, heartRateZones3.getDouble("heartrateZone3End"));
-		Assert.assertEquals(116.0, heartRateZones3.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(123.0, heartRateZones3.getDouble("heartrateZone4End"));
-		Assert.assertEquals(123.0, heartRateZones3.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(165.0, heartRateZones3.getDouble("heartrateZone5End"));
-		Assert.assertEquals(165.0, heartRateZones3.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(172.0, heartRateZones3.getDouble("heartrateZone6End"));
+		Assert.assertEquals(82.52, heartRateZones3.getDouble("heartrateZone1End"));
+		Assert.assertEquals(82.52, heartRateZones3.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(92.78, heartRateZones3.getDouble("heartrateZone2End"));
+		Assert.assertEquals(92.78, heartRateZones3.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(98.66, heartRateZones3.getDouble("heartrateZone3End"));
+		Assert.assertEquals(98.66, heartRateZones3.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(105.24, heartRateZones3.getDouble("heartrateZone4End"));
+		Assert.assertEquals(105.24, heartRateZones3.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(165.16, heartRateZones3.getDouble("heartrateZone5End"));
+		Assert.assertEquals(165.16, heartRateZones3.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(171.75, heartRateZones3.getDouble("heartrateZone6End"));
 		
 		/*Get Shape Index on day 3*/	
 		cal.set(Calendar.HOUR_OF_DAY, 17);
@@ -309,7 +315,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject getShapeIndexObj3 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex3 = getShapeIndexObj3.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex3.getString("userid"));
-		Assert.assertEquals(100.52, getShapeIndex3.getDouble("shapeIndex"));
+		Assert.assertEquals(100.42, getShapeIndex3.getDouble("shapeIndex"));
 		
 		
 		/*Get Shape Index on day 4*/
@@ -320,7 +326,7 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject getShapeIndexObj4 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex4 = getShapeIndexObj4.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex4.getString("userid"));
-		Assert.assertEquals(101.27, getShapeIndex4.getDouble("shapeIndex"));
+		Assert.assertEquals(101.18, getShapeIndex4.getDouble("shapeIndex"));
 		
 		/*Save Resting and Orthostatic Heart Rate test day 4*/
 		cal.set(Calendar.HOUR, 19);
@@ -356,7 +362,7 @@ public class TraineeSureshRegression extends JerseyTest{
 	    saveOrthoHeartRateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,orthoHeartRateTestReqJson5);
 		
 		/*Save Training Session Data Day 6*/
-	    cal.add(Calendar.DATE, 1);
+	    //cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 19);
 		cal.set(Calendar.MINUTE, 0);
 		sessionStartTime = cal.getTime().getTime();
@@ -384,8 +390,9 @@ public class TraineeSureshRegression extends JerseyTest{
 		Assert.assertEquals("OK", saveFitnessTrainingSessionRes6.getString("message"));
 		JSONObject objSaveFitnessTrainingSessionRes6 = saveFitnessTrainingSessionRes6.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes6.getString("userid"));
-		Assert.assertEquals(100.74, objSaveFitnessTrainingSessionRes6.getDouble("shapeIndex"));
-	
+		Assert.assertEquals(100.64, objSaveFitnessTrainingSessionRes6.getDouble("shapeIndex"));
+		Assert.assertEquals(89.5, objSaveFitnessTrainingSessionRes6.getDouble("recentTotalLoadOfExercise"));
+		Assert.assertEquals(26.61, objSaveFitnessTrainingSessionRes6.getDouble("vDot"));
 		
 		/*Save Resting and Orthostatic Heart Rate test day 6*/
 		cal.set(Calendar.HOUR_OF_DAY, 21);
@@ -419,18 +426,18 @@ public class TraineeSureshRegression extends JerseyTest{
 		JSONObject saveHeartrateTestRes7 = saveThresholdHeartrateTest.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class, thresholdtHeartRateTestReqJson7);
 		JSONObject saveHeartrateTestResObj7 = saveHeartrateTestRes7.getJSONObject("obj");
     	JSONObject heartRateZones7 = saveHeartrateTestResObj7.getJSONObject("heartrateZones");
-    	Assert.assertEquals(62.0, heartRateZones7.getDouble("heartrateZone1Start"));
-		Assert.assertEquals(99.0, heartRateZones7.getDouble("heartrateZone1End"));
-		Assert.assertEquals(99.0, heartRateZones7.getDouble("heartrateZone2Start"));
-		Assert.assertEquals(118.0, heartRateZones7.getDouble("heartrateZone2End"));
-		Assert.assertEquals(118.0, heartRateZones7.getDouble("heartrateZone3Start"));
-		Assert.assertEquals(132.0, heartRateZones7.getDouble("heartrateZone3End"));
-		Assert.assertEquals(132.0, heartRateZones7.getDouble("heartrateZone4Start"));
-		Assert.assertEquals(138.0, heartRateZones7.getDouble("heartrateZone4End"));
-		Assert.assertEquals(138.0, heartRateZones7.getDouble("heartrateZone5Start"));
-		Assert.assertEquals(165.0, heartRateZones7.getDouble("heartrateZone5End"));
-		Assert.assertEquals(165.0, heartRateZones7.getDouble("heartrateZone6Start"));
-		Assert.assertEquals(172.0, heartRateZones7.getDouble("heartrateZone6End"));
+    	Assert.assertEquals(68.0, heartRateZones7.getDouble("heartrateZone1Start"));
+		Assert.assertEquals(100.0, heartRateZones7.getDouble("heartrateZone1End"));
+		Assert.assertEquals(100.0, heartRateZones7.getDouble("heartrateZone2Start"));
+		Assert.assertEquals(116.0, heartRateZones7.getDouble("heartrateZone2End"));
+		Assert.assertEquals(116.0, heartRateZones7.getDouble("heartrateZone3Start"));
+		Assert.assertEquals(127.85, heartRateZones7.getDouble("heartrateZone3End"));
+		Assert.assertEquals(127.85, heartRateZones7.getDouble("heartrateZone4Start"));
+		Assert.assertEquals(134.08, heartRateZones7.getDouble("heartrateZone4End"));
+		Assert.assertEquals(134.08, heartRateZones7.getDouble("heartrateZone5Start"));
+		Assert.assertEquals(165.52, heartRateZones7.getDouble("heartrateZone5End"));
+		Assert.assertEquals(165.52, heartRateZones7.getDouble("heartrateZone6Start"));
+		Assert.assertEquals(171.75, heartRateZones7.getDouble("heartrateZone6End"));
 		
 		cal.add(Calendar.MINUTE, 53);
 		sessionEndTime = cal.getTime().getTime();
@@ -456,7 +463,9 @@ public class TraineeSureshRegression extends JerseyTest{
 		Assert.assertEquals("OK", saveFitnessTrainingSessionRes7.getString("message"));
 		JSONObject objSaveFitnessTrainingSessionRes7 = saveFitnessTrainingSessionRes7.getJSONObject("obj");
 		Assert.assertEquals(userId, objSaveFitnessTrainingSessionRes7.getString("userid"));
-		Assert.assertEquals(98.21, objSaveFitnessTrainingSessionRes7.getDouble("shapeIndex"));
+		Assert.assertEquals(96.41, objSaveFitnessTrainingSessionRes7.getDouble("shapeIndex"));
+		Assert.assertEquals(134.0, objSaveFitnessTrainingSessionRes7.getDouble("recentTotalLoadOfExercise"));
+		Assert.assertEquals(31.0, objSaveFitnessTrainingSessionRes7.getDouble("vDot"));
 		
 		/*Save Resting and Orthostatic Heart Rate test day 8*/
 		cal.add(Calendar.DATE, 1);
@@ -540,6 +549,17 @@ public class TraineeSureshRegression extends JerseyTest{
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client client = Client.create(clientConfig);	
 		return client;
+	}
+	
+	@After
+	public void cleanUpAfterClass() throws Exception 
+	{
+		/*Delete Trainee Data*/	
+		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+userId+"/data/clear"; 
+		ClientConfig clientConfig = new DefaultClientConfig();
+		Client clientClearUserData = Client.create(clientConfig);
+		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
+		clearUserData.delete();
 	}
 
 
