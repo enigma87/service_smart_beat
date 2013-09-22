@@ -20,14 +20,14 @@ public class UserBean implements Cloneable
 	private String middleName;
 	private String lastName;
 	private Date dob;
-	private byte gender;
+	private Byte gender;
 	private String email;
 	private String imageUrl;		
 	private Timestamp createdTs;
 	private Timestamp lastUpdatedTs;
 	private Timestamp lastLoginTs;
 	private Boolean active = true;
-	private byte privilegeLevel = 1;
+	private Byte privilegeLevel = 1;
 
 	public static final String ACCESS_TOKEN_TYPE_CUSTOM = "custom";
 	public static final String ACCESS_TOKEN_TYPE_FACEBOOK = "facebook";
@@ -95,11 +95,11 @@ public class UserBean implements Cloneable
 		this.dob = dob;
 	}
 
-	public byte getGender() {
+	public Byte getGender() {
 		return gender;
 	}
 	
-	public void setGender(byte gender) {
+	public void setGender(Byte gender) {
 		this.gender = gender;
 	}
 	
@@ -133,11 +133,11 @@ public class UserBean implements Cloneable
 		this.active = active;
 	}
 
-	public byte getPrivilegeLevel() {
+	public Byte getPrivilegeLevel() {
 		return this.privilegeLevel;
 	}
 	
-	public void setPrivilegeLevel(byte privilegeLevel) {
+	public void setPrivilegeLevel(Byte privilegeLevel) {
 		this.privilegeLevel = privilegeLevel;
 	}
 	public Timestamp getCreatedTs()

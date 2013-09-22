@@ -61,13 +61,13 @@ public class UserBeanTest {
 		Assert.assertTrue(timestamp.equals(user.getLastUpdatedTs()));
 		Assert.assertTrue(timestamp.equals(user.getLastLoginTs()));
 		Assert.assertEquals(new Boolean(true), user.getActive());
-		Assert.assertEquals((byte) 1, user.getPrivilegeLevel());
+		Assert.assertEquals(1, user.getPrivilegeLevel().byteValue());
 		Assert.assertEquals(user.toString(), user.getFirstName() + " " + user.getLastName());
 		
 		user.setActive(false);
 		user.setPrivilegeLevel((byte) 2);
 		Assert.assertEquals(new Boolean(false), user.getActive());
-		Assert.assertEquals((byte) 2, user.getPrivilegeLevel());
+		Assert.assertEquals( 2, user.getPrivilegeLevel().byteValue());
 	}
 	
 	@Test
