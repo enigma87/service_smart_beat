@@ -2,6 +2,8 @@ package com.genie.smartbeat.beans;
 
 import java.sql.Timestamp;
 
+import com.genie.smartbeat.core.HeartrateTestValidityStatus;
+
 /**
  * @author dhasarathy
  **/
@@ -14,6 +16,7 @@ public class FitnessHeartrateTestBean {
 	private Double heartrate;
 	private Timestamp timeOfRecord;
 	private Integer dayOfRecord;
+	private HeartrateTestValidityStatus validityStatus;
 	
 	public String getUserid() {
 		return userid;
@@ -70,6 +73,14 @@ public class FitnessHeartrateTestBean {
 			return true;
 		}
 		return false;
+	}
+	
+	public void setValidityStatus(HeartrateTestValidityStatus validityStatus) {
+		this.validityStatus = validityStatus;
+	}
+	
+	public HeartrateTestValidityStatus getValidityStatus() {
+		return validityStatus;
 	}
 }
 
