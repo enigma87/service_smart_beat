@@ -29,6 +29,7 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.core.HeartrateTestValidityStatus;
 import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
@@ -428,21 +429,27 @@ public class TraineeResource
 		heartrateTestBean.setUserid(userid);
 		fitnessManager.saveHeartrateTest(heartrateTestBean);
 		
-		Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
-		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
-		shapeIndexResponseJson.setUserid(userid);
-		shapeIndexResponseJson.setShapeIndex(shapeIndex);
+		GoodResponseObject gro = null;
 		
-		double[][] heartrateZones = fitnessManager.getHeartrateZones(userid);
-		HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
-		heartRateZoneJson.setUserid(userid);
-		heartRateZoneJson.setHeartrateZones(heartrateZones);
+		if (HeartrateTestValidityStatus.VALID.equals(heartrateTestBean.getValidityStatus())) {
+			Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+			ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+			shapeIndexResponseJson.setUserid(userid);
+			shapeIndexResponseJson.setShapeIndex(shapeIndex);
 		
-		SaveHeartrateTestResponseJson saveHeartrateTestResponseJson = new SaveHeartrateTestResponseJson();
-		saveHeartrateTestResponseJson.setHeartrateZones(heartRateZoneJson);
-		saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
+			double[][] heartrateZones = fitnessManager.getHeartrateZones(userid);
+			HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
+			heartRateZoneJson.setUserid(userid);
+			heartRateZoneJson.setHeartrateZones(heartrateZones);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
+			SaveHeartrateTestResponseJson saveHeartrateTestResponseJson = new SaveHeartrateTestResponseJson();
+			saveHeartrateTestResponseJson.setHeartrateZones(heartRateZoneJson);
+			saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
+		} else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), heartrateTestBean.getValidityStatus().toString());
+		}
 		try
 		{
 			return Formatter.getAsJson(gro, false);
