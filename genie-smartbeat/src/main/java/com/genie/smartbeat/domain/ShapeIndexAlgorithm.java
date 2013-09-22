@@ -18,11 +18,14 @@ public class ShapeIndexAlgorithm
 {
 	public static final double SHAPE_INDEX_INITIAL_VALUE 					= 100.0;
 	
-	/*Session limits*/
+	/*training session limits*/
 	public static final double  MINIMUM_SESSION_DURATION					= 10.0;
 	public static final double  MINIMUM_ZONE_TIME 							= 2.0;
 	public static final double  MINIMUM_ZONE_SPEED 							= 3.0;
 	public static final double  MAXIMUM_ZONE_SPEED 							= 30.0;
+	
+	/*heartrate test limits*/
+	public static final double MINIMUM_RESTING_HEARTRATE 					= 20.0;
 	
 	
 	public static final Integer TRAINEE_CLASSIFICATION_UNTRAINED 			= 1;

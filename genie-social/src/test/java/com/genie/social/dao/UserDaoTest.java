@@ -8,10 +8,8 @@ import java.util.Calendar;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -82,7 +80,7 @@ public class UserDaoTest {
 		Assert.assertNotNull(user1.getLastUpdatedTs());
 		Assert.assertNotNull(user1.getLastLoginTs());
 		Assert.assertEquals(new Boolean(true), user1.getActive());
-		Assert.assertEquals((byte) 1, user1.getPrivilegeLevel());
+		Assert.assertEquals(1, user1.getPrivilegeLevel().byteValue());
 		
 		userDao.deleteUser(user.getUserid());
 		
@@ -99,7 +97,7 @@ public class UserDaoTest {
 		
 		UserBean user2 = userDao.getUserInfo(user1.getUserid());
 		Assert.assertEquals("John", user2.getMiddleName());
-		Assert.assertEquals((byte) 2, user2.getPrivilegeLevel());
+		Assert.assertEquals(2, user2.getPrivilegeLevel().byteValue());
 		userDao.deleteUser(user1.getUserid());
 		
 		Assert.assertEquals(0, userDao.updateUser(new UserBean()));

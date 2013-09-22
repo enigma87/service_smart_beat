@@ -1,6 +1,7 @@
 package com.genie.smartbeat.impl;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -259,103 +260,103 @@ public class FitnessManagerMySQLImplTest {
 	}
 		
 	@Test
-	public void testGetHeartrateZones(){ 
-		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO)smartbeatContext.getBean("fitnessHeartrateZoneDAO");
-		FitnessHeartrateZoneBean fitnessHeartrateZoneBean = new FitnessHeartrateZoneBean();
-		UserManager userManager = (UserManager)smartbeatContext.getBean("userManagerMySQLImpl");
-		
+	public void testGetHeartrateZones(){
+		/*No test history*/
+		/*creating user for context*/
+		UserDao userDAO = (UserDao)smartbeatContext.getBean("userDao");
+		Calendar cal = Calendar.getInstance();
 		UserBean user = new UserBean();
-		user.setUserid("12345");
+		user.setUserid(userid);
 		user.setAccessToken("accessToken1");
 		user.setAccessTokenType("facebook");
-		user.setFirstName("Jane");
-		user.setEmail("jane@acme.com");
-		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -25);
+		user.setFirstName("Suresh");
+		user.setEmail("suresh@acme.com");		
+		cal.add(Calendar.YEAR, -55);
 		user.setDob(new java.sql.Date(cal.getTimeInMillis()));
-		user.setGender(UserManager.GENDER_FEMALE);
-		userManager.registerUser(user);
+		user.setGender(UserManager.GENDER_MALE);
+		userDAO.createUser(user);
 		
-		Double heartrateZone1Start 	= 50.0;
-		Double heartrateZone1End 	= 105.0;
-		Double heartrateZone2Start 	= 105.0;
-		Double heartrateZone2End 	= 133.0;
-		Double heartrateZone3Start 	= 133.0;
-		Double heartrateZone3End 	= 156.0;
-		Double heartrateZone4Start 	= 156.0;
-		Double heartrateZone4End 	= 164.0;
-		Double heartrateZone5Start 	= 164.0;
-		Double heartrateZone5End 	= 182.0;
-		Double heartrateZone6Start 	= 182.0;
-		Double heartrateZone6End 	= 190.0;
+		double[][] heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(userid);
+		Assert.assertEquals(72.0,  	heartrateZones[1][0]);
+		Assert.assertEquals(87.52,	heartrateZones[1][1]);
+		Assert.assertEquals(87.52, 	heartrateZones[2][0]);
+		Assert.assertEquals(95.28, heartrateZones[2][1]);
+		Assert.assertEquals(95.28, heartrateZones[3][0]);
+		Assert.assertEquals(99.06, heartrateZones[3][1]);
+		Assert.assertEquals(99.06, heartrateZones[4][0]);
+		Assert.assertEquals(105.04, heartrateZones[4][1]);
+		Assert.assertEquals(105.04, heartrateZones[5][0]);
+		Assert.assertEquals(165.76, heartrateZones[5][1]);
+		Assert.assertEquals(165.76, heartrateZones[6][0]);
+		Assert.assertEquals(171.75, heartrateZones[6][1]);
 		
-		fitnessHeartrateZoneBean.setUserid(user.getUserid());
-		fitnessHeartrateZoneBean.setHeartrateZone1Start(heartrateZone1Start);
-		fitnessHeartrateZoneBean.setHeartrateZone1End(heartrateZone1End);
-		fitnessHeartrateZoneBean.setHeartrateZone2Start(heartrateZone2Start);
-		fitnessHeartrateZoneBean.setHeartrateZone2End(heartrateZone2End);
-		fitnessHeartrateZoneBean.setHeartrateZone3Start(heartrateZone3Start);
-		fitnessHeartrateZoneBean.setHeartrateZone3End(heartrateZone3End);
-		fitnessHeartrateZoneBean.setHeartrateZone4Start(heartrateZone4Start);
-		fitnessHeartrateZoneBean.setHeartrateZone4End(heartrateZone4End);
-		fitnessHeartrateZoneBean.setHeartrateZone5Start(heartrateZone5Start);
-		fitnessHeartrateZoneBean.setHeartrateZone5End(heartrateZone5End);
-		fitnessHeartrateZoneBean.setHeartrateZone6Start(heartrateZone6Start);
-		fitnessHeartrateZoneBean.setHeartrateZone6End(heartrateZone6End);
+		/*creating HI bean for trainee classification*/
+		FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessHomeostasisIndexBean hiBean = new FitnessHomeostasisIndexBean();
+		hiBean.setUserid(userid);
+		hiBean.setTraineeClassification(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
+		hiDAO.createHomeostasisIndexModel(hiBean);
 		
-		fitnessHeartrateZoneDAO.createHeartrateZoneModel(fitnessHeartrateZoneBean);
+		heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(userid);
+		Assert.assertEquals(72.0,  	heartrateZones[1][0]);
+		Assert.assertEquals(87.52,	heartrateZones[1][1]);
+		Assert.assertEquals(87.52, 	heartrateZones[2][0]);
+		Assert.assertEquals(95.28, heartrateZones[2][1]);
+		Assert.assertEquals(95.28, heartrateZones[3][0]);
+		Assert.assertEquals(99.06, heartrateZones[3][1]);
+		Assert.assertEquals(99.06, heartrateZones[4][0]);
+		Assert.assertEquals(105.04, heartrateZones[4][1]);
+		Assert.assertEquals(105.04, heartrateZones[5][0]);
+		Assert.assertEquals(165.76, heartrateZones[5][1]);
+		Assert.assertEquals(165.76, heartrateZones[6][0]);
+		Assert.assertEquals(171.75, heartrateZones[6][1]);
 		
-		double[][] heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(user.getUserid());
+		FitnessHeartrateTestDAO hrtDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
+		FitnessHeartrateTestBean hrtBean = new FitnessHeartrateTestBean();
+		hrtBean.setUserid(userid);
+		hrtBean.setDayOfRecord(1);		
+		cal = Calendar.getInstance();
+		Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
+		hrtBean.setTimeOfRecord(timeOfRecord);
 		
-		Assert.assertNotNull(heartrateZones[1][0]);
-		Assert.assertNotNull(heartrateZones[6][1]);
-		//System.out.println(Arrays.deepToString(heartrateZones));
+		/*resting heart rate*/
+		hrtBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
+		hrtBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		hrtBean.setHeartrate(60.0);
+		hrtDAO.createHeartrateTest(hrtBean);
 		
-		long now = cal.getTime().getTime();
-		long oneHourBefore = now -(1 * 3600000);
-		long twoHoursBefore = now -(2 * 3600000);
-				
-		FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean1.setUserid(user.getUserid());
-		fitnessHeartrateTestBean1.setHeartrateTestId("user1Test1");
-		fitnessHeartrateTestBean1.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
-		fitnessHeartrateTestBean1.setHeartrate(124.0);
-		fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(now));
-		fitnessHeartrateTestBean1.setDayOfRecord(1);
+		/*threshold heart rate*/
+		String previousTestId = hrtBean.getHeartrateTestId();
+		hrtBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousTestId));
+		hrtBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		hrtBean.setHeartrate(147.0);
+		hrtDAO.createHeartrateTest(hrtBean);
 		
-		FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean2.setUserid(user.getUserid());
-		fitnessHeartrateTestBean2.setHeartrateTestId("user1Test2");
-		fitnessHeartrateTestBean2.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		fitnessHeartrateTestBean2.setHeartrate(130.0);
-		fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(twoHoursBefore));
-		fitnessHeartrateTestBean2.setDayOfRecord(3);
+		/*maximal heart rate*/
+		previousTestId = hrtBean.getHeartrateTestId();
+		hrtBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousTestId));
+		hrtBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		hrtBean.setHeartrate(189.0);
+		hrtDAO.createHeartrateTest(hrtBean);
 		
-		FitnessHeartrateTestBean fitnessHeartrateTestBean3 = new FitnessHeartrateTestBean();
-		fitnessHeartrateTestBean3.setUserid(user.getUserid());
-		fitnessHeartrateTestBean3.setHeartrateTestId("user1Test3");
-		fitnessHeartrateTestBean3.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
-		fitnessHeartrateTestBean3.setHeartrate(146.0);
-		fitnessHeartrateTestBean3.setTimeOfRecord(new Timestamp(oneHourBefore));
-		fitnessHeartrateTestBean3.setDayOfRecord(8);
+		heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(userid);		
+		Assert.assertEquals(60.0,  	heartrateZones[1][0]);
+		Assert.assertEquals(103.5,	heartrateZones[1][1]);
+		Assert.assertEquals(103.5, 	heartrateZones[2][0]);
+		Assert.assertEquals(125.25, heartrateZones[2][1]);
+		Assert.assertEquals(125.25, heartrateZones[3][0]);
+		Assert.assertEquals(141.84, heartrateZones[3][1]);
+		Assert.assertEquals(141.84, heartrateZones[4][0]);
+		Assert.assertEquals(149.58, heartrateZones[4][1]);
+		Assert.assertEquals(149.58, heartrateZones[5][0]);
+		Assert.assertEquals(181.26, heartrateZones[5][1]);
+		Assert.assertEquals(181.26, heartrateZones[6][0]);
+		Assert.assertEquals(189.0, 	heartrateZones[6][1]);
 		
-		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO) smartbeatContext.getBean("fitnessHeartrateTestDAO");
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
-		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean3);
 		
-		heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(user.getUserid());
-		
-		Assert.assertNotNull(heartrateZones[1][0]);
-		Assert.assertNotNull(heartrateZones[6][1]);
-		//System.out.println(Arrays.deepToString(heartrateZones));
-		
-		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(user.getUserid());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean1.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean2.getHeartrateTestId());
-		fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(fitnessHeartrateTestBean3.getHeartrateTestId());
-		UserDao userDao = (UserDao) smartbeatContext.getBean("userDao");
-		userDao.deleteUser(user.getUserid());
+		hrtDAO.deleteAllHeartrateTestsForUser(userid);
+		hiDAO.deleteHomeostasisIndexModelByUserid(userid);
+		userDAO.deleteUser(userid);
 	}
 	
 	@Test 

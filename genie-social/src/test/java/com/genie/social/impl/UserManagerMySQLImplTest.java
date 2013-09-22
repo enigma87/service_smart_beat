@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -59,6 +58,7 @@ public class UserManagerMySQLImplTest {
 		user.setMiddleName("Bob");
 		user.setLastName("CampBell");
 		user.setDob(Dob);
+		user.setGender(UserManager.GENDER_FEMALE);
 		user.setEmail("abc@xyz.com");		
 		user.setImageUrl("www.picasa.com/1002");
 		user.setCreatedTs(timestamp);

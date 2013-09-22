@@ -129,16 +129,25 @@ public class TraineeResource
 			}
 			else{
 				UserBean newUser = authStatus.getAuthenticatedUser();
-				newUser.setUserid(UUID.randomUUID().toString());
-				userManager.registerUser(newUser);
-				RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
-				regResponseJson.setUserid(newUser.getUserid());
-				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);			
-							
-				try {
-					return Formatter.getAsJson(gro, false);
-				} catch (Exception e) {
-					throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+				/*Smartbeat level validation*/
+				if(null == newUser.getDob() || null == newUser.getGender()){
+					gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error: denied DOB and gender required");
+					try {
+						return Formatter.getAsJson(gro, false);
+					} catch (Exception e) {
+						throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+					}
+				}else{	
+					newUser.setUserid(UUID.randomUUID().toString());
+					userManager.registerUser(newUser);
+					RegisterResponseJSON regResponseJson = new RegisterResponseJSON();
+					regResponseJson.setUserid(newUser.getUserid());
+					gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),regResponseJson);										
+					try {
+						return Formatter.getAsJson(gro, false);
+					} catch (Exception e) {
+						throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e).build());
+					}
 				}
 			}
 		} 
