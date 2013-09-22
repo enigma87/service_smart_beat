@@ -8,6 +8,7 @@ import javax.ws.rs.core.Response.Status;
 
 import junit.framework.Assert;
 
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.AfterClass;
@@ -16,6 +17,8 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
@@ -35,6 +38,7 @@ public class TraineeResourceTest {
 		private static AbstractApplicationContext applicationContext;
 		private static UserDao userDao;
 		private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
+		private static FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
 		private static FitnessShapeIndexDAO fitnessShapeIndexDAO;
 		private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 		private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
@@ -62,6 +66,7 @@ public class TraineeResourceTest {
 			
 			userDao = (UserDao)applicationContext.getBean("userDao");
 			fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO)applicationContext.getBean("fitnessHomeostasisIndexDAO");
+			fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO) applicationContext.getBean("fitnessHeartrateTestDAO");
 			fitnessShapeIndexDAO = (FitnessShapeIndexDAO)applicationContext.getBean("fitnessShapeIndexDAO");
 			fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)applicationContext.getBean("fitnessSpeedHeartRateDAO");
 			fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)applicationContext.getBean("fitnessTrainingSessionDAO");
@@ -191,5 +196,55 @@ public class TraineeResourceTest {
 		@Test
 		public void testGetHeartrateZones() {
 			
+		}
+		
+		@Test 
+		public void testGetRestingHeartrateTestsInInterval() throws JSONException {
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, -2);
+			Timestamp startTimeStamp = new Timestamp(cal.getTimeInMillis());
+			cal.add(Calendar.DATE, +5);
+			Timestamp endTimeStamp = new Timestamp(cal.getTimeInMillis());
+			System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
+			//Assert.assertEquals(0, traineeResource.getRestingHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, "accessToken", "accessTokenType"));
+
+			String responseString = traineeResource.getRestingHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, "accessToken", "accessTokenType");
+			JSONObject jsonResponse = new JSONObject(responseString);
+			JSONObject dataJson = new JSONObject(jsonResponse.get("obj").toString());
+			JSONArray heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
+
+			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertTrue(heartrateTestsJson.isNull(0));
+			
+			FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
+			fitnessHeartrateTestBean1.setDayOfRecord(1);
+			fitnessHeartrateTestBean1.setHeartrate(100.0);
+			fitnessHeartrateTestBean1.setHeartrateTestId("user1test1");
+			fitnessHeartrateTestBean1.setHeartrateType(0);
+			cal.add(Calendar.DATE, -3);
+			fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 5 * 3600 * 1000));
+			fitnessHeartrateTestBean1.setUserid("user1");
+			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
+			
+			FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
+			fitnessHeartrateTestBean2.setDayOfRecord(2);
+			fitnessHeartrateTestBean2.setHeartrate(110.0);
+			fitnessHeartrateTestBean2.setHeartrateTestId("user1test2");
+			fitnessHeartrateTestBean2.setHeartrateType(0);
+			fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 2 * 3600 * 1000));
+			fitnessHeartrateTestBean2.setUserid("user1");
+			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
+		
+			//Assert.assertEquals(2, traineeResource.getRestingHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, "accessToken", "accessTokenType"));
+			
+			responseString = traineeResource.getRestingHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, "accessToken", "accessTokenType");
+			jsonResponse = new JSONObject(responseString);
+			dataJson = new JSONObject(jsonResponse.get("obj").toString());
+			heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
+			
+			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertNotNull(heartrateTestsJson.get(0));
+
+			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		}
 }
