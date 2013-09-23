@@ -40,7 +40,7 @@ import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestCo
 public class TraineeChitraRegression extends JerseyTest{
 	
 	UserBean chithra = new UserBean();
-	String chitraFbId = "100006485698211";
+	String chitraFbId = "100006781293572";
 	String userId = null;
 	String accessToken = null;
 
@@ -86,6 +86,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		Client clientRegisterUser = getClient();
 		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
 		JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
+		System.out.println(registerResJson);
 		JSONObject objRegister = registerResJson.getJSONObject("obj");
 		Assert.assertEquals("200", registerResJson.getString("status"));
 		Assert.assertEquals("OK", registerResJson.getString("message"));
