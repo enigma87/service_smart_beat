@@ -44,7 +44,7 @@ public class SaveHeartrateTestRequestJson {
 	}
 	
 	public FitnessHeartrateTestBean getAsHeartrateTestBean(){
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         Date timeOfRecord = null;        
 		try {
 			timeOfRecord = dateFormat.parse(getTimeOfRecord());			
