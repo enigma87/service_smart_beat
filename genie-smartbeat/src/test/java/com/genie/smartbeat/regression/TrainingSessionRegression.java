@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
@@ -34,14 +35,7 @@ public class TrainingSessionRegression {
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception 
 	{
-		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		smartbeatContext.registerShutdownHook();
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		smartbeatContext.close();
+		smartbeatContext = TestSetup.getInstance();
 	}
 	
 	@Test

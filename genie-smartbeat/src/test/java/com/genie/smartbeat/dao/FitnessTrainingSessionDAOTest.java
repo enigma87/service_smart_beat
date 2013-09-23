@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
@@ -41,9 +42,7 @@ public class FitnessTrainingSessionDAOTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
-		
-		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		appContext.registerShutdownHook();
+		appContext = TestSetup.getInstance();
 		fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)appContext.getBean("fitnessTrainingSessionDAO");
 		//set up test data
 		setupTestData();
@@ -58,12 +57,6 @@ public class FitnessTrainingSessionDAOTest {
 		fitnessTrainingSessionBean.setSessionStressPerceptionIndex(sessionStressPerceptionIndex);
 		fitnessTrainingSessionBean.setAverageAltitude(averageAltitude);
 		fitnessTrainingSessionBean.setExtraLoad(extraLoad);
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		appContext.close();
 	}
 
 	@Test

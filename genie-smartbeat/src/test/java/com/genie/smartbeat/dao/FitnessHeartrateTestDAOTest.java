@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
@@ -55,9 +56,8 @@ public class FitnessHeartrateTestDAOTest {
 		oneHourBefore = now -(1 * 3600000);
 		twoHoursBefore = now -(2 * 3600000);
 		threeHoursBefore = now - (3 * 3600000);
-		
-		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		smartbeatContext.registerShutdownHook();
+
+		smartbeatContext = TestSetup.getInstance();
 		fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
 		
 		fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
@@ -123,12 +123,6 @@ public class FitnessHeartrateTestDAOTest {
 		bean.setHeartrateTestId(null);
 		Assert.assertEquals(0, fitnessHeartrateTestDAO.createHeartrateTest(bean));
 
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		smartbeatContext.close();
 	}
 
 	@Test
