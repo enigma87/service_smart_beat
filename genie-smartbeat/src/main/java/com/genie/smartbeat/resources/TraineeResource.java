@@ -485,6 +485,7 @@ public class TraineeResource
 		}else{
 		 Timestamp recoveryTime = fitnessManager.getRecoveryTime(userid);
          RecoveryTimeResponseJson recoveryTimeResponseJson = new RecoveryTimeResponseJson();
+         recoveryTimeResponseJson.setUserId(userid);
          recoveryTimeResponseJson.setRecentTrainingSessionId(recentTrainingSessionId);
          recoveryTimeResponseJson.setRecoveryTime(recoveryTime);
 			
