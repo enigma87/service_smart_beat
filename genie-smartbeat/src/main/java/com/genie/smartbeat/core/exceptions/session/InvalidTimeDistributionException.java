@@ -1,4 +1,4 @@
-package com.genie.smartbeat.core.exceptions;
+package com.genie.smartbeat.core.exceptions.session;
 
 /**
  * @author dhasarathy

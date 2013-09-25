@@ -17,11 +17,11 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.HeartrateTestValidityStatus;
 import com.genie.smartbeat.core.TrainingSessionValidityStatus;
-import com.genie.smartbeat.core.exceptions.InvalidHeartrateException;
-import com.genie.smartbeat.core.exceptions.InvalidSpeedDistributionException;
-import com.genie.smartbeat.core.exceptions.InvalidTimeDistributionException;
-import com.genie.smartbeat.core.exceptions.InvalidTimestampException;
-import com.genie.smartbeat.core.exceptions.TimestampInvalidInChronologyException;
+import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
+import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
+import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
+import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
+import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -126,7 +126,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				/*check validity of new session in chronology */
 				if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){
 					fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
-					throw new TimestampInvalidInChronologyException();
+					throw new InvalidTimestampInChronologyException();
 				}
 				/*generate first training session id*/
 				trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
@@ -155,7 +155,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 		}catch(InvalidTimestampException e){
 			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIMESTAMP);
-		}catch(TimestampInvalidInChronologyException e){
+		}catch(InvalidTimestampInChronologyException e){
 			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
 		}catch(InvalidSpeedDistributionException e){
 			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION);
@@ -441,7 +441,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			if(null != previousHeartrateTestBean){
 				/*chronology validation*/
 				if(previousHeartrateTestBean.getTimeOfRecord().getTime() > fitnessHeartrateTestBean.getTimeOfRecord().getTime()){
-					throw new TimestampInvalidInChronologyException();
+					throw new InvalidTimestampInChronologyException();
 				}				
 				/*valid so process it*/
 				fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
@@ -464,7 +464,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.VALID);
 		}catch(InvalidTimestampException e){
 			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_TIMESTAMP);
-		}catch(TimestampInvalidInChronologyException e){
+		}catch(InvalidTimestampInChronologyException e){
 			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_IN_CHRONOLOGY);
 		}catch(InvalidHeartrateException e){
 			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_HEARTRATE);
