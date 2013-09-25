@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
@@ -50,8 +51,7 @@ public class FitnessManagerMySQLImplTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception 
 	{
-		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		smartbeatContext.registerShutdownHook();
+		smartbeatContext = TestSetup.getInstance();
 		fitnessManagerMySQLImpl = (FitnessManagerMySQLImpl) smartbeatContext.getBean("fitnessManagerMySQLImpl");
 		Date today = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -63,12 +63,6 @@ public class FitnessManagerMySQLImplTest {
 
 		now = cal.getTime().getTime();
 		fitnessManagerMySQLImpl.clearTraineeData(userid);
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		smartbeatContext.close();
 	}
 		
 	@Test 

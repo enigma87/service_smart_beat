@@ -47,7 +47,9 @@ public class SaveHeartrateTestRequestJson {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
         Date timeOfRecord = null;        
 		try {
-			timeOfRecord = dateFormat.parse(getTimeOfRecord());			
+			if (null != getTimeOfRecord()) {
+				timeOfRecord = dateFormat.parse(getTimeOfRecord());
+			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,7 +58,9 @@ public class SaveHeartrateTestRequestJson {
 		FitnessHeartrateTestBean heartrateTestBean = new FitnessHeartrateTestBean();
 		heartrateTestBean.setHeartrateType(getHeartrateType());
 		heartrateTestBean.setHeartrate(getHeartrate());
-		heartrateTestBean.setTimeOfRecord(new Timestamp(timeOfRecord.getTime()));
+		if (null != getTimeOfRecord()) {
+			heartrateTestBean.setTimeOfRecord(new Timestamp(timeOfRecord.getTime()));
+		}
 		return heartrateTestBean;
 	}
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 
 /**
@@ -38,8 +39,7 @@ public class FitnessHeartrateZoneDAOTest {
 	
 	@BeforeClass
 	public static void setupBeforeClass(){
-		smartbeatContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		smartbeatContext.registerShutdownHook();
+		smartbeatContext = TestSetup.getInstance();
 		fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO)smartbeatContext.getBean("fitnessHeartrateZoneDAO");
 		fitnessHeartrateZoneBean = new FitnessHeartrateZoneBean();
 		fitnessHeartrateZoneBean.setUserid(userid);
@@ -55,12 +55,6 @@ public class FitnessHeartrateZoneDAOTest {
 		fitnessHeartrateZoneBean.setHeartrateZone5End(heartrateZone5End);
 		fitnessHeartrateZoneBean.setHeartrateZone6Start(heartrateZone6Start);
 		fitnessHeartrateZoneBean.setHeartrateZone6End(heartrateZone6End);
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		smartbeatContext.close();
 	}
 	
 	@Test

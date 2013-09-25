@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -52,9 +53,8 @@ public class TraineeResourceTest {
 		
 		@BeforeClass
 		public static void setupUserDao(){
-			applicationContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-			applicationContext.registerShutdownHook();
-			
+			applicationContext = TestSetup.getInstance();
+
 			Date today = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(today);
@@ -79,13 +79,7 @@ public class TraineeResourceTest {
 			
 		}
 		
-		@AfterClass
-		public static void tearDown()
-		{
-			applicationContext.close();
-		}
-		
-		//@Test
+//		@Test
 		public void testRegisterUser() throws JSONException {			
 			UserBean testUser = GraphAPI.getTestUser();
 			testUser.setFirstName("jack");
@@ -130,9 +124,7 @@ public class TraineeResourceTest {
 			UserBean user = new UserBean();
 			Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
 			
-			java.sql.Date Dob = null;
-				
-			Dob = new java.sql.Date(now - 12000);
+			java.sql.Date Dob = new java.sql.Date(now - 12000);
 			
 			user.setUserid("123456789");		
 			user.setAccessToken("access_token_123456789");

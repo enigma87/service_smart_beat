@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 
 public class FitnessSpeedHeartRateDAOTest {
@@ -20,21 +21,13 @@ public class FitnessSpeedHeartRateDAOTest {
     
 	@BeforeClass
 	public static void setupBeforeClass(){
-		appContext = new ClassPathXmlApplicationContext("META-INF/spring/testApplicationContext.xml");
-		appContext.registerShutdownHook();
+		appContext = TestSetup.getInstance();
 		fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)appContext.getBean("fitnessSpeedHeartRateDAO");
 		fitnessSpeedHeartRateBean.setUserid(userid);
 		fitnessSpeedHeartRateBean.setCurrentVdot(currentVdot);
 		fitnessSpeedHeartRateBean.setPreviousVdot(previouVdot);
 		
-	}
-	
-	@AfterClass
-	public static void tearDown()
-	{
-		appContext.close();
-	}
-			
+	}		
     
 	@Test
 	public void createSpeedHeartRateModel() {
