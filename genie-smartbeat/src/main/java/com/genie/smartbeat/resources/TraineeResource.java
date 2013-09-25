@@ -31,6 +31,8 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.HeartrateTestValidityStatus;
 import com.genie.smartbeat.core.TrainingSessionValidityStatus;
+import com.genie.smartbeat.core.errors.AccessTokenError;
+import com.genie.smartbeat.core.errors.UserErrors;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.HeartrateTestByRangeResponseJson;
@@ -101,10 +103,10 @@ public class TraineeResource
 				userInfoJSON.copyFromUserBean(user);
 				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), userInfoJSON);
 			} else {
-				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Unknown User!");
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USER_UNKNOWN.toString());
 			}
 		} else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), AccessTokenError.ACCESS_TOKEN_INVALID.toString());
 		}
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -122,7 +124,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(requestJson.getAccessToken(), requestJson.getAccessTokenType());
 		if(AuthenticationStatus.Status.DENIED.equals(authStatus.getAuthenticationStatus())) {
 			if(null == authStatus.getAuthenticatedUser()){
-				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid access token");			
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), AccessTokenError.ACCESS_TOKEN_INVALID.toString());			
 				try {
 					return Formatter.getAsJson(gro, false);
 				} catch (Exception e) {
@@ -133,7 +135,7 @@ public class TraineeResource
 				UserBean newUser = authStatus.getAuthenticatedUser();
 				/*Smartbeat level validation*/
 				if(null == newUser.getDob() || null == newUser.getGender()){
-					gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error: denied DOB and gender required");
+					gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USER_DOB_AND_GENDER_REQUIRED.toString());
 					try {
 						return Formatter.getAsJson(gro, false);
 					} catch (Exception e) {
@@ -155,7 +157,7 @@ public class TraineeResource
 		} 
 		else if (AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED.equals(authStatus.getAuthenticationStatus())) {
 
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Request Error:" + AuthenticationStatus.Status.DENIED_EMAIL_REQUIRED);
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USER_EMAIL_REQUIRED.toString());
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {
@@ -163,7 +165,7 @@ public class TraineeResource
 			}		
 		}
 		else{
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "User already exists");			
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USER_ALREADY_EXISTS.toString());			
 			try {
 				return Formatter.getAsJson(gro, false);
 			} catch (Exception e) {
