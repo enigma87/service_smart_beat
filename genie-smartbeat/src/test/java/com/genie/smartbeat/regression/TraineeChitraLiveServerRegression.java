@@ -33,7 +33,7 @@ import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestCo
 public class TraineeChitraLiveServerRegression{
 
 	UserBean chithra = new UserBean();
-	String chitraFbId = "100006485698211";
+	String chitraFbId = "100006781293572";
 	String userId = null;
 	String accessToken = null;
 
