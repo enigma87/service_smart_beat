@@ -39,6 +39,10 @@ public interface FitnessManager{
 	public double getShapeIndex(String recentTrainingSessionId, FitnessTrainingSessionBean newlyArrivedTrainingSession);
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime);
 
+	/*Recovery Time*/
+	public Timestamp getRecoveryTime(String userid);
+	
 	/*clear user*/
 	public void clearTraineeData(String userid);
+	
 }

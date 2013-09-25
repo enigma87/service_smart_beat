@@ -36,6 +36,7 @@ import com.genie.smartbeat.core.errors.UserErrors;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.HeartrateTestByRangeResponseJson;
+import com.genie.smartbeat.json.RecoveryTimeResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
 import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
@@ -461,6 +462,45 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
+	
+	
+	@GET
+	@Path("id/{userid}/recoveryTime")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getRecoveryTime(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+		 
+		String recentTrainingSessionId = fitnessManager.getRecentTrainingSessionId(userid);
+		if(null == recentTrainingSessionId ){
+			 GoodResponseObject gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "No Training Session for the user");
+			 try
+			 {				
+				return Formatter.getAsJson(gro, true);
+			 }
+			 catch(Exception ex)
+			 {
+				throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+			 }
+			
+		}else{
+		 Timestamp recoveryTime = fitnessManager.getRecoveryTime(userid);
+         RecoveryTimeResponseJson recoveryTimeResponseJson = new RecoveryTimeResponseJson();
+         recoveryTimeResponseJson.setUserId(userid);
+         recoveryTimeResponseJson.setRecentTrainingSessionId(recentTrainingSessionId);
+         recoveryTimeResponseJson.setRecoveryTime(recoveryTime);
+			
+		 GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);
+		 try
+		 {				
+			return Formatter.getAsJson(gro, true);
+		 }
+		 catch(Exception ex)
+		 {
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		 }
+	   }
+	}
+	
 	
 	@DELETE
 	@Path("id/{userid}/data/clear")
