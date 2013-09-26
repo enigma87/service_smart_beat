@@ -192,16 +192,16 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double[] timeDistributionOfHRZ = fitnessTrainingSessionBean.getTimeDistributionOfHRZ();
 		boolean distributionValid = false;
 		if(null != timeDistributionOfHRZ){
-			int nullZoneCount = 0;			
-			int invalidZoneCount = 0;
+			int nullZoneCount = 0;						
 			for(int i = 0; i< (FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1); i++){
+				if(timeDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_TIME){
+					timeDistributionOfHRZ[i] = 0.0;
+				}						
 				if(0 >= timeDistributionOfHRZ[i]){
 					nullZoneCount++;
-				}else if(timeDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_TIME){
-					invalidZoneCount++;
-				}				
+				}		
 			}
-			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1)  > nullZoneCount && 0 == invalidZoneCount){
+			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1)  > nullZoneCount){
 				distributionValid = true;
 			}
 		}		
@@ -251,17 +251,17 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		double[] speedDistributionOfHRZ = fitnessTrainingSessionBean.getSpeedDistributionOfHRZ();		
 		boolean distributionValid = false;
 		if(null != speedDistributionOfHRZ){			
-			int nullZoneCount = 0;
-			int invalidZoneCount = 0;
+			int nullZoneCount = 0;			
 			for(int i = 0; i< (FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1); i++){
+				if(speedDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_SPEED || 
+						speedDistributionOfHRZ[i] > ShapeIndexAlgorithm.MAXIMUM_ZONE_SPEED){
+					speedDistributionOfHRZ[i] = 0.0;
+				}
 				if(0.0 >= speedDistributionOfHRZ[i]){
 					nullZoneCount++;
-				}else if(speedDistributionOfHRZ[i] < ShapeIndexAlgorithm.MINIMUM_ZONE_SPEED || 
-						speedDistributionOfHRZ[i] > ShapeIndexAlgorithm.MAXIMUM_ZONE_SPEED){
-					invalidZoneCount++;
 				}
 			}
-			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1) > nullZoneCount && 0 == invalidZoneCount){
+			if((FitnessTrainingSessionBean.NUMBER_OF_ZONES + 1) > nullZoneCount){
 				distributionValid = true;
 			}
 		}		

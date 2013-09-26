@@ -94,15 +94,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setEndTime(endTime);
 				
 		/*invalid speed distribution */
-		/*zone 2 under min speed limit*/
+		/*zone 1 over max speed limit*/
 		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz1Distance(3000.0);
+		/*zone 2 under min speed limit*/
 		fitnessTrainingSessionBean.setHrz2Time(200.0);
 		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
-		fitnessTrainingSessionBean.setHrz3Time(14.0);
-		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
-		fitnessTrainingSessionBean.setHrz4Time(10.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz3Time(0.0);
+		fitnessTrainingSessionBean.setHrz3Distance(0.0);
+		fitnessTrainingSessionBean.setHrz4Time(0.0);
+		fitnessTrainingSessionBean.setHrz4Distance(0.0);
 		fitnessTrainingSessionBean.setHrz5Time(0.0);
 		fitnessTrainingSessionBean.setHrz5Distance(0.0);
 		fitnessTrainingSessionBean.setHrz6Time(0.0);
@@ -862,15 +863,15 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz1Time(4.0);
 		fitnessTrainingSessionBean.setHrz1Distance(3000.0);
 		fitnessTrainingSessionBean.setHrz2Time(4.0);
-		fitnessTrainingSessionBean.setHrz2Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz2Distance(3000.0);
 		fitnessTrainingSessionBean.setHrz3Time(4.0);
-		fitnessTrainingSessionBean.setHrz3Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz3Distance(3000.0);
 		fitnessTrainingSessionBean.setHrz4Time(4.0);
-		fitnessTrainingSessionBean.setHrz4Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz4Distance(3000.0);
 		fitnessTrainingSessionBean.setHrz5Time(4.0);
-		fitnessTrainingSessionBean.setHrz5Distance(2000.0);
+		fitnessTrainingSessionBean.setHrz5Distance(3000.0);
 		fitnessTrainingSessionBean.setHrz6Time(4.0);
-		fitnessTrainingSessionBean.setHrz6Distance(2000.0);		
+		fitnessTrainingSessionBean.setHrz6Distance(3000.0);		
 		try{
 			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
 			Assert.fail("No InvalidSpeedDistributionException");
@@ -915,9 +916,10 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz6Distance(0.0);		
 		try{
 			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
-			Assert.fail("No InvalidSpeedDistributionException");
+			/*expected vdot 46.36*/
+			Assert.assertEquals(Math.round(46.36*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
 		}catch(InvalidSpeedDistributionException e){
-			Assert.assertTrue(true);
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
 		}
 		
 		/*invalid speed distribution */
@@ -936,9 +938,10 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz6Distance(0.0);		
 		try{
 			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
-			Assert.fail("No InvalidSpeedDistributionException");
+			/*expected vdot 29.58*/
+			Assert.assertEquals(Math.round(29.58*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
 		}catch(InvalidSpeedDistributionException e){
-			Assert.assertTrue(true);
+			Assert.fail("Unexpected InvalidSpeedDistributionException");
 		}
 		
 		/*valid speed distribution */
@@ -1252,18 +1255,23 @@ public class FitnessManagerMySQLImplTest {
 			Assert.assertTrue(true);
 		}
 		
+		/*No HI model in DB*/
+		FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessHomeostasisIndexBean hiBean = hiDAO.getHomeostasisIndexModelByUserid(userid);
+		Assert.assertNull(hiBean);
+		
 		/*invalid time distribution*/
-		/*zone 1 below min time limit*/
+		/*zones below min time limit*/
 		fitnessTrainingSessionBean.setHrz1Time(1.0);
-		fitnessTrainingSessionBean.setHrz2Time(32.0);
-		fitnessTrainingSessionBean.setHrz3Time(14.0);
-		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz2Time(1.0);
+		fitnessTrainingSessionBean.setHrz3Time(0.0);
+		fitnessTrainingSessionBean.setHrz4Time(0.0);
 		fitnessTrainingSessionBean.setHrz5Time(0.0);
-		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(1.0);
 
 		try{
 			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-			Assert.fail("No InvalidTimeDistributionException");
+			Assert.fail("No InvalidTimeDistributionException");			
 		}catch(InvalidTimeDistributionException e){
 			Assert.assertTrue(true);
 		}
@@ -1292,10 +1300,7 @@ public class FitnessManagerMySQLImplTest {
 		/*HI functionality needs vdot*/
 		fitnessTrainingSessionBean.setVdot(47.0);
 		
-		/*No HI model in DB*/
-		FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		FitnessHomeostasisIndexBean hiBean = hiDAO.getHomeostasisIndexModelByUserid(userid);
-		Assert.assertNull(hiBean);
+		
 		
 		/*Valid user bean needed for age and gender*/
 		UserBean user = new UserBean();
