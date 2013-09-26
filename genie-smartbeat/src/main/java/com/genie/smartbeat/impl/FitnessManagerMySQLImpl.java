@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTimeUtils;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
@@ -40,8 +41,7 @@ import com.genie.social.core.UserManager;
 public class FitnessManagerMySQLImpl implements FitnessManager 
 {
 
-	//@Autowired
-	//@Qualifier("userManagerMySQLImpl")
+	private static final Logger log = Logger.getLogger(FitnessManagerMySQLImpl.class);
 	private UserManager userManager;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
@@ -112,7 +112,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		this.fitnessHeartrateZoneDAO = fitnessHeartrateZoneDAO;
 	}
 	
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
 		String userid = fitnessTrainingSessionBean.getUserid();		
 		String trainingSessionId = null, previousTrainingSessionId = null;		
 
@@ -137,7 +137,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}						
 			// set the generated id to bean 
 			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
-		
+			log.info(fitnessTrainingSessionBean.toString());
 			/*update shape index model*/
 			updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
