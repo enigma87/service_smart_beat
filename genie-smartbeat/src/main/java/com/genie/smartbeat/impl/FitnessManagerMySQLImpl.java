@@ -10,7 +10,6 @@ import java.util.List;
 import org.joda.time.DateTimeUtils;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
@@ -452,9 +451,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 					FitnessHeartrateTestBean recentfitnessHeartrateTestBeanByType = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(fitnessHeartrateTestBean.getUserid(), fitnessHeartrateTestBean.getHeartrateType());
 					if (null != recentfitnessHeartrateTestBeanByType){
 						fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(recentfitnessHeartrateTestBeanByType.getHeartrateTestId());
-					}
-					/*update heartrate zone model*/
-					updateHeartrateZoneModel(fitnessHeartrateTestBean.getUserid());
+					}					
 				}
 			}else{
 				fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
@@ -471,26 +468,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}	
 	}
 	
-	public void updateHeartrateZoneModel(String userid){
-		FitnessHeartrateTestBean restingHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
-		FitnessHeartrateTestBean thresholdHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
-		FitnessHeartrateTestBean maximalHeartrateTestBean 	= fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		
-		if(null != restingHeartrateTestBean && null != thresholdHeartrateTestBean && null != maximalHeartrateTestBean){
-			double[][] heartrateZones = ShapeIndexAlgorithm.calculateHeartrateZones(restingHeartrateTestBean.getHeartrate(), thresholdHeartrateTestBean.getHeartrate(), maximalHeartrateTestBean.getHeartrate());
-			FitnessHeartrateZoneBean fitnessHeartrateZoneBean = fitnessHeartrateZoneDAO.getHeartrateZoneModelByUserid(userid);
-			if(null == fitnessHeartrateZoneBean){
-				fitnessHeartrateZoneBean = new FitnessHeartrateZoneBean();
-				fitnessHeartrateZoneBean.setUserid(userid);
-				fitnessHeartrateZoneBean.setHeartrateZones(heartrateZones);
-				fitnessHeartrateZoneDAO.createHeartrateZoneModel(fitnessHeartrateZoneBean);
-			}else{
-				fitnessHeartrateZoneBean.setHeartrateZones(heartrateZones);
-				fitnessHeartrateZoneDAO.updateHeartrateZoneModel(fitnessHeartrateZoneBean);
-			}
-		}
-	}
- 
 	public double[][] getHeartrateZones(String userid) {
 		double[][] heartrateZones = null;		
 		double restingHeartrate = 0.0, thresholdHeartrate = 0.0, maximalHeartrate = 0.0;
