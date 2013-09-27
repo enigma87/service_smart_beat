@@ -22,9 +22,9 @@ public enum TimeErrors {
 	@Override
 	public String toString() {
 		switch (this) {
-		  case INVALID_TIMESTAMP		: return "user_" + getErrorCode() + ":unknown user"; 
-		  case INVALID_DURATION			: return "user_" + getErrorCode() + ":user already exists";
-		  case INVALID_IN_CHRONOLOGY	: return "user_" + getErrorCode() + ":email required";		  
+		  case INVALID_TIMESTAMP		: return "time_error_" + getErrorCode() + ":invalid timestamp"; 
+		  case INVALID_DURATION			: return "time_error_" + getErrorCode() + ":invalid duration";
+		  case INVALID_IN_CHRONOLOGY	: return "time_error_" + getErrorCode() + ":invalid in chronology";		  
 		}
 		return null;
 	}

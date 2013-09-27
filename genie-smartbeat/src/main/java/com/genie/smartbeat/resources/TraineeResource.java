@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -62,6 +63,7 @@ import com.genie.social.util.Formatter;
 @Component
 public class TraineeResource 
 {
+	private static final Logger log = Logger.getLogger(TraineeResource.class);
 	@Autowired
 	@Qualifier("userManagerMySQLImpl")
 	private UserManager userManager;
@@ -308,7 +310,7 @@ public class TraineeResource
 		GoodResponseObject gro = null;
 		
 		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		
+		log.info("Attempting to save fitness training session for user " + userid);
 		if (TrainingSessionValidityStatus.VALID.equals(fitnessTrainingSessionBean.getValidityStatus())) {
 			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);
@@ -325,9 +327,11 @@ public class TraineeResource
 			saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
 			saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString() ,saveFitnessTrainingSessionResponseJson);
+			log.info("Successfully saved fitness training session for user " + userid);
 		}
 		else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), fitnessTrainingSessionBean.getValidityStatus().toString());
+			log.info("Failed saving fitness training session for user " + userid + " with error " + fitnessTrainingSessionBean.getValidityStatus().toString());
 		}
 		
 		try {

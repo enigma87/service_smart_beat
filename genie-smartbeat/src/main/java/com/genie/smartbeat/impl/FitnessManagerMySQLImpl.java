@@ -117,7 +117,9 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		String trainingSessionId = null, previousTrainingSessionId = null;		
 
 		try{
+			log.info("Trying to save training session " + fitnessTrainingSessionBean.toString());
 			if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
+				log.info("Invalid duration");
 				throw new InvalidTimestampException();
 			}
 			FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
@@ -125,6 +127,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				/*check validity of new session in chronology */
 				if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){
 					fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
+					log.info("Invalid in chronology");
 					throw new InvalidTimestampInChronologyException();
 				}
 				/*generate first training session id*/
@@ -136,8 +139,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
 			}						
 			// set the generated id to bean 
-			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);
-			log.info(fitnessTrainingSessionBean.toString());
+			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);			
 			/*update shape index model*/
 			updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 		
@@ -205,6 +207,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}
 		}		
 		if(false == distributionValid){
+			log.info("Invalid time distribution");
 			throw new InvalidTimeDistributionException();			
 		}
 		
@@ -265,6 +268,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			}
 		}		
 		if(false == distributionValid){
+			log.info("Invalid speed distribution");
 			throw new InvalidSpeedDistributionException();			
 		}
 		

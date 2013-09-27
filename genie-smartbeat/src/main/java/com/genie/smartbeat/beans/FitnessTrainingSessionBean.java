@@ -357,26 +357,27 @@ public class FitnessTrainingSessionBean {
 	
 	@Override
 	public String toString() {
-		return "ID:" + getTrainingSessionId() +"-" 
+		return  "userid:" + getUserid()
+				+ "-" + "trainingSessionId:" + getTrainingSessionId() +"-" 
 				+ "-" + "startTime:" 		+ getStartTime() 	+ "-" 
 				+ "-" + "endTime:"  	 	+ getEndTime() 		+ "-"
 				+ "-" + "hrz1Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz1Distance" 	+ getHrz1Distance() + "-"
+				+ "-" + "hrz1Distance:" 	+ getHrz1Distance() + "-"
 				+ "-" + "hrz2Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz2Distance" 	+ getHrz1Distance() + "-"
+				+ "-" + "hrz2Distance:" 	+ getHrz1Distance() + "-"
 				+ "-" + "hrz3Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz3Distance" 	+ getHrz1Distance() + "-"
+				+ "-" + "hrz3Distance:" 	+ getHrz1Distance() + "-"
 				+ "-" + "hrz4Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz4Distance" 	+ getHrz1Distance() + "-"
+				+ "-" + "hrz4Distance:" 	+ getHrz1Distance() + "-"
 				+ "-" + "hrz5Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz5Distance" 	+ getHrz1Distance() + "-"
+				+ "-" + "hrz5Distance:" 	+ getHrz1Distance() + "-"
 				+ "-" + "hrz6Time:" 		+ getHrz1Time() 	+ "-"
-				+ "-" + "hrz6Distance" 	+ getHrz1Distance() + "-"
-				+ "-" + "extraLoad" 		+ getExtraLoad() 	+ "-"
-				+ "-" + "averageAltitude" 	+ getAverageAltitude() + "-"
-				+ "-" + "surfaceIndex" 	+ getSurfaceIndex() + "-"				
-				+ "-" + "sessionStressPerceptionIndex" 	+ getSessionStressPerceptionIndex() 	+ "-"
-				+ "-" + "healthPerceptionIndex" 			+ getHealthPerceptionIndex() 			+ "-"
-				+ "-" + "muscleStatePerceptionIndex" 		+ getMuscleStatePerceptionIndex();
+				+ "-" + "hrz6Distance:" 	+ getHrz1Distance() + "-"
+				+ "-" + "extraLoad:" 		+ getExtraLoad() 	+ "-"
+				+ "-" + "averageAltitude:" 	+ getAverageAltitude() + "-"
+				+ "-" + "surfaceIndex:" 	+ getSurfaceIndex() + "-"				
+				+ "-" + "sessionStressPerceptionIndex:" 	+ getSessionStressPerceptionIndex() 	+ "-"
+				+ "-" + "healthPerceptionIndex:" 			+ getHealthPerceptionIndex() 			+ "-"
+				+ "-" + "muscleStatePerceptionIndex:" 		+ getMuscleStatePerceptionIndex();
 	}
 }
