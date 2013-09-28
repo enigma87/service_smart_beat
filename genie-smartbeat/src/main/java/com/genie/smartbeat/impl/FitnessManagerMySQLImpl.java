@@ -557,6 +557,5 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
-		userManager.deleteUserById(userid);
 	}
 }
