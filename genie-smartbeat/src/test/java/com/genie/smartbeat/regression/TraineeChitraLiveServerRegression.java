@@ -1,6 +1,6 @@
 package com.genie.smartbeat.regression;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -13,8 +13,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.request.RequestContextListener;
 
 import com.genie.social.beans.UserBean;
 import com.genie.social.facebook.GraphAPI;
@@ -23,12 +21,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
-import com.sun.jersey.test.framework.AppDescriptor;
-import com.sun.jersey.test.framework.JerseyTest;
-import com.sun.jersey.test.framework.WebAppDescriptor;
-import com.sun.jersey.test.framework.spi.container.TestContainerFactory;
-import com.sun.jersey.test.framework.spi.container.grizzly2.web.GrizzlyWebTestContainerFactory;
 
 public class TraineeChitraLiveServerRegression{
 
