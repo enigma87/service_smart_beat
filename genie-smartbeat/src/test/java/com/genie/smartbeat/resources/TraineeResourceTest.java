@@ -436,6 +436,7 @@ public class TraineeResourceTest {
 			cal.set(Calendar.HOUR_OF_DAY, 10);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
 			Long sessionStartTime = cal.getTime().getTime();
 			cal.add(Calendar.HOUR, 1);
 			Long sessionEndTime = cal.getTime().getTime();
@@ -464,6 +465,7 @@ public class TraineeResourceTest {
 			fitnessHomeostasisIndexBean.setUserid(userid);
 			fitnessHomeostasisIndexBean.setTraineeClassification(3);
 			fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+			fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
 			
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 			fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
@@ -472,6 +474,9 @@ public class TraineeResourceTest {
 			cal.add(Calendar.DATE, 1);
 			cal.set(Calendar.HOUR_OF_DAY, 19);
 			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			
 			sessionStartTime = cal.getTime().getTime();
 			cal.add(Calendar.MINUTE, 110);
 			sessionEndTime = cal.getTime().getTime();
@@ -496,23 +501,33 @@ public class TraineeResourceTest {
 			fitnessTrainingSessionBean.setTrainingSessionId("test2");
 			
 			fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-235.5);
+			fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-235.5);
 			
 			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 			fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 			
-			/*Get recovery time*/
+			/*Get recovery time response*/
 			responseString = traineeResource.getRecoveryTime(userid, "accessToken", "accessTokenType");
 			responseJSON = new JSONObject(responseString);
 			JSONObject dataJson = new JSONObject(responseJSON.get("obj").toString());
+			String responseUserId = dataJson.getString("userId");
+			String recentTrainingSessionId = dataJson.getString("recentTrainingSessionId");
 			String recoveryTime = dataJson.getString("recoveryTime");
+			Double recentMinimumOfHI = dataJson.getDouble("recentMinimumOfHomeostasisIndex");
+			Double localRegressionMinimumOfHI = dataJson.getDouble("localRegressionMinimumOfHomeostasisIndex");
 			
+						
 			/*Validation*/
 			cal.add(Calendar.DATE, 3);
 			cal.set(Calendar.HOUR_OF_DAY, 11);
 			cal.set(Calendar.MINUTE, 38);
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
+			Assert.assertEquals(userid, responseUserId);
+			Assert.assertEquals("test2", recentTrainingSessionId );
 			Assert.assertEquals(Timestamp.valueOf(recoveryTime).getTime(), cal.getTime().getTime());
+			Assert.assertEquals(-235.5, recentMinimumOfHI);
+			Assert.assertEquals(-235.5, localRegressionMinimumOfHI);
 			
 			/* Clean up*/
 			userDao.deleteUser(userid);

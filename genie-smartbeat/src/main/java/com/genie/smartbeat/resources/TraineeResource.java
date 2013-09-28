@@ -475,6 +475,7 @@ public class TraineeResource
 	public String getRecoveryTime(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		 
 		String recentTrainingSessionId = fitnessManager.getRecentTrainingSessionId(userid);
+				
 		if(null == recentTrainingSessionId ){
 			 GoodResponseObject gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "No Training Session for the user");
 			 try
@@ -487,10 +488,13 @@ public class TraineeResource
 			 }
 			
 		}else{
+		 FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessManager.getHomeostasisIndexModelForUser(userid);
 		 Timestamp recoveryTime = fitnessManager.getRecoveryTime(userid);
          RecoveryTimeResponseJson recoveryTimeResponseJson = new RecoveryTimeResponseJson();
          recoveryTimeResponseJson.setUserId(userid);
          recoveryTimeResponseJson.setRecentTrainingSessionId(recentTrainingSessionId);
+         recoveryTimeResponseJson.setLocalRegressionMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
+         recoveryTimeResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
          recoveryTimeResponseJson.setRecoveryTime(recoveryTime);
 			
 		 GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);

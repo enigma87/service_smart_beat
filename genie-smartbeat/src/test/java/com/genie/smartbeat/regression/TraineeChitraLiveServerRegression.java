@@ -36,11 +36,14 @@ public class TraineeChitraLiveServerRegression{
 	String chitraFbId = "100006781293572";
 	String userId = null;
 	String accessToken = null;
-
+ 
+	public static final String HOST_JENKINS_SERVER = "ec2-54-229-165-204.eu-west-1.compute.amazonaws.com";
 	public static final String HOST_GENIE_LIVE_VIDHUN = "ec2-54-229-146-226.eu-west-1.compute.amazonaws.com";
 	public static final String HOST_LOCAL = "localhost";
+	public static final String PORT_JENKINS = "8090";
+	public static final String PORT_LOCALHOST_SERVER = "8080";
 	public static final String HOST = HOST_GENIE_LIVE_VIDHUN ;
-	public static String PORT = "8080";
+	public static String PORT = PORT_LOCALHOST_SERVER;
 	
 	@Before
 	public void setUpBeforeClass() throws Exception 

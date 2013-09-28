@@ -1356,6 +1356,7 @@ public class FitnessManagerMySQLImplTest {
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 		Long sessionStartTime = cal.getTime().getTime();
 		cal.add(Calendar.HOUR, 1);
 		Long sessionEndTime = cal.getTime().getTime();
@@ -1392,6 +1393,8 @@ public class FitnessManagerMySQLImplTest {
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 19);
 		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 		sessionStartTime = cal.getTime().getTime();
 		cal.add(Calendar.MINUTE, 110);
 		sessionEndTime = cal.getTime().getTime();
