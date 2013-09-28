@@ -142,6 +142,16 @@ public class TraineeResource
 			}
 			else{
 				UserBean newUser = authStatus.getAuthenticatedUser();
+				
+				/* expect dob and gender from app, if fb privacy settings disallow */
+				UserBean newJsonUser = requestJson.getAsUserBean();
+				if (null == newUser.getDob()) {
+					newUser.setDob(newJsonUser.getDob());
+				}
+				if (null == newUser.getGender()) {
+					newUser.setGender(newJsonUser.getGender());
+				}
+				
 				/*Smartbeat level validation*/
 				if(null == newUser.getDob() || null == newUser.getGender()){
 					gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USER_DOB_AND_GENDER_REQUIRED.toString());
