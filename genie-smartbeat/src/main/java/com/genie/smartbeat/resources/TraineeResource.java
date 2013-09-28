@@ -308,9 +308,9 @@ public class TraineeResource
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
 		
 		GoodResponseObject gro = null;
-		
-		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
 		log.info("Attempting to save fitness training session for user " + userid);
+		fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		
 		if (TrainingSessionValidityStatus.VALID.equals(fitnessTrainingSessionBean.getValidityStatus())) {
 			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);

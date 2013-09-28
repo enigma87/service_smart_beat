@@ -1,0 +1,238 @@
+ 
+
+Trainee Sandra downloads app and answer first questions:
+Q: Gender? A: Female
+Q: Age?    A: 25
+Q: Height? A: 172
+Q: Weight? A: 58
+
+
+Sandras knows her resting and threshold heart rates from previous tests:
+Resting: 60
+Threshold: 147
+Maximum: 189
+
+Heart rate zones are calculated:
+HRZ 1: 60-104
+HRZ 2: 104-126
+HRZ 3: 126-143
+HRZ 4: 143-149
+HRZ 5: 149-181
+HRZ 6: 181-189
+
+Scenario 1: At 09.00 day 0 Sandra does orthostatic heart rate test (1): 54-78. Results added in database, no regression done yet. Resting heart rate measured (54) is lower than the 
+estimated (60). 
+
+
+Heart rate zones are adjusted:
+HRZ 1: 54-101
+HRZ 2: 101-124
+HRZ 3: 124-143
+HRZ 4: 143-149
+HRZ 5: 149-181
+HRZ 6: 181-189
+
+
+Scenario 2: Calculation of TLE from training session. At 10.00 Sandra goes for a training session for 60  minutes.
+Time spent in each HRZ:
+HRZ 1: 4 min
+HRZ 2: 32 min
+HRZ 3: 14 min
+Hrz 4: 10 min
+HRZ 5: 0 min
+HRZ 6: 0 min
+Q: Rate the average surface during todays session A=1 (paved road) No corrections made.
+Vdot added in database, no corrections yet.
+
+
+Post scenario:
+TLE: (4*0)+(32*1)+(14*1,75)+(10*3)+(0*5)+(0*9)=86.5
+HI: Initial HI is 0 so HI after session is completed is -86.5. 
+TTR:  TTR is 86,5/3,75=23 hours 4min or at 10.04 day 1.
+vdot: Average speed in HRZ 2: 11.1
+Average speed in HRZ 3: 11.8
+Average speed in HRZ 4: 13.2
+
+Vdot in HRZ 2: 47.1
+vdot in HRZ 3: 45.5
+Vdot in HRZ 4: 46.4
+AVerage vdot: (47.1+45.5+46.4)/3=46.3 (First vdot calculation)
+Rated as moderately trained
+
+Average altitude during session: 0 meters -no correction
+
+Scenario 3: Sandra checks shape Index at 12:00 day 0
+Shape index base : 100
+Supercompensation : 0 - not yet recovered
+Detraining penalty : 0
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had requisite number of SOHR tests
+
+Effective shape index: 100
+
+Scenario 4: At 09.00 day 0 Sandra does an orthostatic heart rate test (2): 56-81. Results added in database, no regression done yet.
+
+Scenario 5: Sandra checks shape Index at 10:15 day 1
+Shape index base : 100
+Supercompensation : 0.4 - fully recovered
+Detraining penalty : 0
+Speed heartrate factor: 0 - need 2 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests
+
+Effective shape index: 100.4
+
+
+Scenario 6: Sandra checks shape Index at 19:00 day 1
+Shape index base : 100
+Supercompensation : 0.4 - fully recovered
+Detraining penalty : 0.27 - 8:56 hours after end of session 0
+Speed heartrate factor: 0 - need 2 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests
+
+Effective shape index: 100.13
+
+
+Scenario 7: Calculation of TLE from training session. At 19.00 day 1 Sandra goes for a training session for 110  minutes.
+Time spent in each HRZ:
+HRZ 1: 8 min
+HRZ 2: 42 min
+HRZ 3: 34 min
+Hrz 4: 10 min
+HRZ 5: 10 min
+HRZ 6: 6 min
+Post scenario:
+TLE: (8*0)+(42*1)+(34*1,75)+(10*3)+(10*5)+(6*9)=235.5 
+Shape Index base: 100.13
+HI:  HI base is 0 so HI after session is completed is -235.5. 
+TTR:  TTR is 235,5/3,75= 62hours 48min or at 11.38 day 4
+vdot: Average speed in HRZ 2: 10.6
+Average speed in HRZ 3: 11.4
+Average speed in HRZ 4: 12.8
+Average speed in HRZ 5: 13
+Average speed in  HRZ 6: 14.1
+Q: Rate the average surface during todays session A=3 (good forest path) All speeds multiplied by 1,05
+Average speed in HRZ 2: 10.6*1.05=11.1
+Average speed in HRZ 3: 11.4*1.05=12.0
+Average speed in HRZ 4: 12.8*1.05=13.4
+Average speed in HRZ 5: 13*1.05=13.65
+Average speed in  HRZ 6: 14.1*1.05=14.8
+
+Vdot in HRZ 2: 47.1
+vdot in HRZ 3: 46.5
+Vdot in HRZ 4: 47.3
+Vdot in HRZ 5: 46.0
+vdot in HRZ 6: 48.2
+Average vdot: (47.1+46.5+47.3+46.0+48.2)/5=47.0 (second vdot calculation)
+Average altitude during session: 0 meters -no correction
+
+Scenario 8: Orthostatic heart rate test (3) at 12.50 day 2: 55/76
+
+Scenario 9: Sandra checks shape Index at 12.55 day 2
+Shape index base : 100.13
+Supercompensation : HI below zero=no supercompensation points yet
+Detraining penalty : None, not fully recovered yet
+HI: -174.7 
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests yet
+Effective shape index: 100.13
+
+Scenario 10: Orthostatic heart rate test (4) at 12.50 day 3: 58/75
+
+Scenario 11: Checks Shape Index at 13.00 day 4.
+Shape index base : 100.13
+Supercompensation : +1.6 fully recovered
+Detraining penalty : 1h18min =-0.03
+HI:0
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests yet
+Effective shape index: 101.7
+
+Scenario 12: Orthostatic heart rate test (5) at 13.50 day 4: 55/77 
+
+Scenario 13: Calculation of TLE from training session. At 16.00 day 4 Sandra goes for a training session for 40  minutes.
+Time spent in each HRZ:
+HRZ 1: 8 min
+HRZ 2: 22 min
+HRZ 3: 4 min
+Hrz 4: 6 min
+HRZ 5: 0 min
+HRZ 6: 0 min
+Post scenario:
+TLE: (8*0)+(22*1)+(4*1,75)+(6*3)+(0*5)+(0*9)=47
+Shape Index base: 101.7
+HI:  HI base is 0 so HI after session is completed is -47
+TTR:  TTR is 47/3,75= 12hours 31min or at 05.11 day 5.
+vdot: Average speed in HRZ 2: 11.2
+Average speed in HRZ 3: 11.9
+Average speed in  HRZ 4: 13
+Q: Rate the average surface during todays session A=1 (paved road) No correction
+
+Vdot in HRZ 2: 47.7
+vdot in HRZ 3: 46
+Vdot in HRZ 4: 45.5
+
+Average vdot: (47.7+46+45.5)=46.4 (third vdot calculation)
+Average altitude during session: 0 meters -no correction
+
+Scenario 14: Orthostatic heart rate test (6) at 14.00 day 5: 57/73
+
+Scenario 15: Calculation of TLE from training session. At 16.00 day 5 Sandra goes for a training session for 65  minutes.
+Time spent in each HRZ:
+HRZ 1: 2 min
+HRZ 2: 32 min
+HRZ 3: 8 min
+Hrz 4: 23 min
+HRZ 5: 0 min
+HRZ 6: 0 min
+vdot: Average speed in HRZ 2: 10.3
+Average speed in HRZ 3: 11.0
+Average speed in  HRZ 4: 12.1
+Q: Rate the average surface during todays session A=4 (short grass) correction factor 1.07
+Average altitude during session: 432 meters
+Corrected speeds:
+
+vdot: Average speed in HRZ 2: 10.3*1,07*(1+(((-0,000175*46,4*432)+0,0067686)/100))=10.635
+Average speed in HRZ 3: 11.0*1,07*(1+(((-0,000175*46,4*432)+0,0067686)/100))=11.358
+Average speed in  HRZ 4: 12.1*1,07*(1+(((-0,000175*46,4*432)+0,0067686)/100))=12.49
+
+
+Vdot in HRZ 2: 44.6
+vdot in HRZ 3: 43.4
+Vdot in HRZ 4: 43.3
+
+Average vdot: =43.7 (4th vdot calculation)
+Speed vs heart rate factor: (43.7+46.4)/(47+46.3)=0,9657
+Shape index base: 101.7 * 0,9657= 98,21 New Shape Index Base
+
+
+Post scenario:
+TLE: (2*0)+(32*1)+(8*1,75)+(23*3)+(0*5)+(0*9)=115
+Shape Index base: 98.21 - detraining (11*0,03)=97.88
+HI:  HI base is 0 so HI after session is completed is -115
+TTR:  TTR is 115/3,75= 30hours 40min or at 23.45 day 6.
+
+Scenario 16: Orthostatic heart rate test (7) at 14.00 day 6: 57/73
+Scenario 17: HI reaches zero at 23.45 day 6, 0.4 supercompensation points added to shape index base 98.21 +0.4=98.61 New Shape index Base
+Scenario 18: Orthostatic heart rate test (8) at 14.00 day 7: 57/73
+Scenario 19: Orthostatic heart rate test (9) at 14.00 day 8: 57/73
+Scenario 20: Orthostatic heart rate test (10) at 14.00 day 9: 57/73
+Orthostatis heart rate factor (linear regression on sOHR 1-6: k-value: -1.09. Orthostatic heart rate factor= 0.6
+Shape index base: 98.61. New Shape index base: 99.21
+------
+Problem
+(B + S + O - D)*V
+B*V + S + O - D
+101.6*1 + 0 + 0 - 0.32
+101.28
+101.28*0.967 + 0 + 0 - 0
+
+
+
+
+
+
+
+
+
+
+
