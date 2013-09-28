@@ -22,14 +22,19 @@ import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.errors.HeartrateTestErrors;
+import com.genie.smartbeat.core.errors.TimeErrors;
+import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.smartbeat.json.RecoveryTimeResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
+import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -172,10 +177,45 @@ public class TraineeResourceTest {
 			SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson = new SaveFitnessTrainingSessionRequestJson();			
 			
 			String response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
 			JSONObject responseJSON = new JSONObject(response);
 			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_TIMESTAMP.toString(), responseJSON.getString("message"));
 			
+			/*setting a valid duration*/
 			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR, 10);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Timestamp startTime = new Timestamp(cal.getTimeInMillis());
+			cal.add(Calendar.MINUTE,60);
+			Timestamp endTime = new Timestamp(cal.getTimeInMillis());
+			saveTrainingSessionRequestJson.setStartTime(startTime.toString());
+			saveTrainingSessionRequestJson.setEndTime(endTime.toString());
+					
+			/*invalid speed distribution */
+			/*zone 1 over max speed limit*/
+			saveTrainingSessionRequestJson.setHrz1Time(4.0);
+			saveTrainingSessionRequestJson.setHrz1Distance(3000.0);
+			/*zone 2 under min speed limit*/
+			saveTrainingSessionRequestJson.setHrz2Time(200.0);
+			saveTrainingSessionRequestJson.setHrz2Distance(5920.0);
+			saveTrainingSessionRequestJson.setHrz3Time(0.0);
+			saveTrainingSessionRequestJson.setHrz3Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz4Time(0.0);
+			saveTrainingSessionRequestJson.setHrz4Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz5Time(0.0);
+			saveTrainingSessionRequestJson.setHrz5Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz6Time(0.0);
+			saveTrainingSessionRequestJson.setHrz6Distance(0.0);
+			
+			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
+			responseJSON = new JSONObject(response);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TrainingSessionErrors.INVALID_SPEED_DISTRIBUTION.toString(), responseJSON.getString("message"));
+			
 			UserBean user = new UserBean();
 			user.setUserid(userid);
 			user.setAccessToken("accessToken1");
@@ -209,8 +249,28 @@ public class TraineeResourceTest {
 			saveTrainingSessionRequestJson.setHrz6Distance(1410.0);
 			
 			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
-			//System.out.println(response);
+			System.out.println(response);
 			responseJSON = new JSONObject(response);
+			Assert.assertEquals("200", responseJSON.getString("status"));
+			
+			/*invalid timestamp - overlaps with previous training session*/
+			cal.add(Calendar.MINUTE,-1);
+			startTime = new Timestamp(cal.getTimeInMillis());
+			startTime.setNanos(0);
+			cal.add(Calendar.MINUTE,40);
+			endTime = new Timestamp(cal.getTimeInMillis());
+			endTime.setNanos(0);
+			saveTrainingSessionRequestJson.setStartTime(startTime.toString());
+			saveTrainingSessionRequestJson.setEndTime(endTime.toString());
+			
+			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
+			responseJSON = new JSONObject(response);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
+			
+			
+			/*clean up*/
 			fitnessManager.clearTraineeData(user.getUserid());
 			userDao.deleteUser(user.getUserid());
 		}
@@ -223,6 +283,60 @@ public class TraineeResourceTest {
 		@Test
 		public void testGetHeartrateZones() {
 			
+		}
+		
+		@Test
+		public void testSaveHeartrateTest() throws Exception{
+			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();
+			String responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			JSONObject responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_TIMESTAMP.toString(), responseJSON.getString("message"));
+			
+			/*valid timestamp but invalid heartrate*/
+			Calendar cal = Calendar.getInstance();
+			Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
+			saveHeartrateTestRequestJson.setTimeOfRecord(timeOfRecord.toString());
+			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(HeartrateTestErrors.INVALID_HEARTRATE.toString(), responseJSON.getString("message"));
+			
+			/*need user data for getting heartrate zones in response*/
+			UserBean user = new UserBean();
+			user.setUserid(userid);
+			user.setAccessToken("accessToken1");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Chitra");
+			user.setEmail("chitra@acme.com");		
+			cal.add(Calendar.YEAR, -25);
+			user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+			user.setGender(UserManager.GENDER_FEMALE);
+			userDao.createUser(user);
+			
+			/*valid first resting heartrate*/
+			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			saveHeartrateTestRequestJson.setHeartrate(60.0);			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("200", responseJSON.getString("status"));
+			
+			/*second resting heartrate invalid in chronology*/
+			cal.add(Calendar.HOUR, -1);
+			timeOfRecord = new Timestamp(cal.getTimeInMillis());
+			saveHeartrateTestRequestJson.setTimeOfRecord(timeOfRecord.toString());
+			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			saveHeartrateTestRequestJson.setHeartrate(60.0);
+			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
+			
+			/*clean up*/
+			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
+
 		}
 		
 		@Test 

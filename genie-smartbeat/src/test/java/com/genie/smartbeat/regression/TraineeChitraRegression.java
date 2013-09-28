@@ -1,10 +1,9 @@
 package com.genie.smartbeat.regression;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
 import javax.ws.rs.core.MediaType;
 
@@ -15,15 +14,10 @@ import org.joda.time.DateTimeUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import com.genie.smartbeat.core.FitnessManager;
-import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.social.beans.UserBean;
-import com.genie.social.core.UserManager;
 import com.genie.social.facebook.GraphAPI;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;

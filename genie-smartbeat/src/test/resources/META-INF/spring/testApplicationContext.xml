@@ -41,10 +41,6 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-	<bean id="fitnessHeartrateZoneDAO" class="com.genie.smartbeat.dao.FitnessHeartrateZoneDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
  	<bean id="userDao" class="com.genie.social.dao.UserDao">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -60,7 +56,6 @@
 		<property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />
 		<property name="fitnessShapeIndexDAO" ref="fitnessShapeIndexDAO" />
 		<property name="fitnessHeartrateTestDAO" ref="fitnessHeartrateTestDAO" />
-		<property name="fitnessHeartrateZoneDAO" ref="fitnessHeartrateZoneDAO" />
 	</bean>
 	
 </beans>

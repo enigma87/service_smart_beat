@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.genie.smartbeat.core.TrainingSessionValidityStatus;
+import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 
 @SuppressWarnings("unused")
 public class FitnessTrainingSessionBeanTest {
@@ -112,13 +112,6 @@ public class FitnessTrainingSessionBeanTest {
 		Assert.assertEquals(Math.round(0*100), Math.round(bean.getSessionDuration()));
 	}
 	
-	@Test
-	public void testValidityStatus(){
-		FitnessTrainingSessionBean bean = new FitnessTrainingSessionBean();
-		bean.setValidityStatus(TrainingSessionValidityStatus.INVALID);
-		Assert.assertEquals(TrainingSessionValidityStatus.INVALID, bean.getValidityStatus());
-	}
-
 	@Test
 	public void testGetAsDoubleValueExtraLoad(){
 		FitnessTrainingSessionBean bean = new FitnessTrainingSessionBean();

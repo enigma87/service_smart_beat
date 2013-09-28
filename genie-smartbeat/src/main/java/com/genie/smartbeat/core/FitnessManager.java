@@ -10,6 +10,9 @@ import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
+import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
+import com.genie.smartbeat.core.exceptions.time.TimeException;
 
 /**
  * @author dhasarathy
@@ -17,7 +20,7 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
  */
 public interface FitnessManager{	
 	/*training session*/
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean);
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) throws TrainingSessionException, TimeException;
 	public String getRecentTrainingSessionId(String userid);
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId);
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTime, Timestamp endTime);
@@ -25,7 +28,7 @@ public interface FitnessManager{
 	public void deleteFitnessTrainingSessionbyTrainingSessionId(String fitnessTrainingSessionId);
 	
 	/*heart rate test*/
-	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean);
+	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) throws HeartrateTestException, TimeException;
 	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp);
 
 	/*heart rate zones*/

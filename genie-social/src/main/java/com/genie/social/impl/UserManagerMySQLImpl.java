@@ -56,7 +56,7 @@ public class UserManagerMySQLImpl implements UserManager{
 			}
 		}	
 		return authStatus;
-	}		
+	}
 
 	public void saveUserInformation(UserBean user) {
 		userDao.updateUser(user);		

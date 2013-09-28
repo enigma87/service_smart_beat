@@ -15,15 +15,15 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
-import com.genie.smartbeat.core.HeartrateTestValidityStatus;
-import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
+import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
+import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
 import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
+import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
-import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
@@ -47,8 +47,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
-	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
-	private FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO;
+	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;	
 	
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
@@ -101,68 +100,45 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void setFitnessHeartrateTestDAO(
 			FitnessHeartrateTestDAO fitnessHeartrateTestDAO) {
 		this.fitnessHeartrateTestDAO = fitnessHeartrateTestDAO;
-	}
+	}		
 	
-	public FitnessHeartrateZoneDAO getFitnessHeartrateZoneDAO() {
-		return fitnessHeartrateZoneDAO;
-	}
-	
-	public void setFitnessHeartrateZoneDAO(
-			FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO) {
-		this.fitnessHeartrateZoneDAO = fitnessHeartrateZoneDAO;
-	}
-	
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) throws TrainingSessionException, TimeException{		
 		String userid = fitnessTrainingSessionBean.getUserid();		
 		String trainingSessionId = null, previousTrainingSessionId = null;		
-
-		try{
-			log.info("Trying to save training session " + fitnessTrainingSessionBean.toString());
-			if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
-				log.info("Invalid duration");
-				throw new InvalidTimestampException();
+		
+		log.info("Trying to save training session " + fitnessTrainingSessionBean.toString());
+		if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
+			log.info("Invalid duration");
+			throw new InvalidTimestampException();
+		}
+		FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
+		if(null != previousTrainingSession){
+			/*check validity of new session in chronology */
+			if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){								
+				throw new InvalidTimestampInChronologyException();
 			}
-			FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
-			if(null != previousTrainingSession){
-				/*check validity of new session in chronology */
-				if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){
-					fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
-					log.info("Invalid in chronology");
-					throw new InvalidTimestampInChronologyException();
-				}
-				/*generate first training session id*/
-				trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
-				/*save previous training session id for updating shape index*/
-				previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
-			}else{
-				/*generate training session id from previous session id*/
-				trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
-			}						
-			// set the generated id to bean 
-			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);			
-			/*update shape index model*/
-			updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
-		
-			/*update speed-heartrate model*/				
-			updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
-		
-			/*always update SH model before HI model as HI model needs incoming session's vdot*/
-			/*update homeostasis index model*/
-			updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		
-			/*save training session*/			
-			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.VALID);
+			/*generate first training session id*/
+			trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
+			/*save previous training session id for updating shape index*/
+			previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
+		}else{
+			/*generate training session id from previous session id*/
+			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
+		}						
+		// set the generated id to bean 
+		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);			
+		/*update shape index model*/
+		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 	
-		}catch(InvalidTimestampException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIMESTAMP);
-		}catch(InvalidTimestampInChronologyException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
-		}catch(InvalidSpeedDistributionException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION);
-		}catch(InvalidTimeDistributionException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIME_DISTRIBUTION);
-		}		
+		/*update speed-heartrate model*/				
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
+	
+		/*always update SH model before HI model as HI model needs incoming session's vdot*/
+		/*update homeostasis index model*/
+		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+	
+		/*save training session*/			
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);		
 	}
 			
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {
@@ -414,62 +390,53 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return recentTrainingSessionId;
 	}
 
-	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) {
+	public void saveHeartrateTest(FitnessHeartrateTestBean fitnessHeartrateTestBean) throws HeartrateTestException, TimeException{
 		
-		String userid = fitnessHeartrateTestBean.getUserid();
-		try{
-			/*timestamp validation*/
-			if(null == fitnessHeartrateTestBean.getTimeOfRecord()){
-				throw new InvalidTimestampException();
-			}
-			/*null heart rate validation*/
-			if((null == fitnessHeartrateTestBean.getHeartrate()) || (0.0 >= fitnessHeartrateTestBean.getHeartrate())){
+		String userid = fitnessHeartrateTestBean.getUserid();		
+		/*timestamp validation*/
+		if(null == fitnessHeartrateTestBean.getTimeOfRecord()){
+			throw new InvalidTimestampException();
+		}
+		/*null heart rate validation*/
+		if((null == fitnessHeartrateTestBean.getHeartrate()) || (0.0 >= fitnessHeartrateTestBean.getHeartrate())){
+			throw new InvalidHeartrateException();
+		}
+		/*resting heartrate validation*/
+		if(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING.equals(fitnessHeartrateTestBean.getHeartrateType())){
+			if(ShapeIndexAlgorithm.MINIMUM_RESTING_HEARTRATE > fitnessHeartrateTestBean.getHeartrate()){
 				throw new InvalidHeartrateException();
 			}
-			/*resting heartrate validation*/
-			if(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING.equals(fitnessHeartrateTestBean.getHeartrateType())){
-				if(ShapeIndexAlgorithm.MINIMUM_RESTING_HEARTRATE > fitnessHeartrateTestBean.getHeartrate()){
-					throw new InvalidHeartrateException();
-				}
-			}			
-			/*threshold heart rate validation*/
-			if(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD.equals(fitnessHeartrateTestBean.getHeartrateType())){
-				FitnessHeartrateTestBean maximalHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, 
-																							ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-				if(null != maximalHeartrateTestBean && maximalHeartrateTestBean.getHeartrate() < fitnessHeartrateTestBean.getHeartrate()){
-					throw new InvalidHeartrateException();
-				}
-			}			
-		    FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(userid);
-			if(null != previousHeartrateTestBean){
-				/*chronology validation*/
-				if(previousHeartrateTestBean.getTimeOfRecord().getTime() > fitnessHeartrateTestBean.getTimeOfRecord().getTime()){
-					throw new InvalidTimestampInChronologyException();
-				}				
-				/*valid so process it*/
-				fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
-				Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
-				Integer latestDayOfRecord = previousHeartrateTestBean.getDayOfRecord() + differenceInDays.intValue();
-				fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
-				if(fitnessHeartrateTestBean.getHeartrateType() != ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
-					FitnessHeartrateTestBean recentfitnessHeartrateTestBeanByType = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(fitnessHeartrateTestBean.getUserid(), fitnessHeartrateTestBean.getHeartrateType());
-					if (null != recentfitnessHeartrateTestBeanByType){
-						fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(recentfitnessHeartrateTestBeanByType.getHeartrateTestId());
-					}					
-				}
-			}else{
-				fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
-				fitnessHeartrateTestBean.setDayOfRecord(1);
+		}			
+		/*threshold heart rate validation*/
+		if(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD.equals(fitnessHeartrateTestBean.getHeartrateType())){
+			FitnessHeartrateTestBean maximalHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, 
+																						ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+			if(null != maximalHeartrateTestBean && maximalHeartrateTestBean.getHeartrate() < fitnessHeartrateTestBean.getHeartrate()){
+				throw new InvalidHeartrateException();
 			}
-			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);
-			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.VALID);
-		}catch(InvalidTimestampException e){
-			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_TIMESTAMP);
-		}catch(InvalidTimestampInChronologyException e){
-			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_IN_CHRONOLOGY);
-		}catch(InvalidHeartrateException e){
-			fitnessHeartrateTestBean.setValidityStatus(HeartrateTestValidityStatus.INVALID_HEARTRATE);
-		}	
+		}			
+	    FitnessHeartrateTestBean previousHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUser(userid);
+		if(null != previousHeartrateTestBean){
+			/*chronology validation*/
+			if(previousHeartrateTestBean.getTimeOfRecord().getTime() > fitnessHeartrateTestBean.getTimeOfRecord().getTime()){
+				throw new InvalidTimestampInChronologyException();
+			}				
+			/*valid so process it*/
+			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getNextId(previousHeartrateTestBean.getHeartrateTestId()));
+			Long differenceInDays = (fitnessHeartrateTestBean.getTimeOfRecord().getTime() - previousHeartrateTestBean.getTimeOfRecord().getTime())/(24*60*60*1000);
+			Integer latestDayOfRecord = previousHeartrateTestBean.getDayOfRecord() + differenceInDays.intValue();
+			fitnessHeartrateTestBean.setDayOfRecord(latestDayOfRecord);
+			if(fitnessHeartrateTestBean.getHeartrateType() != ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC){
+				FitnessHeartrateTestBean recentfitnessHeartrateTestBeanByType = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(fitnessHeartrateTestBean.getUserid(), fitnessHeartrateTestBean.getHeartrateType());
+				if (null != recentfitnessHeartrateTestBeanByType){
+					fitnessHeartrateTestDAO.deleteHeartrateTestByTestId(recentfitnessHeartrateTestBeanByType.getHeartrateTestId());
+				}					
+			}
+		}else{
+			fitnessHeartrateTestBean.setHeartrateTestId(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID));
+			fitnessHeartrateTestBean.setDayOfRecord(1);
+		}
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean);		
 	}
 	
 	public double[][] getHeartrateZones(String userid) {
@@ -552,8 +519,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public void clearTraineeData(String userid) {
-		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
-		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);

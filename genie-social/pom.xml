@@ -117,18 +117,7 @@
 			<version>${com.restfb-version}</version>
 		</dependency>		
   </dependencies>
-  	<build>
-	  	<plugins>
-	      		<plugin>
-	        		<groupId>org.apache.maven.plugins</groupId>
-	        		<artifactId>maven-release-plugin</artifactId>
-	        		<configuration>
-	          			<tagNameFormat>${project.artifactId}-${project.version}</tagNameFormat>
-	        		</configuration>
-	      		</plugin>
-	    	</plugins>
-	    </build>
-	<!--<build>
+	<build>
 		<finalName>genie-social</finalName>
 		<pluginManagement>
 			<plugins>
@@ -147,5 +136,5 @@
            </plugin> 
 			</plugins>
 		</pluginManagement> 
-	</build>-->
+	</build>
 </project>

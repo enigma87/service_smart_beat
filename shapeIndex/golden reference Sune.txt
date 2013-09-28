@@ -1,0 +1,252 @@
+Trainee Sune downloads app and answer first questions:
+Q: Gender? A: Male
+Q: Age?    A: 55
+Q: Height? A: 180
+Q: Weight? A: 84
+
+
+
+Heart rate estimates are calculated from age (assumed untrained as agreed):
+Resting heart rate:72
+Threshold heart rate:172X0,7=120 /*should be 0.6 and not 0.7*/
+Maximum heart rate: 202-(0.55x55)=172
+
+HRZ 1: 72-96
+HRZ 2: 96-108
+HRZ 3: 108-116
+HRZ 4: 116-122
+HRZ 5: 122-166
+HRZ 6: 166-172
+
+Scenario 1: At 11.00 day 0 Sune does  heart rate test (1): 66-101. Results added in database, no regression done yet. Resting heart rate measured (66) is lower than the 
+estimated (72). 
+
+
+Heart rate zones are adjusted:
+HRZ 1: 66-93
+HRZ 2: 93-107
+HRZ 3: 107-116
+HRZ 4: 116-123
+HRZ 5: 123-166
+HRZ 6: 166-172
+
+
+Scenario 2: Calculation of TLE from training session. At 12.00 day 0 Sune goes for a training session for 28  minutes.
+Time spent in each HRZ:
+HRZ 1: 0 min
+HRZ 2: 3 min
+HRZ 3: 14 min
+Hrz 4: 10 min
+HRZ 5: 1 min
+HRZ 6: 0 min
+Q: Rate the average surface during todays session A=1 (paved road) No corrections made.
+Vdot added in database, no corrections yet.
+
+
+Post scenario:
+TLE: (4*0)+(3*1)+(14*1,75)+(10*3)+(1*5)+(0*9)=62.5
+HI: Initial HI is 0 so HI after session is completed is -62.5. 
+TTR:  TTR is 62,5/2,5=25 hours or at 13.28 day 1.
+vdot: Average speed in HRZ 2: 7.3
+Average speed in HRZ 3: 8.4
+Average speed in HRZ 4: 9
+Average speed in HRZ 5: 9.5
+
+Vdot in HRZ 2: 26.6
+vdot in HRZ 3: 28.7
+Vdot in HRZ 4: 27.6
+Vdot in HRZ 5: 28.0
+Average altitude during session: 0 meters -no correction
+
+AVerage vdot: (26.6+28.7+27.6+28)/4=27.7 (First vdot calculation) 
+Defined as "untrained"
+
+
+Scenario 3: Sune checks shape Index at 15:00 day 0
+Shape index base : 100
+Homeostasis index: -56.2
+Supercompensation : 0 - not yet recovered
+Detraining penalty : 0
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had requisite number of SOHR tests
+
+Effective shape index: 100
+
+Scenario 4: At 19.00 day 0 Sune does an orthostatic heart rate test (2): 67-99. Results added in database, no regression done yet.
+
+Scenario 5: Sune checks shape Index at 14:28 day 1
+Shape index base : 100
+Homeostasis index: 0
+Supercompensation : 0.8 - fully recovered
+Detraining penalty : 0.01x1=0.01
+Speed heartrate factor: 0 - need 2 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests
+
+Effective shape index: 100.79
+
+Scenario 6: Sune checks shape Index at 16:00 day 2
+Shape index base : 100.79
+Homeostasis index: 0
+Supercompensation : 0
+Detraining penalty : 0.01x26,5=0.265
+Speed heartrate factor: 0 - need 2 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests
+
+Effective shape index: 100.79-0.265=100.525
+
+
+
+Scenario 7: Calculation of TLE from training session. At 17.00 day 2 Sune goes for a training session for 42  minutes.
+Time spent in each HRZ:
+HRZ 1: 2 min
+HRZ 2: 12 min
+HRZ 3: 14 min
+Hrz 4: 8 min
+HRZ 5: 4 min
+HRZ 6: 2 min
+Post scenario:
+TLE: (2*0)+(12*1)+(14*1,75)+(8*3)+(4*5)+(2*9)=98.5
+Shape Index base: 100.525-0.01(detraining penalty since last shape index check)=100.515
+HI:  HI base is 0 so HI after session is completed is -98.5. 
+TTR:  TTR is 98,5/2.5= 39hours 24min or at 09:06 day 4
+vdot: Average speed in HRZ 2: 7.5
+Average speed in HRZ 3: 8.6
+Average speed in HRZ 4: 9.1
+Average speed in HRZ 5: 9.7
+Average speed in  HRZ 6: 10.3
+Q: Rate the average surface during todays session A=3 (good forest path) All speeds multiplied by 1,05
+Average speed in HRZ 2: 10.6*1.05=11.1 /*copied from Sandra need to update*/
+Average speed in HRZ 3: 11.4*1.05=12.0
+Average speed in HRZ 4: 12.8*1.05=13.4
+Average speed in HRZ 5: 13*1.05=13.65
+Average speed in  HRZ 6: 14.1*1.05=14.8
+
+Vdot in HRZ 2: 27.7
+vdot in HRZ 3: 29.7
+Vdot in HRZ 4: 28.1
+Vdot in HRZ 5: 28.9
+vdot in HRZ 6: 29.5
+Average vdot: =28.8 (second vdot calculation)
+Average altitude during session: 0 meters -no correction
+
+Scenario 8: Orthostatic heart rate test (3) at 21.50 day 2: 68/100
+
+Scenario 9: Sune checks shape Index at 17.00 day 3
+Shape index base : 100.515
+Homeostasis index:-40.4
+Supercompensation : HI below zero=no supercompensation points yet
+Detraining penalty : None, not fully recovered yet 
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests yet
+Effective shape index: 100.525
+
+Scenario 10:  heart rate test (4) at 12.50 day 3: 62/97
+Heart rate zones are adjusted from new resting heart rate:
+zone 1	62	91
+zone 2	91	106
+zone 3	106	116
+zone 4	116	123
+zone 5	123	165
+zone 6	165	172
+
+
+Scenario 11: Checks Shape Index at 13.06 day 4.
+Shape index base : 100.515
+Supercompensation : +0.8 fully recovered
+Detraining penalty : 4h =-0.04
+Homeostasis index: 0
+Speed heartrate factor: 0 - need 4 training sessions
+Orthostatic heartrate factor: 0 - not had 10 SOHR tests yet
+Effective shape index: 101.275
+
+Scenario 12: Orthostatic heart rate test (5) at 19.50 day 4: 64/102
+Scenario 13: Orthostatic heart rate test (6) at 21.00 day 5: 67/96
+
+Scenario 14: Calculation of TLE from training session. At 19.00 day 6 Sune goes for a training session for 60  minutes.
+Time spent in each HRZ:
+HRZ 1: 8 min
+HRZ 2: 12 min
+HRZ 3: 34 min
+Hrz 4: 6 min
+HRZ 5: 0 min
+HRZ 6: 0 min
+Post scenario:
+TLE: (8*0)+(12*1)+(34*1,75)+(6*3)+(0*5)+(0*9)=89.5
+Shape Index base: 101.275 -(53,9*0,01 detraining penalty)=100.736
+HI:  HI base is 0 so HI after session is completed is -89.5
+TTR:  TTR is 89.5/2,5= 35hours 48min or at 07.48 day 8.
+vdot: Average speed in HRZ 2: 7
+Average speed in HRZ 3: 8.1
+Average speed in  HRZ 4: 9
+
+Q: Rate the average surface during todays session A=1 (paved road) No correction
+
+Vdot in HRZ 2: 25
+vdot in HRZ 3: 27.2
+Vdot in HRZ 4: 27.6
+Average vdot: 26.7 (third vdot calculation)
+Average altitude during session: 0 meters -no correction
+
+Scenario 15: Orthostatic heart rate test (7) at 21.00 day 6: 68/98
+
+Scenario 16: Threshold test. At 10.00 day 7 Sune attempts a threshold test (total 53 minutes incl warmup).
+Highest average heart rate during 30 consecutive minutes was 132.
+New heart rate zone calculation:
+zone 1	62	99 /*zone 1 should begin from 68*/
+zone 2	99	118
+zone 3	118	132
+zone 4	132	138
+zone 5	138	165
+zone 6	165	172
+
+Scenario 17: Calculation of TLE from threshold test.
+Time spent in each HRZ: 
+HRZ 1: 5 min
+HRZ 2: 5 min
+HRZ 3: 8 min
+Hrz 4: 30 min
+HRZ 5: 5 min
+HRZ 6: 0 min
+
+Post scenario:
+TLE: (5*0)+(5*1)+(8*1,75)+(30*3)+(5*5)+(0*9)=134
+Shape Index base: 101.275 -(53,9*0,01 detraining penalty)=100.736
+HI:  HI base is -54,5, after session -188,5
+TTR:  TTR is 188,5/2,5= 75hours 24min or at 14.41 day 10.
+vdot: Average speed in HRZ 2: 7.5
+Average speed in HRZ 3: 8.6
+Average speed in  HRZ 4: 9.9
+Aveage speed in HRZ 5: 11.1
+
+Q: Rate the average surface during todays session A=1 (paved road) No correction
+
+Vdot in HRZ 2: 27.7
+vdot in HRZ 3: 29.7
+Vdot in HRZ 4: 31.7
+Vdot in HRZ 5: 34.9
+Average vdot: 31 (fourth vdot)
+Average altitude during session: 0 meters -no correction
+
+Speed vs heart rate factor is calculated: (26.7+31)/(27.7+28.8)=1,0212
+Shape index base (100.736) multiplied with 1.0212= 102.88 is the new Shape Index base
+
+Scenario 18:  Orthostatic heart rate test (8) at 21.00 day 8: 66/92
+Scenario 19:  Orthostatic heart rate test (9) at 21.00 day 9: 67/95
+
+Scenario 20: Sune Checks Shape index at 16.00 day 10
+Shape index base : 102.88
+Homeostasis index: 0
+Supercompensation : 1.6 (based on nadir HI -188.5) new shape index base: 104.48
+Detraining penalty : 1 hour = -0.01. New shape index base 104.47
+Speed heartrate factor: N.A
+Orthostatic heartrate factor: 0 - not had requisite number of SOHR tests
+
+Scenario 21: Orthostatic heart rate test (10) at 21.00 day 10: 68/91
+Orthostatis heart rate factor (linear regression on sOHR 1-6: k-value: -0.543. Orthostatic heart rate factor= 0.3
+Shape index base: 104.48. New Shape index base: 104.78
+
+
+
+
+
+
