@@ -22,6 +22,8 @@ import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.errors.TimeErrors;
+import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
@@ -172,10 +174,45 @@ public class TraineeResourceTest {
 			SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson = new SaveFitnessTrainingSessionRequestJson();			
 			
 			String response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
 			JSONObject responseJSON = new JSONObject(response);
 			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_TIMESTAMP.toString(), responseJSON.getString("message"));
 			
+			/*setting a valid duration*/
 			Calendar cal = Calendar.getInstance();
+			cal.set(Calendar.HOUR, 10);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Timestamp startTime = new Timestamp(cal.getTimeInMillis());
+			cal.add(Calendar.MINUTE,60);
+			Timestamp endTime = new Timestamp(cal.getTimeInMillis());
+			saveTrainingSessionRequestJson.setStartTime(startTime.toString());
+			saveTrainingSessionRequestJson.setEndTime(endTime.toString());
+					
+			/*invalid speed distribution */
+			/*zone 1 over max speed limit*/
+			saveTrainingSessionRequestJson.setHrz1Time(4.0);
+			saveTrainingSessionRequestJson.setHrz1Distance(3000.0);
+			/*zone 2 under min speed limit*/
+			saveTrainingSessionRequestJson.setHrz2Time(200.0);
+			saveTrainingSessionRequestJson.setHrz2Distance(5920.0);
+			saveTrainingSessionRequestJson.setHrz3Time(0.0);
+			saveTrainingSessionRequestJson.setHrz3Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz4Time(0.0);
+			saveTrainingSessionRequestJson.setHrz4Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz5Time(0.0);
+			saveTrainingSessionRequestJson.setHrz5Distance(0.0);
+			saveTrainingSessionRequestJson.setHrz6Time(0.0);
+			saveTrainingSessionRequestJson.setHrz6Distance(0.0);
+			
+			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
+			responseJSON = new JSONObject(response);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TrainingSessionErrors.INVALID_SPEED_DISTRIBUTION.toString(), responseJSON.getString("message"));
+			
 			UserBean user = new UserBean();
 			user.setUserid(userid);
 			user.setAccessToken("accessToken1");
@@ -209,8 +246,28 @@ public class TraineeResourceTest {
 			saveTrainingSessionRequestJson.setHrz6Distance(1410.0);
 			
 			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
-			//System.out.println(response);
+			System.out.println(response);
 			responseJSON = new JSONObject(response);
+			Assert.assertEquals("200", responseJSON.getString("status"));
+			
+			/*invalid timestamp - overlaps with previous training session*/
+			cal.add(Calendar.MINUTE,-1);
+			startTime = new Timestamp(cal.getTimeInMillis());
+			startTime.setNanos(0);
+			cal.add(Calendar.MINUTE,40);
+			endTime = new Timestamp(cal.getTimeInMillis());
+			endTime.setNanos(0);
+			saveTrainingSessionRequestJson.setStartTime(startTime.toString());
+			saveTrainingSessionRequestJson.setEndTime(endTime.toString());
+			
+			response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			System.out.println(response);
+			responseJSON = new JSONObject(response);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
+			
+			
+			/*clean up*/
 			fitnessManager.clearTraineeData(user.getUserid());
 			userDao.deleteUser(user.getUserid());
 		}

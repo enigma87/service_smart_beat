@@ -16,12 +16,13 @@ import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.HeartrateTestValidityStatus;
-import com.genie.smartbeat.core.TrainingSessionValidityStatus;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
+import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
+import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -112,57 +113,43 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		this.fitnessHeartrateZoneDAO = fitnessHeartrateZoneDAO;
 	}
 	
-	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) {		
+	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) throws TrainingSessionException, TimeException{		
 		String userid = fitnessTrainingSessionBean.getUserid();		
 		String trainingSessionId = null, previousTrainingSessionId = null;		
-
-		try{
-			log.info("Trying to save training session " + fitnessTrainingSessionBean.toString());
-			if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
-				log.info("Invalid duration");
-				throw new InvalidTimestampException();
+		
+		log.info("Trying to save training session " + fitnessTrainingSessionBean.toString());
+		if(ShapeIndexAlgorithm.MINIMUM_SESSION_DURATION > fitnessTrainingSessionBean.getSessionDuration()){
+			log.info("Invalid duration");
+			throw new InvalidTimestampException();
+		}
+		FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
+		if(null != previousTrainingSession){
+			/*check validity of new session in chronology */
+			if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){								
+				throw new InvalidTimestampInChronologyException();
 			}
-			FitnessTrainingSessionBean previousTrainingSession = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
-			if(null != previousTrainingSession){
-				/*check validity of new session in chronology */
-				if(previousTrainingSession.getEndTime().getTime() >= fitnessTrainingSessionBean.getStartTime().getTime()){
-					fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
-					log.info("Invalid in chronology");
-					throw new InvalidTimestampInChronologyException();
-				}
-				/*generate first training session id*/
-				trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
-				/*save previous training session id for updating shape index*/
-				previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
-			}else{
-				/*generate training session id from previous session id*/
-				trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
-			}						
-			// set the generated id to bean 
-			fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);			
-			/*update shape index model*/
-			updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
-		
-			/*update speed-heartrate model*/				
-			updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
-		
-			/*always update SH model before HI model as HI model needs incoming session's vdot*/
-			/*update homeostasis index model*/
-			updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
-		
-			/*save training session*/			
-			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.VALID);
+			/*generate first training session id*/
+			trainingSessionId = SmartbeatIDGenerator.getNextId(previousTrainingSession.getTrainingSessionId());
+			/*save previous training session id for updating shape index*/
+			previousTrainingSessionId = previousTrainingSession.getTrainingSessionId();
+		}else{
+			/*generate training session id from previous session id*/
+			trainingSessionId = SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID);			
+		}						
+		// set the generated id to bean 
+		fitnessTrainingSessionBean.setTrainingSessionId(trainingSessionId);			
+		/*update shape index model*/
+		updateShapeIndexModel(userid, fitnessTrainingSessionBean, previousTrainingSessionId);
 	
-		}catch(InvalidTimestampException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIMESTAMP);
-		}catch(InvalidTimestampInChronologyException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY);
-		}catch(InvalidSpeedDistributionException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION);
-		}catch(InvalidTimeDistributionException e){
-			fitnessTrainingSessionBean.setValidityStatus(TrainingSessionValidityStatus.INVALID_TIME_DISTRIBUTION);
-		}		
+		/*update speed-heartrate model*/				
+		updateSpeedHeartRateModel(userid, fitnessTrainingSessionBean, previousTrainingSession);
+	
+		/*always update SH model before HI model as HI model needs incoming session's vdot*/
+		/*update homeostasis index model*/
+		updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
+	
+		/*save training session*/			
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);		
 	}
 			
 	public FitnessTrainingSessionBean getTrainingSessionById(String fitnessTrainingSessionId) {

@@ -4,7 +4,7 @@ package com.genie.smartbeat.core.exceptions.session;
  * @author dhasarathy
  **/
 
-public class InvalidTimeDistributionException extends Exception {
+public class InvalidTimeDistributionException extends TrainingSessionException {
 	/**
 	 * 
 	 */

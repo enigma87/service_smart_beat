@@ -1,9 +1,9 @@
-package com.genie.smartbeat.core;
+package com.genie.smartbeat.core.errors;
 
-public enum TrainingSessionValidityStatus {
+public enum TrainingSessionErrors {
 	
 		VALID(0),
-		INVALID(1),
+		INVALID_TRAINING_SESSION(1),
 		INVALID_TIMESTAMP(2),		
 		INVALID_IN_CHRONOLOGY(3),
 		INVALID_SPEED_DISTRIBUTION(4),
@@ -11,7 +11,7 @@ public enum TrainingSessionValidityStatus {
 		
 		private int statusval;
 		
-		private  TrainingSessionValidityStatus(int val) {
+		private  TrainingSessionErrors(int val) {
 			this.statusval = val;
 		}
 		
@@ -23,7 +23,7 @@ public enum TrainingSessionValidityStatus {
 		public String toString() {
 			switch (this) {
 			  case VALID: return "OK"; 
-			  case INVALID: return "training session invalid";
+			  case INVALID_TRAINING_SESSION: return "invalid training session";
 			  case INVALID_TIMESTAMP: return "invalid timestamp";			  
 			  case INVALID_IN_CHRONOLOGY: return "session invalid in chronology";
 			  case INVALID_SPEED_DISTRIBUTION: return "invalid speed distribution";

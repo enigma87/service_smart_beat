@@ -23,9 +23,13 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.HeartrateTestValidityStatus;
-import com.genie.smartbeat.core.TrainingSessionValidityStatus;
+import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
+import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
+import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
+import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
+import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -79,8 +83,15 @@ public class FitnessManagerMySQLImplTest {
 		Timestamp endTime = new Timestamp(cal.getTimeInMillis());
 		fitnessTrainingSessionBean.setStartTime(startTime);
 		fitnessTrainingSessionBean.setEndTime(endTime);
-		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_TIMESTAMP, fitnessTrainingSessionBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		}catch(InvalidTimestampException e){
+			Assert.assertTrue(true);
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}
 		
 		/*setting a valid duration*/
 		cal.set(Calendar.HOUR, 10);
@@ -91,25 +102,7 @@ public class FitnessManagerMySQLImplTest {
 		cal.add(Calendar.MINUTE,60);
 		endTime = new Timestamp(cal.getTimeInMillis());
 		fitnessTrainingSessionBean.setStartTime(startTime);
-		fitnessTrainingSessionBean.setEndTime(endTime);
-				
-		/*invalid speed distribution */
-		/*zone 1 over max speed limit*/
-		fitnessTrainingSessionBean.setHrz1Time(4.0);
-		fitnessTrainingSessionBean.setHrz1Distance(3000.0);
-		/*zone 2 under min speed limit*/
-		fitnessTrainingSessionBean.setHrz2Time(200.0);
-		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
-		fitnessTrainingSessionBean.setHrz3Time(0.0);
-		fitnessTrainingSessionBean.setHrz3Distance(0.0);
-		fitnessTrainingSessionBean.setHrz4Time(0.0);
-		fitnessTrainingSessionBean.setHrz4Distance(0.0);
-		fitnessTrainingSessionBean.setHrz5Time(0.0);
-		fitnessTrainingSessionBean.setHrz5Distance(0.0);
-		fitnessTrainingSessionBean.setHrz6Time(0.0);
-		fitnessTrainingSessionBean.setHrz6Distance(0.0);
-		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_SPEED_DISTRIBUTION, fitnessTrainingSessionBean.getValidityStatus());
+		fitnessTrainingSessionBean.setEndTime(endTime);								
 		
 		/*setting a first session*/
 		/*creating a user for context*/
@@ -136,11 +129,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz5Distance(0.0);
 		fitnessTrainingSessionBean.setHrz6Time(0.0);
 		fitnessTrainingSessionBean.setHrz6Distance(0.0);
-		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		Assert.assertEquals(TrainingSessionValidityStatus.VALID, fitnessTrainingSessionBean.getValidityStatus());
-		FitnessTrainingSessionDAO ftsDAO = (FitnessTrainingSessionDAO)smartbeatContext.getBean("fitnessTrainingSessionDAO");
-		Assert.assertNotNull(ftsDAO.getFitnessTrainingSessionById(fitnessTrainingSessionBean.getTrainingSessionId()));
-		Assert.assertEquals(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID), fitnessTrainingSessionBean.getTrainingSessionId());
+		try{
+			fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);			
+			FitnessTrainingSessionDAO ftsDAO = (FitnessTrainingSessionDAO)smartbeatContext.getBean("fitnessTrainingSessionDAO");
+			Assert.assertNotNull(ftsDAO.getFitnessTrainingSessionById(fitnessTrainingSessionBean.getTrainingSessionId()));
+			Assert.assertEquals(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_TRAINING_SESSION_ID), fitnessTrainingSessionBean.getTrainingSessionId());
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}
 		
 		
 		/*invalid timestamp - overlaps with previous training session*/
@@ -152,8 +150,15 @@ public class FitnessManagerMySQLImplTest {
 		endTime.setNanos(0);
 		fitnessTrainingSessionBean.setStartTime(startTime);
 		fitnessTrainingSessionBean.setEndTime(endTime);
-		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		Assert.assertEquals(TrainingSessionValidityStatus.INVALID_IN_CHRONOLOGY, fitnessTrainingSessionBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+		}catch(InvalidTimestampInChronologyException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}		
 		
 		/*creating a valid second session*/
 		/*Sandra scenario 7*/
@@ -179,9 +184,14 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz6Time(6.0);
 		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
 		String firstSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-		fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-		Assert.assertEquals(TrainingSessionValidityStatus.VALID, fitnessTrainingSessionBean.getValidityStatus());
-		Assert.assertEquals(SmartbeatIDGenerator.getNextId(firstSessionId), fitnessTrainingSessionBean.getTrainingSessionId());
+		try{
+			fitnessManagerMySQLImpl.saveFitnessTrainingSession(fitnessTrainingSessionBean);		
+			Assert.assertEquals(SmartbeatIDGenerator.getNextId(firstSessionId), fitnessTrainingSessionBean.getTrainingSessionId());
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}
 		
 		fitnessManagerMySQLImpl.clearTraineeData(userid);
 		userDao.deleteUser(userid);
