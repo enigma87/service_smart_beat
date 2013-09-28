@@ -1,7 +1,6 @@
 package com.genie.smartbeat.impl;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -10,23 +9,20 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.DateTimeUtils;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.beans.FitnessHeartrateZoneBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
-import com.genie.smartbeat.core.HeartrateTestValidityStatus;
-import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
+import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
+import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -236,37 +232,72 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setUserid(userid);		
 		
 		/*invalid timestamp*/
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_TIMESTAMP, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidTimestampException");
+		}catch(InvalidTimestampException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}
 		
 		/*valid timestamp but invalid heartrate*/
 		Calendar cal = Calendar.getInstance();
 		Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
 		fitnessHeartrateTestBean.setTimeOfRecord(timeOfRecord);
-		
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
-		
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidHeartrateException");
+		}catch(InvalidHeartrateException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}				
 		/*invalid resting heartrate*/
 		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		fitnessHeartrateTestBean.setHeartrate(0.0);
 		
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidHeartrateException");
+		}catch(InvalidHeartrateException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}			
 		
 		/*invalid resting heartrate*/
 		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		fitnessHeartrateTestBean.setHeartrate(15.0);
 		
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidHeartrateException");
+		}catch(InvalidHeartrateException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		
 		/*valid first resting heartrate*/
 		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		fitnessHeartrateTestBean.setHeartrate(60.0);
 		
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getFirstId(userid, SmartbeatIDGenerator.MARKER_HEARTRATE_TEST_ID), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(1, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -278,8 +309,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 		fitnessHeartrateTestBean.setHeartrate(60.0);
 		
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_IN_CHRONOLOGY, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidTimestampInChronologyException");
+		}catch(InvalidTimestampInChronologyException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		
 		/*valid second resting heartrate*/
 		cal.add(Calendar.HOUR, 1);
@@ -289,8 +328,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(55.0);
 		
 		String previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(1, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -305,8 +349,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(52.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(2, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -320,8 +369,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(189.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(2, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -336,8 +390,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(195.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.INVALID_HEARTRATE, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			Assert.fail("No InvalidHeartrateException");
+		}catch(InvalidHeartrateException e){
+			Assert.assertTrue(true);
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		
 		/*valid first threshold heartrate*/
 		/*one day ahead to check day of record*/
@@ -348,8 +410,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(147.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(3, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -367,8 +434,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(78.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(4, fitnessHeartrateTestBean.getDayOfRecord().intValue());
@@ -386,8 +458,13 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHeartrateTestBean.setHeartrate(78.0);
 		
 		previousTestId = fitnessHeartrateTestBean.getHeartrateTestId();
-		fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
-		Assert.assertEquals(HeartrateTestValidityStatus.VALID, fitnessHeartrateTestBean.getValidityStatus());
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}		
 		Assert.assertEquals(SmartbeatIDGenerator.getNextId(previousTestId), fitnessHeartrateTestBean.getHeartrateTestId());
 		Assert.assertNotNull(hrtDAO.getHeartrateTestByTestId(fitnessHeartrateTestBean.getHeartrateTestId()));
 		Assert.assertEquals(5, fitnessHeartrateTestBean.getDayOfRecord().intValue());

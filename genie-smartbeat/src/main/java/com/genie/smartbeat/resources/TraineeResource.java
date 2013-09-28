@@ -30,14 +30,16 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.FitnessManager;
-import com.genie.smartbeat.core.HeartrateTestValidityStatus;
 import com.genie.smartbeat.core.errors.AccessTokenError;
+import com.genie.smartbeat.core.errors.HeartrateTestErrors;
 import com.genie.smartbeat.core.errors.TimeErrors;
 import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.core.errors.UserErrors;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
+import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
+import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -460,11 +462,15 @@ public class TraineeResource
 	public String saveHeartrateTest(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveHeartrateTestRequestJson saveHeartrateTestRequestJson){
 		FitnessHeartrateTestBean heartrateTestBean = saveHeartrateTestRequestJson.getAsHeartrateTestBean();
 		heartrateTestBean.setUserid(userid);
-		fitnessManager.saveHeartrateTest(heartrateTestBean);
 		
 		GoodResponseObject gro = null;
-		
-		if (HeartrateTestValidityStatus.VALID.equals(heartrateTestBean.getValidityStatus())) {
+		try{
+			log.info("attempting to save heart rate test for user " + userid);
+			fitnessManager.saveHeartrateTest(heartrateTestBean);
+			log.info("Successfully saved fitness training session" + heartrateTestBean.getHeartrateTestId() 
+			+ "for user " + userid);
+			
+			/*prepare response json*/
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
 			ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
 			shapeIndexResponseJson.setUserid(userid);
@@ -480,9 +486,19 @@ public class TraineeResource
 			saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
 		
 			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
-		} else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), heartrateTestBean.getValidityStatus().toString());
+			
+		}catch(InvalidTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIMESTAMP.toString());			
+		}catch(InvalidTimestampInChronologyException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_IN_CHRONOLOGY.toString());
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
+		}catch(InvalidHeartrateException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());			
+		}catch(HeartrateTestException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());
 		}
+				
 		try
 		{
 			return Formatter.getAsJson(gro, false);
