@@ -24,7 +24,6 @@ import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
-import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
@@ -48,8 +47,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
-	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
-	private FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO;
+	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;	
 	
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
@@ -102,16 +100,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	public void setFitnessHeartrateTestDAO(
 			FitnessHeartrateTestDAO fitnessHeartrateTestDAO) {
 		this.fitnessHeartrateTestDAO = fitnessHeartrateTestDAO;
-	}
-	
-	public FitnessHeartrateZoneDAO getFitnessHeartrateZoneDAO() {
-		return fitnessHeartrateZoneDAO;
-	}
-	
-	public void setFitnessHeartrateZoneDAO(
-			FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO) {
-		this.fitnessHeartrateZoneDAO = fitnessHeartrateZoneDAO;
-	}
+	}		
 	
 	public void saveFitnessTrainingSession(FitnessTrainingSessionBean fitnessTrainingSessionBean) throws TrainingSessionException, TimeException{		
 		String userid = fitnessTrainingSessionBean.getUserid();		
@@ -530,8 +519,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public void clearTraineeData(String userid) {
-		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
-		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid(userid);
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);

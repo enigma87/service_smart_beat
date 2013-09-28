@@ -27,7 +27,6 @@ import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
-import com.genie.smartbeat.dao.FitnessHeartrateZoneDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
@@ -1176,9 +1175,7 @@ public class FitnessManagerMySQLImplTest {
 	public void testGetOrthostaticHeartrateFactor() {
 		Calendar cal = Calendar.getInstance();
 	
-		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
-		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO) smartbeatContext.getBean("fitnessHeartrateZoneDAO");
-		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");				
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		
 		double[] ohrtValues = {101.0,99.0,100.0,97.0,102.0,96.0,98.0,92.0,95.0,91.0};
