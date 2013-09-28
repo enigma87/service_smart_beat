@@ -22,6 +22,7 @@ import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.errors.HeartrateTestErrors;
 import com.genie.smartbeat.core.errors.TimeErrors;
 import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
@@ -29,9 +30,11 @@ import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
 import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.smartbeat.json.RecoveryTimeResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
+import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -280,6 +283,60 @@ public class TraineeResourceTest {
 		@Test
 		public void testGetHeartrateZones() {
 			
+		}
+		
+		@Test
+		public void testSaveHeartrateTest() throws Exception{
+			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();
+			String responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			JSONObject responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_TIMESTAMP.toString(), responseJSON.getString("message"));
+			
+			/*valid timestamp but invalid heartrate*/
+			Calendar cal = Calendar.getInstance();
+			Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
+			saveHeartrateTestRequestJson.setTimeOfRecord(timeOfRecord.toString());
+			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(HeartrateTestErrors.INVALID_HEARTRATE.toString(), responseJSON.getString("message"));
+			
+			/*need user data for getting heartrate zones in response*/
+			UserBean user = new UserBean();
+			user.setUserid(userid);
+			user.setAccessToken("accessToken1");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Chitra");
+			user.setEmail("chitra@acme.com");		
+			cal.add(Calendar.YEAR, -25);
+			user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+			user.setGender(UserManager.GENDER_FEMALE);
+			userDao.createUser(user);
+			
+			/*valid first resting heartrate*/
+			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			saveHeartrateTestRequestJson.setHeartrate(60.0);			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("200", responseJSON.getString("status"));
+			
+			/*second resting heartrate invalid in chronology*/
+			cal.add(Calendar.HOUR, -1);
+			timeOfRecord = new Timestamp(cal.getTimeInMillis());
+			saveHeartrateTestRequestJson.setTimeOfRecord(timeOfRecord.toString());
+			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			saveHeartrateTestRequestJson.setHeartrate(60.0);
+			
+			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
+			
+			/*clean up*/
+			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
+
 		}
 		
 		@Test 

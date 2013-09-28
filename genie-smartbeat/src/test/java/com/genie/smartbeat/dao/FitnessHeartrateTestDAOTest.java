@@ -10,11 +10,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
@@ -215,9 +213,7 @@ public class FitnessHeartrateTestDAOTest {
 public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 		
 		Calendar cal = Calendar.getInstance();		
-		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");
-		FitnessHeartrateZoneDAO fitnessHeartrateZoneDAO = (FitnessHeartrateZoneDAO) smartbeatContext.getBean("fitnessHeartrateZoneDAO");
-		fitnessHeartrateZoneDAO.deleteHeartrateZoneModelByUserid("user1");
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");				
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 		
 		List<FitnessHeartrateTestBean> ohrTests = fitnessHeartrateTestDAO.getNRecentHeartRateTestsForUserByTypeWithOffset("user1", 
