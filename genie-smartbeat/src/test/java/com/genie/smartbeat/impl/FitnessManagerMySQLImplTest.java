@@ -17,6 +17,7 @@ import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
+import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
@@ -29,6 +30,7 @@ import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
+import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
@@ -1165,6 +1167,133 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	
+	}
+	
+	@Test
+	public void testGetShapeIndexWithNewlyArrivedSession(){
+		
+		/*To check the null recoveryTime scenario*/
+		Timestamp recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		Assert.assertNull(recoveryTime);
+		
+		/*Valid user bean needed for age and gender*/
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1988);
+		cal.set(Calendar.MONTH, 8);
+		cal.set(Calendar.DAY_OF_MONTH, 24);
+		java.sql.Date dob = new java.sql.Date(cal.getTimeInMillis());
+		
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setDob(dob);
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		FitnessHomeostasisIndexDAO homeostasisIndexDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		FitnessShapeIndexDAO  fitnessShapeIndexDAO  = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");
+		FitnessSpeedHeartRateDAO  fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)smartbeatContext.getBean("fitnessSpeedHeartRateDAO");
+		
+		/*Sandra Session 1*/
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Long sessionStartTime = cal.getTime().getTime();
+		cal.add(Calendar.HOUR, 1);
+		Long sessionEndTime = cal.getTime().getTime();
+		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+				
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(0);
+		fitnessTrainingSessionBean.setTrainingSessionId("test1");
+		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid(userid);
+		fitnessHomeostasisIndexBean.setTraineeClassification(3);
+		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
+		
+		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean =  new FitnessSpeedHeartRateBean();
+		fitnessSpeedHeartRateBean.setUserid(userid);
+		fitnessSpeedHeartRateBean.setCurrentVdot(46.3);
+		
+		FitnessShapeIndexBean fitnessShapeIndexBean = new FitnessShapeIndexBean();
+		fitnessShapeIndexBean.setUserid(userid);
+		fitnessShapeIndexBean.setShapeIndex(100.0);
+		fitnessShapeIndexBean.setTimeOfRecord(new Timestamp(sessionEndTime));
+		fitnessShapeIndexBean.setSessionOfRecord("test1");
+		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
+		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
+		
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 15);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTimeInMillis());
+		Assert.assertEquals(100.4, fitnessManagerMySQLImpl.getShapeIndex("test1", null));
+		
+
+		cal.set(Calendar.HOUR_OF_DAY, 19);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		sessionStartTime = cal.getTime().getTime();
+		cal.add(Calendar.MINUTE, 110);
+		sessionEndTime = cal.getTime().getTime();
+		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+	
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);
+		fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+		fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+		fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(2);
+		fitnessTrainingSessionBean.setTrainingSessionId("test2");
+		
+		Assert.assertEquals(100.13, fitnessManagerMySQLImpl.getShapeIndex("test1", fitnessTrainingSessionBean));
+		
+	    fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
+	    fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(userid);
+	    homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+	    fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+	    userDao.deleteUser(userid);
+		
 	}
 
 	/*
