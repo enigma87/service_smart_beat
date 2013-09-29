@@ -8,6 +8,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -196,34 +197,41 @@ public class FitnessManagerMySQLImplTest {
 	
 	@Test
 	public void testGetFitnessSupercompensationPoints(){
+	
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.HOUR, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+						
+		double supercompensationPoints = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(userid, new Timestamp(cal.getTimeInMillis()));
+		Assert.assertEquals(Math.round(0.0*100), Math.round(supercompensationPoints*100));
 		
-		long now = new Date().getTime();
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoDays = now - (3600000*48);
-		String fitnessTrainingSessionId = "20131";
-	    
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		fitnessHomeostasisIndexBean.setUserid("testUser_001");
-		fitnessHomeostasisIndexBean.setTraineeClassification(2);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(nowPastOneHour));
-		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(120.0);
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-80.0);
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoDays));
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);
-		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-10.0);
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);		
+		/*creating HI bean for Sandra scenario 2*/
+		FitnessHomeostasisIndexBean hiBean = new FitnessHomeostasisIndexBean();
+		hiBean.setUserid(userid);
+		cal.add(Calendar.MINUTE, 60);
+		Timestamp recentEndTime = new Timestamp(cal.getTimeInMillis()); 
+		hiBean.setRecentEndTime(recentEndTime);
+		hiBean.setTraineeClassification(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED);
+		hiBean.setRecentTotalLoadOfExercise(86.5);
+		hiBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+		hiBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);		
+		FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		hiDAO.createHomeostasisIndexModel(hiBean);
 		
-		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
-		Double points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid(), timeAtConsideration);
-		Assert.assertEquals(0.0, points);
+		/*check pre compensation*/
+		cal.add(Calendar.HOUR, 22);		
+		Timestamp timeAtConsideration = new Timestamp(cal.getTimeInMillis());
+		supercompensationPoints = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(userid, timeAtConsideration);
+		Assert.assertEquals(Math.round(0.0*100), Math.round(supercompensationPoints*100));
 		
-		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-1.0);
-		fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		
-		points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid(), timeAtConsideration);
-		Assert.assertTrue(points > 0.0);
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		/*check post compensation*/
+		cal.add(Calendar.HOUR, 2);
+		timeAtConsideration = new Timestamp(cal.getTimeInMillis());
+		supercompensationPoints = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(userid, timeAtConsideration);
+		Assert.assertEquals(Math.round(0.4*100), Math.round(supercompensationPoints*100));
+		hiDAO.deleteHomeostasisIndexModelByUserid(userid);
 	}
 	
 	@Test
@@ -728,11 +736,6 @@ public class FitnessManagerMySQLImplTest {
 	}
 
 	@Test
-	public void testUpdateHeartrateZoneModel() {
-						
-	}
-
-	@Test
 	public void testGetSpeedHeartrateFactor() {
 		long now = new Date().getTime();
 		long nowBeforeTwoDays = now - (2*24*3600000);
@@ -797,41 +800,42 @@ public class FitnessManagerMySQLImplTest {
 @Test
 	public void testGetFitnessDetrainingPenalty() {
 	
-		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
-		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
-		Integer traineeClassification = 2;
-		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
-		Double recentMinimumOfHomeostasisIndex = 110.0;
-		Double recentTotalLoadOfExercise = 100.0;
-		Double previousTotalLoadOfExercise = 125.0;
+	Calendar cal = Calendar.getInstance();
+	cal.set(Calendar.HOUR, 10);
+	cal.set(Calendar.MINUTE, 0);
+	cal.set(Calendar.SECOND, 0);
+	cal.set(Calendar.MILLISECOND, 0);
+	double detrainingPenalty = fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid, new Timestamp(cal.getTimeInMillis()));
+	Assert.assertEquals(Math.round(0.0*100), Math.round(detrainingPenalty*100));
 	
-		fitnessHomeostasisIndexBean.setUserid(userid);
-		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
-		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		
-		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
-		Assert.assertEquals(0.0, fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration));
-		
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
-		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		
-		Assert.assertTrue(fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration) > 0.0);
-		
-		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-	}
+	/*creating HI bean for Sandra scenario 2*/
+	FitnessHomeostasisIndexBean hiBean = new FitnessHomeostasisIndexBean();
+	hiBean.setUserid(userid);
+	cal.add(Calendar.MINUTE, 60);
+	Timestamp recentEndTime = new Timestamp(cal.getTimeInMillis()); 
+	hiBean.setRecentEndTime(recentEndTime);
+	hiBean.setTraineeClassification(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_MODERATELY_TRAINED);
+	hiBean.setRecentTotalLoadOfExercise(86.5);
+	hiBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+	hiBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);		
+	FitnessHomeostasisIndexDAO hiDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+	hiDAO.createHomeostasisIndexModel(hiBean);
+	
+	/*check pre compensation*/
+	cal.add(Calendar.HOUR, 23);
+	cal.add(Calendar.MINUTE, 4);	
+	Timestamp timeAtConsideration = new Timestamp(cal.getTimeInMillis());
+	detrainingPenalty = fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid, timeAtConsideration);
+	Assert.assertEquals(Math.round(0.0*100), Math.round(detrainingPenalty*100));
+	
+	/*check post compensation*/
+	cal.add(Calendar.HOUR, 8);
+	cal.add(Calendar.MINUTE, 56);	
+	timeAtConsideration = new Timestamp(cal.getTimeInMillis());
+	detrainingPenalty = fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid, timeAtConsideration);
+	Assert.assertEquals(Math.round(0.27*100), Math.round(detrainingPenalty*100));
+	hiDAO.deleteHomeostasisIndexModelByUserid(userid);
+}
 
 	@Test
 	public void testDeleteFitnessTrainingSessionbyTrainingSessionId() {
