@@ -1193,7 +1193,7 @@ public class FitnessManagerMySQLImplTest {
 		user.setAccessTokenType("facebook");		
 		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
 		userDao.createUser(user);
-		
+	
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		FitnessHomeostasisIndexDAO homeostasisIndexDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		FitnessShapeIndexDAO  fitnessShapeIndexDAO  = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");
@@ -1234,6 +1234,8 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setTraineeClassification(3);
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(sessionEndTime));
 		
 		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean =  new FitnessSpeedHeartRateBean();
 		fitnessSpeedHeartRateBean.setUserid(userid);
@@ -1250,15 +1252,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
 		
+		/*Validate shape index before the arrival of next training session*/
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 15);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		DateTimeUtils.setCurrentMillisFixed(cal.getTimeInMillis());
-		Assert.assertEquals(100.4, fitnessManagerMySQLImpl.getShapeIndex("test1", null));
+		Assert.assertEquals(100.39, fitnessManagerMySQLImpl.getShapeIndex("test1", null));
 		
-
+        /*Sandra Session 2*/
 		cal.set(Calendar.HOUR_OF_DAY, 19);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -1286,14 +1289,16 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setSurfaceIndex(2);
 		fitnessTrainingSessionBean.setTrainingSessionId("test2");
 		
+		/*Validate get shape Index just the arrival of next shape Index*/
 		Assert.assertEquals(100.13, fitnessManagerMySQLImpl.getShapeIndex("test1", fitnessTrainingSessionBean));
 		
+		/*Cleanup*/
 	    fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	    fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(userid);
 	    homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	    fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 	    userDao.deleteUser(userid);
-		
+
 	}
 
 	/*
@@ -1650,5 +1655,252 @@ public class FitnessManagerMySQLImplTest {
 		homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		userDao.deleteUser(userid);
 	}
+	
+	@Test
+	public void testGetFitnessTrainingSessionsInTimeInterval(){
+		
+		Assert.assertNull(fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(null, null, null));
+		
+		/*Valid user bean needed for age and gender*/
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1988);
+		cal.set(Calendar.MONTH, 8);
+		cal.set(Calendar.DAY_OF_MONTH, 24);
+		java.sql.Date dob = new java.sql.Date(cal.getTimeInMillis());
+		
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setDob(dob);
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		
+		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
+		
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Long sessionStartTime = cal.getTime().getTime();
+		cal.add(Calendar.HOUR, 1);
+		Long sessionEndTime = cal.getTime().getTime();
+		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+				
+		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(32.0);
+		fitnessTrainingSessionBean.setHrz3Time(14.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(0.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
+		fitnessTrainingSessionBean.setHrz1Distance(100.0);
+		fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+		fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+		fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+		fitnessTrainingSessionBean.setHrz5Distance(0.0);
+		fitnessTrainingSessionBean.setHrz6Distance(0.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(0);
+		fitnessTrainingSessionBean.setTrainingSessionId("test1");
+		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+	
+		cal.add(Calendar.HOUR, 2);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		
+		/*Get Fitness Training Session In TimeInterval*/
+		Calendar calForQuery = Calendar.getInstance();
+		calForQuery.set(Calendar.HOUR_OF_DAY, 0);
+		calForQuery.set(Calendar.MINUTE, 0);
+		Long startTime = calForQuery.getTime().getTime();
+		calForQuery.set(Calendar.HOUR_OF_DAY, 12);
+		calForQuery.set(Calendar.MINUTE, 0);
+		Long endTime = calForQuery.getTime().getTime();
+		List<FitnessTrainingSessionBean> fitnessTrainingSessionBeanList = fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(startTime), new Timestamp(endTime));
+		
+		Assert.assertEquals(1, fitnessTrainingSessionBeanList.size());
+		
+		FitnessTrainingSessionBean responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
+		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
+		Assert.assertEquals("test1", responseFitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(new Timestamp(sessionStartTime), responseFitnessTrainingSessionBean.getStartTime());
+		Assert.assertEquals(new Timestamp(sessionEndTime), responseFitnessTrainingSessionBean.getEndTime());
+		Assert.assertEquals(4.0, responseFitnessTrainingSessionBean.getHrz1Time());
+		Assert.assertEquals(32.0, responseFitnessTrainingSessionBean.getHrz2Time());
+		Assert.assertEquals(14.0, responseFitnessTrainingSessionBean.getHrz3Time());
+		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz4Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Time());
+		Assert.assertEquals(100.0, responseFitnessTrainingSessionBean.getHrz1Distance());
+		Assert.assertEquals(5920.0, responseFitnessTrainingSessionBean.getHrz2Distance());
+		Assert.assertEquals(2753.33, responseFitnessTrainingSessionBean.getHrz3Distance());
+		Assert.assertEquals(2200.0, responseFitnessTrainingSessionBean.getHrz4Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Distance());
+		Assert.assertEquals(new Integer(0), responseFitnessTrainingSessionBean.getSurfaceIndex());
+		
+		
+	    /*Sandra Session 2*/
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 19);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		sessionStartTime = cal.getTime().getTime();
+		cal.add(Calendar.MINUTE, 110);
+		sessionEndTime = cal.getTime().getTime();
+		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+	
+		fitnessTrainingSessionBean.setUserid(userid);
+		fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+		fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+		fitnessTrainingSessionBean.setHrz1Time(4.0);
+		fitnessTrainingSessionBean.setHrz2Time(42.0);
+		fitnessTrainingSessionBean.setHrz3Time(34.0);
+		fitnessTrainingSessionBean.setHrz4Time(10.0);
+		fitnessTrainingSessionBean.setHrz5Time(10.0);
+		fitnessTrainingSessionBean.setHrz6Time(6.0);
+		fitnessTrainingSessionBean.setHrz1Distance(100.0);
+		fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+		fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+		fitnessTrainingSessionBean.setHrz4Distance(2133.33);
+		fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+		fitnessTrainingSessionBean.setHrz6Distance(1410.0);
+		fitnessTrainingSessionBean.setSurfaceIndex(2);
+		fitnessTrainingSessionBean.setTrainingSessionId("test2");		
+		
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+  
+		cal.set(Calendar.HOUR_OF_DAY, 22);
+		DateTimeUtils.setCurrentMillisFixed(cal.getTimeInMillis());
+		
+		/*Get Fitness Training Session in Time Interval*/
+		calForQuery.set(Calendar.HOUR_OF_DAY, 0);
+		calForQuery.set(Calendar.MINUTE, 0);
+		startTime = calForQuery.getTime().getTime();
+		calForQuery.add(Calendar.DATE, 1);
+		calForQuery.set(Calendar.HOUR_OF_DAY, 21);
+		calForQuery.set(Calendar.MINUTE, 0);
+		endTime = calForQuery.getTime().getTime();
+		fitnessTrainingSessionBeanList = fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(startTime), new Timestamp(endTime));
+		
+		
+		Assert.assertEquals(2, fitnessTrainingSessionBeanList.size());
+				
+		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
+		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
+		Assert.assertEquals("test1", responseFitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(4.0, responseFitnessTrainingSessionBean.getHrz1Time());
+		Assert.assertEquals(32.0, responseFitnessTrainingSessionBean.getHrz2Time());
+		Assert.assertEquals(14.0, responseFitnessTrainingSessionBean.getHrz3Time());
+		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz4Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Time());
+		Assert.assertEquals(100.0, responseFitnessTrainingSessionBean.getHrz1Distance());
+		Assert.assertEquals(5920.0, responseFitnessTrainingSessionBean.getHrz2Distance());
+		Assert.assertEquals(2753.33, responseFitnessTrainingSessionBean.getHrz3Distance());
+		Assert.assertEquals(2200.0, responseFitnessTrainingSessionBean.getHrz4Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Distance());
+		Assert.assertEquals(new Integer(0), responseFitnessTrainingSessionBean.getSurfaceIndex());
+		
+		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(1);
+		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
+		Assert.assertEquals("test2", responseFitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(new Timestamp(sessionStartTime), responseFitnessTrainingSessionBean.getStartTime());
+		Assert.assertEquals(new Timestamp(sessionEndTime), responseFitnessTrainingSessionBean.getEndTime());
+		Assert.assertEquals(4.0, responseFitnessTrainingSessionBean.getHrz1Time());
+		Assert.assertEquals(42.0, responseFitnessTrainingSessionBean.getHrz2Time());
+		Assert.assertEquals(34.0, responseFitnessTrainingSessionBean.getHrz3Time());
+		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz4Time());
+		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz5Time());
+		Assert.assertEquals(6.0, responseFitnessTrainingSessionBean.getHrz6Time());
+		Assert.assertEquals(100.0, responseFitnessTrainingSessionBean.getHrz1Distance());
+		Assert.assertEquals(7420.0, responseFitnessTrainingSessionBean.getHrz2Distance());
+		Assert.assertEquals(6460.0, responseFitnessTrainingSessionBean.getHrz3Distance());
+		Assert.assertEquals(2133.33, responseFitnessTrainingSessionBean.getHrz4Distance());
+		Assert.assertEquals(2166.67, responseFitnessTrainingSessionBean.getHrz5Distance());
+		Assert.assertEquals(1410.0, responseFitnessTrainingSessionBean.getHrz6Distance());
+		Assert.assertEquals(new Integer(2), responseFitnessTrainingSessionBean.getSurfaceIndex());
+		
+		/*Cleaning up*/
+		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
+		userDao.deleteUser(userid);
+		
+	}
+	
+	@Test
+	public void testGetHomeostasisIndexModelForUser(){
+		
+		Assert.assertNull(fitnessManagerMySQLImpl.getRecentTrainingSessionId(""));
+		Assert.assertNull(fitnessManagerMySQLImpl.getRecentTrainingSessionId(null));
+		
+		/*Valid user bean needed for age and gender*/
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1988);
+		cal.set(Calendar.MONTH, 8);
+		cal.set(Calendar.DAY_OF_MONTH, 24);
+		java.sql.Date dob = new java.sql.Date(cal.getTimeInMillis());
+		
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setDob(dob);
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		
+		FitnessHomeostasisIndexDAO homeostasisIndexDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.add(Calendar.DATE, -1);
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		Long previousEndTime = cal.getTime().getTime();
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		Long currentEndTime = cal.getTime().getTime();
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid(userid);
+		fitnessHomeostasisIndexBean.setTraineeClassification(3);
+		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setTraineeClassification(3);
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
+		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(235.5);
+		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(previousEndTime));
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp (currentEndTime));
+		
+		/*Creating Homeostasis model in DB*/
+		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		
+		/*Get Homeostasis Index Model for the User*/
+		FitnessHomeostasisIndexBean  responsefitnessHomeostasisIndexBean = fitnessManagerMySQLImpl.getHomeostasisIndexModelForUser(userid);
+		Assert.assertEquals(userid, responsefitnessHomeostasisIndexBean.getUserid());
+		Assert.assertEquals(new Integer(3), responsefitnessHomeostasisIndexBean.getTraineeClassification());
+		Assert.assertEquals(-86.5, responsefitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		Assert.assertEquals(-86.5, responsefitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
+		Assert.assertEquals(86.5, responsefitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
+		Assert.assertEquals(235.5, responsefitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
+		Assert.assertNotNull(responsefitnessHomeostasisIndexBean.getPreviousEndTime());
+		Assert.assertNotNull(responsefitnessHomeostasisIndexBean.getRecentEndTime());
+		
+		/*Cleaning up*/
+		homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+		userDao.deleteUser(userid);
+		
+	}
+	
 	
 }

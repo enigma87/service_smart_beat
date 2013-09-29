@@ -5,3 +5,4 @@ delete from genie.fitness_heartrate_zone_model;
 delete from genie.fitness_homeostasis_index_model;
 delete from genie.fitness_shape_index_model;
 delete from genie.fitness_training_session;
+delete from genie.fitness_speed_heartrate_model;
