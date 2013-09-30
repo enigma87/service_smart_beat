@@ -16,8 +16,6 @@ public class FitnessHomeostasisIndexBean {
 	private Double recentMinimumOfHomeostasisIndex;
 	private Double recentTotalLoadOfExercise;	
 	private Timestamp recentEndTime;
-	private Double previousTotalLoadOfExercise;	
-	private Timestamp previousEndTime;		
 	
 	public FitnessHomeostasisIndexBean() {
 		traineeClassification = ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED;
@@ -73,22 +71,6 @@ public class FitnessHomeostasisIndexBean {
 		this.recentEndTime = currentEndTime;
 	}
 	
-	public Double getPreviousTotalLoadOfExercise() {
-		return previousTotalLoadOfExercise;
-	}
-	
-	public void setPreviousTotalLoadOfExercise(
-			Double previousTotalLoadOfExercise) {
-		this.previousTotalLoadOfExercise = previousTotalLoadOfExercise;
-	}
-	
-	public Timestamp getPreviousEndTime() {
-		return previousEndTime;
-	}
-		
-	public void setPreviousEndTime(Timestamp previousEndTime) {
-		this.previousEndTime = previousEndTime;
-	}		
 	
 	public boolean isValidForTableInsert() {
 		if ((null != this.getUserid() && !this.getUserid().isEmpty())) {

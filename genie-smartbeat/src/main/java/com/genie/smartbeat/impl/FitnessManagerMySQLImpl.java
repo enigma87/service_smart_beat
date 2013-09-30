@@ -202,7 +202,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}else{
 			/*creating Homeostasis Index Model for the user*/
 			fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-			/*Setting the userid while the previousTotalLoadOfExercise and PreviousEndTime by default is set to null*/
+			/*Setting the userid while the recentTotalLoadOfExercise and recentEndTime by default is set to null*/
 			fitnessHomeostasisIndexBean.setUserid(userid);
 			fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		}

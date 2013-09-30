@@ -18,10 +18,6 @@ public class FitnessHomeostasisIndexBeanTest {
 		Double recentTotalLoadOfExercise = 50.0;
 		long now = new Date().getTime();
 		Timestamp recentEndTime = new Timestamp(now);
-		Double previousTotalLoadOfExercise = 40.0;
-		long nowBeforeTwoDays = now - (2*24*3600000);
-		Timestamp previousEndTime = new Timestamp(nowBeforeTwoDays);
-		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
@@ -29,8 +25,6 @@ public class FitnessHomeostasisIndexBeanTest {
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(recentEndTime);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousEndTime(previousEndTime);
 		
 		Assert.assertEquals(userid,fitnessHomeostasisIndexBean.getUserid());
 		Assert.assertEquals(traineeClassification,fitnessHomeostasisIndexBean.getTraineeClassification());
@@ -38,8 +32,7 @@ public class FitnessHomeostasisIndexBeanTest {
 		Assert.assertEquals(recentMinimumOfHomeostasisIndex,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		Assert.assertEquals(recentTotalLoadOfExercise,fitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
 		Assert.assertEquals(recentEndTime,fitnessHomeostasisIndexBean.getRecentEndTime());
-		Assert.assertEquals(previousTotalLoadOfExercise,fitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
-		Assert.assertEquals(previousEndTime,fitnessHomeostasisIndexBean.getPreviousEndTime());
+		
 	}
 
 }

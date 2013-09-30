@@ -323,52 +323,59 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String saveFitnessTrainingSession(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson){
 
-		saveTrainingSessionRequestJson.setUserid(userid);
-		FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
-		
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		try{
-			log.info("attempting to save fitness training session for user " + userid);
-			fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
-			log.info("Successfully saved fitness training session" + fitnessTrainingSessionBean.getTrainingSessionId() 
-			+ "for user " + userid);
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+			saveTrainingSessionRequestJson.setUserid(userid);
+			FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
+		
+			try{
+				log.info("attempting to save fitness training session for user " + userid);
+				fitnessManager.saveFitnessTrainingSession(fitnessTrainingSessionBean);
+				log.info("Successfully saved fitness training session" + fitnessTrainingSessionBean.getTrainingSessionId() 
+						+ "for user " + userid);
 			
-			/*prepare response json*/
-			String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
-			Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);		
-			SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
-			saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
-			saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
-			saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
-			saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
-			saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
+				/*prepare response json*/
+				String fitnessTrainingSessionId = fitnessTrainingSessionBean.getTrainingSessionId();
+				Double shapeIndex = fitnessManager.getShapeIndex(fitnessTrainingSessionId);		
+				SaveFitnessTrainingSessionResponseJson saveFitnessTrainingSessionResponseJson = new SaveFitnessTrainingSessionResponseJson();
+				saveFitnessTrainingSessionResponseJson.setUserid(saveTrainingSessionRequestJson.getUserid());		
+				saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionBean.getTrainingSessionId());
+				saveFitnessTrainingSessionResponseJson.setShapeIndex(shapeIndex);
+				saveFitnessTrainingSessionResponseJson.setTrainingSessionId(fitnessTrainingSessionId);
+				saveFitnessTrainingSessionResponseJson.setvDot(fitnessTrainingSessionBean.getVdot());
 			
-			FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
-			saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
-			saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
-			saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
-			/*set response json*/
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase() ,saveFitnessTrainingSessionResponseJson);
+				FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = fitnessManager.getHomeostasisIndexModelForUser(fitnessTrainingSessionBean.getUserid());
+				saveFitnessTrainingSessionResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexModel.getRecentMinimumOfHomeostasisIndex());
+				saveFitnessTrainingSessionResponseJson.setRecentTotalLoadOfExercise(fitnessHomeostasisIndexModel.getRecentTotalLoadOfExercise());
+				saveFitnessTrainingSessionResponseJson.setTraineeClassification(fitnessHomeostasisIndexModel.getTraineeClassification());
+				/*set response json*/
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase() ,saveFitnessTrainingSessionResponseJson);
 			
-		}catch(InvalidTimeDistributionException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIME_DISTRIBUTION.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to InvalidTimeDistributionException");
-		}catch(InvalidSpeedDistributionException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_SPEED_DISTRIBUTION.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to InvalidSpeedDistributionException");
-		}catch(TrainingSessionException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TRAINING_SESSION.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to TrainingSessionException");
-		}catch(InvalidTimestampException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIMESTAMP.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to InvalidTimestampException");
-		}catch(InvalidTimestampInChronologyException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_IN_CHRONOLOGY.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to InvalidTimestampInChronologyException");
-		}catch(TimeException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
-			log.info("failed saving fitness training session for user " + userid + " due to TimeException");
+			}catch(InvalidTimeDistributionException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIME_DISTRIBUTION.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to InvalidTimeDistributionException");
+			}catch(InvalidSpeedDistributionException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_SPEED_DISTRIBUTION.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to InvalidSpeedDistributionException");
+			}catch(TrainingSessionException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TRAINING_SESSION.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to TrainingSessionException");
+			}catch(InvalidTimestampException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to InvalidTimestampException");
+			}catch(InvalidTimestampInChronologyException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_IN_CHRONOLOGY.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to InvalidTimestampInChronologyException");
+			}catch(TimeException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
+				log.info("failed saving fitness training session for user " + userid + " due to TimeException");
+			}
+		} 
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("user authentication failed!");
 		}
 		
 		try {
@@ -378,7 +385,6 @@ public class TraineeResource
 		{
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
-		
 	}
 
 	@GET
@@ -474,41 +480,50 @@ public class TraineeResource
 		heartrateTestBean.setUserid(userid);
 		
 		GoodResponseObject gro = null;
-		try{
-			log.info("attempting to save heart rate test for user " + userid);
-			fitnessManager.saveHeartrateTest(heartrateTestBean);
-			log.info("Successfully saved fitness training session" + heartrateTestBean.getHeartrateTestId() 
-			+ "for user " + userid);
+		
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {	
+			try{
+				log.info("attempting to save heart rate test for user " + userid);
+				fitnessManager.saveHeartrateTest(heartrateTestBean);
+				log.info("Successfully saved fitness training session" + heartrateTestBean.getHeartrateTestId() 
+						+ "for user " + userid);
 			
-			/*prepare response json*/
-			Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
-			ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
-			shapeIndexResponseJson.setUserid(userid);
-			shapeIndexResponseJson.setShapeIndex(shapeIndex);
+				/*prepare response json*/
+				Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+				ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+				shapeIndexResponseJson.setUserid(userid);
+				shapeIndexResponseJson.setShapeIndex(shapeIndex);
 		
-			double[][] heartrateZones = fitnessManager.getHeartrateZones(userid);
-			HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
-			heartRateZoneJson.setUserid(userid);
-			heartRateZoneJson.setHeartrateZones(heartrateZones);
+				double[][] heartrateZones = fitnessManager.getHeartrateZones(userid);
+				HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
+				heartRateZoneJson.setUserid(userid);
+				heartRateZoneJson.setHeartrateZones(heartrateZones);
 		
-			SaveHeartrateTestResponseJson saveHeartrateTestResponseJson = new SaveHeartrateTestResponseJson();
-			saveHeartrateTestResponseJson.setHeartrateZones(heartRateZoneJson);
-			saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
+				SaveHeartrateTestResponseJson saveHeartrateTestResponseJson = new SaveHeartrateTestResponseJson();
+				saveHeartrateTestResponseJson.setHeartrateZones(heartRateZoneJson);
+				saveHeartrateTestResponseJson.setShapeIndex(shapeIndexResponseJson);
 		
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),saveHeartrateTestResponseJson);
 			
-		}catch(InvalidTimestampException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIMESTAMP.toString());			
-		}catch(InvalidTimestampInChronologyException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_IN_CHRONOLOGY.toString());
-		}catch(TimeException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
-		}catch(InvalidHeartrateException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());			
-		}catch(HeartrateTestException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());
+			}catch(InvalidTimestampException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIMESTAMP.toString());			
+			}catch(InvalidTimestampInChronologyException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_IN_CHRONOLOGY.toString());
+			}catch(TimeException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
+			}catch(InvalidHeartrateException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());			
+			}catch(HeartrateTestException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HeartrateTestErrors.INVALID_HEARTRATE.toString());
+			}
 		}
-				
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("user authentication failed!");
+		}
+
 		try
 		{
 			return Formatter.getAsJson(gro, false);
@@ -518,8 +533,7 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
-	
-	
+
 	@GET
 	@Path("id/{userid}/recoveryTime")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
