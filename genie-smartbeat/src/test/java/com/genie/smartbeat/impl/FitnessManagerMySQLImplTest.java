@@ -8,7 +8,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -644,15 +643,10 @@ public class FitnessManagerMySQLImplTest {
 		
 		long now = cal.getTime().getTime();
 		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
-		Timestamp nowTimeStamp = new Timestamp(now);
 		Timestamp nowPastOneHourTimeStamp = new Timestamp(nowPastOneHour);
-		Timestamp nowPastTwoHourTimeStamp = new Timestamp(nowPastTwoHour);
 		long nowPastOneDay 	= now - (24*3600000);
 		long nowPastTwoDays 	= now - (2*24*3600000);
 		long nowPastThreeDays 	= now - (3*24*3600000);
-		long nowPastFourDays 	= now - (4*24*3600000);
-		
 		FitnessShapeIndexDAO fitnessShapeIndexDAO = (FitnessShapeIndexDAO) smartbeatContext.getBean("fitnessShapeIndexDAO");
 		List<FitnessShapeIndexBean> shapeIndexBeans = null;
 		
@@ -738,7 +732,6 @@ public class FitnessManagerMySQLImplTest {
 	@Test
 	public void testGetSpeedHeartrateFactor() {
 		long now = new Date().getTime();
-		long nowBeforeTwoDays = now - (2*24*3600000);
 		long nowBeforeOneDay = now - (24*3600000);
 		long nowBeforeOneDayFiftyMinutes = nowBeforeOneDay - (3000000);
 		double speedHeartrateFactor = 0.0;
@@ -1137,23 +1130,18 @@ public class FitnessManagerMySQLImplTest {
 
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
 		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 		Integer traineeClassification = 2;
 		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
 		Double recentMinimumOfHomeostasisIndex = 110.0;
 		Double recentTotalLoadOfExercise = 100.0;
-		Double previousTotalLoadOfExercise = 125.0;
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 
 		
@@ -1870,7 +1858,6 @@ public class FitnessManagerMySQLImplTest {
 		cal.add(Calendar.DATE, -1);
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 0);
-		Long previousEndTime = cal.getTime().getTime();
 		cal.add(Calendar.DATE, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 10);
 		cal.set(Calendar.MINUTE, 0);
@@ -1882,8 +1869,6 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
 		fitnessHomeostasisIndexBean.setTraineeClassification(3);
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(235.5);
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(previousEndTime));
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp (currentEndTime));
 		
 		/*Creating Homeostasis model in DB*/
@@ -1896,8 +1881,6 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertEquals(-86.5, responsefitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		Assert.assertEquals(-86.5, responsefitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
 		Assert.assertEquals(86.5, responsefitnessHomeostasisIndexBean.getRecentTotalLoadOfExercise());
-		Assert.assertEquals(235.5, responsefitnessHomeostasisIndexBean.getPreviousTotalLoadOfExercise());
-		Assert.assertNotNull(responsefitnessHomeostasisIndexBean.getPreviousEndTime());
 		Assert.assertNotNull(responsefitnessHomeostasisIndexBean.getRecentEndTime());
 		
 		/*Cleaning up*/
