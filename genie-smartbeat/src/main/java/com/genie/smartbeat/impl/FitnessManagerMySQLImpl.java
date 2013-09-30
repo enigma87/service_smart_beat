@@ -483,7 +483,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
 		List<String> trainingSessionIdList = null;
-		if ((null != userID && !userID.isEmpty()) || null != startTimestamp || null != endTimestamp ){
+		if (null != userID && !userID.isEmpty() && null != startTimestamp && null != endTimestamp ){
 		 trainingSessionIdList = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
 		}
 		return trainingSessionIdList;
@@ -491,7 +491,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {	
 		List<FitnessTrainingSessionBean> fitnessTrainingSessionBeanList = null;
-		if ((null != userID && !userID.isEmpty()) || null != startTimestamp || null != endTimestamp ){
+		if (null != userID && !userID.isEmpty() && null != startTimestamp && null != endTimestamp ){
 		fitnessTrainingSessionBeanList = fitnessTrainingSessionDAO.getFitnessTrainingSessionsByTimeRange(userID, startTimestamp, endTimestamp);
 		}
 		return fitnessTrainingSessionBeanList;
@@ -499,7 +499,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
 		List<FitnessShapeIndexBean> FitnessShapeIndexBeanList = null;
-		if ((null != userid && !userid.isEmpty()) || null != startTime || null != endTime ){
+		if (null != userid && !userid.isEmpty() && null != startTime && null != endTime ){
 		FitnessShapeIndexBeanList =  fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
 		}
 		return FitnessShapeIndexBeanList;
@@ -507,7 +507,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 
 	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
 		List<FitnessHeartrateTestBean> FitnessHeartrateTestBeanList = null;
-		if ((null != userid && !userid.isEmpty())|| null!= heartrateType || null != startTimestamp || null != endTimestamp ){
+		if (null != userid && !userid.isEmpty() && null!= heartrateType && null != startTimestamp && null != endTimestamp ){
 			FitnessHeartrateTestBeanList = fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval(userid, heartrateType, startTimestamp, endTimestamp);
 		}
 		return FitnessHeartrateTestBeanList;
