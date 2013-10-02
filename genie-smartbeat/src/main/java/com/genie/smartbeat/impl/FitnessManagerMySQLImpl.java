@@ -20,6 +20,9 @@ import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionExcept
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
 import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
+import com.genie.smartbeat.core.exceptions.time.InvalidDurationException;
+import com.genie.smartbeat.core.exceptions.time.InvalidEndTimestampException;
+import com.genie.smartbeat.core.exceptions.time.InvalidStartTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -481,34 +484,74 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return heartrateZones;
 	}
 	
-	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException {
 		List<String> trainingSessionIdList = null;
-		if (null != userID && !userID.isEmpty() && null != startTimestamp && null != endTimestamp ){
-		 trainingSessionIdList = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
+		if (null != startTimestamp && null != endTimestamp ){
+			if (endTimestamp.getTime() > startTimestamp.getTime()){
+		       trainingSessionIdList = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
+			}else{
+				throw new InvalidDurationException();
+			}
+		}else{
+			if(null == startTimestamp){
+				throw new InvalidStartTimestampException();
+			}else{
+				throw new InvalidEndTimestampException();
+			}
 		}
 		return trainingSessionIdList;
 	}
 
-	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) {	
+	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException{	
 		List<FitnessTrainingSessionBean> fitnessTrainingSessionBeanList = null;
-		if (null != userID && !userID.isEmpty() && null != startTimestamp && null != endTimestamp ){
-		fitnessTrainingSessionBeanList = fitnessTrainingSessionDAO.getFitnessTrainingSessionsByTimeRange(userID, startTimestamp, endTimestamp);
+		if (null != startTimestamp && null != endTimestamp ){
+			if (endTimestamp.getTime() > startTimestamp.getTime()){
+		        fitnessTrainingSessionBeanList = fitnessTrainingSessionDAO.getFitnessTrainingSessionsByTimeRange(userID, startTimestamp, endTimestamp);
+			}else{
+				throw new InvalidDurationException();
+			}
+		}else{
+			if(null == startTimestamp){
+				throw new InvalidStartTimestampException();
+			}else{
+				throw new InvalidEndTimestampException();
+			}
 		}
 		return fitnessTrainingSessionBeanList;
 	}
 	
-	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) {
+	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) throws TimeException {
 		List<FitnessShapeIndexBean> FitnessShapeIndexBeanList = null;
-		if (null != userid && !userid.isEmpty() && null != startTime && null != endTime ){
-		FitnessShapeIndexBeanList =  fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
+		if (null != startTime && null != endTime ){
+		    if (endTime.getTime() > startTime.getTime()){
+			   FitnessShapeIndexBeanList =  fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
+		    }else{
+		    	 throw new InvalidDurationException();
+		    }
+		}else{
+			if(null == startTime){
+				throw new InvalidStartTimestampException();
+			}else{
+				throw new InvalidEndTimestampException();
+			}
 		}
 		return FitnessShapeIndexBeanList;
 	}
 
-	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) {
+	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException {
 		List<FitnessHeartrateTestBean> FitnessHeartrateTestBeanList = null;
-		if (null != userid && !userid.isEmpty() && null!= heartrateType && null != startTimestamp && null != endTimestamp ){
-			FitnessHeartrateTestBeanList = fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval(userid, heartrateType, startTimestamp, endTimestamp);
+		if (null!= heartrateType && null != startTimestamp && null != endTimestamp ){
+			if (endTimestamp.getTime() > startTimestamp.getTime()){
+			  FitnessHeartrateTestBeanList = fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval(userid, heartrateType, startTimestamp, endTimestamp);
+			}else{
+			  throw new InvalidDurationException();
+			}
+		}else{
+			if(null == startTimestamp){
+				throw new InvalidStartTimestampException();
+			}else{
+				throw new InvalidEndTimestampException();
+			}
 		}
 		return FitnessHeartrateTestBeanList;
 	}

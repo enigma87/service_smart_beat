@@ -40,6 +40,9 @@ import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionExcept
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
 import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
+import com.genie.smartbeat.core.exceptions.time.InvalidDurationException;
+import com.genie.smartbeat.core.exceptions.time.InvalidEndTimestampException;
+import com.genie.smartbeat.core.exceptions.time.InvalidStartTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -222,12 +225,29 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndexHistoryInInterval (@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
-		shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
-		shapeIndexHistoryJson.setUserID(userID);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		GoodResponseObject gro = null;
+		
+		try{
+		   List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		   ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
+		   shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
+		   shapeIndexHistoryJson.setUserID(userID);
+		   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		}catch(InvalidStartTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Shape Index History for user " + userID + " due to InvalidStartTimeException");
+		}catch(InvalidEndTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Shape Index History for user " + userID + " due to InvalidEndTimeException");
+		}catch(InvalidDurationException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Shape Index History for user " + userID + " due to InvalidDurationException");			
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Shape Index History for user " + userID + " due to TimeException");	
+		}
+		
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -261,12 +281,27 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
-		trainingSessionIdRangeJson.setUserID(userID);
-		trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
-		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+
+		GoodResponseObject gro = null;
+		try{
+		   List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+		   TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
+		   trainingSessionIdRangeJson.setUserID(userID);
+		   trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
+		   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+		}catch(InvalidStartTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("Failed Getting TrainingSession IDs for user " + userID + " due to InvalidStartTimeException");
+		}catch(InvalidEndTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("Failed Getting TrainingSession IDs for user " + userID + " due to InvalidEndTimeException");
+		}catch(InvalidDurationException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("Failed Getting TrainingSession IDs for user " + userID + " due to InvalidDurationException");
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("Failed Getting TrainingSession IDs for user " + userID + " due to TimeException");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -280,12 +315,26 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		GoodResponseObject gro = null;
+		try{
 		List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
 		TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
 		trainingSessionRangeJson.setUserID(userID);
 		trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
-		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
+		gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
+		}catch(InvalidStartTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting fitness training sessions for user " + userID + " due to InvalidStartTimestampException");
+		}catch(InvalidEndTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting fitness training sessions for user " + userID + " due to InvalidEndTimestampException");
+		}catch(InvalidDurationException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting fitness training sessions for user " + userID + " due to InvalidDurationException");
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting fitness training sessions for user " + userID + " due to TimeException");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -396,13 +445,16 @@ public class TraineeResource
 		GoodResponseObject gro = null;
 		if (null != startTimeStamp
 				&& null != endTimeStamp) {
-
-			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, startTimeStamp, endTimeStamp);
-			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-			heartrateTestsJson.setUserId(userID);
-			heartrateTestsJson.setHeartrateTests(heartrateTests);
-		
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+            try{
+            	List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, startTimeStamp, endTimeStamp);
+			    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			    heartrateTestsJson.setUserId(userID);
+			    heartrateTestsJson.setHeartrateTests(heartrateTests);	
+			    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+            }catch(TimeException e){
+            	gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed getting Resting Heartrate tests for user " + userID + " due to TimeException");
+            }
 		} else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid Time Interval");
 		}
@@ -419,13 +471,19 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMaximalHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		GoodResponseObject gro = null;
 		
+		try{
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
+		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		    heartrateTestsJson.setUserId(userID);
+		    heartrateTestsJson.setHeartrateTests(heartrateTests);
+		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Maximal Heartrate tests for user " + userID + " due to TimeException");
+		}
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
@@ -438,12 +496,19 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getThresholdHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		GoodResponseObject gro = null;
+		
+		try{
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
+		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		    heartrateTestsJson.setUserId(userID);
+		    heartrateTestsJson.setHeartrateTests(heartrateTests);
+		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting Threshold Heartrate tests for user " + userID + " due to TimeException");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -457,12 +522,28 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getOrthostaticHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		GoodResponseObject gro = null;
+		
+		try{
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
+		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+		    heartrateTestsJson.setUserId(userID);
+		    heartrateTestsJson.setHeartrateTests(heartrateTests);
+		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		}catch(InvalidStartTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting orthostatic Heartrate tests for user " + userID + " due to InvalidStartTimestampException");
+		}catch(InvalidEndTimestampException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting orthostatic Heartrate tests for user " + userID + " due to InvalidEndTimestampException");
+		}catch(InvalidDurationException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting orthostatic Heartrate tests for user " + userID + " due to InvalidDurationException");
+		}catch(TimeException e){
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+			log.info("failed getting orthostatic Heartrate tests for user " + userID + " due to TimeException");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);

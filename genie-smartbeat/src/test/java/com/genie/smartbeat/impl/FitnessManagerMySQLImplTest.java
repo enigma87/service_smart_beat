@@ -24,6 +24,9 @@ import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionExcept
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
 import com.genie.smartbeat.core.exceptions.test.InvalidHeartrateException;
+import com.genie.smartbeat.core.exceptions.time.InvalidDurationException;
+import com.genie.smartbeat.core.exceptions.time.InvalidEndTimestampException;
+import com.genie.smartbeat.core.exceptions.time.InvalidStartTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.InvalidTimestampInChronologyException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -578,7 +581,13 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test 
-	public void testGetTrainingSessionIdsInTimeInterval() {
+	public void testGetTrainingSessionIdsInTimeInterval() throws TimeException{
+		
+		try{
+			fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid, null, null);
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		}
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		
@@ -619,13 +628,32 @@ public class FitnessManagerMySQLImplTest {
 				fitnessTrainingSessionDAO.createFitnessTrainingSession(newTrainingSession);
 			}
 			
+			try{
+				fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid, Timestamp.valueOf("2013-07-03 18:23:10"), null);
+			}catch(InvalidEndTimestampException e){
+				Assert.assertTrue(true);
+			}
+			
+			try{
+				fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid,  Timestamp.valueOf("2013-08-30 18:23:10"), Timestamp.valueOf("2013-07-03 18:23:10"));
+			}catch(InvalidDurationException e){
+				Assert.assertTrue(true);
+			}
+			
 			Assert.assertEquals(9, fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" , Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
 		
 			fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e");;
 	}
 	
 	@Test 
-	public void testgetShapeIndexHistoryInTimeInterval() {
+	public void testgetShapeIndexHistoryInTimeInterval() throws TimeException {
+		
+		try{
+			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, null, null);
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
 		Date today = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(today);
@@ -649,6 +677,18 @@ public class FitnessManagerMySQLImplTest {
 		Timestamp endInterval = new Timestamp(cal.getTimeInMillis());
 		cal.add(Calendar.DATE, -3);
 		Timestamp startInterval = new Timestamp(cal.getTimeInMillis());
+		
+		try{
+			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, null);
+		}catch(InvalidEndTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
+		try{
+			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, endInterval, startInterval);
+		}catch(InvalidDurationException e){
+			Assert.assertTrue(true);
+		}
 				
 		FitnessShapeIndexBean  fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
 		fitnessShapeIndexBean1.setUserid(userid);
@@ -1646,9 +1686,13 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test
-	public void testGetFitnessTrainingSessionsInTimeInterval(){
+	public void testGetFitnessTrainingSessionsInTimeInterval() throws TimeException{
+		try{
+		fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, null, null);
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		}
 		
-		Assert.assertNull(fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(null, null, null));
 		
 		/*Valid user bean needed for age and gender*/
 		Calendar cal = Calendar.getInstance();
@@ -1680,6 +1724,18 @@ public class FitnessManagerMySQLImplTest {
 		Long sessionEndTime = cal.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
 				
+		try{
+			fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(sessionStartTime), null);
+		}catch(InvalidEndTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
+		try{
+			fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid,new Timestamp(sessionEndTime) , new Timestamp(sessionStartTime));
+		}catch(InvalidDurationException e){
+			Assert.assertTrue(true);
+		}
+		
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
 		fitnessTrainingSessionBean.setUserid(userid);
 		fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
@@ -1712,8 +1768,8 @@ public class FitnessManagerMySQLImplTest {
 		calForQuery.set(Calendar.HOUR_OF_DAY, 12);
 		calForQuery.set(Calendar.MINUTE, 0);
 		Long endTime = calForQuery.getTime().getTime();
-		List<FitnessTrainingSessionBean> fitnessTrainingSessionBeanList = fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(startTime), new Timestamp(endTime));
 		
+		List<FitnessTrainingSessionBean> fitnessTrainingSessionBeanList = fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(startTime), new Timestamp(endTime));
 		Assert.assertEquals(1, fitnessTrainingSessionBeanList.size());
 		
 		FitnessTrainingSessionBean responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
@@ -1778,9 +1834,9 @@ public class FitnessManagerMySQLImplTest {
 		calForQuery.set(Calendar.HOUR_OF_DAY, 21);
 		calForQuery.set(Calendar.MINUTE, 0);
 		endTime = calForQuery.getTime().getTime();
+		
 		fitnessTrainingSessionBeanList = fitnessManagerMySQLImpl.getTrainingSessionsInTimeInterval(userid, new Timestamp(startTime), new Timestamp(endTime));
-		
-		
+				
 		Assert.assertEquals(2, fitnessTrainingSessionBeanList.size());
 				
 		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
@@ -1826,10 +1882,20 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test 
-	public void testGetFitnessHeartrateTestsByTypeInTimeInterval(){
+	public void testGetFitnessHeartrateTestsByTypeInTimeInterval() throws TimeException{
 		
-		Assert.assertNull(fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(null, null, null, null));
-		Assert.assertNull(fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval("", 0, null, null));
+		try{
+		    fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(userid, null, null, null);
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
+		try{
+			fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(userid, 0, null, null);
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
 		
 		/*Valid user bean needed for age and gender*/
 		Calendar cal = Calendar.getInstance();
@@ -1947,6 +2013,18 @@ public class FitnessManagerMySQLImplTest {
 		Long endTime = calForQuery.getTime().getTime();
 		DateTimeUtils.setCurrentMillisFixed(calForQuery.getTimeInMillis());
 		
+		try{
+			fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(userid, 0, new Timestamp(startTime), null);
+		}catch(InvalidEndTimestampException e){
+			Assert.assertTrue(true);
+		}
+		
+		try{
+			fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(userid, 0, new Timestamp(endTime), new Timestamp(startTime));
+		}catch(InvalidDurationException e){
+			Assert.assertTrue(true);
+		}
+		
 		/*Get Resting Heartrate in Time Interval*/
 		List<FitnessHeartrateTestBean> fitnessHeartrateTestBeanList = fitnessManagerMySQLImpl.getFitnessHeartrateTestsByTypeInTimeInterval(userid, 0, new Timestamp(startTime), new Timestamp(endTime));
 		Assert.assertEquals(1, fitnessHeartrateTestBeanList.size());
@@ -2012,8 +2090,6 @@ public class FitnessManagerMySQLImplTest {
 	@Test
 	public void testGetHomeostasisIndexModelForUser(){
 		
-		Assert.assertNull(fitnessManagerMySQLImpl.getRecentTrainingSessionId(""));
-		Assert.assertNull(fitnessManagerMySQLImpl.getRecentTrainingSessionId(null));
 		
 		/*Valid user bean needed for age and gender*/
 		Calendar cal = Calendar.getInstance();
