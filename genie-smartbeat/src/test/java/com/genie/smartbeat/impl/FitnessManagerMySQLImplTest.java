@@ -207,9 +207,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setTraineeClassification(2);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(nowPastOneHour));
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(120.0);
-		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-80.0);
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoDays));
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(140.0);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-80.0);		
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-10.0);
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);		
@@ -802,24 +800,19 @@ public class FitnessManagerMySQLImplTest {
 		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
 		Double recentMinimumOfHomeostasisIndex = 110.0;
 		Double recentTotalLoadOfExercise = 100.0;
-		Double previousTotalLoadOfExercise = 125.0;
-	
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(traineeClassification);
 		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(localRegressionMinimumOfHomeostasisIndex);
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(recentMinimumOfHomeostasisIndex);
-		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setPreviousTotalLoadOfExercise(previousTotalLoadOfExercise);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(nowPastTwoHour));
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(recentTotalLoadOfExercise);		
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now));		
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		Timestamp timeAtConsideration = new Timestamp(DateTimeUtils.currentTimeMillis());
 		Assert.assertEquals(0.0, fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration));
 		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
-		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));
-		fitnessHomeostasisIndexBean.setPreviousEndTime(new Timestamp(now - 30 * 24* 3600 * 1000));
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(now - 15 * 24 * 3600 * 1000));		
 		fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		Assert.assertTrue(fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration) > 0.0);
