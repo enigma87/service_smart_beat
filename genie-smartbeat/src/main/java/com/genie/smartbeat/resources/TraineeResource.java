@@ -108,6 +108,7 @@ public class TraineeResource
 		GoodResponseObject gro;
 		if(null != authStatus 
 				&& AuthenticationStatus.Status.APPROVED.equals(authStatus.getAuthenticationStatus())) {
+			
 			UserBean user = userManager.getUserInformationByEmail(email);
 			if (null != user) {
 				UserInfoJSON userInfoJSON = new UserInfoJSON();
@@ -119,6 +120,7 @@ public class TraineeResource
 		} else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), AccessTokenError.ACCESS_TOKEN_INVALID.toString());
 		}
+
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception e) {
@@ -200,13 +202,24 @@ public class TraineeResource
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+		
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 		 
-		Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
-		ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
-		shapeIndexResponseJson.setUserid(userid);
-		shapeIndexResponseJson.setShapeIndex(shapeIndex);
+			Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
+			ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
+			shapeIndexResponseJson.setUserid(userid);
+			shapeIndexResponseJson.setShapeIndex(shapeIndex);
 			
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexResponseJson);
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexResponseJson);
+		} 
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
+		
 		try
 		{				
 			return Formatter.getAsJson(gro, true);
@@ -222,12 +235,24 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getShapeIndexHistoryInInterval (@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
-		shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
-		shapeIndexHistoryJson.setUserID(userID);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+		
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
+			shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
+			shapeIndexHistoryJson.setUserID(userID);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -242,13 +267,24 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getHeartrateZones(@PathParam("userid") String userID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 
-		double[][] heartrateZones = fitnessManager.getHeartrateZones(userID);
-		HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
-		heartRateZoneJson.setUserid(userID);
-		heartRateZoneJson.setHeartrateZones(heartrateZones);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateZoneJson);
-	
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			double[][] heartrateZones = fitnessManager.getHeartrateZones(userID);
+			HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
+			heartRateZoneJson.setUserid(userID);
+			heartRateZoneJson.setHeartrateZones(heartrateZones);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartRateZoneJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
+		
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
@@ -261,12 +297,24 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionIds(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
-		trainingSessionIdRangeJson.setUserID(userID);
-		trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+		
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
+			trainingSessionIdRangeJson.setUserID(userID);
+			trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -280,12 +328,24 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
-		trainingSessionRangeJson.setUserID(userID);
-		trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+		
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
+			trainingSessionRangeJson.setUserID(userID);
+			trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -300,16 +360,26 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFitnessTrainingSessionById(@PathParam("userid") String userID, @QueryParam("trainingSessionID") String trainingSessionID, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
 		
-		TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
-		FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
-		GoodResponseObject gro;
-		if (null != trainingSessionBean) {
-			trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
-		} else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), Status.NOT_ACCEPTABLE.getReasonPhrase(), null);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+		
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
+			FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
+
+			if (null != trainingSessionBean) {
+				trainingSessionResponseJson.noJSONSetTrainingSession(trainingSessionBean);
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionResponseJson);
+			} else {
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), Status.NOT_ACCEPTABLE.getReasonPhrase(), null);
+			}
 		}
-			
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
@@ -326,7 +396,9 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		
 			saveTrainingSessionRequestJson.setUserid(userid);
 			FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
 		
@@ -393,18 +465,28 @@ public class TraineeResource
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getRestingHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
 		
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
-		if (null != startTimeStamp
-				&& null != endTimeStamp) {
-
-			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, startTimeStamp, endTimeStamp);
-			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-			heartrateTestsJson.setUserId(userID);
-			heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
-		} else {
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid Time Interval");
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			if (null != startTimeStamp
+					&& null != endTimeStamp) {
+
+				List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, startTimeStamp, endTimeStamp);
+				HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+				heartrateTestsJson.setUserId(userID);
+				heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+			} else {
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "Invalid Time Interval");
+			}
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
 		}
 		
 		try {
@@ -419,12 +501,23 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getMaximalHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
+			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			heartrateTestsJson.setUserId(userID);
+			heartrateTestsJson.setHeartrateTests(heartrateTests);
+		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		
 		try {
 			return Formatter.getAsJson(gro, true);
@@ -438,13 +531,23 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getThresholdHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
+			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			heartrateTestsJson.setUserId(userID);
+			heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		} 
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("authentication failed!");
+		}
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
@@ -457,13 +560,23 @@ public class TraineeResource
 	@Consumes(MediaType.TEXT_HTML)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getOrthostaticHeartrateTestsInInterval(@PathParam("userid") String userID, @QueryParam("startTimeStamp") Timestamp startTimeStamp, @QueryParam("endTimeStamp") Timestamp endTimeStamp, @QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
-		List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
-		HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		heartrateTestsJson.setUserId(userID);
-		heartrateTestsJson.setHeartrateTests(heartrateTests);
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
 		
-		GoodResponseObject gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		if (null != authStatus 
+				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+
+			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
+			HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			heartrateTestsJson.setUserId(userID);
+			heartrateTestsJson.setHeartrateTests(heartrateTests);
 		
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		}
+		else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("user authentication failed!");
+		}
 		try {
 			return Formatter.getAsJson(gro, true);
 		} catch (Exception ex) {
