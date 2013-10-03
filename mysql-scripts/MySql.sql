@@ -75,8 +75,6 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
   `recent_minimum_of_homeostasis_index` DOUBLE DEFAULT NULL,
   `recent_total_load_of_exercise` DOUBLE DEFAULT NULL,
   `recent_end_time` timestamp NULL DEFAULT NULL,
-  `previous_total_load_of_exercise` DOUBLE DEFAULT NULL,  
-  `previous_end_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY(`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
 
