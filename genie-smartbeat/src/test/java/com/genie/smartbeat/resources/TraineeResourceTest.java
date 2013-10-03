@@ -284,6 +284,7 @@ public class TraineeResourceTest {
 		public void testSaveHeartrateTest() throws Exception{
 			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();
 			String responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(TimeErrors.INVALID_TIMESTAMP.toString(), responseJSON.getString("message"));
