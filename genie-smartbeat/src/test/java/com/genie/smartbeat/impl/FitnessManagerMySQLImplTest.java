@@ -202,8 +202,6 @@ public class FitnessManagerMySQLImplTest {
 		
 		long now = new Date().getTime();
 		long nowPastOneHour = now - 3600000;
-		long nowPastTwoDays = now - (3600000*48);
-		String fitnessTrainingSessionId = "20131";
 	    
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid("testUser_001");
@@ -225,6 +223,8 @@ public class FitnessManagerMySQLImplTest {
 		points = fitnessManagerMySQLImpl.getFitnessSupercompensationPoints(fitnessHomeostasisIndexBean.getUserid(), timeAtConsideration);
 		Assert.assertTrue(points > 0.0);
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(fitnessHomeostasisIndexBean.getUserid());
+		
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
 	@Test
@@ -832,9 +832,7 @@ public class FitnessManagerMySQLImplTest {
 		FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO) smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
 		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
-		
-		long nowPastOneHour = now - 3600000;
-		long nowPastTwoHour = now - 7200000;
+	
 		String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
 		Integer traineeClassification = 2;
 		Double localRegressionMinimumOfHomeostasisIndex = 130.0;
@@ -858,6 +856,8 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertTrue(fitnessManagerMySQLImpl.getFitnessDetrainingPenalty(userid,timeAtConsideration) > 0.0);
 		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
+		
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 
 	@Test
@@ -1320,6 +1320,8 @@ public class FitnessManagerMySQLImplTest {
 	    homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	    fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 	    userDao.deleteUser(userid);
+	    
+	    DateTimeUtils.setCurrentMillisSystem();
 
 	}
 
@@ -1676,6 +1678,7 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 		homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		userDao.deleteUser(userid);
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
 	@Test
@@ -1871,6 +1874,7 @@ public class FitnessManagerMySQLImplTest {
 		/*Cleaning up*/
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 		userDao.deleteUser(userid);
+		DateTimeUtils.setCurrentMillisSystem();
 		
 	}
 	
@@ -2078,6 +2082,7 @@ public class FitnessManagerMySQLImplTest {
 		/* Cleanup */
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
 		userDao.deleteUser(userid);
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
 	@Test
@@ -2136,7 +2141,7 @@ public class FitnessManagerMySQLImplTest {
 		/*Cleaning up*/
 		homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 		userDao.deleteUser(userid);
-		
+		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
 	
