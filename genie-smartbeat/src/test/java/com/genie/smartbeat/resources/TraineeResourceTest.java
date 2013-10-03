@@ -62,6 +62,7 @@ public class TraineeResourceTest {
 		private static String appID = "333643156765163";
 		private static long now;
 		private static final String userid = "ff2d44bb-8af8-46e3-b88f-0cd777ac188e";
+		private static UserBean user;
 		
 		@BeforeClass
 		public static void setupUserDao(){
@@ -89,6 +90,29 @@ public class TraineeResourceTest {
 			userManager = (UserManagerMySQLImpl) traineeResource.getUserManager();
 			fitnessManager = (FitnessManagerMySQLImpl) traineeResource.getFitnessManager();
 			
+		}
+		
+		@BeforeClass
+		public static void SetUpObjects() {
+			user = new UserBean();
+			
+			Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
+			java.sql.Date Dob = new java.sql.Date(now - 12000);
+			
+			user.setUserid("123456789");		
+			user.setAccessToken("access_token_123456789");
+			user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
+			user.setFirstName("Antony");
+			user.setMiddleName("Bob");
+			user.setLastName("CampBell");
+			user.setDob( Dob);
+			user.setGender((byte) 1);
+			user.setEmail("abc@xyz.com");
+			user.setPrivilegeLevel((byte) 1);
+			user.setImageUrl("www.picasa.com/1002");
+			user.setCreatedTs(timestamp);
+			user.setLastUpdatedTs(timestamp);
+			user.setLastLoginTs(timestamp);
 		}
 		
 //		@Test
@@ -132,25 +156,6 @@ public class TraineeResourceTest {
 		
 		@Test
 		public void testGetUserInfo() throws Exception{
-			
-			UserBean user = new UserBean();
-			Timestamp timestamp = new Timestamp (Calendar.getInstance().getTime().getTime());
-			
-			java.sql.Date Dob = new java.sql.Date(now - 12000);
-			
-			user.setUserid("123456789");		
-			user.setAccessToken("access_token_123456789");
-			user.setAccessTokenType(UserBean.ACCESS_TOKEN_TYPE_CUSTOM);
-			user.setFirstName("Antony");
-			user.setMiddleName("Bob");
-			user.setLastName("CampBell");
-			user.setDob( Dob);
-			user.setEmail("abc@xyz.com");		
-			user.setImageUrl("www.picasa.com/1002");
-			user.setCreatedTs(timestamp);
-			user.setLastUpdatedTs(timestamp);
-			user.setLastLoginTs(timestamp);
-			
 			String responseString = null;
 			JSONObject jsonResponse;
 			
@@ -162,6 +167,7 @@ public class TraineeResourceTest {
 			
 			responseString = traineeResource.getUserInfo(user.getEmail(), user.getAccessToken(), user.getAccessTokenType());
 			jsonResponse = new JSONObject(responseString);
+			System.out.println(responseString);
 			Assert.assertEquals(Status.OK.getStatusCode(), Integer.parseInt(jsonResponse.get("status").toString()));
 			Assert.assertEquals(user.getUserid(), new JSONObject(jsonResponse.get("obj").toString()).get("userid").toString());
 
@@ -177,9 +183,8 @@ public class TraineeResourceTest {
 		@Test
 		public void testSaveFitnessTrainingSession() throws Exception{
 		
-			SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson = new SaveFitnessTrainingSessionRequestJson();			
-			
-			String response = traineeResource.saveFitnessTrainingSession(userid, null, null, saveTrainingSessionRequestJson);
+			SaveFitnessTrainingSessionRequestJson saveTrainingSessionRequestJson = new SaveFitnessTrainingSessionRequestJson();						
+			String response = traineeResource.saveFitnessTrainingSession(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveTrainingSessionRequestJson);
 			JSONObject responseJSON = new JSONObject(response);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(AuthenticationStatus.Status.DENIED.toString(), responseJSON.getString("message"));
@@ -232,8 +237,8 @@ public class TraineeResourceTest {
 			saveTrainingSessionRequestJson.setHrz6Time(0.0);
 			saveTrainingSessionRequestJson.setHrz6Distance(0.0);
 			
-			response = traineeResource.saveFitnessTrainingSession(userid, accessToken, accessTokenType, saveTrainingSessionRequestJson);
-			System.out.println(response);
+			response = traineeResource.saveFitnessTrainingSession(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveTrainingSessionRequestJson);
+			//System.out.println(response);
 			responseJSON = new JSONObject(response);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(TrainingSessionErrors.INVALID_SPEED_DISTRIBUTION.toString(), responseJSON.getString("message"));
@@ -259,8 +264,8 @@ public class TraineeResourceTest {
 			saveTrainingSessionRequestJson.setHrz6Time(6.0);
 			saveTrainingSessionRequestJson.setHrz6Distance(1410.0);
 			
-			response = traineeResource.saveFitnessTrainingSession(userid, accessToken, accessTokenType, saveTrainingSessionRequestJson);
-			System.out.println(response);
+			response = traineeResource.saveFitnessTrainingSession(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveTrainingSessionRequestJson);
+			//System.out.println(response);
 			responseJSON = new JSONObject(response);
 			Assert.assertEquals("200", responseJSON.getString("status"));
 			
@@ -274,8 +279,8 @@ public class TraineeResourceTest {
 			saveTrainingSessionRequestJson.setStartTime(startTime.toString());
 			saveTrainingSessionRequestJson.setEndTime(endTime.toString());
 			
-			response = traineeResource.saveFitnessTrainingSession(userid, accessToken, accessTokenType, saveTrainingSessionRequestJson);
-			System.out.println(response);
+			response = traineeResource.saveFitnessTrainingSession(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveTrainingSessionRequestJson);
+			//System.out.println(response);
 			responseJSON = new JSONObject(response);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
@@ -300,7 +305,7 @@ public class TraineeResourceTest {
 		@Test
 		public void testSaveHeartrateTest() throws Exception{
 			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();
-			String responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			String responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
@@ -310,6 +315,7 @@ public class TraineeResourceTest {
 			String accessToken 		= "accessToken1";
 			String accessTokenType 	= "facebook";
 			Calendar cal = Calendar.getInstance();
+			/*need user data for authorization*/					
 			UserBean user = new UserBean();
 			user.setUserid(userid);
 			user.setAccessToken(accessToken);
@@ -341,7 +347,7 @@ public class TraineeResourceTest {
 			/*valid first resting heartrate*/
 			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 			saveHeartrateTestRequestJson.setHeartrate(60.0);			
-			responseString = traineeResource.saveHeartrateTest(userid, accessToken, accessTokenType, saveHeartrateTestRequestJson);
+			responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("200", responseJSON.getString("status"));
 			
@@ -352,7 +358,7 @@ public class TraineeResourceTest {
 			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 			saveHeartrateTestRequestJson.setHeartrate(60.0);
 			
-			responseString = traineeResource.saveHeartrateTest(userid, accessToken, accessTokenType, saveHeartrateTestRequestJson);
+			responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
@@ -360,7 +366,6 @@ public class TraineeResourceTest {
 			/*clean up*/
 			fitnessManager.clearTraineeData(userid);
 			userDao.deleteUser(userid);
-
 		}
 		
 //		@Test 

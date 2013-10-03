@@ -301,12 +301,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		
 		if (null != fitnessShapeIndexBean) {
 			String userid = fitnessShapeIndexBean.getUserid();
-			newShapeIndex = (
-				fitnessShapeIndexBean.getShapeIndex()
+			newShapeIndex = 
+				(fitnessShapeIndexBean.getShapeIndex()*getSpeedHeartrateFactor(userid))
 				+ getFitnessSupercompensationPoints(userid, timeAtConsideration)
 				+ getOrthostaticHeartrateFactor(userid)
-				- getFitnessDetrainingPenalty(userid, timeAtConsideration)				
-				)* getSpeedHeartrateFactor(userid);
+				- getFitnessDetrainingPenalty(userid, timeAtConsideration);
 		}else{
 			newShapeIndex = ShapeIndexAlgorithm.SHAPE_INDEX_INITIAL_VALUE;
 		}					
