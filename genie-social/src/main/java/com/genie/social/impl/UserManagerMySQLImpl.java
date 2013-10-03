@@ -38,23 +38,25 @@ public class UserManagerMySQLImpl implements UserManager{
 	}
 
 	public AuthenticationStatus authenticateRequest(String accessToken, String accessTokenType) {
-		AuthenticationStatus authStatus = null;
-		UserBean authenticatedUser = userDao.getUserInfoByAccessToken(accessToken);
-
-		if (authenticatedUser != null) {
-			authStatus = new AuthenticationStatus();
-			authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
-			authStatus.setAuthenticatedUser(authenticatedUser);
-		}
-		else if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)) {
-			authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
-			
-			if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
-				&& userDao.getUserInfoByEmail(authStatus.getAuthenticatedUser().getEmail()) == null) {
-				
-				authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+		AuthenticationStatus authStatus = new AuthenticationStatus();
+		authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+		if(null != accessToken && null != accessTokenType)
+		{
+			UserBean authenticatedUser = userDao.getUserInfoByAccessToken(accessToken);
+			if (authenticatedUser != null) {			
+				authStatus.setAuthenticationStatus(AuthenticationStatus.Status.APPROVED);
+				authStatus.setAuthenticatedUser(authenticatedUser);
 			}
-		}	
+			else if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)) {
+				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
+				
+				if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
+					&& userDao.getUserInfoByEmail(authStatus.getAuthenticatedUser().getEmail()) == null) {
+					
+					authStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+				}
+			}
+		}
 		return authStatus;
 	}
 

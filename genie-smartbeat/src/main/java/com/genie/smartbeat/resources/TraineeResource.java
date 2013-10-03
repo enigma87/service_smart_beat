@@ -208,8 +208,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 		 
 			Double shapeIndex = fitnessManager.getShapeIndex(fitnessManager.getRecentTrainingSessionId(userid));
 			ShapeIndexResponseJson shapeIndexResponseJson = new ShapeIndexResponseJson();
@@ -242,28 +241,26 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-	    if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
-         try{
-		   List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		   ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
-		   shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
-		   shapeIndexHistoryJson.setUserID(userID);
-		   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
-		 }catch(InvalidStartTimestampException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
-			log.info("failed getting Shape Index History for user " + userID + " due to InvalidStartTimeException");
-		 }catch(InvalidEndTimestampException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
-			log.info("failed getting Shape Index History for user " + userID + " due to InvalidEndTimeException");
-		 }catch(InvalidDurationException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
-			log.info("failed getting Shape Index History for user " + userID + " due to InvalidDurationException");			
-		 }catch(TimeException e){
-			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
-			log.info("failed getting Shape Index History for user " + userID + " due to TimeException");	
-		}
-		
+	    if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+	         try{
+			   List<FitnessShapeIndexBean> shapeIndexBeans = fitnessManager.getShapeIndexHistoryInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			   ShapeIndexHistoryResponseJson shapeIndexHistoryJson = new ShapeIndexHistoryResponseJson();
+			   shapeIndexHistoryJson.setShapeIndexes(shapeIndexBeans);
+			   shapeIndexHistoryJson.setUserID(userID);
+			   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), shapeIndexHistoryJson);
+			 }catch(InvalidStartTimestampException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed getting Shape Index History for user " + userID + " due to InvalidStartTimeException");
+			 }catch(InvalidEndTimestampException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed getting Shape Index History for user " + userID + " due to InvalidEndTimeException");
+			 }catch(InvalidDurationException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed getting Shape Index History for user " + userID + " due to InvalidDurationException");			
+			 }catch(TimeException e){
+				gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
+				log.info("failed getting Shape Index History for user " + userID + " due to TimeException");	
+			}		
 		}
 		else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
@@ -286,8 +283,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 
 			double[][] heartrateZones = fitnessManager.getHeartrateZones(userID);
 			HeartRateZoneResponseJson heartRateZoneJson = new HeartRateZoneResponseJson(); 
@@ -317,15 +313,14 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 			
            try{
-		   List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-		   TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
-		   trainingSessionIdRangeJson.setUserID(userID);
-		   trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
-		   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
+			   List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			   TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
+			   trainingSessionIdRangeJson.setUserID(userID);
+			   trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);
+			   gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionIdRangeJson);
            }catch(InvalidStartTimestampException e){
         	  gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
       		  log.info("Failed Getting TrainingSession IDs for user " + userID + " due to InvalidStartTimestampException"); 
@@ -361,14 +356,13 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
             try{
-			List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
-			TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
-			trainingSessionRangeJson.setUserID(userID);
-			trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
+				List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+				TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
+				trainingSessionRangeJson.setUserID(userID);
+				trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
             }catch(InvalidStartTimestampException e){
             	gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
     			log.info("failed getting fitness training sessions for user " + userID + " due to InvalidStartTimestampException");
@@ -381,8 +375,7 @@ public class TraineeResource
     		}catch(TimeException e){
     			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
     			log.info("failed getting fitness training sessions for user " + userID + " due to TimeException");
-    		}
-    		
+    		}    		
 		}
 		else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
@@ -405,8 +398,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 
 			TrainingSessionByIdResponseJson trainingSessionResponseJson = new TrainingSessionByIdResponseJson();
 			FitnessTrainingSessionBean trainingSessionBean = fitnessManager.getTrainingSessionById(trainingSessionID);
@@ -438,8 +430,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 		
 			saveTrainingSessionRequestJson.setUserid(userid);
 			FitnessTrainingSessionBean fitnessTrainingSessionBean = saveTrainingSessionRequestJson.getAsTrainingSessionBean();
@@ -510,8 +501,7 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 
 			if (null != startTimeStamp
 					&& null != endTimeStamp) {
@@ -549,15 +539,14 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
  
 		   try{
-			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
-		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		    heartrateTestsJson.setUserId(userID);
-		    heartrateTestsJson.setHeartrateTests(heartrateTests);
-		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+				List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, startTimeStamp, endTimeStamp);
+			    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			    heartrateTestsJson.setUserId(userID);
+			    heartrateTestsJson.setHeartrateTests(heartrateTests);
+			    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
 		   }catch(TimeException e){
 			   gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
 			log.info("failed saving fitness training session for user " + userID + " due to TimeException");
@@ -584,15 +573,14 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 			
            try{ 
-			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
-		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		    heartrateTestsJson.setUserId(userID);
-		    heartrateTestsJson.setHeartrateTests(heartrateTests);
-		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+				List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, startTimeStamp, endTimeStamp);
+			    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			    heartrateTestsJson.setUserId(userID);
+			    heartrateTestsJson.setHeartrateTests(heartrateTests);
+			    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
             }catch(TimeException e){
  			   gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TimeErrors.INVALID_TIME.toString());
  				log.info("failed saving fitness training session for user " + userID + " due to TimeException");
@@ -617,15 +605,14 @@ public class TraineeResource
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 		
-		if (null != authStatus 
-				&& authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
-           try{
-			List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
-		    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
-		    heartrateTestsJson.setUserId(userID);
-		    heartrateTestsJson.setHeartrateTests(heartrateTests);
-		    gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
-			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
+		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
+           
+			try{
+				List<FitnessHeartrateTestBean> heartrateTests = fitnessManager.getFitnessHeartrateTestsByTypeInTimeInterval(userID, ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimeStamp, endTimeStamp);
+			    HeartrateTestByRangeResponseJson heartrateTestsJson = new HeartrateTestByRangeResponseJson();
+			    heartrateTestsJson.setUserId(userID);
+			    heartrateTestsJson.setHeartrateTests(heartrateTests);			    
+				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), heartrateTestsJson);
    		   }catch(InvalidStartTimestampException e){
    			 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());
 			 log.info("failed getting orthostatic Heartrate tests for user " + userID + " due to InvalidStartTimestampException"); 

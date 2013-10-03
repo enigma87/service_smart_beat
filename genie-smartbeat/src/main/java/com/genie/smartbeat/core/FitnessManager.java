@@ -12,10 +12,6 @@ import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
-import com.genie.smartbeat.core.exceptions.time.InvalidDurationException;
-import com.genie.smartbeat.core.exceptions.time.InvalidEndTimestampException;
-import com.genie.smartbeat.core.exceptions.time.InvalidStartTimestampException;
-import com.genie.smartbeat.core.exceptions.time.InvalidTimestampException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
 
 /**
