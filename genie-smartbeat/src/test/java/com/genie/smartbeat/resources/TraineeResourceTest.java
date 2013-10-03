@@ -282,8 +282,9 @@ public class TraineeResourceTest {
 		
 		@Test
 		public void testSaveHeartrateTest() throws Exception{
+			userDao.createUser(user);
 			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();
-			String responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			String responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
@@ -294,27 +295,16 @@ public class TraineeResourceTest {
 			Timestamp timeOfRecord = new Timestamp(cal.getTimeInMillis());
 			saveHeartrateTestRequestJson.setTimeOfRecord(timeOfRecord.toString());
 			
-			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(HeartrateTestErrors.INVALID_HEARTRATE.toString(), responseJSON.getString("message"));
 			
-			/*need user data for getting heartrate zones in response*/
-			UserBean user = new UserBean();
-			user.setUserid(userid);
-			user.setAccessToken("accessToken1");
-			user.setAccessTokenType("facebook");
-			user.setFirstName("Chitra");
-			user.setEmail("chitra@acme.com");		
-			cal.add(Calendar.YEAR, -25);
-			user.setDob(new java.sql.Date(cal.getTimeInMillis()));
-			user.setGender(UserManager.GENDER_FEMALE);
-			userDao.createUser(user);
 			
 			/*valid first resting heartrate*/
 			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 			saveHeartrateTestRequestJson.setHeartrate(60.0);			
-			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("200", responseJSON.getString("status"));
 			
@@ -325,14 +315,14 @@ public class TraineeResourceTest {
 			saveHeartrateTestRequestJson.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
 			saveHeartrateTestRequestJson.setHeartrate(60.0);
 			
-			responseString = traineeResource.saveHeartrateTest(userid, null, null, saveHeartrateTestRequestJson);
+			responseString = traineeResource.saveHeartrateTest(user.getUserid(), user.getAccessToken(), user.getAccessTokenType(), saveHeartrateTestRequestJson);
 			responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
 			Assert.assertEquals(TimeErrors.INVALID_IN_CHRONOLOGY.toString(), responseJSON.getString("message"));
 			
 			/*clean up*/
 			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);
-
+			userDao.deleteUser(user.getUserid());
 		}
 		
 		@Test 
