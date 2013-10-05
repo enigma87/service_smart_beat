@@ -48,7 +48,7 @@ public class UserManagerMySQLImpl implements UserManager{
 				authStatus.setAuthenticatedUser(authenticatedUser);
 			}
 			else if (accessTokenType.equals(UserBean.ACCESS_TOKEN_TYPE_FACEBOOK)) {
-				authStatus = GraphAPI.getUserAuthenticationStatus(accessToken);
+				GraphAPI.determineUserAuthenticationStatus(authStatus,accessToken);
 				
 				if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)
 					&& userDao.getUserInfoByEmail(authStatus.getAuthenticatedUser().getEmail()) == null) {
