@@ -17,7 +17,6 @@ import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
-import com.genie.smartbeat.beans.FitnessSpeedHeartRateBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
@@ -33,7 +32,6 @@ import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
-import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
@@ -1233,8 +1231,7 @@ public class FitnessManagerMySQLImplTest {
 	
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		FitnessHomeostasisIndexDAO homeostasisIndexDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
-		FitnessShapeIndexDAO  fitnessShapeIndexDAO  = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");
-		FitnessSpeedHeartRateDAO  fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)smartbeatContext.getBean("fitnessSpeedHeartRateDAO");
+		FitnessShapeIndexDAO  fitnessShapeIndexDAO  = (FitnessShapeIndexDAO)smartbeatContext.getBean("fitnessShapeIndexDAO");		
 		
 		/*Sandra Session 1*/
 		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
@@ -1274,10 +1271,6 @@ public class FitnessManagerMySQLImplTest {
 		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
 		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(sessionEndTime));
 		
-		FitnessSpeedHeartRateBean fitnessSpeedHeartRateBean =  new FitnessSpeedHeartRateBean();
-		fitnessSpeedHeartRateBean.setUserid(userid);
-		fitnessSpeedHeartRateBean.setCurrentVdot(46.3);
-		
 		FitnessShapeIndexBean fitnessShapeIndexBean = new FitnessShapeIndexBean();
 		fitnessShapeIndexBean.setUserid(userid);
 		fitnessShapeIndexBean.setShapeIndex(100.0);
@@ -1286,7 +1279,6 @@ public class FitnessManagerMySQLImplTest {
 		
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
-		fitnessSpeedHeartRateDAO.createSpeedHeartRateModel(fitnessSpeedHeartRateBean);
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean);
 		
 		/*Validate shape index before the arrival of next training session*/
@@ -1330,8 +1322,7 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertEquals(100.13, fitnessManagerMySQLImpl.getShapeIndex("test1", fitnessTrainingSessionBean));
 		
 		/*Cleanup*/
-	    fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
-	    fitnessSpeedHeartRateDAO.deleteSpeedHeartRateModelByUserid(userid);
+	    fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);	    
 	    homeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);
 	    fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
 	    userDao.deleteUser(userid);

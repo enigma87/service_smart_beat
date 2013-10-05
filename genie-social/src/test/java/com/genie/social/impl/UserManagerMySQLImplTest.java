@@ -155,7 +155,9 @@ public class UserManagerMySQLImplTest {
 		// case 1.b user exists
 		usMgr.registerUser(userFb);
 		userDao.updateUser(userFb);
-		AuthenticationStatus fbAuthStatus = GraphAPI.getUserAuthenticationStatus(userFb.getAccessToken());
+		AuthenticationStatus fbAuthStatus = new AuthenticationStatus();
+		fbAuthStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
+		GraphAPI.determineUserAuthenticationStatus(fbAuthStatus,userFb.getAccessToken());
 		authStatus = userManagerMySQLImpl.authenticateRequest(userFb.getAccessToken(), UserBean.ACCESS_TOKEN_TYPE_FACEBOOK);
 		Assert.assertEquals(fbAuthStatus.getAuthenticationStatus(), authStatus.getAuthenticationStatus());
 		Assert.assertNotNull(authStatus.getAuthenticatedUser());

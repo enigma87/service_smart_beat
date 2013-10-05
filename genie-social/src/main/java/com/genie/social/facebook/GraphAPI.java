@@ -43,10 +43,9 @@ public class GraphAPI {
 	private static final String VAL_GENDER_FEMALE		= "female";
 	private static final String VAL_GENDER_MALE			= "male";
 
-	public static AuthenticationStatus getUserAuthenticationStatus(String accessToken) {
+	public static void determineUserAuthenticationStatus(AuthenticationStatus authenticationStatus, String accessToken) {
 		FacebookClient facebookClient = null;
-		UserBean user = null;
-		AuthenticationStatus authenticationStatus = new AuthenticationStatus();
+		UserBean user = null;		
 		try{
 			facebookClient = new DefaultFacebookClient(accessToken);
 			com.restfb.types.User facebookUser = facebookClient.fetchObject("me", com.restfb.types.User.class);
@@ -75,8 +74,7 @@ public class GraphAPI {
 		}catch(FacebookOAuthException e){
 			authenticationStatus.setAuthenticationStatus(AuthenticationStatus.Status.DENIED);
 			authenticationStatus.setAuthenticatedUser(null);
-		}
-		return authenticationStatus;
+		}		
 	}
 	
 	/*section - oauth*/
