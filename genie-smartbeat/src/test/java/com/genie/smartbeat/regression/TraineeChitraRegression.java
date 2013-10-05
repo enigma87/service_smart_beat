@@ -431,7 +431,7 @@ public class TraineeChitraRegression extends JerseyTest{
 		JSONObject getShapeIndexObj6 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex6 = getShapeIndexObj6.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex6.getString("userid"));
-		//Assert.assertEquals(98.61, getShapeIndex6.getDouble("shapeIndex"));
+		Assert.assertEquals(98.73, getShapeIndex6.getDouble("shapeIndex"));
 	    
 		/*Save Resting and Orthostatic Heart Rate test day 7*/
 		cal.add(Calendar.DATE, 1);
@@ -488,7 +488,7 @@ public class TraineeChitraRegression extends JerseyTest{
 	    JSONObject getShapeIndexObj9 = getShapeIndex.get(JSONObject.class);
 		JSONObject getShapeIndex9 = getShapeIndexObj9.getJSONObject("obj");
 		Assert.assertEquals(userId, getShapeIndex9.getString("userid"));
-		Assert.assertEquals(99.21, getShapeIndex9.getDouble("shapeIndex"));
+		Assert.assertEquals(96.76, getShapeIndex9.getDouble("shapeIndex"));
 	    
 
 		

@@ -637,6 +637,10 @@ public class TraineeResourceTest {
 			String responseString = traineeResource.getRecoveryTime(userid, null, null);
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
+			
+			responseString = traineeResource.getRecoveryTime(null, null, null);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
 		
 			Calendar cal = Calendar.getInstance();
 			UserBean user = new UserBean();
@@ -725,7 +729,7 @@ public class TraineeResourceTest {
 			fitnessHomeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 			
 			/*Get recovery time response*/
-			responseString = traineeResource.getRecoveryTime(userid, "accessToken", "accessTokenType");
+			responseString = traineeResource.getRecoveryTime(userid, "accessToken1", "facebook");
 			responseJSON = new JSONObject(responseString);
 			JSONObject dataJson = new JSONObject(responseJSON.get("obj").toString());
 			String responseUserId = dataJson.getString("userId");
