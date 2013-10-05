@@ -454,7 +454,7 @@ public class TraineeResourceTest {
 			Timestamp startTimeStamp = new Timestamp(cal.getTimeInMillis());
 			cal.add(Calendar.DATE, +5);
 			Timestamp endTimeStamp = new Timestamp(cal.getTimeInMillis());
-			System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
+			//System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
 
 			String responseString = traineeResource.getThresholdHeartrateTestsInInterval(user.getUserid(), startTimeStamp, endTimeStamp, accessToken, accessTokenType);
 			JSONObject jsonResponse = new JSONObject(responseString);
@@ -520,14 +520,14 @@ public class TraineeResourceTest {
 			Timestamp startTimeStamp = new Timestamp(cal.getTimeInMillis());
 			cal.add(Calendar.DATE, +5);
 			Timestamp endTimeStamp = new Timestamp(cal.getTimeInMillis());
-			System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
+			//System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
 
-			String responseString = traineeResource.getMaximalHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, accessToken, accessTokenType);
+			String responseString = traineeResource.getMaximalHeartrateTestsInInterval(user.getUserid(), startTimeStamp, endTimeStamp, accessToken, accessTokenType);
 			JSONObject jsonResponse = new JSONObject(responseString);
 			JSONObject dataJson = new JSONObject(jsonResponse.get("obj").toString());
 			JSONArray heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
 
-			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertEquals(user.getUserid(), dataJson.get("userId"));
 			Assert.assertTrue(heartrateTestsJson.isNull(0));
 			
 			FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
@@ -537,7 +537,7 @@ public class TraineeResourceTest {
 			fitnessHeartrateTestBean1.setHeartrateType(2);
 			cal.add(Calendar.DATE, -3);
 			fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 5 * 3600 * 1000));
-			fitnessHeartrateTestBean1.setUserid("user1");
+			fitnessHeartrateTestBean1.setUserid(user.getUserid());
 			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 			
 			FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
@@ -546,18 +546,18 @@ public class TraineeResourceTest {
 			fitnessHeartrateTestBean2.setHeartrateTestId("user1test2");
 			fitnessHeartrateTestBean2.setHeartrateType(2);
 			fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 2 * 3600 * 1000));
-			fitnessHeartrateTestBean2.setUserid("user1");
+			fitnessHeartrateTestBean2.setUserid(user.getUserid());
 			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
 
-			responseString = traineeResource.getMaximalHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, accessToken, accessTokenType);
+			responseString = traineeResource.getMaximalHeartrateTestsInInterval(user.getUserid(), startTimeStamp, endTimeStamp, accessToken, accessTokenType);
 			jsonResponse = new JSONObject(responseString);
 			dataJson = new JSONObject(jsonResponse.get("obj").toString());
 			heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
 			
-			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertEquals(user.getUserid(), dataJson.get("userId"));
 			Assert.assertNotNull(heartrateTestsJson.get(0));
 
-			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(user.getUserid());
 			
 			/*clean up*/
 			fitnessManager.clearTraineeData(userid);
@@ -587,14 +587,14 @@ public class TraineeResourceTest {
 			Timestamp startTimeStamp = new Timestamp(cal.getTimeInMillis());
 			cal.add(Calendar.DATE, +5);
 			Timestamp endTimeStamp = new Timestamp(cal.getTimeInMillis());
-			System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
+			//System.out.println(startTimeStamp.toString() + "   " + endTimeStamp.toString());
 
-			String responseString = traineeResource.getOrthostaticHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, accessToken, accessTokenType);
+			String responseString = traineeResource.getOrthostaticHeartrateTestsInInterval(user.getUserid(), startTimeStamp, endTimeStamp, accessToken, accessTokenType);
 			JSONObject jsonResponse = new JSONObject(responseString);
 			JSONObject dataJson = new JSONObject(jsonResponse.get("obj").toString());
 			JSONArray heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
 
-			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertEquals(user.getUserid(), dataJson.get("userId"));
 			Assert.assertTrue(heartrateTestsJson.isNull(0));
 			
 			FitnessHeartrateTestBean fitnessHeartrateTestBean1 = new FitnessHeartrateTestBean();
@@ -604,7 +604,7 @@ public class TraineeResourceTest {
 			fitnessHeartrateTestBean1.setHeartrateType(3);
 			cal.add(Calendar.DATE, -3);
 			fitnessHeartrateTestBean1.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 5 * 3600 * 1000));
-			fitnessHeartrateTestBean1.setUserid("user1");
+			fitnessHeartrateTestBean1.setUserid(user.getUserid());
 			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean1);
 			
 			FitnessHeartrateTestBean fitnessHeartrateTestBean2 = new FitnessHeartrateTestBean();
@@ -613,18 +613,18 @@ public class TraineeResourceTest {
 			fitnessHeartrateTestBean2.setHeartrateTestId("user1test2");
 			fitnessHeartrateTestBean2.setHeartrateType(3);
 			fitnessHeartrateTestBean2.setTimeOfRecord(new Timestamp(cal.getTimeInMillis() - 2 * 3600 * 1000));
-			fitnessHeartrateTestBean2.setUserid("user1");
+			fitnessHeartrateTestBean2.setUserid(user.getUserid());
 			fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean2);
 
-			responseString = traineeResource.getOrthostaticHeartrateTestsInInterval("user1", startTimeStamp, endTimeStamp, accessToken, accessTokenType);
+			responseString = traineeResource.getOrthostaticHeartrateTestsInInterval(user.getUserid(), startTimeStamp, endTimeStamp, accessToken, accessTokenType);
 			jsonResponse = new JSONObject(responseString);
 			dataJson = new JSONObject(jsonResponse.get("obj").toString());
 			heartrateTestsJson = dataJson.getJSONArray("heartrateTests");
 			
-			Assert.assertEquals("user1", dataJson.get("userId"));
+			Assert.assertEquals(user.getUserid(), dataJson.get("userId"));
 			Assert.assertNotNull(heartrateTestsJson.get(0));
 
-			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+			fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(user.getUserid());
 			
 			/*clean up*/
 			fitnessManager.clearTraineeData(userid);
