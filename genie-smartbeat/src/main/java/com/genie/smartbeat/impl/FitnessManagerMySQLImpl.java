@@ -408,6 +408,13 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			if(ShapeIndexAlgorithm.MINIMUM_RESTING_HEARTRATE > fitnessHeartrateTestBean.getHeartrate()){
 				throw new InvalidHeartrateException();
 			}
+			
+			FitnessHeartrateTestBean restingHeartrateTestBean = fitnessHeartrateTestDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			if(null != restingHeartrateTestBean && restingHeartrateTestBean.getHeartrate() < fitnessHeartrateTestBean.getHeartrate()){
+				/*hold this logic for now*/
+				log.info("resting heart rate for user " + fitnessHeartrateTestBean.getUserid() + "greater than recorded minimum");
+				return;
+			}
 		}			
 		/*threshold heart rate validation*/
 		if(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD.equals(fitnessHeartrateTestBean.getHeartrateType())){

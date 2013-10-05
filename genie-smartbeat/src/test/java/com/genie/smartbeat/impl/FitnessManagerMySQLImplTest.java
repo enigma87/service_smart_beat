@@ -322,6 +322,21 @@ public class FitnessManagerMySQLImplTest {
 			Assert.fail("Unexpected HeartrateTestException");
 		}		
 		
+		/*invalid higher second resting heartrate*/
+		fitnessHeartrateTestBean.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean.setHeartrate(65.0);
+		
+		try{
+			fitnessManagerMySQLImpl.saveHeartrateTest(fitnessHeartrateTestBean);
+			FitnessHeartrateTestBean localhrtBean = hrtDAO.getRecentHeartrateTestForUserByType(userid, ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+			Assert.assertEquals(Math.round(60.0*100), Math.round(localhrtBean.getHeartrate()*100));
+			
+		}catch(TimeException e){
+			Assert.fail("Unexpected TimeException");
+		}catch(HeartrateTestException e){
+			Assert.fail("Unexpected HeartrateTestException");
+		}
+		
 		/*valid second resting heartrate*/
 		cal.add(Calendar.HOUR, 1);
 		timeOfRecord = new Timestamp(cal.getTimeInMillis());
