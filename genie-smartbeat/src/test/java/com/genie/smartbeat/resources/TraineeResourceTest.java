@@ -29,7 +29,6 @@ import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
-import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
@@ -51,8 +50,7 @@ public class TraineeResourceTest {
 		private static UserDao userDao;
 		private static FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
 		private static FitnessHeartrateTestDAO fitnessHeartrateTestDAO;
-		private static FitnessShapeIndexDAO fitnessShapeIndexDAO;
-		private static FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
+		private static FitnessShapeIndexDAO fitnessShapeIndexDAO;		
 		private static FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 		private static TraineeResource traineeResource;
 		private static UserManagerMySQLImpl userManager;
@@ -79,8 +77,7 @@ public class TraineeResourceTest {
 			userDao = (UserDao)applicationContext.getBean("userDao");
 			fitnessHomeostasisIndexDAO = (FitnessHomeostasisIndexDAO)applicationContext.getBean("fitnessHomeostasisIndexDAO");
 			fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO) applicationContext.getBean("fitnessHeartrateTestDAO");
-			fitnessShapeIndexDAO = (FitnessShapeIndexDAO)applicationContext.getBean("fitnessShapeIndexDAO");
-			fitnessSpeedHeartRateDAO = (FitnessSpeedHeartRateDAO)applicationContext.getBean("fitnessSpeedHeartRateDAO");
+			fitnessShapeIndexDAO = (FitnessShapeIndexDAO)applicationContext.getBean("fitnessShapeIndexDAO");			
 			fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO)applicationContext.getBean("fitnessTrainingSessionDAO");
 			traineeResource = new TraineeResource();
 			traineeResource.setFitnessManager((FitnessManagerMySQLImpl) applicationContext.getBean("fitnessManagerMySQLImpl"));

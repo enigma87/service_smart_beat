@@ -29,7 +29,6 @@ import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
 import com.genie.smartbeat.dao.FitnessShapeIndexDAO;
-import com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO;
 import com.genie.smartbeat.dao.FitnessTrainingSessionDAO;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.DoubleValueFormatter;
@@ -48,7 +47,6 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	private UserManager userManager;
 	private FitnessTrainingSessionDAO fitnessTrainingSessionDAO;
 	private FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO;
-	private FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO;
 	private FitnessShapeIndexDAO fitnessShapeIndexDAO;
 	private FitnessHeartrateTestDAO fitnessHeartrateTestDAO;	
 	
@@ -77,16 +75,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 			FitnessHomeostasisIndexDAO fitnessHomeostasisIndexDAO) {
 		this.fitnessHomeostasisIndexDAO = fitnessHomeostasisIndexDAO;
 	}
-	
-	public FitnessSpeedHeartRateDAO getFitnessSpeedHeartRateDAO() {
-		return fitnessSpeedHeartRateDAO;
-	}
-	
-	public void setFitnessSpeedHeartRateDAO(
-			FitnessSpeedHeartRateDAO fitnessSpeedHeartRateDAO) {
-		this.fitnessSpeedHeartRateDAO = fitnessSpeedHeartRateDAO;
-	}
-	
+		
 	public FitnessShapeIndexDAO getFitnessShapeIndexDAO() {
 		return fitnessShapeIndexDAO;
 	}

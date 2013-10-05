@@ -32,10 +32,6 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 	
-    <bean id="fitnessSpeedHeartRateDAO" class="com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-	
 	<bean id="fitnessHeartrateTestDAO" class="com.genie.smartbeat.dao.FitnessHeartrateTestDAO">
 		<property name="dataSource" ref="dataSource" />
 	</bean>		
@@ -44,7 +40,6 @@
 	    <property name="userManager" ref="userManagerMySQLImpl" />		
 		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
 		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
-	    <property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />
 	    <property name="fitnessShapeIndexDAO" ref="fitnessShapeIndexDAO" />
 	    <property name="fitnessHeartrateTestDAO" ref="fitnessHeartrateTestDAO" />	    
 	</bean>

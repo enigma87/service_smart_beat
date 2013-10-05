@@ -80,17 +80,6 @@ CREATE TABLE genie.`fitness_homeostasis_index_model` (
 
 delimiter $$
 
-CREATE TABLE genie.`fitness_speed_heartrate_model` (
-  `userid` varchar(128) NOT NULL,
-  `current_vdot` DOUBLE DEFAULT NULL,
-  `previous_vdot` DOUBLE DEFAULT NULL,   
-  PRIMARY KEY(`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8$$
-
-delimiter $$
-
-delimiter $$
-
 CREATE TABLE genie.`fitness_heartrate_test` (
   `userid` varchar(128) NOT NULL,
   `heartrate_test_id` varchar(128) NOT NULL,
