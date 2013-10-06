@@ -14,6 +14,7 @@ import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
@@ -479,11 +480,11 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return heartrateZones;
 	}
 	
-	public List<String> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException {
-		List<String> trainingSessionIdList = null;
+	public List<FitnessTrainingSessionIdBean> getTrainingSessionIdsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException {
+		List<FitnessTrainingSessionIdBean> trainingSessionIds = null;
 		if (null != startTimestamp && null != endTimestamp ){
 			if (endTimestamp.getTime() > startTimestamp.getTime()){
-		       trainingSessionIdList = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
+		       trainingSessionIds = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
 			}else{
 				throw new InvalidDurationException();
 			}
@@ -494,7 +495,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				throw new InvalidEndTimestampException();
 			}
 		}
-		return trainingSessionIdList;
+		return trainingSessionIds;
 	}
 
 	public List<FitnessTrainingSessionBean> getTrainingSessionsInTimeInterval(String userID, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException{	

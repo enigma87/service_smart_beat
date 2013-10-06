@@ -29,6 +29,7 @@ import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.errors.AccessTokenError;
 import com.genie.smartbeat.core.errors.HeartrateTestErrors;
@@ -316,7 +317,7 @@ public class TraineeResource
 		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
 			
            try{
-			   List<String> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
+			   List<FitnessTrainingSessionIdBean> sessionIDs= fitnessManager.getTrainingSessionIdsInTimeInterval(userID, startTimeStamp, endTimeStamp);
 			   TrainingSessionIdsByRangeResponseJson trainingSessionIdRangeJson = new TrainingSessionIdsByRangeResponseJson();
 			   trainingSessionIdRangeJson.setUserID(userID);
 			   trainingSessionIdRangeJson.setTrainingSessionIDs(sessionIDs);

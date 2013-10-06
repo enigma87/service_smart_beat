@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 
 /**
  * @author dhasarathy
@@ -121,20 +122,23 @@ public class FitnessTrainingSessionDAO {
 		 return trainingSessions;
 	}
 
-	public List<String>  getFitnessTrainingSessionIdsByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
-		List <String> trainingSessionIDs = new ArrayList<String>();
+	public List<FitnessTrainingSessionIdBean>  getFitnessTrainingSessionIdsByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
+		List <FitnessTrainingSessionIdBean> trainingSessionIds = new ArrayList<FitnessTrainingSessionIdBean>();
 		
 		List<FitnessTrainingSessionBean>  trainingSessions = new JdbcTemplate(this.getDataSource()).query(QUERY_SELECT_TIME_RANGE,
 				ParameterizedBeanPropertyRowMapper.newInstance(FitnessTrainingSessionBean.class),
 				userID, startTimestamp.toString(), endTimestamp.toString());
 		
 		 for (Iterator<FitnessTrainingSessionBean> iter = trainingSessions.iterator(); iter.hasNext();) {
-			
 			FitnessTrainingSessionBean trainingSessionBean=  iter.next();
-			trainingSessionIDs.add(trainingSessionBean.getTrainingSessionId());
+			FitnessTrainingSessionIdBean fitnessTrainingSessionIdBean = new FitnessTrainingSessionIdBean();
+			fitnessTrainingSessionIdBean.setTrainingSessionId(trainingSessionBean.getTrainingSessionId());
+			fitnessTrainingSessionIdBean.setStartTime(trainingSessionBean.getStartTime());
+			fitnessTrainingSessionIdBean.setEndTime(trainingSessionBean.getEndTime());
+			trainingSessionIds.add(fitnessTrainingSessionIdBean);
 		}
 		
-		return trainingSessionIDs;
+		return trainingSessionIds;
 	}
 	
 	private static final String DELETE_SESSION_USING_TRAINING_SESSION_ID = "DELETE FROM " + TABLE_FITNESS_TRAINING_SESSION + " WHERE " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_TRAINING_SESSION_ID] + " =?";

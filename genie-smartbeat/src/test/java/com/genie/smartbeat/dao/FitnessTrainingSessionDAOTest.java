@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNull;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -17,6 +16,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.genie.smartbeat.TestSetup;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 
 /**
@@ -125,12 +125,14 @@ public class FitnessTrainingSessionDAOTest {
 	@Test
 	public void testGetFitnessTrainingSessionIdsByTimeRange() {
 		
-			List<String>  sessions = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-04 00:00:00"), Timestamp.valueOf("2013-07-05 23:59:59"));
-			for (Iterator<String> i = sessions.iterator(); i.hasNext();) {
-				i.next();
-				//String id = i.next();
-				//System.out.println(id);
-			}
+		List<FitnessTrainingSessionIdBean>  sessionIds = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-03 00:00:00"), Timestamp.valueOf("2013-08-05 00:00:00"));
+	    Assert.assertEquals(5, sessionIds.size());
+	    Assert.assertEquals("1",sessionIds.get(0).getTrainingSessionId());
+	    Assert.assertEquals("2",sessionIds.get(1).getTrainingSessionId());
+	    Assert.assertEquals("3",sessionIds.get(2).getTrainingSessionId());
+	    Assert.assertEquals("4",sessionIds.get(3).getTrainingSessionId());
+	    Assert.assertEquals("5",sessionIds.get(4).getTrainingSessionId());
+
 	}
 	
 	public static void setupTestData() {

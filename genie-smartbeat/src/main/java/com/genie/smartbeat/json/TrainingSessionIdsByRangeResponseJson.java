@@ -2,9 +2,11 @@ package com.genie.smartbeat.json;
 
 import java.util.List;
 
+import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
+
 public class TrainingSessionIdsByRangeResponseJson {
 	private String userID;
-	private List<String> trainingSessionIDs;
+	private List<FitnessTrainingSessionIdBean> trainingSessionIDs;
 	
 	public String getUserID() {
 		return this.userID;
@@ -14,11 +16,11 @@ public class TrainingSessionIdsByRangeResponseJson {
 		this.userID = userID;
 	}
 	
-	public List<String> getTrainingSessionIDs() {
+	public List<FitnessTrainingSessionIdBean> getTrainingSessionIDs() {
 		return this.trainingSessionIDs;
 	}
 	
-	public void setTrainingSessionIDs(List<String> trainingSessionIDs) {
+	public void setTrainingSessionIDs(List<FitnessTrainingSessionIdBean> trainingSessionIDs) {
 		this.trainingSessionIDs = trainingSessionIDs;
 	}
 }
