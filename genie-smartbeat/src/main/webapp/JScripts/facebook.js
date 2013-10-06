@@ -1,3 +1,10 @@
+var Zone1Time = [1.0];
+var Zone2Time = [2.0];
+var Zone3Time = [2.0];
+var Zone4Time = [3.0];
+var Zone5Time = [4.0];
+var line1 = [['2013-07-06 18:23:10', 4]];
+
 window.fbAsyncInit = function () {
     FB.init({
         appId: '333643156765163', // App ID
@@ -72,13 +79,12 @@ function getShapelinks() {
 }
 
 function getShapeChart() {
-    var line1 = [['2013-07-06 18:23:10', 4]];
     line1.pop();
     $.getJSON($("#shapeindexrangelink").val(), function (response) {
         for (var i = 0; i < response.obj.shapeIndexes.length - 1; i++) {
             var item = response.obj.shapeIndexes[i];
             var temp = [item.timeOfRecord, item.shapeIndex];
-            alert(item.timeOfRecord +" && "+ item.shapeIndex);
+            alert(item.timeOfRecord + " && " + item.shapeIndex);
             line1.push(temp)
         }
     });
@@ -103,38 +109,45 @@ function getShapeChart() {
 
 
 function getlastWeekSessionHistory() {
+    Zone1Time.pop();
+    Zone2Time.pop();
+    Zone3Time.pop();
+    Zone4Time.pop();
+    Zone5Time.pop();
+
     $.getJSON($("#lastWeekSessionHistorylink").val(), function (response) {
-        var html = "<table style='border-spacing:0px;'>";
+        var html = "<table style='border-spacing:0px; width:1000px;'>";
         html += "<tr style='background-color:#0094ff; color:#FFFFFF;text-align:center;'>";
-        html += "<td>startTime</td>";
-        html += "<td>endTime</td>";
-        html += "<td>hrz1Time</td>";
-        html += "<td>hrz2Time</td>";
-        html += "<td>hrz3Time</td>";
-        html += "<td>hrz4Time</td>";
-        html += "<td>hrz5Time</td>";
-        html += "<td>hrz6Time</td>";
-        html += "<td>hrz1Speed</td>";
-        html += "<td>hrz2Speed</td>";
-        html += "<td>hrz3Speed</td>";
-        html += "<td>hrz4Speed</td>";
-        html += "<td>hrz5Speed</td>";
-        html += "<td>hrz6Speed</td>";
-        html += "<td>surfaceIndex</td>";
-        html += "<td>vdot</td>";
-        html += "<td>healthPerceptionIndex</td>";
-        html += "<td>muscleStatePerceptionIndex</td>";
-        html += "<td>sessionStressPerceptionIndex</td>";
-        html += "<td>averageAltitude</td>";
-        html += "<td>extraLoad</td>";
-        html += "<td>validityStatus</td>";
-        html += "<td>asDoubleValueAverageAltitude</td>";
-        html += "<td>validForTableInsert</td>";
-        html += "<td>sessionDuration</td>";
-        html += "<td>asDoubleValueExtraLoad</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Start Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>End Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz1 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz2 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz3 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz4 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz5 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz6 Time</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz1 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz2 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz3 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz4 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz5 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>hrz6 Speed</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Surface Index</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>vdot</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Health Perception Index</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Muscle State Perception Index</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Session Stress Perception Index</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Average Altitude</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Extra Load</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Validity Status</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>As Double Value Average Altitude</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Valid For Table Insert</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>Session Duration</td>";
+        html += "<td style='border:1px solid #BBBBBB;'>As Double Value Extra Load</td>";
         html += "</tr>";
 
-        for (var i = 0; i < response.obj.trainingSessionBeans.length - 1; i++) {
+        //alert(response.obj.trainingSessionBeans.length);
+        for (var i = 0; i < response.obj.trainingSessionBeans.length; i++) {
             var item = response.obj.trainingSessionBeans[i];
             html += "<tr>";
             html += "<td style='border:1px solid #0094ff;'> " + item.startTime + "</td>";
@@ -164,7 +177,56 @@ function getlastWeekSessionHistory() {
             html += "<td style='border:1px solid #0094ff;'> " + item.sessionDuration + "</td>";
             html += "<td style='border:1px solid #0094ff;'> " + item.asDoubleValueExtraLoad + "</td>";
             html += "</tr>";
+
+            Zone1Time.push(item.hrz1Time);
+            Zone2Time.push(item.hrz2Time);
+            Zone3Time.push(item.hrz3ime);
+            Zone4Time.push(item.hrz4Time);
+            Zone5Time.push(item.hrz5Time);
         }
         $("#dv_lastWeekSessionHistory").html(html);
     });
+    //alert(hrz1Time.length);
+
+    plot3 = $.jqplot('chart3', [Zone1Time, Zone2Time, Zone3Time, Zone4Time, Zone5Time], {
+        // Tell the plot to stack the bars.
+        stackSeries: true,
+        captureRightClick: true,
+        seriesDefaults: {
+            renderer: $.jqplot.BarRenderer,
+            rendererOptions: {
+                // Put a 30 pixel margin between bars.
+                barMargin: 30,
+                // Highlight bars when mouse button pressed.
+                // Disables default highlighting on mouse over.
+                highlightMouseDown: true
+            },
+            pointLabels: { show: true }
+        },
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer
+            },
+            yaxis: {
+                // Don't pad out the bottom of the data range.  By default,
+                // axes scaled as if data extended 10% above and below the
+                // actual range to prevent data points right on grid boundaries.
+                // Don't want to do that here.
+                padMin: 0
+            }
+        },
+        legend: {
+            show: true,
+            location: 'e',
+            placement: 'outside'
+        }
+    });
+    // Bind a listener to the "jqplotDataClick" event.  Here, simply change
+    // the text of the info3 element to show what series and ponit were
+    // clicked along with the data for that point.
+    //$('#chart3').bind('jqplotDataClick',
+    //  function (ev, seriesIndex, pointIndex, data) {
+    //      $('#info3').html('series: ' + seriesIndex + ', point: ' + pointIndex + ', data: ' + data);
+    //  }
+    //);
 }

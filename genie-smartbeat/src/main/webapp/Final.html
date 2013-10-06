@@ -2,11 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>smartbeat</title>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="JScripts/facebook.js"></script>
-    <script src="JScripts/moment.min.js"></script>
-    <script src="JScripts/jqplot.dateAxisRenderer.min.js"></script>
-    <script src="JScripts/jquery.jqplot.min.js"></script>    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="JScripts/facebook.js"></script>
+    <script type="text/javascript" src="JScripts/moment.min.js"></script>
+    <script type="text/javascript" src="JScripts/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="JScripts/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="JScripts/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="JScripts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="JScripts/plugins/jqplot.pointLabels.min.js"></script>
     <link href="Style/jquery.jqplot.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -16,13 +19,13 @@
     <input type="text" id="name" style="width: 1200px" />
     <input type="text" id="shapeindexlink" style="width: 1200px" />
     <input type="text" id="shapeindexrangelink" style="width: 1200px" />
-    <input type="button" onclick="getShapelinks();" value="Get User ID" />
+    <input type="button" onclick="getShapelinks();" value="Get Links" />
     <input type="button" onclick="getShapeChart();" value="Get Chart" />
     <input type="text" id="lastWeekSessionHistorylink" style="width: 1200px" />
     <label id="lbl_UserName"></label>
-    <input type="button" onclick="getlastWeekSessionHistory();" value="Get lastWeek Training session history" />    
+    <input type="button" onclick="getlastWeekSessionHistory();" value="Get lastWeek Training session history" />
     <div id="dv_lastWeekSessionHistory"></div>
     <div id="chart1" style="height: 300px; width: 650px;"></div>
-    
+    <div id="chart3" style="width: 400px;"></div>
 </body>
 </html>
