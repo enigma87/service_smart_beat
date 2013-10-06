@@ -2,18 +2,7 @@
 $(document).ready(function () {
     //Adjust Dimensions
     adjustPageDimensions();
-
-    //$("#dv_dialog").dialog({
-    //       autoOpen: false,
-    //       height: 140,
-    //       modal: true,
-    //       buttons: {
-    //           Ok: function () {
-    //               $(this).dialog("close");
-    //           }
-    //       }
-    //   });
-
+    
     $("#btn_GetUserIDDetails").click(function () {
         getUserID();
     });
