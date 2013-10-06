@@ -3,6 +3,11 @@
  */
 package com.genie.social.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Iterator;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,6 +18,7 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 
 /**
  * @author vidhun
@@ -151,6 +157,7 @@ public class UserDao
 		return user;
 	}
 	
+
 	public boolean isExistingUser(String email){
 		boolean isExistingUser = false;
 		if(null != getUserInfoByEmail(email)){
@@ -158,4 +165,28 @@ public class UserDao
 		}
 		return isExistingUser;
 	}		
+	
+	private static final String SELECT_ALL_USERS  =	"SELECT * FROM " + TABLE_USER;
+	public List<UserIdBean> getUserIds(){
+		List<UserIdBean> userIds = new ArrayList<UserIdBean>();
+		List<UserBean> users = null;
+		
+		try{
+			users = new JdbcTemplate(dataSource).query(SELECT_ALL_USERS, 
+					ParameterizedBeanPropertyRowMapper.newInstance(UserBean.class));
+			for(Iterator<UserBean> iter = users.iterator() ; iter.hasNext();){
+				UserBean userBean = iter.next();
+				UserIdBean userIdBean = new UserIdBean();
+				userIdBean.setUserid(userBean.getUserid());
+				userIdBean.setFirstName(userBean.getFirstName());
+				userIds.add(userIdBean);
+			}
+		}
+		catch(EmptyResultDataAccessException ex){
+			
+		}
+		
+		return userIds;
+		
+	}
 }

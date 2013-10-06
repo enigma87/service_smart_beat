@@ -8,7 +8,8 @@ public enum UserErrors {
 	USER_UNKNOWN(1),
 	USER_ALREADY_EXISTS(1),
 	USER_EMAIL_REQUIRED(2),
-	USER_DOB_AND_GENDER_REQUIRED(3);
+	USER_DOB_AND_GENDER_REQUIRED(3),
+	USERS_NOT_PRESENT(4);
 	
 	private int errorCode;
 	private UserErrors(int errorCode) {
@@ -26,6 +27,7 @@ public enum UserErrors {
 		  case USER_ALREADY_EXISTS			: return "user_" + getErrorCode() + ":user already exists";
 		  case USER_EMAIL_REQUIRED			: return "user_" + getErrorCode() + ":email required";
 		  case USER_DOB_AND_GENDER_REQUIRED	: return "user_" + getErrorCode() + ":dob and gender required";
+		  case USERS_NOT_PRESENT            : return "user_" + getErrorCode() + ":users not present";
 		}
 		return null;
 	}

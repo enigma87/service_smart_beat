@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -14,6 +15,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
@@ -201,5 +203,39 @@ public class UserManagerMySQLImplTest {
 		usMgr.deleteUserById(user.getUserid());
 		userBean = usMgr.getUserInformation(user.getUserid());
 		Assert.assertNull(userBean);
+	}
+	
+	@Test
+	public void testGetUserIds(){
+		UserManager usMgr = new UserManagerMySQLImpl();
+		if(usMgr instanceof UserManagerMySQLImpl){}
+		((UserManagerMySQLImpl)usMgr).setUserDao(userDao);
+		
+		UserBean user1 = new UserBean();
+		user1.setUserid("abc123");
+		user1.setFirstName("Chithra");
+		user1.setEmail("chithra@xyz.com");
+		user1.setAccessToken("2222222222222222222");
+		user1.setAccessTokenType("facebook");
+		userDao.createUser(user1);
+		
+		user1.setUserid("xyz789");
+		user1.setFirstName("Suresh");
+		user1.setEmail("suresh@xyz.com");
+		user1.setAccessToken("3333333333333333333");
+		user1.setAccessTokenType("facebook");
+		userDao.createUser(user1);
+		
+		List<UserIdBean> userIds = usMgr.getUserIds();
+		
+		Assert.assertEquals(2, userIds.size());
+		Assert.assertEquals("abc123", userIds.get(0).getUserid());
+		Assert.assertEquals("Chithra", userIds.get(0).getFirstName());
+		Assert.assertEquals("xyz789", userIds.get(1).getUserid());
+		Assert.assertEquals("Suresh", userIds.get(1).getFirstName());		
+		
+		usMgr.deleteUserById("abc123");
+		usMgr.deleteUserById("xyz789");
+		
 	}
 }

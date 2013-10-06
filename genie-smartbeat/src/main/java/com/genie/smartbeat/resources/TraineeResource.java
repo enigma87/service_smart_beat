@@ -57,10 +57,12 @@ import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
 import com.genie.smartbeat.json.SaveHeartrateTestResponseJson;
 import com.genie.smartbeat.json.ShapeIndexHistoryResponseJson;
 import com.genie.smartbeat.json.ShapeIndexResponseJson;
+import com.genie.smartbeat.json.TraineeIdsResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
 import com.genie.smartbeat.json.TrainingSessionsByRangeResponseJson;
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.json.RegisterRequestJSON;
@@ -740,6 +742,35 @@ public class TraineeResource
 		{
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
+	}
+	
+	
+	@GET
+	@Path("/all")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTraineeIds(@QueryParam("userid") String userID,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) {
+		
+		List<UserIdBean> traineeIds = userManager.getUserIds();
+		GoodResponseObject gro = null;
+		
+		if(null != traineeIds){
+			TraineeIdsResponseJson traineeIdsResponseJson = new TraineeIdsResponseJson();
+			traineeIdsResponseJson.setTraineeIds(traineeIds);
+			gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(),traineeIdsResponseJson);
+		}else{
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), UserErrors.USERS_NOT_PRESENT.toString());	
+		}
+		
+		try
+		{
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+		
 	}
 	
 	

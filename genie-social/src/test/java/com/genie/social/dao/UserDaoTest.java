@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -14,6 +15,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 import com.genie.social.core.UserManager;
 
 /**
@@ -154,5 +156,38 @@ public class UserDaoTest {
 		Assert.assertTrue(isExistingUser);
 		userDao.deleteUser(user.getUserid());
 	}	
+	
+	@Test
+	public void testGetUserIds(){
+		
+		userDao.createUser(user);
+		
+		
+		
+		UserBean user1 = new UserBean();
+		user1.setUserid("abc123");
+		user1.setFirstName("Chithra");
+		user1.setEmail("chithra@xyz.com");
+		user1.setAccessToken("2222222222222222222");
+		user1.setAccessTokenType("facebook");
+		userDao.createUser(user1);
+		
+		user1.setUserid("xyz789");
+		user1.setFirstName("Suresh");
+		user1.setEmail("suresh@xyz.com");
+		user1.setAccessToken("3333333333333333333");
+		user1.setAccessTokenType("facebook");
+		userDao.createUser(user1);
+		
+		List<UserIdBean> userIds = userDao.getUserIds();
+		Assert.assertEquals(3,userIds.size());
+		Assert.assertEquals("123456789", userIds.get(0).getUserid());
+		Assert.assertEquals("abc123", userIds.get(1).getUserid());
+		Assert.assertEquals("xyz789", userIds.get(2).getUserid());
+		
+		userDao.deleteUser(user.getUserid());
+		userDao.deleteUser("abc123");
+		userDao.deleteUser("xyz789");
+	}
 }
 

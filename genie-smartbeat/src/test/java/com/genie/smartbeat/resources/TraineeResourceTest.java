@@ -866,6 +866,58 @@ public class TraineeResourceTest {
 			
 		}
 		
+		@Test
+		public void testGetTraineeIds() throws JSONException{
+			String responseString = traineeResource.getRecoveryTime(userid, null, null);
+			JSONObject responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+				
+			UserBean user = new UserBean();
+			user.setUserid(userid);
+			user.setAccessToken("accessToken1");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Chitra");
+			user.setEmail("chitra@acme.com");
+			userDao.createUser(user);
+			
+			user.setUserid("22222bbbbb");
+			user.setAccessToken("accessToken2");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Suresh");
+			user.setEmail("suresh@acme.com");
+			userDao.createUser(user);
+			
+			user.setUserid("33333ccccc");
+			user.setAccessToken("accessToken3");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Sandra");
+			user.setEmail("sandra@acme.com");
+			userDao.createUser(user);
+			
+			responseString = traineeResource.getTraineeIds(userid, "accessToken1", "facebook");
+			JSONObject jsonResponse = new JSONObject(responseString);
+			JSONObject dataJson = new JSONObject(jsonResponse.get("obj").toString());
+			JSONArray traineeIds = dataJson.getJSONArray("traineeIds");
+			
+			JSONObject trainee = traineeIds.getJSONObject(0);
+			Assert.assertEquals("22222bbbbb", trainee.get("userid"));
+			Assert.assertEquals("Suresh", trainee.get("firstName"));
+			
+			trainee = traineeIds.getJSONObject(1);
+			Assert.assertEquals("33333ccccc", trainee.get("userid"));
+			Assert.assertEquals("Sandra", trainee.get("firstName"));
+			
+			trainee = traineeIds.getJSONObject(2);
+			Assert.assertEquals(userid, trainee.get("userid"));
+			Assert.assertEquals("Chitra", trainee.get("firstName"));
+			
+			userDao.deleteUser(userid);
+			userDao.deleteUser("22222bbbbb");
+			userDao.deleteUser("33333ccccc");
+			
+			
+		}
+		
 		@Before
 		public void testSetup(){
 			

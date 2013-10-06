@@ -1,11 +1,13 @@
 package com.genie.social.impl;
 
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
 import com.genie.social.dao.UserDao;
 import com.genie.social.facebook.GraphAPI;
 import com.genie.social.util.AuthorizationStatus;
+import java.util.List;
 
 
 /**
@@ -68,7 +70,11 @@ public class UserManagerMySQLImpl implements UserManager{
 		
 		return null;
 	}
-
+ 
+	public List<UserIdBean>getUserIds(){
+		return userDao.getUserIds();
+	}
+	
 	public void deleteUserById(String userid) {
 		userDao.deleteUser(userid);		
 	}

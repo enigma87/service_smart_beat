@@ -2,7 +2,9 @@ package com.genie.social.core;
 
 
 import com.genie.social.beans.UserBean;
+import com.genie.social.beans.UserIdBean;
 import com.genie.social.util.AuthorizationStatus;
+import java.util.List;
 
 /**
  * @author dhasarathy
@@ -19,4 +21,5 @@ public interface UserManager {
 	public UserBean getUserInformationByEmail(String email);
 	public void saveUserInformation(UserBean user);
 	public void deleteUserById(String userid);
+	public List<UserIdBean> getUserIds();
 }
