@@ -179,6 +179,7 @@ public class UserDao
 				UserIdBean userIdBean = new UserIdBean();
 				userIdBean.setUserid(userBean.getUserid());
 				userIdBean.setFirstName(userBean.getFirstName());
+				userIdBean.setLastName(userBean.getLastName());
 				userIds.add(userIdBean);
 			}
 		}

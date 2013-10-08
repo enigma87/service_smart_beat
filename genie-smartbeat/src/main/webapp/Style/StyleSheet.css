@@ -3,20 +3,23 @@ html
 {
     overflow-x: auto;
     overflow-y: auto;
+    height: 100%;
 }
 
 body
 {
     font-family: Calibri;
-    font-size: 70%;
+    font-size: 100%;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     background-color: #FEFEFE;
     text-align: left;
     vertical-align: top;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
+    height: 100%;
 }
+
 
 input.text
 {
@@ -36,7 +39,7 @@ input.text
     background-color: #FEFEFE;
 }
 
-#dv_Navigation
+.dv_Navigation
 {
     border-top: 6px solid #808080;
     border-bottom: 3px solid #CCCCCC;
@@ -44,15 +47,16 @@ input.text
     height: 30px;
     font-size: 11pt;
     color: #FFFFFF;
-    text-align: right;
+    text-align: center;
     vertical-align: middle;
 }
 
 #dv_Main
 {
     padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
+    margin:0 auto;	
     background-color: #FEFEFE;
+    height: 100%;
 }
 
 #dv_Footer
@@ -104,8 +108,84 @@ input.text
     color: #FF6600;
 }
 
-#dv_Navigation a
+#dv_Navigation a 
 {
     color: White;
     text-decoration: none;
 }
+
+label.navigation 
+{
+	color: White;
+	cursor: pointer;
+	text-decoration: none;
+	border: none;
+}
+
+#fbcorner 
+{
+	float:right;
+}
+
+#userlist 
+{
+	width:20%;
+	height: 100%;
+	border:2px solid #CCCCCC;
+}
+
+#detail
+{
+	float:right;
+	width:75%;
+}
+
+
+#qvtimetorecover
+{
+	width: 30%;
+	float:left;
+	text-align: center;
+	border: 2px solid #CCCCCC;
+}
+
+#qvtraineeclassification 
+{
+	width: 30%;
+	float:left;
+	text-align: center;
+	border: 2px solid #CCCCCC;
+}
+
+#qvshapeindex
+{
+	width: 30%;
+	float:left;
+	text-align: center;
+	border: 2px solid #CCCCCC;
+}
+.shapeindexhistoryrow
+{
+	text-align: center;
+	border: 2px solid #CCCCCC;
+	position: relative;
+}
+.trainingsessionhistoryrow
+{
+	text-align: center;	
+	border: 2px solid #CCCCCC;
+	position: relative;
+}
+.shapeindexhistorycolumn
+{
+	text-align: center;
+	margin: 0 auto 0 0;
+	border: 1px solid #CCCCCC;
+}
+.trainingsessionhistorycolumn
+{
+	text-align: center;
+	margin: 0 auto 0 0;
+	border: 1px solid #CCCCCC;
+}
+

@@ -2,7 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>smartbeat</title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+   <!-- <script type="text/javascript" src="JScripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="JScripts/jquery-ui.min.js"></script>
+-->
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
     <script type="text/javascript" src="JScripts/facebook.js"></script>
     <script type="text/javascript" src="JScripts/moment.min.js"></script>
     <script type="text/javascript" src="JScripts/jquery.jqplot.min.js"></script>
@@ -11,21 +17,27 @@
     <script type="text/javascript" src="JScripts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
     <script type="text/javascript" src="JScripts/plugins/jqplot.pointLabels.min.js"></script>
     <link href="Style/jquery.jqplot.min.css" rel="stylesheet" />
+    <link href="Style/StyleSheet.css" rel="stylesheet">
+   <!-- <link href="Style/jquery-ui.css" rel="stylesheet"> -->
 </head>
 <body>
-    <fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
-    <input type="text" id="useridlink" style="width: 1200px" />
-    <input type="text" id="accessToken" style="width: 1200px" />
-    <input type="text" id="name" style="width: 1200px" />
-    <input type="text" id="shapeindexlink" style="width: 1200px" />
-    <input type="text" id="shapeindexrangelink" style="width: 1200px" />
-    <input type="button" onclick="getShapelinks();" value="Get Links" />
-    <input type="button" onclick="getShapeChart();" value="Get Chart" />
-    <input type="text" id="lastWeekSessionHistorylink" style="width: 1200px" />
-    <label id="lbl_UserName"></label>
-    <input type="button" onclick="getlastWeekSessionHistory();" value="Get lastWeek Training session history" />
-    <div id="dv_lastWeekSessionHistory"></div>
-    <div id="chart1" style="height: 300px; width: 650px;"></div>
-    <div id="chart3" style="width: 400px;"></div>
+
+
+<div id="dv_Header" class="login">
+	<div id="fbcorner">
+	<fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
+	</div>
+</div>
+
+</br>
+
+<div id="dv_Main">
+	<div id="detail">
+	</div>
+	<div id="userlist">
+	</div>
+</div>
+
+
 </body>
 </html>

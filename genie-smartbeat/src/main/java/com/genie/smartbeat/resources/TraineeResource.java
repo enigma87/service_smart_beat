@@ -726,6 +726,7 @@ public class TraineeResource
           recoveryTimeResponseJson.setLocalRegressionMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
           recoveryTimeResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
           recoveryTimeResponseJson.setRecoveryTime(recoveryTime);
+          recoveryTimeResponseJson.setTraineeClassification(fitnessHomeostasisIndexBean.getTraineeClassification());
 			
 		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);
 	   }

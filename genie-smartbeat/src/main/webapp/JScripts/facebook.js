@@ -1,3 +1,8 @@
+// globals, for a session
+
+var uid = '';
+var accessToken = '';
+
 var Zone1Time = [1.0];
 var Zone2Time = [2.0];
 var Zone3Time = [2.0];
@@ -24,8 +29,8 @@ window.fbAsyncInit = function () {
                         $("#lbl_UserName").val(response2.name);
                         FB.getLoginStatus(function (response3) {
                             if (response3.status === 'connected') {
-                                var uid = response3.authResponse.userID;
-                                var accessToken = response3.authResponse.accessToken;
+                                uid = response3.authResponse.userID;
+                                accessToken = response3.authResponse.accessToken;
 
                                 $("#accessToken").val(accessToken);
 
@@ -35,7 +40,9 @@ window.fbAsyncInit = function () {
                                 //$("#shapeindexrangelink").val("http://localhost:8080/smartbeat/v1.0/trainee/id/" + uid + "/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=2013-07-03 18:23:11&endTimeStamp=2013-08-05 18:23:10");
 
                             } else if (response.status === 'not_authorized') {
-                                // the user is logged in to Facebook, 
+                                
+				document.write('<p>app denied auth</p>');
+				// the user is logged in to Facebook, 
                                 // but has not authenticated your app
                             } else {
                                 // the user isn't logged in to Facebook.
@@ -63,6 +70,126 @@ window.fbAsyncInit = function () {
     js.src = "//connect.facebook.net/en_US/all.js";
     ref.parentNode.insertBefore(js, ref);
 }(document));
+
+
+function getAllUsers() {
+	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/all", 
+		function (response) {
+			for (var i=0; i < response.obj.traineeIds.length; i++) {
+				$("#userlist").append('<div  class="dv_Navigation" onclick="ShowQuickView(' 
+					+ "'" +response.obj.traineeIds[i].userid.toString() + "'" 
+					+ ')" > <label class="navigation">' 
+					+ response.obj.traineeIds[i].lastName 
+					+ ", " 
+					+ response.obj.traineeIds[i].firstName
+					+ "</label></div>"
+				);
+			}
+		} 
+	);
+}
+
+
+function ShowQuickView(userid) {
+	$("#detail").html(
+		'<div id="accordion">'
+		+ '<h3>Summary</h3>'
+	  	+ '<div> <div id="qvsummary" >'
+		+ '<div id="qvtraineeclassification"> </div>'		
+		+ '<div id="qvtimetorecover"> </div>'
+		+ '<div id="qvshapeindex"> </div>'			
+		+ '</div></div>'
+		+ '<h3>Training Session History</h3>'
+		+ '<div id="qvtrainingsessionhistory"> </div>'
+		+ '<h3>Shape Index History</h3>'
+		+ '<div id="qvshapeindexhistory"></div>'
+		+ '</div>');
+
+	$( "#accordion" ).accordion({
+  		heightStyle: "content",
+  		autoHeight: false
+ 	});
+	
+	QVRecoveryTime(userid);
+	QVShapeIndex(userid);
+	QVTrainingSessionHistory(userid);
+	QVShapeIndexHistory(userid);
+}
+
+function QVTrainingSessionHistory(userid) {
+	// use global access token
+	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
+        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+
+	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
+		var html = '';
+		for (var i=0; i< response.obj.trainingSessionBeans.length; i++) {
+			var trainingSessionBean = response.obj.trainingSessionBeans[i];
+			html += '<div class="trainingsessionhistoryrow">';
+			
+				for (key in trainingSessionBean) {
+					if (key == 'userid') {
+						continue;					
+					}
+					html += '<div class="trainingsessionhistorycolumn"> <label> '+ key + '</label></br>'
+					+ trainingSessionBean[key] + '</div>';
+				}
+			
+			html += '</div>';		
+		}
+		$('#qvtrainingsessionhistory').html(html);
+	});
+}
+
+function QVShapeIndexHistory(userid) {
+	// use global access token
+	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
+        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+
+	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
+		var html = '';
+		for (var i=0; i< response.obj.shapeIndexes.length; i++) {
+			var shapeIndexBean = response.obj.shapeIndexes[i];
+			html += '<div class="shapeindexhistoryrow">';			
+				for (key in shapeIndexBean) {
+					html += '<div class="shapeindexhistorycolumn"> <label> ' + key + ' </label> </br>'
+						+ shapeIndexBean[key] + '</div>';
+				}
+			
+			html += '</div>';		
+		}
+		$('#qvshapeindexhistory').html(html);
+	});
+}
+
+function QVShapeIndex (userid) {
+	// use global access token
+	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/" + userid +"/shapeIndex?accessToken=" +accessToken+"&accessTokenType=facebook",
+		function (response) {
+			$("#qvsummary").find("#qvshapeindex").html(
+				"<label> ShapeIndex </label> </br>"
+				 + response.obj.shapeIndex		
+			); 
+		});
+}
+
+function QVRecoveryTime (userid) {
+	// use global access token
+	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/recoveryTime?accessToken="+ accessToken + "&accessTokenType=facebook",
+		function (response) {
+			$("#qvsummary").find("#qvtraineeclassification").html(
+				"<label> Trainee Classificaion </label></br>"
+				+ response.obj.traineeClassification			
+			);
+			$("#qvsummary").find("#qvtimetorecover").html(
+				"<label> Recovery Time </label> </br>"				
+				+ response.obj.recoveryTime
+			);
+		}
+	);
+
+}
+
 
 function getShapelinks() {
     //alert($("#useridlink").val());
@@ -230,3 +357,31 @@ function getlastWeekSessionHistory() {
     //  }
     //);
 }
+
+// Perl Style dump for de-bugging
+function dump(arr,level) {
+        var dumped_text = "";
+        if(!level) level = 0;
+
+        var level_padding = "";
+        for(var j=0;j<level+1;j++) level_padding += "    ";
+
+                if(typeof(arr) == 'object') {
+                        for(var item in arr) {
+                                var value = arr[item];
+                                if(typeof(value) == 'object') {
+                                        dumped_text += level_padding + "'" + item + "'             ...\n";
+                                        dumped_text += dump(value,level+1);
+                                } else {
+                                        dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+                                }
+                        }
+                } else {
+                        dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
+                }
+        return dumped_text;
+}
+
+$(document).ready(function () { 
+	getAllUsers();
+});
