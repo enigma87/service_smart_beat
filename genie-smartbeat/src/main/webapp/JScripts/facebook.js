@@ -107,7 +107,8 @@ function ShowQuickView(userid) {
 
 	$( "#accordion" ).accordion({
   		heightStyle: "content",
-  		autoHeight: false
+  		autoHeight: false,
+		collapsible: true 
  	});
 	
 	QVRecoveryTime(userid);
@@ -383,5 +384,7 @@ function dump(arr,level) {
 }
 
 $(document).ready(function () { 
+	 $( "#tabmenu" ).tabs();
+	 $( "img#icon" ).show( "bounce", { times: 3 }, "slow" );
 	getAllUsers();
 });

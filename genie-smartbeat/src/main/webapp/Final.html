@@ -1,10 +1,7 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>smartbeat</title>
-   <!-- <script type="text/javascript" src="JScripts/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="JScripts/jquery-ui.min.js"></script>
--->
+<title>smartbeat</title>
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -27,17 +24,27 @@
 	<div id="fbcorner">
 	<fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
 	</div>
+	<div id="icon"><img id="icon" src="Images/smartbeat.jpg" /> </div>
 </div>
 
 </br>
 
-<div id="dv_Main">
-	<div id="detail">
-	</div>
-	<div id="userlist">
-	</div>
-</div>
+<div id="tabmenu">
+  <ul>
+    <li><a href="#quickview">Quick View</a></li>
+    <li><a href="#goodies">Goodies</a></li>
+    <li><a href="#myaccount">My Account</a></li>
+  </ul>
 
+	<div id="quickview">
+		<div id="detail">
+		</div>
+		<div id="userlist">
+		</div>
+	</div>
+	<div id="Goodies"></div>
+	<div id="myaccount"></div>
+</div>
 
 </body>
 </html>

@@ -35,7 +35,7 @@ input.text
 
 #dv_Header
 {
-    height: 100px;
+    height: 90px;
     background-color: #FEFEFE;
 }
 
@@ -187,5 +187,15 @@ label.navigation
 	text-align: center;
 	margin: 0 auto 0 0;
 	border: 1px solid #CCCCCC;
+}
+.ui-widget-content{
+    border: none;
+}
+.ui-widget-header{
+   border: none;
+}
+img#icon {
+	height: 72px;
+	width: 120px;
 }
 
