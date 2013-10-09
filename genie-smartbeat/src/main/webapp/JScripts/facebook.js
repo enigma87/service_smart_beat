@@ -1,7 +1,7 @@
 // globals, for a session
 
-var uid = '';
-var accessToken = '';
+var uid = null;
+var accessToken = null;
 
 var Zone1Time = [1.0];
 var Zone2Time = [2.0];
@@ -31,14 +31,9 @@ window.fbAsyncInit = function () {
                             if (response3.status === 'connected') {
                                 uid = response3.authResponse.userID;
                                 accessToken = response3.authResponse.accessToken;
-
-                                $("#accessToken").val(accessToken);
-
-                                $("#useridlink").val("http://localhost:8080/smartbeat/v1.0/trainee/email/" + email + "?accessToken=" + accessToken + "&accessTokenType=facebook");
-
-                                //$("#shapeindexlink").val("http://localhost:8080/smartbeat/v1.0/trainee/id/" + uid + "/shapeIndex?accessToken=" + accessToken + "&accessTokenType=facebook");
-                                //$("#shapeindexrangelink").val("http://localhost:8080/smartbeat/v1.0/trainee/id/" + uid + "/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=2013-07-03 18:23:11&endTimeStamp=2013-08-05 18:23:10");
-
+				$("#main").show(700);
+				$("img#logout").show();
+				
                             } else if (response.status === 'not_authorized') {
                                 
 				document.write('<p>app denied auth</p>');
@@ -46,6 +41,7 @@ window.fbAsyncInit = function () {
                                 // but has not authenticated your app
                             } else {
                                 // the user isn't logged in to Facebook.
+				document.write('<p>user not logged in.</p>');
                             }
                         });
 
@@ -56,6 +52,7 @@ window.fbAsyncInit = function () {
             });
         }
         else {
+	    document.write('<p>please log into facebook</p>');
             FB.login();
         }
     });
@@ -76,45 +73,61 @@ function getAllUsers() {
 	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/all", 
 		function (response) {
 			for (var i=0; i < response.obj.traineeIds.length; i++) {
-				$("#userlist").append('<div  class="dv_Navigation" onclick="ShowQuickView(' 
+				$("#userlist").find("ul").append('<li  onclick="ShowQuickView(this,' 
 					+ "'" +response.obj.traineeIds[i].userid.toString() + "'" 
-					+ ')" > <label class="navigation">' 
+					+ ')"><div> <span class="ui-icon ui-icon-person" style="display:inline-block"></span> <label class="navigation">' 
 					+ response.obj.traineeIds[i].lastName 
 					+ ", " 
 					+ response.obj.traineeIds[i].firstName
-					+ "</label></div>"
+					+ "</label></div></li>"
 				);
 			}
+			$("#userlist").find("li").first().click();		
 		} 
 	);
 }
 
+function HighlightSelectedUser(listitem) {
 
-function ShowQuickView(userid) {
-	$("#detail").html(
-		'<div id="accordion">'
-		+ '<h3>Summary</h3>'
-	  	+ '<div> <div id="qvsummary" >'
-		+ '<div id="qvtraineeclassification"> </div>'		
-		+ '<div id="qvtimetorecover"> </div>'
-		+ '<div id="qvshapeindex"> </div>'			
-		+ '</div></div>'
-		+ '<h3>Training Session History</h3>'
-		+ '<div id="qvtrainingsessionhistory"> </div>'
-		+ '<h3>Shape Index History</h3>'
-		+ '<div id="qvshapeindexhistory"></div>'
-		+ '</div>');
+	$("#userlist").find("label.navigation").removeClass("selected");
+	$(listitem).find("label.navigation").addClass("selected");
+}
 
-	$( "#accordion" ).accordion({
-  		heightStyle: "content",
-  		autoHeight: false,
-		collapsible: true 
- 	});
+function ShowQuickView(listitem, userid) {
+
+	if (userid != null
+		&& accessToken != null) {
+
+		HighlightSelectedUser(listitem)
+
+		$("#detail").html(
+			'<div id="accordion">'
+			+ '<h3>Summary</h3>'
+		  	+ '<div> <div id="qvsummary" ><ul>'
+			+ '<li id="qvtraineeclassification"> </li>'		
+			+ '<li id="qvtimetorecover"> </li>'	
+			+ '<li id="qvshapeindex"> </li>'			
+			+ '</ul></div>'
+			+ '</div>'
+			+ '<h3>Training Session History</h3>'
+			+ '<div id="qvtrainingsessionhistory"> </div>'
+			+ '<h3>Shape Index History</h3>'
+			+ '<div id="qvshapeindexhistory"></div>'	
+			+ '</div>');
+
+		$( "#accordion" ).accordion({
+	  		heightStyle: "content",
+	  		autoHeight: false,
+			collapsible: true 
+	 	});
 	
-	QVRecoveryTime(userid);
-	QVShapeIndex(userid);
-	QVTrainingSessionHistory(userid);
-	QVShapeIndexHistory(userid);
+		QVRecoveryTime(userid);
+		QVShapeIndex(userid);
+		QVTrainingSessionHistory(userid);
+		QVShapeIndexHistory(userid);
+	} else {
+		window.setTimeout(function() { ShowQuickView(listitem, userid); }, 333);	
+	}
 }
 
 function QVTrainingSessionHistory(userid) {
@@ -126,17 +139,21 @@ function QVTrainingSessionHistory(userid) {
 		var html = '';
 		for (var i=0; i< response.obj.trainingSessionBeans.length; i++) {
 			var trainingSessionBean = response.obj.trainingSessionBeans[i];
-			html += '<div class="trainingsessionhistoryrow">';
-			
+			html += '<ul class="trainingsessionhistoryrow">';
+
 				for (key in trainingSessionBean) {
-					if (key == 'userid') {
+					if (!InList(key, ['trainingSessionId', 'startTime', 'endTime', 'surfaceIndex', 'vdot', 'healthPerceptionIndex', 'muscleStatePerceptionIndex', 'sessionStressPerceptionIndex', 'averageAltitude', 'extraLoad', 'validForTableInsert', 'sessionDuration', 'timeDistributionOfHRZ', 'speedDistributionOfHRZ' ])) {
 						continue;					
 					}
-					html += '<div class="trainingsessionhistorycolumn"> <label> '+ key + '</label></br>'
-					+ trainingSessionBean[key] + '</div>';
+					var listitemhtml = '<li class="trainingsessionhistorycolumn"> <label>'+ key + ' : </label>'
+					+ trainingSessionBean[key] + '</li>';
+					if (key == 'trainingSessionId') {
+						listitemhtml = '<b>' + listitemhtml + '</b>';					
+					}
+					html += listitemhtml;
 				}
 			
-			html += '</div>';		
+			html += '</ul>';		
 		}
 		$('#qvtrainingsessionhistory').html(html);
 	});
@@ -151,13 +168,13 @@ function QVShapeIndexHistory(userid) {
 		var html = '';
 		for (var i=0; i< response.obj.shapeIndexes.length; i++) {
 			var shapeIndexBean = response.obj.shapeIndexes[i];
-			html += '<div class="shapeindexhistoryrow">';			
+			html += '<ul class="shapeindexhistoryrow">';			
 				for (key in shapeIndexBean) {
-					html += '<div class="shapeindexhistorycolumn"> <label> ' + key + ' </label> </br>'
-						+ shapeIndexBean[key] + '</div>';
+					html += '<li class="shapeindexhistorycolumn"> <label> ' + key + ' : </label>'
+						+ shapeIndexBean[key] + '</li>';
 				}
 			
-			html += '</div>';		
+			html += '</ul>';		
 		}
 		$('#qvshapeindexhistory').html(html);
 	});
@@ -168,7 +185,7 @@ function QVShapeIndex (userid) {
 	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/" + userid +"/shapeIndex?accessToken=" +accessToken+"&accessTokenType=facebook",
 		function (response) {
 			$("#qvsummary").find("#qvshapeindex").html(
-				"<label> ShapeIndex </label> </br>"
+				"<label> Shape index : </label>"
 				 + response.obj.shapeIndex		
 			); 
 		});
@@ -179,11 +196,11 @@ function QVRecoveryTime (userid) {
 	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/recoveryTime?accessToken="+ accessToken + "&accessTokenType=facebook",
 		function (response) {
 			$("#qvsummary").find("#qvtraineeclassification").html(
-				"<label> Trainee Classificaion </label></br>"
+				"<label> Trainee classificaion : </label>"
 				+ response.obj.traineeClassification			
 			);
 			$("#qvsummary").find("#qvtimetorecover").html(
-				"<label> Recovery Time </label> </br>"				
+				"<label> Time at full recovery : </label> "				
 				+ response.obj.recoveryTime
 			);
 		}
@@ -388,3 +405,38 @@ $(document).ready(function () {
 	 $( "img#icon" ).show( "bounce", { times: 3 }, "slow" );
 	getAllUsers();
 });
+
+function LogoutSmartbeat() {
+	FB.logout(function(response) { location.reload(); });
+}
+
+function InList( value, array ){
+
+//alert('value: ' + value + "\n" + dump(array) );
+
+        if( !isArray(array) ){
+                alert( 'Second argument to InList should be an array' );
+                return null;
+        }
+ 
+        for( var i = 0; i < array.length; i++ ){
+                if( value == array[i] ){
+                        return 1;
+                }       
+	 }
+
+        return 0;
+}
+
+function isArray(a) {
+    return isObject(a) && a.constructor == Array;
+}
+ 
+function isObject(a) {
+    return (typeof a == 'object' && !!a) || isFunction(a);
+}
+
+function isFunction(a) {
+    return typeof a == 'function';
+}
+
