@@ -74,10 +74,10 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setUserid(userid);
 		
 		/*covering exceptions*/
-		/*invalid duration of 5 min*/
+		/*invalid duration of 2 min*/
 		Calendar cal = Calendar.getInstance();
 		Timestamp startTime = new Timestamp(cal.getTimeInMillis());
-		cal.add(Calendar.MINUTE, 5);
+		cal.add(Calendar.MINUTE, 2);
 		Timestamp endTime = new Timestamp(cal.getTimeInMillis());
 		fitnessTrainingSessionBean.setStartTime(startTime);
 		fitnessTrainingSessionBean.setEndTime(endTime);
@@ -1469,12 +1469,12 @@ public class FitnessManagerMySQLImplTest {
 		
 		/*invalid time distribution*/
 		/*zones below min time limit*/
-		fitnessTrainingSessionBean.setHrz1Time(1.0);
-		fitnessTrainingSessionBean.setHrz2Time(1.0);
+		fitnessTrainingSessionBean.setHrz1Time(0.3);
+		fitnessTrainingSessionBean.setHrz2Time(0.3);
 		fitnessTrainingSessionBean.setHrz3Time(0.0);
 		fitnessTrainingSessionBean.setHrz4Time(0.0);
 		fitnessTrainingSessionBean.setHrz5Time(0.0);
-		fitnessTrainingSessionBean.setHrz6Time(1.0);
+		fitnessTrainingSessionBean.setHrz6Time(0.0);
 
 		try{
 			fitnessManagerMySQLImpl.updateHomeostasisIndexModel(userid, fitnessTrainingSessionBean);
