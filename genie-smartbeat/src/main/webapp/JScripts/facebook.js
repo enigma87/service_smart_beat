@@ -1,5 +1,8 @@
 // globals, for a session
 
+var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+//var HOST_URL='http://localhost:8080/smartbeat/';
+
 var uid = null;
 var accessToken = null;
 var graphs = []; // for replotting the graphs in accordion 
@@ -71,7 +74,7 @@ window.fbAsyncInit = function () {
 
 
 function getAllUsers() {
-	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/all", 
+	$.getJSON(HOST_URL + "v1.0/trainee/all", 
 		function (response) {
 			for (var i=0; i < response.obj.traineeIds.length; i++) {
 				$("#userlist").find("ul").append('<li  onclick="ShowQuickView(this,' 
@@ -144,7 +147,7 @@ function QVTrainingSessionHistory(userid) {
 	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
         var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
 
-	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
+	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
 		
 		for (var i=0; i< response.obj.trainingSessionBeans.length; i++) {
 
@@ -209,7 +212,7 @@ function QVShapeIndexHistory(userid) {
 	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
         var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
 
-	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
+	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
 
 		
 		var plotdata = [];
@@ -224,7 +227,7 @@ function QVShapeIndexHistory(userid) {
 
 function QVShapeIndex (userid) {
 	// use global access token
-	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/" + userid +"/shapeIndex?accessToken=" +accessToken+"&accessTokenType=facebook",
+	$.getJSON(HOST_URL + "v1.0/trainee/id/" + userid +"/shapeIndex?accessToken=" +accessToken+"&accessTokenType=facebook",
 		function (response) {
 			$("#qvsummary").find("#qvshapeindex").html(
 				"<label> Shape index : </label>"
@@ -235,7 +238,7 @@ function QVShapeIndex (userid) {
 
 function QVRecoveryTime (userid) {
 	// use global access token
-	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/recoveryTime?accessToken="+ accessToken + "&accessTokenType=facebook",
+	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/recoveryTime?accessToken="+ accessToken + "&accessTokenType=facebook",
 		function (response) {
 			$("#qvsummary").find("#qvtraineeclassification").html(
 				"<label> Trainee classificaion : </label>"
