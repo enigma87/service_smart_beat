@@ -714,12 +714,16 @@ public class TraineeResource
 			
 		String recentTrainingSessionId = fitnessManager.getRecentTrainingSessionId(userid);
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessManager.getHomeostasisIndexModelForUser(userid);
 		GoodResponseObject gro = null;
 	    if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {	
 		 if(null == recentTrainingSessionId ){
-			 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "No Training Session for the user");
-		 }else{
-		  FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessManager.getHomeostasisIndexModelForUser(userid);
+			 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "No Training Session for the user!");
+		 } 
+		 else if (null == fitnessHomeostasisIndexBean) {
+			 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), "No Homeostasis Index Model for the user!");
+		 }
+		 else{
 		  Timestamp recoveryTime = fitnessManager.getRecoveryTime(userid);
           RecoveryTimeResponseJson recoveryTimeResponseJson = new RecoveryTimeResponseJson();
           recoveryTimeResponseJson.setUserId(userid);
@@ -727,6 +731,7 @@ public class TraineeResource
           recoveryTimeResponseJson.setLocalRegressionMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getLocalRegressionMinimumOfHomeostasisIndex());
           recoveryTimeResponseJson.setRecentMinimumOfHomeostasisIndex(fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
           recoveryTimeResponseJson.setRecoveryTime(recoveryTime);
+          recoveryTimeResponseJson.setTraineeClassification(fitnessHomeostasisIndexBean.getTraineeClassification());
 			
 		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);
 	   }

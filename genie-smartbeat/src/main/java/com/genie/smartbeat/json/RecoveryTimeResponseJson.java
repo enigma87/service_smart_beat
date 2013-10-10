@@ -8,6 +8,7 @@ public class RecoveryTimeResponseJson {
 	private Double recentMinimumOfHomeostasisIndex;
 	private Double localRegressionMinimumOfHomeostasisIndex;
 	private Timestamp recoveryTime;
+	private Integer traineeClassification;
 	
 	public void setRecentTrainingSessionId(String recentTrainingSessionId) {
 		this.recentTrainingSessionId = recentTrainingSessionId;
@@ -49,5 +50,13 @@ public class RecoveryTimeResponseJson {
 	public void setRecentMinimumOfHomeostasisIndex(
 			Double recentMinimumOfHomeostasisIndex) {
 		this.recentMinimumOfHomeostasisIndex = recentMinimumOfHomeostasisIndex;
+	}
+
+	public Integer getTraineeClassification() {
+		return traineeClassification;
+	}
+
+	public void setTraineeClassification(Integer traineeClassification) {
+		this.traineeClassification = traineeClassification;
 	}
 }

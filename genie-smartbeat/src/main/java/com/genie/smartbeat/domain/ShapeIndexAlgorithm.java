@@ -19,8 +19,8 @@ public class ShapeIndexAlgorithm
 	public static final double SHAPE_INDEX_INITIAL_VALUE 					= 100.0;
 	
 	/*training session limits*/
-	public static final double  MINIMUM_SESSION_DURATION					= 10.0;
-	public static final double  MINIMUM_ZONE_TIME 							= 2.0;
+	public static final double  MINIMUM_SESSION_DURATION					= 5.0;
+	public static final double  MINIMUM_ZONE_TIME 							= 0.5;
 	public static final double  MINIMUM_ZONE_SPEED 							= 3.0;
 	public static final double  MAXIMUM_ZONE_SPEED 							= 30.0;
 	
