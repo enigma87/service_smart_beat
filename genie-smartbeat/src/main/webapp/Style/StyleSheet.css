@@ -175,5 +175,14 @@ ul.userlist li{
 
 .selected {
 	border-bottom:solid;
+	border-bottom-width:2px;
 	border-bottom-color:#ee8b49;	
+}
+
+div#qvshapeindexhistory {
+	height:330px;
+	width:95%;
+}
+.jqplot-target {
+	color:#ee8b49;
 }
