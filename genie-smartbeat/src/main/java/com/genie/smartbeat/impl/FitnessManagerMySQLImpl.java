@@ -573,6 +573,19 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		return recoveryTime;
 	}
 	
+	public double getHomeostasisIndex(String userid){
+		double homeostasisIndex = 0.0;
+		
+		if (userid != null && !userid.isEmpty()) {
+			FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+			if(null != fitnessHomeostasisIndexBean){
+				Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
+				homeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getRecentEndTime(), currentTime, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+			}
+		}
+		return  homeostasisIndex;
+	}
+	
 	public void clearTraineeData(String userid) {
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser(userid);		
 		fitnessHomeostasisIndexDAO.deleteHomeostasisIndexModelByUserid(userid);

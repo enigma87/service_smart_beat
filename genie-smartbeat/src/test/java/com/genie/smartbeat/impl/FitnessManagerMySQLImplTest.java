@@ -2150,5 +2150,60 @@ public class FitnessManagerMySQLImplTest {
 		DateTimeUtils.setCurrentMillisSystem();
 	}
 	
+	@Test 
+	public void testGetHomeostasisIndex(){
+		/*Valid user bean needed for age and gender*/
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, 1988);
+		cal.set(Calendar.MONTH, 8);
+		cal.set(Calendar.DAY_OF_MONTH, 24);
+		java.sql.Date dob = new java.sql.Date(cal.getTimeInMillis());
+		
+		UserBean user = new UserBean();
+		user.setUserid(userid);
+		user.setEmail("abc@xyz.com");
+		user.setFirstName("Jane");
+		user.setDob(dob);
+		user.setGender(UserManager.GENDER_FEMALE);
+		user.setAccessToken("atoken");
+		user.setAccessTokenType("facebook");		
+		UserDao userDao = (UserDao)smartbeatContext.getBean("userDao");
+		userDao.createUser(user);
+		
+		FitnessHomeostasisIndexDAO homeostasisIndexDAO = (FitnessHomeostasisIndexDAO)smartbeatContext.getBean("fitnessHomeostasisIndexDAO");
+		
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		DateTimeUtils.setCurrentMillisFixed(cal.getTimeInMillis());
+		Long currentEndTime = cal.getTime().getTime();
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+		fitnessHomeostasisIndexBean.setUserid(userid);
+		fitnessHomeostasisIndexBean.setTraineeClassification(3);
+		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
+		fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
+		fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp (currentEndTime));
+		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 1);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		
+		DateTimeUtils.setCurrentMillisFixed(cal.getTimeInMillis());
+		
+		Double homeostasisIndex =  fitnessManagerMySQLImpl.getHomeostasisIndex(userid);
+		Assert.assertEquals(-30.25, homeostasisIndex);
+		
+		/*Creating Homeostasis model in DB*/
+		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+		userDao.deleteUser(userid);
+		DateTimeUtils.setCurrentMillisSystem();
+	}
 	
 }

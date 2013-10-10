@@ -867,6 +867,73 @@ public class TraineeResourceTest {
 		}
 		
 		@Test
+		public void testGetHomeostasisIndex() throws JSONException{
+			String responseString = traineeResource.getHomeostasisIndex(userid, null, null);
+			JSONObject responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			
+			responseString = traineeResource.getRecoveryTime(null, null, null);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+		
+			Calendar cal = Calendar.getInstance();
+			UserBean user = new UserBean();
+			user.setUserid(userid);
+			user.setAccessToken("accessToken1");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Chitra");
+			user.setEmail("chitra@acme.com");		
+			cal.add(Calendar.YEAR, -25);
+			user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+			user.setGender(UserManager.GENDER_FEMALE);
+			userDao.createUser(user);
+	
+			cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+			cal.set(Calendar.HOUR_OF_DAY, 10);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+		
+			FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
+			fitnessHomeostasisIndexBean.setUserid(userid);
+			fitnessHomeostasisIndexBean.setTraineeClassification(3);
+			fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
+			fitnessHomeostasisIndexBean.setLocalRegressionMinimumOfHomeostasisIndex(-86.5);
+			fitnessHomeostasisIndexBean.setRecentTotalLoadOfExercise(86.5);
+			fitnessHomeostasisIndexBean.setRecentEndTime(new Timestamp(cal.getTime().getTime()));
+			
+			
+			fitnessHomeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
+			
+		    /*Sandra Session 2*/
+			cal.add(Calendar.DATE, 1);
+			cal.set(Calendar.HOUR_OF_DAY, 1);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+
+			
+			/*Get Homeostasis Index response*/
+			responseString = traineeResource.getHomeostasisIndex(userid, "accessToken1", "facebook");
+			responseJSON = new JSONObject(responseString);
+			JSONObject dataJson = new JSONObject(responseJSON.get("obj").toString());
+			String responseUserId = dataJson.getString("userid");
+			Double homeostasisIndex = dataJson.getDouble("homeostasisIndex");	
+						
+			/*Validation*/
+			Assert.assertEquals(userid, responseUserId);
+			Assert.assertEquals(-30.25, homeostasisIndex);
+
+						
+			/*clean up*/
+			fitnessManager.clearTraineeData(userid);
+			userDao.deleteUser(userid);
+			DateTimeUtils.setCurrentMillisSystem();
+		}
+		
+		@Test
 		public void testGetTraineeIds() throws JSONException{
 			String responseString = traineeResource.getRecoveryTime(userid, null, null);
 			JSONObject responseJSON = new JSONObject(responseString);

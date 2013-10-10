@@ -11,6 +11,7 @@ import junit.framework.Assert;
 
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,14 +59,17 @@ public class TraineeChitraLiveServerRegression{
 		JSONObject inputJsonObj = new JSONObject();
 		inputJsonObj.put("accessToken", chithra.getAccessToken());
 		inputJsonObj.put("accessTokenType", chithra.getAccessTokenType() );
-		Client clientRegisterUser = getClient();
-		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
-		JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
-		JSONObject objRegister = registerResJson.getJSONObject("obj");
-		Assert.assertEquals("200", registerResJson.getString("status"));
-		Assert.assertEquals("OK", registerResJson.getString("message"));
-		userId = objRegister.getString("userid");
-		chithra.setUserid(userId);
+//		Client clientRegisterUser = getClient();
+//		WebResource registerUser = clientRegisterUser.resource(registerUserUrl);      
+//		JSONObject registerResJson = registerUser.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
+//		JSONObject objRegister = registerResJson.getJSONObject("obj");
+//		Assert.assertEquals("200", registerResJson.getString("status"));
+//		Assert.assertEquals("OK", registerResJson.getString("message"));
+//		userId = objRegister.getString("userid");
+		userId = "74c733a9-0a0a-4648-bad9-1b0ba630e487";
+    	chithra.setUserid(userId);
+		
+		
 		
 		/*Get Default HeartrateZones for the User*/
 		String getHeartRateZoneUrl = "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/id/"+userId+"/heartrateZones?accessToken="+accessToken+"&accessTokenType=facebook";
@@ -177,14 +181,18 @@ public class TraineeChitraLiveServerRegression{
 		JSONObject getShapeIndexResJson11 = getShapeIndex.get(JSONObject.class);
 		System.out.println(getShapeIndexResJson11);
 		
+			
+	}
+	
+	@After
+	public void cleanUpAfterClass() throws Exception 
+	{
 		/*Clear the User Data*/
 		String clearUserDataUrl =  "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/id/"+userId+"/data/clear"; 
 		ClientConfig clientConfig = new DefaultClientConfig();
 		Client clientClearUserData = Client.create(clientConfig);
 		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
 		clearUserData.delete();
-	
-		
 	}
 	
 	private Client getClient(){
