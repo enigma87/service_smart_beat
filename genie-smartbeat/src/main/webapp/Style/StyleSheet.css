@@ -180,9 +180,22 @@ ul.userlist li{
 }
 
 div#qvshapeindexhistory {
-	height:330px;
-	width:95%;
+	height:300px;
+	width:90%;
+}
+div#qvtrainingsessionhistory {
+	text-align:center;
+	width:90%;
+}
+div.speedistrograph {
+	height:120px;
+	width:120px;
 }
 .jqplot-target {
 	color:#ee8b49;
+}
+div.trainingsessionkeys {
+	float:left;
+	width:50%;
+	text-align:left;
 }

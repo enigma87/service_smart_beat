@@ -12,6 +12,7 @@ var Zone5Time = [4.0];
 var line1 = [['2013-07-06 18:23:10', 4]];
 
 window.fbAsyncInit = function () {
+
     FB.init({
         appId: '333643156765163', // App ID
         //channelUrl: 'http://htmlpreview.github.io/?https://github.com/KarunakaranRaju/FacebookLoginHTML/blob/master/HTMLPage.htm', // Channel File
@@ -33,8 +34,7 @@ window.fbAsyncInit = function () {
                                 uid = response3.authResponse.userID;
                                 accessToken = response3.authResponse.accessToken;
 				$("#main").show(700);
-				$("img#logout").show();
-				
+				$("img#logout").show(700);
                             } else if (response.status === 'not_authorized') {
                                 
 				document.write('<p>app denied auth</p>');
@@ -54,7 +54,7 @@ window.fbAsyncInit = function () {
         }
         else {
 	    document.write('<p>please log into facebook</p>');
-            FB.login();
+	    FB.login();
         }
     });
 };
@@ -95,6 +95,9 @@ function HighlightSelectedUser(listitem) {
 }
 
 function ShowQuickView(listitem, userid) {
+
+	//when quickview is changed to another user, reset plots
+	graphs=[];
 
 	if (userid != null
 		&& accessToken != null) {
@@ -142,26 +145,62 @@ function QVTrainingSessionHistory(userid) {
         var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
 
 	$.getJSON("http://localhost:8080/smartbeat/v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
-		var html = '';
+		
 		for (var i=0; i< response.obj.trainingSessionBeans.length; i++) {
-			var trainingSessionBean = response.obj.trainingSessionBeans[i];
-			html += '<ul class="trainingsessionhistoryrow">';
 
-				for (key in trainingSessionBean) {
-					if (!InList(key, ['trainingSessionId', 'startTime', 'endTime', 'surfaceIndex', 'vdot', 'healthPerceptionIndex', 'muscleStatePerceptionIndex', 'sessionStressPerceptionIndex', 'averageAltitude', 'extraLoad', 'validForTableInsert', 'sessionDuration', 'timeDistributionOfHRZ', 'speedDistributionOfHRZ' ])) {
-						continue;					
-					}
-					var listitemhtml = '<li class="trainingsessionhistorycolumn"> <label>'+ key + ' : </label>'
-					+ trainingSessionBean[key] + '</li>';
-					if (key == 'trainingSessionId') {
-						listitemhtml = '<b>' + listitemhtml + '</b>';					
-					}
-					html += listitemhtml;
+			var trainingSessionBean = response.obj.trainingSessionBeans[i];
+
+			$('#qvtrainingsessionhistory').append(
+				'<div style="height:240px;" id="trainingsessionrow-'+ trainingSessionBean.trainingSessionId.toString() + '">'   
+				+'</div>'
+			);
+
+			var trainingsessionselector = 'div#trainingsessionrow-' + trainingSessionBean.trainingSessionId.toString();
+
+			var trainingSessionrow = $('#qvtrainingsessionhistory').find(trainingsessionselector)[0];
+
+			var html = '<div class="trainingsessionkeys"><ul>';
+			for (key in trainingSessionBean) {
+				if (!InList(key, ['startTime',
+						  'endTime', 
+						  'surfaceIndex', 
+						  'vdot', 
+						  'healthPerceptionIndex', 
+						  'muscleStatePerceptionIndex',
+						  'sessionStressPerceptionIndex',
+						  'averageAltitude',
+						  'extraLoad',
+						  'validForTableInsert', 
+						  'sessionDuration'])) {
+					
+					continue;					
 				}
+				var listitemhtml = '<li class="trainingsessionhistorycolumn"> <label>'+ key + ' : </label>'
+				+ trainingSessionBean[key] + '</li>';
+				html += listitemhtml;
+			}
+			html += '</ul></div>';
+
+			$(trainingSessionrow).append(html);
+
+
+			var plotdata = [];
+			for (var j=0; j < trainingSessionBean.timeDistributionOfHRZ.length; j++) {
+				plotdata[j] = [trainingSessionBean.timeDistributionOfHRZ[j], trainingSessionBean.speedDistributionOfHRZ[j]]; 
+			}
 			
-			html += '</ul>';		
+			$(trainingSessionrow).append(
+				'<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="trainingsessiongraph-' 
+				+ trainingSessionBean.trainingSessionId.toString() 
+				+ '"></div>'
+			);	
+			PlotGraph('trainingsessiongraph-' + trainingSessionBean.trainingSessionId, [plotdata], "Speed Distribution");
+
+			if (response.obj.trainingSessionBeans.length > (i+1) ) {
+				$('#qvtrainingsessionhistory').append('<hr>');			
+			}		
 		}
-		$('#qvtrainingsessionhistory').html(html);
+		
 	});
 }
 
@@ -238,8 +277,6 @@ function dump(arr,level) {
 
 $(document).ready(function () { 
 	$( "#tabmenu" ).tabs();
-	$( "img#icon" ).show( "bounce", { times: 3 }, "slow" );
-	
 	getAllUsers();
 });
 
@@ -276,26 +313,91 @@ function isFunction(a) {
 }
 
 
-function DateGraph(divid, plotarrays) {
+function DateGraph(divid, plotarrays, graphtitle) {
+
+	if (!(isArray(plotarrays)
+		&& plotarrays[0].length > 0
+		&& isArray(plotarrays[0])
+		&& plotarrays[0][0].length == 2)) {
+		
+		return;
+	}
+
 	var graph1 = $.jqplot(divid, plotarrays, {
 		seriesColors: [ "#ee8b49"],
-	      title:'Data Point Highlighting',
+	      title:{ 
+		text:graphtitle,
+		show:true
+		},
+		grid: {
+			borderWidth:1.0
+		},
 	      axes:{
 	        xaxis:{
 	          renderer:$.jqplot.DateAxisRenderer,
 	          tickOptions:{
-	            formatString:'%b&nbsp%#d'
+		    showGridline: false,
+	            formatString:'%b&nbsp%#d',
+		    markSize:0
 	          } 
 	        },
 	        yaxis:{
 	          tickOptions:{
-	            formatString:'%.2f'
+	            formatString:'%.2f &nbsp',
+		    markSize:0
 	            }
 	        }
 	      },
 	      highlighter: {
 	        show: true,
-	        sizeAdjust: 7.5
+	        sizeAdjust: 5
+	      },
+	      cursor: {
+	        show: false
+	      }
+	  });
+
+	graphs[graphs.length] = graph1;
+}
+
+
+function PlotGraph(divid, plotarrays, graphtitle) {
+
+	if (!(isArray(plotarrays)
+		&& plotarrays[0].length > 0
+		&& isArray(plotarrays[0])
+		&& plotarrays[0][0].length == 2)) {
+		
+		return;
+	}
+
+	var graph1 = $.jqplot(divid, plotarrays, {
+		seriesColors: [ "#ee8b49"],
+	      title:{ 
+		text:graphtitle,
+		show:true
+		},
+		grid: {
+			borderWidth:1.0
+		},
+	      axes:{
+	        xaxis:{
+	          tickOptions:{
+		    showGridline: false,
+//	            formatString:'%b&nbsp%#d',
+		    markSize:0
+	          } 
+	        },
+	        yaxis:{
+	          tickOptions:{
+//	            formatString:'%.2f &nbsp',
+		    markSize:0
+	            }
+	        }
+	      },
+	      highlighter: {
+	        show: true,
+	        sizeAdjust: 5
 	      },
 	      cursor: {
 	        show: false
