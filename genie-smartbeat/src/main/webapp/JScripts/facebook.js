@@ -199,10 +199,10 @@ function QVTrainingSessionHistory(userid) {
 			}
 			
 			$(trainingSessionrow).append(
-				'<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="timedistrograph-' 
+				'<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="timedistrograph-' 
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
-				+ '<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="speeddistrograph-' 
+				+ '<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="speeddistrograph-' 
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
 			);	
@@ -343,7 +343,7 @@ function DateGraph(divid, plotarrays, graphtitle) {
 		show:true
 		},
 		grid: {
-			borderWidth:1.0
+			borderWidth:0.0
 		},
 	      axes:{
 	        xaxis:{
@@ -396,7 +396,7 @@ function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 			show:true
 		},
 		grid: {
-			borderWidth:1.0
+			borderWidth:0.0
 		},
 		axes:{
 	        	xaxis:{

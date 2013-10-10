@@ -20,37 +20,12 @@ body
     height: 100%;
 }
 
-
-input.text
-{
-    margin-bottom: 12px;
-    width: 95%;
-    padding: .4em;
-}
-/*Page divs*/
-#dv_PageContainer
-{
-    padding: 0px 0px 0px 0px;
-}
-
 #header
 {
     height: 90px;
     background-color: #FEFEFE;
     margin-left:auto;
     margin-right:auto;
-}
-
-.dv_Navigation
-{
-    border-top: 6px solid #808080;
-    border-bottom: 3px solid #CCCCCC;
-    background-color: #999999;
-    height: 30px;
-    font-size: 11pt;
-    color: #FFFFFF;
-    text-align: center;
-    vertical-align: middle;
 }
 
 #main
@@ -66,49 +41,6 @@ input.text
 {
     text-align: center; /*height: 15px;*/
     background-color: #E6E6E6;
-}
-
-/*Header Text*/
-#spn_Logo1
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 40pt;
-    font-weight: bolder;
-    color: #0033CC; /*text-shadow: 2px 2px 2px #555;*/
-}
-
-#spn_Logo2
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 40pt;
-    font-weight: bolder;
-    color: #FF6600;
-}
-
-#spn_Logo3
-{
-    float: right;
-    padding: 0px 0px 0px 0px;
-    font-size: 12pt;
-    font-weight: bolder;
-    color: #0033CC;
-    color: #808080;
-}
-
-#spn_Logo4
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 14pt;
-    font-weight: bolder;
-    color: #0033CC;
-}
-
-#spn_Logo5
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 14pt;
-    font-weight: bolder;
-    color: #FF6600;
 }
 
 .navigation 
@@ -181,11 +113,12 @@ ul.userlist li{
 
 div#qvshapeindexhistory {
 	height:300px;
+	text-align:center;
 	width:90%;
 }
 div#qvtrainingsessionhistory {
-	text-align:center;
-	width:90%;
+	text-align:left;
+	width:95%;
 }
 div.speedistrograph {
 	height:120px;
@@ -195,7 +128,11 @@ div.speedistrograph {
 	color:#ee8b49;
 }
 div.trainingsessionkeys {
-	float:left;
-	width:50%;
+	margin-right: auto;
+	margin-left:0px;
+	margin-top:0px;
+	margin-bottom:0px;
+	width:30%;
+	position:absolute;
 	text-align:left;
 }
