@@ -1,7 +1,7 @@
 // globals, for a session
 
-var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
-//var HOST_URL='http://localhost:8080/smartbeat/';
+//var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+var HOST_URL='http://localhost:8080/smartbeat/';
 
 var uid = null;
 var accessToken = null;
@@ -13,6 +13,8 @@ var Zone3Time = [2.0];
 var Zone4Time = [3.0];
 var Zone5Time = [4.0];
 var line1 = [['2013-07-06 18:23:10', 4]];
+
+var JQPLOT_COLORS = ["#ee8b49", "#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"]; 
 
 window.fbAsyncInit = function () {
 
@@ -187,17 +189,25 @@ function QVTrainingSessionHistory(userid) {
 			$(trainingSessionrow).append(html);
 
 
-			var plotdata = [];
+			var heartratezones = [1, 2, 3, 4, 5, 6];
+			var timedistrodata = [];
+			var speeddistrodata = [];
+
 			for (var j=0; j < trainingSessionBean.timeDistributionOfHRZ.length; j++) {
-				plotdata[j] = [trainingSessionBean.timeDistributionOfHRZ[j], trainingSessionBean.speedDistributionOfHRZ[j]]; 
+				timedistrodata[j] = trainingSessionBean.timeDistributionOfHRZ[j];
+				speeddistrodata[j] =  trainingSessionBean.speedDistributionOfHRZ[j]; 
 			}
 			
 			$(trainingSessionrow).append(
-				'<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="trainingsessiongraph-' 
+				'<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="timedistrograph-' 
+				+ trainingSessionBean.trainingSessionId.toString() 
+				+ '"></div>'
+				+ '<div style="float:left;width:300px;height:240px;" class="speeddistrograph"  id="speeddistrograph-' 
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
 			);	
-			PlotGraph('trainingsessiongraph-' + trainingSessionBean.trainingSessionId, [plotdata], "Speed Distribution");
+			BarGraph('timedistrograph-' + trainingSessionBean.trainingSessionId, [timedistrodata], heartratezones, "Time Distribution");
+			BarGraph('speeddistrograph-' + trainingSessionBean.trainingSessionId, [speeddistrodata], heartratezones, "Speed Distribution");
 
 			if (response.obj.trainingSessionBeans.length > (i+1) ) {
 				$('#qvtrainingsessionhistory').append('<hr>');			
@@ -327,7 +337,7 @@ function DateGraph(divid, plotarrays, graphtitle) {
 	}
 
 	var graph1 = $.jqplot(divid, plotarrays, {
-		seriesColors: [ "#ee8b49"],
+		seriesColors: JQPLOT_COLORS,
 	      title:{ 
 		text:graphtitle,
 		show:true
@@ -364,48 +374,53 @@ function DateGraph(divid, plotarrays, graphtitle) {
 }
 
 
-function PlotGraph(divid, plotarrays, graphtitle) {
+function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 
-	if (!(isArray(plotarrays)
-		&& plotarrays[0].length > 0
-		&& isArray(plotarrays[0])
-		&& plotarrays[0][0].length == 2)) {
+	if (!(isArray(bararrays)
+		&& bararrays[0].length > 0
+		&& isArray(xaxisarray)
+		&& xaxisarray.length > 0)) {
 		
 		return;
 	}
 
-	var graph1 = $.jqplot(divid, plotarrays, {
-		seriesColors: [ "#ee8b49"],
-	      title:{ 
-		text:graphtitle,
-		show:true
+	var graph1 = $.jqplot(divid, bararrays, {
+		animate: !$.jqplot.use_excanvas,
+		seriesDefaults:{
+                	renderer:$.jqplot.BarRenderer,
+                	pointLabels: { show: true }
+            	},
+		seriesColors: JQPLOT_COLORS,
+		title:{ 
+			text:graphtitle,
+			show:true
 		},
 		grid: {
 			borderWidth:1.0
 		},
-	      axes:{
-	        xaxis:{
-	          tickOptions:{
-		    showGridline: false,
-//	            formatString:'%b&nbsp%#d',
-		    markSize:0
-	          } 
-	        },
-	        yaxis:{
-	          tickOptions:{
-//	            formatString:'%.2f &nbsp',
-		    markSize:0
-	            }
-	        }
-	      },
-	      highlighter: {
-	        show: true,
-	        sizeAdjust: 5
-	      },
-	      cursor: {
-	        show: false
-	      }
-	  });
+		axes:{
+	        	xaxis:{
+				ticks: xaxisarray,
+				renderer: $.jqplot.CategoryAxisRenderer,
+	        		tickOptions:{
+				    showGridline: false,
+				    markSize:0
+		        	  } 
+		        },
+			yaxis:{
+				tickOptions:{
+					markSize:0
+	        	    }
+	        	}
+		},
+		/*highlighter: {
+		        show: true,
+		        sizeAdjust: 5
+		},*/
+		cursor: {
+			show: false
+		}
+	});
 
 	graphs[graphs.length] = graph1;
 }
