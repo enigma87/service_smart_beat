@@ -3,20 +3,23 @@ html
 {
     overflow-x: auto;
     overflow-y: auto;
+    height: 100%;
 }
 
 body
 {
     font-family: Calibri;
-    font-size: 70%;
+    font-size: 100%;
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
     background-color: #FEFEFE;
     text-align: left;
     vertical-align: top;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: auto;
+    height: 100%;
 }
+
 
 input.text
 {
@@ -30,13 +33,15 @@ input.text
     padding: 0px 0px 0px 0px;
 }
 
-#dv_Header
+#header
 {
-    height: 100px;
+    height: 90px;
     background-color: #FEFEFE;
+    margin-left:auto;
+    margin-right:auto;
 }
 
-#dv_Navigation
+.dv_Navigation
 {
     border-top: 6px solid #808080;
     border-bottom: 3px solid #CCCCCC;
@@ -44,18 +49,20 @@ input.text
     height: 30px;
     font-size: 11pt;
     color: #FFFFFF;
-    text-align: right;
+    text-align: center;
     vertical-align: middle;
 }
 
-#dv_Main
+#main
 {
     padding: 0px 0px 0px 0px;
-    margin: 0px 0px 0px 0px;
+    margin:0 auto;	
     background-color: #FEFEFE;
+    height: 100%;
+    display: none;
 }
 
-#dv_Footer
+#footer
 {
     text-align: center; /*height: 15px;*/
     background-color: #E6E6E6;
@@ -104,8 +111,78 @@ input.text
     color: #FF6600;
 }
 
-#dv_Navigation a
+.navigation 
 {
-    color: White;
-    text-decoration: none;
+	cursor: pointer;
+	border: none;
+}
+
+#icon {
+	float:left;	
+	margin: 6px 6px 6px 6px;
+}
+
+#fbcorner 
+{
+	margin: 6px 0px 6px 6px;
+	float:left;
+}
+
+#logout 
+{
+	float:right;
+	cursor: pointer;
+	margin: 6px 6px 6px 6px;
+}
+
+#userlist 
+{
+	width:20%;
+	height: 100%;
+}
+
+#detail
+{
+	float:right;
+	width:77%;
+}
+
+
+.ui-widget-content{
+    border: none;
+}
+.ui-widget-header{
+   border: none;
+}
+img#icon {
+	height: 72px;
+	width: 120px;
+}
+img#logout {
+	height:49px;
+	width: 49px;
+	display: none;
+}
+ul { 
+	list-style: none;
+	font-size: 13px;
+}
+
+ul.userlist li{ 
+	margin:0 20px 20px 0; vertical-align:top;
+	font-size: 14.5px;
+}
+
+.selected {
+	border-bottom:solid;
+	border-bottom-width:2px;
+	border-bottom-color:#ee8b49;	
+}
+
+div#qvshapeindexhistory {
+	height:330px;
+	width:95%;
+}
+.jqplot-target {
+	color:#ee8b49;
 }
