@@ -46,6 +46,9 @@ public interface FitnessManager{
 	/*Recovery Time*/
 	public Timestamp getRecoveryTime(String userid);
 	
+	/*Homeostasis Index*/
+	public double getHomeostasisIndex(String userid);
+	
 	/*clear user*/
 	public void clearTraineeData(String userid);
 	

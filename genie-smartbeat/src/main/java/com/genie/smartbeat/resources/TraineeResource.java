@@ -50,6 +50,7 @@ import com.genie.smartbeat.core.exceptions.time.TimeException;
 import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.json.HeartRateZoneResponseJson;
 import com.genie.smartbeat.json.HeartrateTestByRangeResponseJson;
+import com.genie.smartbeat.json.HomeostasisIndexResponseJson;
 import com.genie.smartbeat.json.RecoveryTimeResponseJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionResponseJson;
@@ -734,6 +735,38 @@ public class TraineeResource
 			
 		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);
 	   }
+	  }else {
+			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
+			log.info("user authentication failed!");
+		}  
+
+		try
+		{
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+	
+	
+	@GET
+	@Path("id/{userid}/homeostasisIndex")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getHomeostasisIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+			
+		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
+		GoodResponseObject gro = null;
+	    if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {	
+	      /* Get Homeostasis Index*/	
+		  Double homeostasisIndex = fitnessManager.getHomeostasisIndex(userid);
+		  
+		  HomeostasisIndexResponseJson  homeostasisIndexResponseJson = new  HomeostasisIndexResponseJson();
+		  homeostasisIndexResponseJson.setUserid(userid);
+		  homeostasisIndexResponseJson.setHomeostasisIndex(homeostasisIndex);
+		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), homeostasisIndexResponseJson);
 	  }else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
 			log.info("user authentication failed!");

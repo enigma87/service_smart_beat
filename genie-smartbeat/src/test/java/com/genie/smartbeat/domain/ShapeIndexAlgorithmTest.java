@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.joda.time.DateTimeUtils;
 import org.junit.Test;
 
 /**
@@ -107,7 +108,29 @@ public class ShapeIndexAlgorithmTest {
 
 	@Test
 	public void testGetRegressedHomeostasisIndex() {
-		/*fail("Not yet implemented");*/
+		int traineeClassification = 3;
+		double recentMinimumOfHomeostasisIndex = -86.5;
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+		cal.set(Calendar.HOUR_OF_DAY, 10);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Timestamp previousTrainingSessionEndTime = new Timestamp(cal.getTime().getTime());	
+		
+		cal.add(Calendar.DATE, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 1);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Timestamp timeAtConsideration = new Timestamp(cal.getTime().getTime());	
+		
+		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(traineeClassification, previousTrainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
+		assertEquals(-30.25, regressedHomeostasisIndex);
+		
+		
+		
 	}
 
 	@Test
