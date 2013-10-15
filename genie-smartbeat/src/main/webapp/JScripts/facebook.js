@@ -1,7 +1,7 @@
 // globals, for a session
 
-var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
-//var HOST_URL='http://localhost:8080/smartbeat/';
+//var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+var HOST_URL='http://localhost:8080/smartbeat/';
 
 var uid = null;
 var accessToken = null;
@@ -125,8 +125,9 @@ function ShowQuickView(listitem, userid) {
 			+ '</div>');
 
 		$( "#accordion" ).accordion({
+			animate: 300,
 	  		heightStyle: "content",
-	  		autoHeight: false,
+	  		autoHeight: true,
 			collapsible: true,
 			activate: function(event, ui) {
 				for(var i=0; i < graphs.length; i++) {
@@ -193,9 +194,10 @@ function QVTrainingSessionHistory(userid) {
 			var timedistrodata = [];
 			var speeddistrodata = [];
 
-			for (var j=0; j < trainingSessionBean.timeDistributionOfHRZ.length; j++) {
-				timedistrodata[j] = trainingSessionBean.timeDistributionOfHRZ[j];
-				speeddistrodata[j] =  trainingSessionBean.speedDistributionOfHRZ[j]; 
+			//WARNING: index doesn't start with 0 because we deliberately mark the zones from 1-6
+			for (var j=1; j <= trainingSessionBean.timeDistributionOfHRZ.length; j++) {
+				timedistrodata[j-1] = trainingSessionBean.timeDistributionOfHRZ[j];
+				speeddistrodata[j-1] =  trainingSessionBean.speedDistributionOfHRZ[j]; 
 			}
 			
 			$(trainingSessionrow).append(
@@ -206,6 +208,7 @@ function QVTrainingSessionHistory(userid) {
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
 			);	
+			
 			BarGraph('timedistrograph-' + trainingSessionBean.trainingSessionId, [timedistrodata], heartratezones, "Time Distribution");
 			BarGraph('speeddistrograph-' + trainingSessionBean.trainingSessionId, [speeddistrodata], heartratezones, "Speed Distribution");
 
@@ -363,7 +366,7 @@ function DateGraph(divid, plotarrays, graphtitle) {
 	      },
 	      highlighter: {
 	        show: true,
-	        sizeAdjust: 5
+	        sizeAdjust: 7
 	      },
 	      cursor: {
 	        show: false
