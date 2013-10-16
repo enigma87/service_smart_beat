@@ -126,8 +126,8 @@ public class ShapeIndexAlgorithmTest {
 		cal.set(Calendar.MILLISECOND, 0);
 		Timestamp timeAtConsideration = new Timestamp(cal.getTime().getTime());	
 		
-		double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(traineeClassification, previousTrainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
-		assertEquals(-30.25, regressedHomeostasisIndex);
+		Double regressedHomeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(traineeClassification, previousTrainingSessionEndTime, timeAtConsideration, recentMinimumOfHomeostasisIndex);
+		assertEquals(new Double(-30.25), regressedHomeostasisIndex);
 		
 		
 		

@@ -9,6 +9,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -189,5 +190,6 @@ public class UserDaoTest {
 		userDao.deleteUser("abc123");
 		userDao.deleteUser("xyz789");
 	}
+	
 }
 
