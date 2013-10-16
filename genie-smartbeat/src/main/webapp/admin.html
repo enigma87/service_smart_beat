@@ -1,57 +1,61 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>smartbeat</title>
+    <title>smartbeat</title>
 
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-	<script src="JScripts/facebook.js"></script>
-	<script src="JScripts/jquery.jqplot.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="JScripts/facebook.js"></script>
+    <script src="JScripts/jquery.jqplot.min.js"></script>
 
-	<script src="JScripts/plugins/jqplot.dateAxisRenderer.min.js"></script>
-	<script src="JScripts/plugins/jqplot.barRenderer.min.js"></script>
-	<script src="JScripts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-	<script src="JScripts/plugins/jqplot.cursor.js"></script>
-	<script src="JScripts/plugins/jqplot.highlighter.min.js"></script>
-	<script src="JScripts/moment.min.js"></script>
+    <script src="JScripts/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <script src="JScripts/plugins/jqplot.barRenderer.min.js"></script>
+    <script src="JScripts/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script src="JScripts/plugins/jqplot.cursor.js"></script>
+    <script src="JScripts/plugins/jqplot.highlighter.min.js"></script>
+    <script src="JScripts/moment.min.js"></script>
 
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />	
-	<link href="Style/jquery.jqplot.css" rel="Stylesheet" />
-	<link href="Style/StyleSheet.css" rel="stylesheet" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/excite-bike/jquery-ui.css" />
+    <link href="Style/jquery.jqplot.css" rel="Stylesheet" />
+    <link href="Style/StyleSheet.css" rel="stylesheet" />
 
 </head>
 <body>
 
 
-<div id="header" class="login">
-	<div id="logout">
-		<img id="logout" src="Images/logout.jpg" onclick="LogoutSmartbeat()" />
-	</div>
-	<div id="icon"><img id="icon" src="Images/smartbeat.jpg" /> </div>
-	<div id="fbcorner">
-	<fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
-	</div>
-</div>
+    <div id="header" class="login">
+        <div id="logout">
+            <img id="logout" src="Images/logout.jpg" onclick="LogoutSmartbeat()" />
+        </div>
+        <div id="icon">
+            <img id="icon" src="Images/smartbeat.jpg" />
+        </div>
+        <div id="fbcorner">
+            <fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
+        </div>
 
-</br>
-<div id="main">
-	<div id="tabmenu">
-	  <ul>
-	    <li><a href="#quickview">Quick View</a></li>
-	    <li><a href="#unused1">unused</a></li>
-	    <li><a href="#unused2">unused</a></li>
-	  </ul>
+         <span id="spn_Logo1">Smart</span><span id="spn_Logo2">beat</span>
+    </div>
 
-		<div id="quickview">
-			<div id="detail">
-			</div>
-			<div id="userlist">
-				<ul class="userlist"></ul>
-			</div>
-		</div>
-		<div id="unused1"></div>
-		<div id="unused2"></div>
-	</div>
-</div>
+    </br>
+    <div id="main">
+        <div id="tabmenu">
+            <ul>
+                <li><a href="#quickview">Quick View</a></li>
+                <li><a href="#unused1">unused</a></li>
+                <li><a href="#unused2">unused</a></li>
+            </ul>
+
+            <div id="quickview">
+                <div id="detail">
+                </div>
+                <div id="userlist">
+                    <ul class="userlist"></ul>
+                </div>
+            </div>
+            <div id="unused1"></div>
+            <div id="unused2"></div>
+        </div>
+    </div>
 </body>
 </html>

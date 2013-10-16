@@ -70,9 +70,10 @@ public class GraphAPITest {
 	}
 	
 	@Test
-	public void testGetTestUser(){
+	public void testGetTestUser() throws IOException{
 		UserBean userFb = GraphAPI.getTestUser();
 		assertNotNull(userFb);		
+		GraphAPI.deleteTestUser(userFb);
 	}
 	
 	public void testDeleteTestUser() throws IOException {
