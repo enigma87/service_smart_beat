@@ -1,5 +1,4 @@
-﻿/*General case*/
-html
+﻿html
 {
     overflow-x: auto;
     overflow-y: auto;
@@ -24,15 +23,14 @@ body
 {
     height: 90px;
     background-color: #FEFEFE;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 #main
 {
     padding: 0px 0px 0px 0px;
-    margin: 0 auto;
+    margin:0 auto;        
     background-color: #FEFEFE;
     height: 100%;
     display: none;
@@ -44,135 +42,96 @@ body
     background-color: #E6E6E6;
 }
 
-.navigation
+.navigation 
 {
-    cursor: pointer;
-    border: none;
+        cursor: pointer;
+        border: none;
 }
 
-#icon
-{
-    float: left;
-    margin: 6px 6px 6px 6px;
+#icon {
+        float:left;        
+        margin: 6px 6px 6px 6px;
 }
 
-#fbcorner
+#fbcorner 
 {
-    margin: 6px 0px 6px 6px;
-    float: left;
+        margin: 6px 0px 6px 6px;
+        float:left;
 }
 
-#logout
+#logout 
 {
-    float: right;
-    cursor: pointer;
-    margin: 6px 6px 6px 6px;
+        float:right;
+        cursor: pointer;
+        margin: 6px 6px 6px 6px;
 }
 
-#userlist
+#userlist 
 {
-    width: 20%;
-    height: 100%;
+        width:20%;
+        height: 100%;
 }
 
 #detail
 {
-    float: right;
-    width: 77%;
+        float:right;
+        width:77%;
 }
 
 
-.ui-widget-content
-{
+.ui-widget-content{
     border: none;
 }
-
-.ui-widget-header
-{
-    border: none;
+.ui-widget-header{
+   border: none;
+}
+img#icon {
+        height: 72px;
+        width: 120px;
+}
+img#logout {
+        height:49px;
+        width: 49px;
+        display: none;
+}
+ul { 
+        list-style: none;
+        font-size: 13px;
 }
 
-img#icon
-{
-    height: 72px;
-    width: 120px;
-}
-
-img#logout
-{
-    height: 49px;
-    width: 49px;
-    display: none;
-}
-
-ul
-{
-    list-style: none;
-    font-size: 13px;
-}
-
-    ul.userlist li
-    {
-        margin: 0 20px 20px 0;
-        vertical-align: top;
+ul.userlist li{ 
+        margin:0 20px 20px 0; vertical-align:top;
         font-size: 14.5px;
-    }
-
-.selected
-{
-    border-bottom: solid;
-    border-bottom-width: 2px;
-    border-bottom-color: #ee8b49;
 }
 
-div#qvshapeindexhistory
-{
-    height: 300px;
-    text-align: center;
-    width: 90%;
+.selected {
+        border-bottom:solid;
+        border-bottom-width:2px;
+        border-bottom-color:#ee8b49;        
 }
 
-div#qvtrainingsessionhistory
-{
-    text-align: left;
-    width: 95%;
+div#qvshapeindexhistory {
+        height:300px;
+        text-align:center;
+        width:90%;
 }
-
-div.speedistrograph
-{
-    height: 120px;
-    width: 120px;
+div#qvtrainingsessionhistory {
+        text-align:left;
+        width:95%;
 }
-
-.jqplot-target
-{
-    color: #ee8b49;
+div.speedistrograph {
+        height:120px;
+        width:120px;
 }
-
-div.trainingsessionkeys
-{
-    margin-right: auto;
-    margin-left: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    width: 30%;
-    position: absolute;
-    text-align: left;
+.jqplot-target {
+        color:#ee8b49;
 }
-
-/*Header Text*/
-#spn_Logo1
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 40pt;
-    font-weight: bolder;
-    color: #0033CC; /*text-shadow: 2px 2px 2px #555;*/
-}
-
-#spn_Logo2
-{
-    padding: 0px 0px 0px 0px;
-    font-size: 40pt;
-    font-weight: bolder;
-    color: #FF6600;
+div.trainingsessionkeys {
+        margin-right: auto;
+        margin-left:0px;
+        margin-top:0px;
+        margin-bottom:0px;
+        width:30%;
+        position:absolute;
+        text-align:left;
 }

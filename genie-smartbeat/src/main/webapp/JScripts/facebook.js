@@ -147,8 +147,10 @@ function ShowQuickView(listitem, userid) {
 
 function QVTrainingSessionHistory(userid) {
 	// use global access token
-	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
-        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+	//var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS");
+        
+	var startTimestamp = '2013-10-01 00:00:00.000';
+	var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS");
 
 	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
 		
@@ -222,8 +224,10 @@ function QVTrainingSessionHistory(userid) {
 
 function QVShapeIndexHistory(userid) {
 	// use global access token
-	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
-        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+	//var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
+        
+	var startTimestamp = '2013-10-01 00:00:00.000';
+	var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
 
 	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
 
