@@ -81,7 +81,7 @@ function getAllUsers() {
 			for (var i=0; i < response.obj.traineeIds.length; i++) {
 				$("#userlist").find("ul").append('<li  onclick="ShowQuickView(this,' 
 					+ "'" +response.obj.traineeIds[i].userid.toString() + "'" 
-					+ ')"><div> <span class="ui-icon ui-icon-person" style="display:inline-block"></span> <label class="navigation">' 
+					+ ')"><div> <span class="ui-icon ui-icon-person"></span> <label class="navigation">' 
 					+ response.obj.traineeIds[i].lastName 
 					+ ", " 
 					+ response.obj.traineeIds[i].firstName
@@ -159,7 +159,7 @@ function QVTrainingSessionHistory(userid) {
 			var trainingSessionBean = response.obj.trainingSessionBeans[i];
 
 			$('#qvtrainingsessionhistory').append(
-				'<div style="height:240px;" id="trainingsessionrow-'+ trainingSessionBean.trainingSessionId.toString() + '">'   
+				'<div class="trainingsessionrow" id="trainingsessionrow-'+ trainingSessionBean.trainingSessionId.toString() + '">'   
 				+'</div>'
 			);
 
@@ -203,10 +203,10 @@ function QVTrainingSessionHistory(userid) {
 			}
 			
 			$(trainingSessionrow).append(
-				'<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="timedistrograph-' 
+				'<div class="speeddistrograph"  id="timedistrograph-' 
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
-				+ '<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="speeddistrograph-' 
+				+ '<div class="speeddistrograph"  id="speeddistrograph-' 
 				+ trainingSessionBean.trainingSessionId.toString() 
 				+ '"></div>'
 			);	
@@ -215,7 +215,7 @@ function QVTrainingSessionHistory(userid) {
 			BarGraph('speeddistrograph-' + trainingSessionBean.trainingSessionId, [speeddistrodata], heartratezones, "Speed Distribution");
 
 			if (response.obj.trainingSessionBeans.length > (i+1) ) {
-				$('#qvtrainingsessionhistory').append('<hr>');			
+				$('#qvtrainingsessionhistory').append('</br>');			
 			}		
 		}
 		
@@ -238,7 +238,9 @@ function QVShapeIndexHistory(userid) {
 			plotdata[i] = [moment(shapeIndexBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), shapeIndexBean.shapeIndex];
 		}
 		
-		DateGraph("qvshapeindexhistory", [plotdata]);
+		$("#qvshapeindexhistory").append('<div id="shapeindexhistorygraph"></div>');
+
+		DateGraph("shapeindexhistorygraph", [plotdata]);
 	});
 }
 

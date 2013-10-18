@@ -46,6 +46,7 @@ body
 {
         cursor: pointer;
         border: none;
+	display:inline-block;
 }
 
 #icon {
@@ -68,14 +69,14 @@ body
 
 #userlist 
 {
-        width:20%;
+        width:26%;
         height: 100%;
 }
 
 #detail
 {
         float:right;
-        width:77%;
+        width:72%;
 }
 
 
@@ -111,27 +112,44 @@ ul.userlist li{
 }
 
 div#qvshapeindexhistory {
-        height:300px;
         text-align:center;
         width:90%;
+	overflow:hidden;
 }
 div#qvtrainingsessionhistory {
         text-align:left;
         width:95%;
 }
-div.speedistrograph {
-        height:120px;
-        width:120px;
+div.speeddistrograph {
+	float:right;
+	padding-left:15px;
+	width:240px;
+	height:200px;
+}
+div.timedistrograph {
+	float:right;
+	padding-left:15px;
+	width:240px;
+	height:200px;
 }
 .jqplot-target {
         color:#ee8b49;
 }
 div.trainingsessionkeys {
-        margin-right: auto;
-        margin-left:0px;
-        margin-top:0px;
-        margin-bottom:0px;
-        width:30%;
-        position:absolute;
+	float:left;
         text-align:left;
 }
+div.trainingsessionrow {
+	overflow:hidden;
+	border-bottom:solid;
+	border-bottom-width:2px;
+	border-color:#CCCCCC;
+}
+.ui-icon-person {
+	display:inline-block;	
+}
+div#shapeindexhistorygraph {
+	height:300px;
+	width:550px;
+}
+
