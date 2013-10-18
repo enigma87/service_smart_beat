@@ -122,13 +122,13 @@ div#qvtrainingsessionhistory {
 }
 div.speeddistrograph {
 	float:left;
-	padding-left:.5cm;
+	padding: 0px 0.5cm 0px 0px;
 	width:240px;
 	height:200px;
 }
 div.timedistrograph {
 	float:left;
-	padding-left:.5cm;
+	padding: 0px 0.5cm 0px 0px;
 	width:240px;
 	height:200px;
 }
@@ -136,7 +136,7 @@ div.timedistrograph {
         color:#ee8b49;
 }
 div.trainingsessionkeys {
-	padding: 0px 0.5cm 0px 0.5cm;
+	padding: 0px 1cm 0px 0px;
 	float:left;
         text-align:left;
 }
