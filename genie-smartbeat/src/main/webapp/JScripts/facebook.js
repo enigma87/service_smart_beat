@@ -1,6 +1,6 @@
 // globals, for a session
 
-var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+var HOST_URL = 'http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
 //var HOST_URL = 'http://localhost:8080/smartbeat/';
 
 var uid = null;
@@ -16,7 +16,7 @@ var line1 = [['2013-07-06 18:23:10', 4]];
 
 var JQPLOT_COLORS = [
  "#ee8b49",
- "#839557", 
+ "#839557",
  "#4bb2c5",
  "#c5b47f",
  "#958c12",
@@ -152,7 +152,7 @@ function ShowQuickView(listitem, userid) {
             }
         });
 
-	AddSummary(userid);
+        AddSummary(userid);
         QVTrainingSessionHistory(userid);
         QVShapeIndexHistory(userid);
         QVHeartrateTestHistory(userid);
@@ -162,28 +162,27 @@ function ShowQuickView(listitem, userid) {
 }
 
 function AddSummary(userid) {
-        QVRecoveryTime(userid);
-        QVShapeIndex(userid);
-	QVHeartrateZones(userid);
+    QVRecoveryTime(userid);
+    QVShapeIndex(userid);
+    QVHeartrateZones(userid);
 }
 
 function QVHeartrateZones(userid) {
-	// use global access token
+    // use global access token
     $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateZones?accessToken=" + accessToken + "&accessTokenType=facebook",
 	function (response) {
-		var donutdata = [];
-		for (var i = 1; i <= 6; i++ ) {
-			var start = response.obj['heartrateZone' + i + 'Start'];
-			var end = response.obj['heartrateZone' + i + 'End'];
-			var label = 'Zone ' + i + ': ' + start + ' - ' + end;
-			var value = end - start;
-			donutdata[i-1] = [label, value];	
-		}	
-			
-		DonutGraph("qvheartratedonut", [donutdata], "Heartrate Zones");
+	    var donutdata = [];
+	    for (var i = 1; i <= 6; i++) {
+	        var start = response.obj['heartrateZone' + i + 'Start'];
+	        var end = response.obj['heartrateZone' + i + 'End'];
+	        var label = 'Zone ' + i + ': ' + start + ' - ' + end;
+	        var value = end - start;
+	        donutdata[i - 1] = [label, value];
+	    }
+
+	    DonutGraph("qvheartratedonut", [donutdata], "Heartrate Zones");
 	});
 }
-
 function QVHeartrateTestHistory(userid) {
     // use global access token
     //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")    
@@ -195,9 +194,8 @@ function QVHeartrateTestHistory(userid) {
     var thresholdheartrate;
     var maximalheartrate;
 
-    $("#qvheartratetesthistory").append('<table style="text-align:center;">');
-    $("#qvheartratetesthistory").append('<tr><td>Orthostatic Heartrate : </td></tr>');
-    $("#qvheartratetesthistory").append('<tr><td><div id="heartratetesthistorygraph" style="width:500px;"></div></td></tr>');
+    $("#qvheartratetesthistory").append('<ul style="list-style: none; width:800px;">');
+    $("#qvheartratetesthistory").append('<li><div style="width:500px; text-align:center; float:right;">Orthostatic Heartrate : </div><br/><div id="heartratetesthistorygraph" style="width:500px;float:right;"></div></li>');
 
     //resting
     $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
@@ -209,7 +207,7 @@ function QVHeartrateTestHistory(userid) {
             restingheartrate = "NA";
         }
 
-        $("#qvheartratetesthistory").append('<tr><td>Resting Heartrate : ' + restingheartrate + '</td></tr>');
+        $("#qvheartratetesthistory").append('<li><br/><div style="width:225px;">Resting Heartrate : ' + restingheartrate + '</div></li>');
 
         //threshold
         $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
@@ -222,7 +220,7 @@ function QVHeartrateTestHistory(userid) {
                 thresholdheartrate = "NA";
             }
 
-            $("#qvheartratetesthistory").append('<tr><td>threshold Heartrate : ' + thresholdheartrate + '</td></tr>');
+            $("#qvheartratetesthistory").append('<li><div style="width:225px;">Threshold Heartrate : ' + thresholdheartrate + '</div></li>');
 
             //maximal
             $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
@@ -234,9 +232,9 @@ function QVHeartrateTestHistory(userid) {
                     maximalheartrate = "NA";
                 }
 
-                $("#qvheartratetesthistory").append('<tr><td>maximal Heartrate : ' + maximalheartrate + '</td></tr>');
+                $("#qvheartratetesthistory").append('<li><div style="width:225px;">Maximal Heartrate : ' + maximalheartrate + '</div></li>');
 
-                $("#qvheartratetesthistory").append('</table>');
+                $("#qvheartratetesthistory").append(' </ul>');
                 //orthostatic
                 $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
                 .done(function (orthostaticresponse) {
@@ -255,6 +253,79 @@ function QVHeartrateTestHistory(userid) {
 
     //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
 }
+
+
+//function QVHeartrateTestHistory(userid) {
+//    // use global access token
+//    //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")    
+//    var startTimestamp = '2013-10-01 00:00:00.000';
+//    var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+
+//    //HTML for otherhearrate types
+//    var restingheartrate;
+//    var thresholdheartrate;
+//    var maximalheartrate;
+
+//    $("#qvheartratetesthistory").append('<table style="text-align:center;">');
+//    $("#qvheartratetesthistory").append('<tr><td>Orthostatic Heartrate : </td></tr>');
+//    $("#qvheartratetesthistory").append('<tr><td><div id="heartratetesthistorygraph" style="width:500px;"></div></td></tr>');
+
+//    //resting
+//    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+//    .done(function (restingresponse) {
+//        if (restingresponse.obj.heartrateTests.length > 0) {
+//            restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
+//        }
+//        else {
+//            restingheartrate = "NA";
+//        }
+
+//        $("#qvheartratetesthistory").append('<tr><td>Resting Heartrate : ' + restingheartrate + '</td></tr>');
+
+//        //threshold
+//        $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+//        .done(function (thresholdresponse) {
+
+//            if (thresholdresponse.obj.heartrateTests.length > 0) {
+//                thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
+//            }
+//            else {
+//                thresholdheartrate = "NA";
+//            }
+
+//            $("#qvheartratetesthistory").append('<tr><td>threshold Heartrate : ' + thresholdheartrate + '</td></tr>');
+
+//            //maximal
+//            $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+//            .done(function (maximalresponse) {
+//                if (maximalresponse.obj.heartrateTests.length > 0) {
+//                    maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
+//                }
+//                else {
+//                    maximalheartrate = "NA";
+//                }
+
+//                $("#qvheartratetesthistory").append('<tr><td>maximal Heartrate : ' + maximalheartrate + '</td></tr>');
+
+//                $("#qvheartratetesthistory").append('</table>');
+//                //orthostatic
+//                $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+//                .done(function (orthostaticresponse) {
+//                    var plotdata = [];
+
+//                    for (var i = 0; i < orthostaticresponse.obj.heartrateTests.length; i++) {
+//                        var heartrateBean = orthostaticresponse.obj.heartrateTests[i];
+//                        plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
+//                    }
+
+//                    DateGraph("heartratetesthistorygraph", [plotdata]);
+//                });
+//            });
+//        });
+//    });
+
+//    //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
+//}
 
 
 function QVTrainingSessionHistory(userid) {
@@ -547,37 +618,34 @@ function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 }
 
 function DonutGraph(divid, donutarrays, title) {
-	if (!(isArray(donutarrays)
+    if (!(isArray(donutarrays)
 		&& donutarrays[0].length > 0)) {
 
-		return;
-	}
+        return;
+    }
 
-	var graph = $.jqplot(divid, donutarrays, {
-		animate: !$.jqplot.use_excanvas,
-		title: {
-        	    text: title,
-        	    show: true
-        	},
-		grid: {
-        	    borderWidth: 0.0
-        	},
-		seriesColors: JQPLOT_COLORS,
-		seriesDefaults: {
-			renderer:$.jqplot.DonutRenderer,
-		        rendererOptions:{
-				showDataLabels: false,
-				sliceMargin: 0,
-				diameter: 100,
-				innerDiameter: 60,
-				startAngle: -90,
-				dataLabels:'value'
-	         	}
-	     	},
-		legend: { show:true, location: 'e' }
-	});
-	graphs[graphs.length] = graph;
+    var graph = $.jqplot(divid, donutarrays, {
+        animate: !$.jqplot.use_excanvas,
+        title: {
+            text: title,
+            show: true
+        },
+        grid: {
+            borderWidth: 0.0
+        },
+        seriesColors: JQPLOT_COLORS,
+        seriesDefaults: {
+            renderer: $.jqplot.DonutRenderer,
+            rendererOptions: {
+                showDataLabels: false,
+                sliceMargin: 0,
+                diameter: 100,
+                innerDiameter: 60,
+                startAngle: -90,
+                dataLabels: 'value'
+            }
+        },
+        legend: { show: true, location: 'e' }
+    });
+    graphs[graphs.length] = graph;
 }
-
-
-
