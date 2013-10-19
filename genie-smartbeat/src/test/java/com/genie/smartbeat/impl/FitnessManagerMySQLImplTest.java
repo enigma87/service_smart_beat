@@ -18,6 +18,9 @@ import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
 import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
+import com.genie.smartbeat.core.exceptions.homeostasis.AbsenceOfHomeostasisIndexModelException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
+import com.genie.smartbeat.core.exceptions.session.AbsenceOfTrainingSessionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
@@ -1205,7 +1208,7 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test
-	public void testGetShapeIndexWithNewlyArrivedSession(){
+	public void testGetShapeIndexWithNewlyArrivedSession() throws TrainingSessionException, HomeostasisModelException{
 		
 		/*To check the null recoveryTime scenario*/
 		Timestamp recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
@@ -1572,10 +1575,15 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test
-	public void testGetRecoveryTime(){
+	public void testGetRecoveryTime() throws TrainingSessionException, HomeostasisModelException{
 		
+		Timestamp recoveryTime = null;
 		/*To check the null recoveryTime scenario*/
-		Timestamp recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		try{
+		   recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		}catch(AbsenceOfTrainingSessionException e){
+			Assert.assertTrue(true);
+		}
 		Assert.assertNull(recoveryTime);
 		
 		/*Valid user bean needed for age and gender*/
@@ -1628,13 +1636,20 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setHrz6Distance(0.0);
 		fitnessTrainingSessionBean.setSurfaceIndex(0);
 		fitnessTrainingSessionBean.setTrainingSessionId("test1");
+		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
+		try{
+			 recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		}catch(AbsenceOfHomeostasisIndexModelException e){
+		     Assert.assertTrue(true);
+		}
 		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid(userid);
 		fitnessHomeostasisIndexBean.setTraineeClassification(3);
 		fitnessHomeostasisIndexBean.setRecentMinimumOfHomeostasisIndex(-86.5);
 		
-		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+		
 		homeostasisIndexDAO.createHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 	    /*Sandra Session 2*/
@@ -2151,7 +2166,7 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test 
-	public void testGetHomeostasisIndex(){
+	public void testGetHomeostasisIndex() throws HomeostasisModelException{
 		/*Valid user bean needed for age and gender*/
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, 1988);

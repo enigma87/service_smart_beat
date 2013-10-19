@@ -13,22 +13,22 @@ public class AuthenticationStatus {
 		DENIED(1),
 		DENIED_EMAIL_REQUIRED(2);
 		
-		private int statusval;
+		private int errorCode;
 		
-		private  Status(int val) {
-			this.statusval = val;
+		private  Status(int errorCode) {
+			this.errorCode = errorCode;
 		}
 		
-		public int getValue() {
-			return this.statusval;
+		public int getErrorCode() {
+			return this.errorCode;
 		}
 		
 		@Override
 		public String toString() {
 			switch (this) {
-			  case APPROVED: return "Access Granted!"; 
-			  case DENIED_EMAIL_REQUIRED: return "Valid EmailID required for Access."; 
-			  case DENIED: return "Access Denied.";
+			  case APPROVED					: return "authentication_status_" + getErrorCode() + ": authentication granted";
+			  case DENIED					: return "authentication_status_" + getErrorCode() + ": authentication denied";
+			  case DENIED_EMAIL_REQUIRED	: return "authentication_status_" + getErrorCode() + ": authentication denied - email required"; 			  
 			}
 			return null;
 		}	

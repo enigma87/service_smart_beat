@@ -16,6 +16,9 @@ import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.core.FitnessManager;
+import com.genie.smartbeat.core.exceptions.homeostasis.AbsenceOfHomeostasisIndexModelException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
+import com.genie.smartbeat.core.exceptions.session.AbsenceOfTrainingSessionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
@@ -554,35 +557,40 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	
 	public FitnessHomeostasisIndexBean getHomeostasisIndexModelForUser(String userid) {
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexModel = null;
-		if (userid != null && !userid.isEmpty()) {
-			fitnessHomeostasisIndexModel = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		}
+
+		fitnessHomeostasisIndexModel = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		
 		return fitnessHomeostasisIndexModel;
 	}
 	
-	public Timestamp getRecoveryTime(String userid) {
+	public Timestamp getRecoveryTime(String userid) throws TrainingSessionException,HomeostasisModelException {
 		
 		Timestamp recoveryTime = null;
 		FitnessTrainingSessionBean fitnessTrainingSessionBean = fitnessTrainingSessionDAO.getRecentFitnessTrainingSessionForUser(userid);
-		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-		
-		if(null != fitnessTrainingSessionBean && null != fitnessHomeostasisIndexBean )
-		{
-			recoveryTime = ShapeIndexAlgorithm.calculateTimeAtFullRecovery(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessTrainingSessionBean.getEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		if (null == fitnessTrainingSessionBean){
+			throw new AbsenceOfTrainingSessionException();
 		}
+		
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		if (null == fitnessHomeostasisIndexBean){
+			throw new AbsenceOfHomeostasisIndexModelException();
+		}
+		
+		recoveryTime = ShapeIndexAlgorithm.calculateTimeAtFullRecovery(fitnessHomeostasisIndexBean.getTraineeClassification(),fitnessTrainingSessionBean.getEndTime() ,fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
 		return recoveryTime;
 	}
 	
-	public double getHomeostasisIndex(String userid){
+	public double getHomeostasisIndex(String userid) throws HomeostasisModelException{
 		double homeostasisIndex = 0.0;
 		
-		if (userid != null && !userid.isEmpty()) {
-			FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
-			if(null != fitnessHomeostasisIndexBean){
-				Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
-				homeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getRecentEndTime(), currentTime, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
-			}
+		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = fitnessHomeostasisIndexDAO.getHomeostasisIndexModelByUserid(userid);
+		if(null != fitnessHomeostasisIndexBean){
+			Timestamp currentTime = new Timestamp(DateTimeUtils.currentTimeMillis());
+			homeostasisIndex = ShapeIndexAlgorithm.getRegressedHomeostasisIndex(fitnessHomeostasisIndexBean.getTraineeClassification(), fitnessHomeostasisIndexBean.getRecentEndTime(), currentTime, fitnessHomeostasisIndexBean.getRecentMinimumOfHomeostasisIndex());
+		}else{
+			throw new AbsenceOfHomeostasisIndexModelException();
 		}
+	
 		return  homeostasisIndex;
 	}
 	
