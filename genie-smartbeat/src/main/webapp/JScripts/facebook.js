@@ -1,7 +1,7 @@
 // globals, for a session
 
 //var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
-var HOST_URL='http://localhost:8080/smartbeat/';
+var HOST_URL = 'http://localhost:8080/smartbeat/';
 
 var uid = null;
 var accessToken = null;
@@ -14,7 +14,7 @@ var Zone4Time = [3.0];
 var Zone5Time = [4.0];
 var line1 = [['2013-07-06 18:23:10', 4]];
 
-var JQPLOT_COLORS = ["#ee8b49", "#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"]; 
+var JQPLOT_COLORS = ["#ee8b49", "#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"];
 
 window.fbAsyncInit = function () {
 
@@ -38,16 +38,16 @@ window.fbAsyncInit = function () {
                             if (response3.status === 'connected') {
                                 uid = response3.authResponse.userID;
                                 accessToken = response3.authResponse.accessToken;
-				$("#main").show(700);
-				$("img#logout").show(700);
+                                $("#main").show(700);
+                                $("img#logout").show(700);
                             } else if (response.status === 'not_authorized') {
-                                
-				document.write('<p>app denied auth</p>');
-				// the user is logged in to Facebook, 
+
+                                document.write('<p>app denied auth</p>');
+                                // the user is logged in to Facebook, 
                                 // but has not authenticated your app
                             } else {
                                 // the user isn't logged in to Facebook.
-				document.write('<p>user not logged in.</p>');
+                                document.write('<p>user not logged in.</p>');
                             }
                         });
 
@@ -58,8 +58,8 @@ window.fbAsyncInit = function () {
             });
         }
         else {
-	    document.write('<p>please log into facebook</p>');
-	    FB.login();
+            document.write('<p>please log into facebook</p>');
+            FB.login();
         }
     });
 };
@@ -76,189 +76,271 @@ window.fbAsyncInit = function () {
 
 
 function getAllUsers() {
-	$.getJSON(HOST_URL + "v1.0/trainee/all", 
+    $.getJSON(HOST_URL + "v1.0/trainee/all",
 		function (response) {
-			for (var i=0; i < response.obj.traineeIds.length; i++) {
-				$("#userlist").find("ul").append('<li  onclick="ShowQuickView(this,' 
-					+ "'" +response.obj.traineeIds[i].userid.toString() + "'" 
-					+ ')"><div> <span class="ui-icon ui-icon-person" style="display:inline-block"></span> <label class="navigation">' 
-					+ response.obj.traineeIds[i].lastName 
-					+ ", " 
+		    for (var i = 0; i < response.obj.traineeIds.length; i++) {
+		        $("#userlist").find("ul").append('<li  onclick="ShowQuickView(this,'
+					+ "'" + response.obj.traineeIds[i].userid.toString() + "'"
+					+ ')"><div> <span class="ui-icon ui-icon-person"></span> <label class="navigation">'
+					+ response.obj.traineeIds[i].lastName
+					+ ", "
 					+ response.obj.traineeIds[i].firstName
 					+ "</label></div></li>"
 				);
-			}
-			$("#userlist").find("li").first().click();		
-		} 
+		    }
+		    $("#userlist").find("li").first().click();
+		}
 	);
 }
 
 function HighlightSelectedUser(listitem) {
 
-	$("#userlist").find("label.navigation").removeClass("selected");
-	$(listitem).find("label.navigation").addClass("selected");
+    $("#userlist").find("label.navigation").removeClass("selected");
+    $(listitem).find("label.navigation").addClass("selected");
 }
 
 function ShowQuickView(listitem, userid) {
 
-	//when quickview is changed to another user, reset plots
-	graphs=[];
+    //when quickview is changed to another user, reset plots
+    graphs = [];
 
-	if (userid != null
+    if (userid != null
 		&& accessToken != null) {
 
-		HighlightSelectedUser(listitem)
+        HighlightSelectedUser(listitem)
 
-		$("#detail").html(
+        $("#detail").html(
 			'<div id="accordion">'
 			+ '<h3>Summary</h3>'
 		  	+ '<div> <div id="qvsummary" ><ul>'
-			+ '<li id="qvtraineeclassification"> </li>'		
-			+ '<li id="qvtimetorecover"> </li>'	
-			+ '<li id="qvshapeindex"> </li>'			
+			+ '<li id="qvtraineeclassification"> </li>'
+			+ '<li id="qvtimetorecover"> </li>'
+			+ '<li id="qvshapeindex"> </li>'
 			+ '</ul></div>'
 			+ '</div>'
 			+ '<h3>Training Session History</h3>'
 			+ '<div id="qvtrainingsessionhistory" > </div>'
 			+ '<h3>Shape Index History</h3>'
-			+ '<div id="qvshapeindexhistory" ></div>'	
-			+ '</div>');
+			+ '<div id="qvshapeindexhistory" ></div>'
+            + '<h3>Heart Rate Test</h3>'
+            + '<div id="qvheartratetesthistory" ></div>'
+            + '</div>');
 
-		$( "#accordion" ).accordion({
-			animate: 300,
-	  		heightStyle: "content",
-	  		autoHeight: true,
-			collapsible: true,
-			activate: function(event, ui) {
-				for(var i=0; i < graphs.length; i++) {
-					graphs[i].replot();	
-				}
-			}
-	 	});
-	
-		QVRecoveryTime(userid);
-		QVShapeIndex(userid);
-		QVTrainingSessionHistory(userid);
-		QVShapeIndexHistory(userid);
-	} else {
-		window.setTimeout(function() { ShowQuickView(listitem, userid); }, 333);	
-	}
+        $("#accordion").accordion({
+            animate: 300,
+            heightStyle: "content",
+            autoHeight: true,
+            collapsible: true,
+            activate: function (event, ui) {
+                for (var i = 0; i < graphs.length; i++) {
+                    graphs[i].replot();
+                }
+            }
+        });
+
+        QVRecoveryTime(userid);
+        QVShapeIndex(userid);
+        QVTrainingSessionHistory(userid);
+        QVShapeIndexHistory(userid);
+        QVHeartrateTestHistory(userid);
+    } else {
+        window.setTimeout(function () { ShowQuickView(listitem, userid); }, 333);
+    }
 }
 
+function QVHeartrateTestHistory(userid) {
+    // use global access token
+    //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")    
+    var startTimestamp = '2013-10-01 00:00:00.000';
+    var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+
+    //HTML for otherhearrate types
+    var restingheartrate;
+    var thresholdheartrate;
+    var maximalheartrate;
+
+    $("#qvheartratetesthistory").append('<table style="text-align:center;">');
+    $("#qvheartratetesthistory").append('<tr><td>Orthostatic Heartrate : </td></tr>');
+    $("#qvheartratetesthistory").append('<tr><td><div id="heartratetesthistorygraph" style="width:500px;"></div></td></tr>');
+
+    //resting
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+    .done(function (restingresponse) {
+        if (restingresponse.obj.heartrateTests.length > 0) {
+            restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
+        }
+        else {
+            restingheartrate = "NA";
+        }
+
+        $("#qvheartratetesthistory").append('<tr><td>Resting Heartrate : ' + restingheartrate + '</td></tr>');
+
+        //threshold
+        $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+        .done(function (thresholdresponse) {
+
+            if (thresholdresponse.obj.heartrateTests.length > 0) {
+                thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
+            }
+            else {
+                thresholdheartrate = "NA";
+            }
+
+            $("#qvheartratetesthistory").append('<tr><td>threshold Heartrate : ' + thresholdheartrate + '</td></tr>');
+
+            //maximal
+            $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+            .done(function (maximalresponse) {
+                if (maximalresponse.obj.heartrateTests.length > 0) {
+                    maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
+                }
+                else {
+                    maximalheartrate = "NA";
+                }
+
+                $("#qvheartratetesthistory").append('<tr><td>maximal Heartrate : ' + maximalheartrate + '</td></tr>');
+
+                $("#qvheartratetesthistory").append('</table>');
+                //orthostatic
+                $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+                .done(function (orthostaticresponse) {
+                    var plotdata = [];
+
+                    for (var i = 0; i < orthostaticresponse.obj.heartrateTests.length; i++) {
+                        var heartrateBean = orthostaticresponse.obj.heartrateTests[i];
+                        plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
+                    }
+
+                    DateGraph("heartratetesthistorygraph", [plotdata]);
+                });
+            });
+        });
+    });
+
+    //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
+}
+
+
 function QVTrainingSessionHistory(userid) {
-	// use global access token
-	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
-        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+    // use global access token
+    //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS");
 
-	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
-		
-		for (var i=0; i< response.obj.trainingSessionBeans.length; i++) {
+    var startTimestamp = '2013-10-01 00:00:00.000';
+    var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS");
 
-			var trainingSessionBean = response.obj.trainingSessionBeans[i];
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp, function (response) {
 
-			$('#qvtrainingsessionhistory').append(
-				'<div style="height:240px;" id="trainingsessionrow-'+ trainingSessionBean.trainingSessionId.toString() + '">'   
-				+'</div>'
+        for (var i = 0; i < response.obj.trainingSessionBeans.length; i++) {
+
+            var trainingSessionBean = response.obj.trainingSessionBeans[i];
+
+            $('#qvtrainingsessionhistory').append(
+				'<div class="trainingsessionrow" id="trainingsessionrow-' + trainingSessionBean.trainingSessionId.toString() + '">'
+				+ '</div>'
 			);
 
-			var trainingsessionselector = 'div#trainingsessionrow-' + trainingSessionBean.trainingSessionId.toString();
+            var trainingsessionselector = 'div#trainingsessionrow-' + trainingSessionBean.trainingSessionId.toString();
 
-			var trainingSessionrow = $('#qvtrainingsessionhistory').find(trainingsessionselector)[0];
+            var trainingSessionrow = $('#qvtrainingsessionhistory').find(trainingsessionselector)[0];
 
-			var html = '<div class="trainingsessionkeys"><ul>';
-			for (key in trainingSessionBean) {
-				if (!InList(key, ['startTime',
-						  'endTime', 
-						  'surfaceIndex', 
-						  'vdot', 
-						  'healthPerceptionIndex', 
+            var html = '<div class="trainingsessionkeys"><ul>';
+            for (key in trainingSessionBean) {
+                if (!InList(key, ['startTime',
+						  'endTime',
+						  'surfaceIndex',
+						  'vdot',
+						  'healthPerceptionIndex',
 						  'muscleStatePerceptionIndex',
 						  'sessionStressPerceptionIndex',
 						  'averageAltitude',
 						  'extraLoad',
-						  'validForTableInsert', 
+						  'validForTableInsert',
 						  'sessionDuration'])) {
-					
-					continue;					
-				}
-				var listitemhtml = '<li class="trainingsessionhistorycolumn"> <label>'+ key + ' : </label>'
+
+                    continue;
+                }
+                var listitemhtml = '<li class="trainingsessionhistorycolumn"> <label>' + key + ' : </label>'
 				+ trainingSessionBean[key] + '</li>';
-				html += listitemhtml;
-			}
-			html += '</ul></div>';
+                html += listitemhtml;
+            }
+            html += '</ul></div>';
 
-			$(trainingSessionrow).append(html);
+            $(trainingSessionrow).append(html);
 
 
-			var heartratezones = [1, 2, 3, 4, 5, 6];
-			var timedistrodata = [];
-			var speeddistrodata = [];
+            var heartratezones = [1, 2, 3, 4, 5, 6];
+            var timedistrodata = [];
+            var speeddistrodata = [];
 
-			//WARNING: index doesn't start with 0 because we deliberately mark the zones from 1-6
-			for (var j=1; j <= trainingSessionBean.timeDistributionOfHRZ.length; j++) {
-				timedistrodata[j-1] = trainingSessionBean.timeDistributionOfHRZ[j];
-				speeddistrodata[j-1] =  trainingSessionBean.speedDistributionOfHRZ[j]; 
-			}
-			
-			$(trainingSessionrow).append(
-				'<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="timedistrograph-' 
-				+ trainingSessionBean.trainingSessionId.toString() 
+            //WARNING: index doesn't start with 0 because we deliberately mark the zones from 1-6
+            for (var j = 1; j <= trainingSessionBean.timeDistributionOfHRZ.length; j++) {
+                timedistrodata[j - 1] = trainingSessionBean.timeDistributionOfHRZ[j];
+                speeddistrodata[j - 1] = trainingSessionBean.speedDistributionOfHRZ[j];
+            }
+
+            $(trainingSessionrow).append(
+				'<div class="speeddistrograph"  id="timedistrograph-'
+				+ trainingSessionBean.trainingSessionId.toString()
 				+ '"></div>'
-				+ '<div style="padding-left:15px;float:right;width:300px;height:240px;" class="speeddistrograph"  id="speeddistrograph-' 
-				+ trainingSessionBean.trainingSessionId.toString() 
+				+ '<div class="speeddistrograph"  id="speeddistrograph-'
+				+ trainingSessionBean.trainingSessionId.toString()
 				+ '"></div>'
-			);	
-			
-			BarGraph('timedistrograph-' + trainingSessionBean.trainingSessionId, [timedistrodata], heartratezones, "Time Distribution");
-			BarGraph('speeddistrograph-' + trainingSessionBean.trainingSessionId, [speeddistrodata], heartratezones, "Speed Distribution");
+			);
 
-			if (response.obj.trainingSessionBeans.length > (i+1) ) {
-				$('#qvtrainingsessionhistory').append('<hr>');			
-			}		
-		}
-		
-	});
+            BarGraph('timedistrograph-' + trainingSessionBean.trainingSessionId, [timedistrodata], heartratezones, "Time Distribution");
+            BarGraph('speeddistrograph-' + trainingSessionBean.trainingSessionId, [speeddistrodata], heartratezones, "Speed Distribution");
+
+            if (response.obj.trainingSessionBeans.length > (i + 1)) {
+                $('#qvtrainingsessionhistory').append('</br>');
+            }
+        }
+
+    });
 }
 
 function QVShapeIndexHistory(userid) {
-	// use global access token
-	var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
-        var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
+    // use global access token
+    //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")
 
-	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp+ "&endTimeStamp=" +endTimestamp, function(response) {
+    var startTimestamp = '2013-10-01 00:00:00.000';
+    var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
 
-		
-		var plotdata = [];
-		for (var i=0; i< response.obj.shapeIndexes.length; i++) {
-			var shapeIndexBean = response.obj.shapeIndexes[i];
-			plotdata[i] = [moment(shapeIndexBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), shapeIndexBean.shapeIndex];
-		}
-		
-		DateGraph("qvshapeindexhistory", [plotdata]);
-	});
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/shapeIndex/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp, function (response) {
+
+
+        var plotdata = [];
+        for (var i = 0; i < response.obj.shapeIndexes.length; i++) {
+            var shapeIndexBean = response.obj.shapeIndexes[i];
+            plotdata[i] = [moment(shapeIndexBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), shapeIndexBean.shapeIndex];
+        }
+
+        $("#qvshapeindexhistory").append('<div id="shapeindexhistorygraph"></div>');
+
+        DateGraph("shapeindexhistorygraph", [plotdata]);
+    });
 }
 
-function QVShapeIndex (userid) {
-	// use global access token
-	$.getJSON(HOST_URL + "v1.0/trainee/id/" + userid +"/shapeIndex?accessToken=" +accessToken+"&accessTokenType=facebook",
+function QVShapeIndex(userid) {
+    // use global access token
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/shapeIndex?accessToken=" + accessToken + "&accessTokenType=facebook",
 		function (response) {
-			$("#qvsummary").find("#qvshapeindex").html(
+		    $("#qvsummary").find("#qvshapeindex").html(
 				"<label> Shape index : </label>"
-				 + response.obj.shapeIndex		
-			); 
+				 + response.obj.shapeIndex
+			);
 		});
 }
 
-function QVRecoveryTime (userid) {
-	// use global access token
-	$.getJSON(HOST_URL + "v1.0/trainee/id/"+ userid +"/recoveryTime?accessToken="+ accessToken + "&accessTokenType=facebook",
+function QVRecoveryTime(userid) {
+    // use global access token
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/recoveryTime?accessToken=" + accessToken + "&accessTokenType=facebook",
 		function (response) {
-			$("#qvsummary").find("#qvtraineeclassification").html(
+		    $("#qvsummary").find("#qvtraineeclassification").html(
 				"<label> Trainee classificaion : </label>"
-				+ response.obj.traineeClassification			
+				+ response.obj.traineeClassification
 			);
-			$("#qvsummary").find("#qvtimetorecover").html(
-				"<label> Time at full recovery : </label> "				
+		    $("#qvsummary").find("#qvtimetorecover").html(
+				"<label> Time at full recovery : </label> "
 				+ response.obj.recoveryTime
 			);
 		}
@@ -268,58 +350,58 @@ function QVRecoveryTime (userid) {
 
 
 // Perl Style dump for de-bugging
-function dump(arr,level) {
-        var dumped_text = "";
-        if(!level) level = 0;
+function dump(arr, level) {
+    var dumped_text = "";
+    if (!level) level = 0;
 
-        var level_padding = "";
-        for(var j=0;j<level+1;j++) level_padding += "    ";
+    var level_padding = "";
+    for (var j = 0; j < level + 1; j++) level_padding += "    ";
 
-                if(typeof(arr) == 'object') {
-                        for(var item in arr) {
-                                var value = arr[item];
-                                if(typeof(value) == 'object') {
-                                        dumped_text += level_padding + "'" + item + "'             ...\n";
-                                        dumped_text += dump(value,level+1);
-                                } else {
-                                        dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
-                                }
-                        }
-                } else {
-                        dumped_text = "===>"+arr+"<===("+typeof(arr)+")";
-                }
-        return dumped_text;
+    if (typeof (arr) == 'object') {
+        for (var item in arr) {
+            var value = arr[item];
+            if (typeof (value) == 'object') {
+                dumped_text += level_padding + "'" + item + "'             ...\n";
+                dumped_text += dump(value, level + 1);
+            } else {
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+            }
+        }
+    } else {
+        dumped_text = "===>" + arr + "<===(" + typeof (arr) + ")";
+    }
+    return dumped_text;
 }
 
-$(document).ready(function () { 
-	$( "#tabmenu" ).tabs();
-	getAllUsers();
+$(document).ready(function () {
+    $("#tabmenu").tabs();
+    getAllUsers();
 });
 
 function LogoutSmartbeat() {
-	FB.logout(function(response) { location.reload(); });
+    FB.logout(function (response) { location.reload(); });
 }
 
-function InList( value, array ){
+function InList(value, array) {
 
-        if( !isArray(array) ){
-                alert( 'Second argument to InList should be an array' );
-                return null;
+    if (!isArray(array)) {
+        alert('Second argument to InList should be an array');
+        return null;
+    }
+
+    for (var i = 0; i < array.length; i++) {
+        if (value == array[i]) {
+            return 1;
         }
- 
-        for( var i = 0; i < array.length; i++ ){
-                if( value == array[i] ){
-                        return 1;
-                }       
-	 }
+    }
 
-        return 0;
+    return 0;
 }
 
 function isArray(a) {
     return isObject(a) && a.constructor == Array;
 }
- 
+
 function isObject(a) {
     return (typeof a == 'object' && !!a) || isFunction(a);
 }
@@ -331,99 +413,99 @@ function isFunction(a) {
 
 function DateGraph(divid, plotarrays, graphtitle) {
 
-	if (!(isArray(plotarrays)
+    if (!(isArray(plotarrays)
 		&& plotarrays[0].length > 0
 		&& isArray(plotarrays[0])
 		&& plotarrays[0][0].length == 2)) {
-		
-		return;
-	}
 
-	var graph1 = $.jqplot(divid, plotarrays, {
-		seriesColors: JQPLOT_COLORS,
-	      title:{ 
-		text:graphtitle,
-		show:true
-		},
-		grid: {
-			borderWidth:0.0
-		},
-	      axes:{
-	        xaxis:{
-	          renderer:$.jqplot.DateAxisRenderer,
-	          tickOptions:{
-		    showGridline: false,
-	            formatString:'%b&nbsp%#d',
-		    markSize:0
-	          } 
-	        },
-	        yaxis:{
-	          tickOptions:{
-	            formatString:'%.2f &nbsp',
-		    markSize:0
-	            }
-	        }
-	      },
-	      highlighter: {
-	        show: true,
-	        sizeAdjust: 7
-	      },
-	      cursor: {
-	        show: false
-	      }
-	  });
+        return;
+    }
 
-	graphs[graphs.length] = graph1;
+    var graph1 = $.jqplot(divid, plotarrays, {
+        seriesColors: JQPLOT_COLORS,
+        title: {
+            text: graphtitle,
+            show: true
+        },
+        grid: {
+            borderWidth: 0.0
+        },
+        axes: {
+            xaxis: {
+                renderer: $.jqplot.DateAxisRenderer,
+                tickOptions: {
+                    showGridline: false,
+                    formatString: '%b&nbsp%#d',
+                    markSize: 0
+                }
+            },
+            yaxis: {
+                tickOptions: {
+                    formatString: '%.2f &nbsp',
+                    markSize: 0
+                }
+            }
+        },
+        highlighter: {
+            show: true,
+            sizeAdjust: 7
+        },
+        cursor: {
+            show: false
+        }
+    });
+
+    graphs[graphs.length] = graph1;
 }
 
 
 function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 
-	if (!(isArray(bararrays)
+    if (!(isArray(bararrays)
 		&& bararrays[0].length > 0
 		&& isArray(xaxisarray)
 		&& xaxisarray.length > 0)) {
-		
-		return;
-	}
 
-	var graph1 = $.jqplot(divid, bararrays, {
-		animate: !$.jqplot.use_excanvas,
-		seriesDefaults:{
-                	renderer:$.jqplot.BarRenderer,
-                	pointLabels: { show: true }
-            	},
-		seriesColors: JQPLOT_COLORS,
-		title:{ 
-			text:graphtitle,
-			show:true
-		},
-		grid: {
-			borderWidth:0.0
-		},
-		axes:{
-	        	xaxis:{
-				ticks: xaxisarray,
-				renderer: $.jqplot.CategoryAxisRenderer,
-	        		tickOptions:{
-				    showGridline: false,
-				    markSize:0
-		        	  } 
-		        },
-			yaxis:{
-				tickOptions:{
-					markSize:0
-	        	    }
-	        	}
-		},
-		/*highlighter: {
+        return;
+    }
+
+    var graph1 = $.jqplot(divid, bararrays, {
+        animate: !$.jqplot.use_excanvas,
+        seriesDefaults: {
+            renderer: $.jqplot.BarRenderer,
+            pointLabels: { show: true }
+        },
+        seriesColors: JQPLOT_COLORS,
+        title: {
+            text: graphtitle,
+            show: true
+        },
+        grid: {
+            borderWidth: 0.0
+        },
+        axes: {
+            xaxis: {
+                ticks: xaxisarray,
+                renderer: $.jqplot.CategoryAxisRenderer,
+                tickOptions: {
+                    showGridline: false,
+                    markSize: 0
+                }
+            },
+            yaxis: {
+                tickOptions: {
+                    markSize: 0
+                }
+            }
+        },
+        /*highlighter: {
 		        show: true,
 		        sizeAdjust: 5
 		},*/
-		cursor: {
-			show: false
-		}
-	});
+        cursor: {
+            show: false
+        }
+    });
 
-	graphs[graphs.length] = graph1;
+    graphs[graphs.length] = graph1;
 }
