@@ -11,7 +11,6 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
-import com.genie.smartbeat.core.exceptions.FitnessManagerException;
 import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
