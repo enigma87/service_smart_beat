@@ -547,7 +547,6 @@ function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 }
 
 function DonutGraph(divid, donutarrays, title) {
-alert(dump(donutarrays));
 	if (!(isArray(donutarrays)
 		&& donutarrays[0].length > 0)) {
 
