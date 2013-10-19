@@ -33,9 +33,13 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.errors.AccessTokenError;
 import com.genie.smartbeat.core.errors.HeartrateTestErrors;
+import com.genie.smartbeat.core.errors.HomeostasisModelErrors;
 import com.genie.smartbeat.core.errors.TimeErrors;
 import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.core.errors.UserErrors;
+import com.genie.smartbeat.core.exceptions.homeostasis.AbsenceOfHomeostasisIndexModelException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
+import com.genie.smartbeat.core.exceptions.session.AbsenceOfTrainingSessionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
@@ -730,13 +734,14 @@ public class TraineeResource
 	@Path("id/{userid}/recoveryTime")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getRecoveryTime(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+	public String getRecoveryTime(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) throws TrainingSessionException, HomeostasisModelException{
 					
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 
 		GoodResponseObject gro = null;
 	    if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {	
 
+	    try{
 	    	Timestamp recoveryTime = fitnessManager.getRecoveryTime(userid);
 			  RecoveryTimeResponseJson recoveryTimeResponseJson = new RecoveryTimeResponseJson();
 			  recoveryTimeResponseJson.setUserId(userid);
@@ -753,11 +758,18 @@ public class TraineeResource
 			      recoveryTimeResponseJson.setTraineeClassification(fitnessHomeostasisIndexBean.getTraineeClassification());
 			  }
 				
-			  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);	  
-	  }else {
+			  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), recoveryTimeResponseJson);
+	     }catch(AbsenceOfTrainingSessionException e){
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.ABSENCE_OF_TRAINING_SESSION.toString());
+			 log.info("User - " + userid + " has failed to get recovery time due to AbsenceOfTrainingSessionException");
+	     }catch(AbsenceOfHomeostasisIndexModelException e){
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
+			 log.info("User - " + userid + " has failed to get recovery time due to AbsenceOfHomeostasisIndexsModelException");
+	     }
+	   }else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
 			log.info("User - " + userid + " " + authStatus.getAuthenticationStatus().toString());
-		}  
+	   }  
 
 		try
 		{
@@ -774,22 +786,26 @@ public class TraineeResource
 	@Path("id/{userid}/homeostasisIndex")
 	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getHomeostasisIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType){
+	public String getHomeostasisIndex(@PathParam("userid") String userid,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType) throws HomeostasisModelException{
 			
 		AuthenticationStatus authStatus = userManager.authenticateRequest(accessToken, accessTokenType);
 		GoodResponseObject gro = null;
 	    if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {	
-	      /* Get Homeostasis Index*/	
+	      /* Get Homeostasis Index*/
+	     try{
 		  Double homeostasisIndex = fitnessManager.getHomeostasisIndex(userid);
-		  
 		  HomeostasisIndexResponseJson  homeostasisIndexResponseJson = new  HomeostasisIndexResponseJson();
 		  homeostasisIndexResponseJson.setUserid(userid);
 		  homeostasisIndexResponseJson.setHomeostasisIndex(homeostasisIndex);
 		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), homeostasisIndexResponseJson);
-	  }else {
+	     }catch(AbsenceOfHomeostasisIndexModelException e){
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
+			 log.info("User - " + userid + " has failed to get homeostasis index model due to AbsenceOfHomeostasisIndexsModelException");
+	     }
+	     }else {
 			gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), authStatus.getAuthenticationStatus().toString());
 			log.info("User - " + userid + " " + authStatus.getAuthenticationStatus().toString());
-		}  
+		 }  
 
 		try
 		{

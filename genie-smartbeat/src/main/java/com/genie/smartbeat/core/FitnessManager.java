@@ -11,6 +11,8 @@ import com.genie.smartbeat.beans.FitnessHomeostasisIndexBean;
 import com.genie.smartbeat.beans.FitnessShapeIndexBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
+import com.genie.smartbeat.core.exceptions.FitnessManagerException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.core.exceptions.test.HeartrateTestException;
 import com.genie.smartbeat.core.exceptions.time.TimeException;
@@ -44,10 +46,10 @@ public interface FitnessManager{
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) throws TimeException;
 
 	/*Recovery Time*/
-	public Timestamp getRecoveryTime(String userid);
+	public Timestamp getRecoveryTime(String userid) throws TrainingSessionException,HomeostasisModelException;
 	
 	/*Homeostasis Index*/
-	public double getHomeostasisIndex(String userid);
+	public double getHomeostasisIndex(String userid) throws HomeostasisModelException;
 	
 	/*clear user*/
 	public void clearTraineeData(String userid);
