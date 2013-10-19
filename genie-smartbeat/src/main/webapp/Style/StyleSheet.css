@@ -99,6 +99,11 @@ ul {
         list-style: none;
         font-size: 13px;
 }
+ul.qvsummary {
+	float:left;
+	padding: 0px 1cm 0px 0px;
+
+}
 
 ul.userlist li{ 
         margin:0 20px 20px 0; vertical-align:top;
@@ -152,5 +157,11 @@ div.trainingsessionrow {
 div#shapeindexhistorygraph {
 	height:300px;
 	width:550px;
+}
+
+div#qvheartratedonut{
+	float: left;
+	height: 240px;
+	width: 340px;
 }
 

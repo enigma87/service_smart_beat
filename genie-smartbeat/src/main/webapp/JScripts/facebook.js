@@ -1,7 +1,7 @@
 // globals, for a session
 
-//var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
-var HOST_URL = 'http://localhost:8080/smartbeat/';
+var HOST_URL='http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+//var HOST_URL = 'http://localhost:8080/smartbeat/';
 
 var uid = null;
 var accessToken = null;
@@ -14,7 +14,20 @@ var Zone4Time = [3.0];
 var Zone5Time = [4.0];
 var line1 = [['2013-07-06 18:23:10', 4]];
 
-var JQPLOT_COLORS = ["#ee8b49", "#4bb2c5", "#c5b47f", "#EAA228", "#579575", "#839557", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"];
+var JQPLOT_COLORS = [
+ "#ee8b49",
+ "#839557", 
+ "#4bb2c5",
+ "#c5b47f",
+ "#958c12",
+ "#EAA228",
+ "#4b5de4",
+ "#d8b83f",
+ "#ff5800",
+ "#953579",
+ "#0085cc",
+ "#579575"
+];
 
 window.fbAsyncInit = function () {
 
@@ -112,11 +125,12 @@ function ShowQuickView(listitem, userid) {
         $("#detail").html(
 			'<div id="accordion">'
 			+ '<h3>Summary</h3>'
-		  	+ '<div> <div id="qvsummary" ><ul>'
+		  	+ '<div id="qvsummary" ><ul class="qvsummary">'
 			+ '<li id="qvtraineeclassification"> </li>'
 			+ '<li id="qvtimetorecover"> </li>'
 			+ '<li id="qvshapeindex"> </li>'
-			+ '</ul></div>'
+			+ '</ul>'
+			+ '<div id="qvheartratedonut"></div>'
 			+ '</div>'
 			+ '<h3>Training Session History</h3>'
 			+ '<div id="qvtrainingsessionhistory" > </div>'
@@ -138,14 +152,36 @@ function ShowQuickView(listitem, userid) {
             }
         });
 
-        QVRecoveryTime(userid);
-        QVShapeIndex(userid);
+	AddSummary(userid);
         QVTrainingSessionHistory(userid);
         QVShapeIndexHistory(userid);
         QVHeartrateTestHistory(userid);
     } else {
         window.setTimeout(function () { ShowQuickView(listitem, userid); }, 333);
     }
+}
+
+function AddSummary(userid) {
+        QVRecoveryTime(userid);
+        QVShapeIndex(userid);
+	QVHeartrateZones(userid);
+}
+
+function QVHeartrateZones(userid) {
+	// use global access token
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateZones?accessToken=" + accessToken + "&accessTokenType=facebook",
+	function (response) {
+		var donutdata = [];
+		for (var i = 1; i <= 6; i++ ) {
+			var start = response.obj['heartrateZone' + i + 'Start'];
+			var end = response.obj['heartrateZone' + i + 'End'];
+			var label = 'Zone ' + i + ': ' + start + ' - ' + end;
+			var value = end - start;
+			donutdata[i-1] = [label, value];	
+		}	
+			
+		DonutGraph("qvheartratedonut", [donutdata], "Heartrate Zones");
+	});
 }
 
 function QVHeartrateTestHistory(userid) {
@@ -509,3 +545,40 @@ function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 
     graphs[graphs.length] = graph1;
 }
+
+function DonutGraph(divid, donutarrays, title) {
+alert(dump(donutarrays));
+	if (!(isArray(donutarrays)
+		&& donutarrays[0].length > 0)) {
+
+		return;
+	}
+
+	var graph = $.jqplot(divid, donutarrays, {
+		animate: !$.jqplot.use_excanvas,
+		title: {
+        	    text: title,
+        	    show: true
+        	},
+		grid: {
+        	    borderWidth: 0.0
+        	},
+		seriesColors: JQPLOT_COLORS,
+		seriesDefaults: {
+			renderer:$.jqplot.DonutRenderer,
+		        rendererOptions:{
+				showDataLabels: false,
+				sliceMargin: 0,
+				diameter: 100,
+				innerDiameter: 60,
+				startAngle: -90,
+				dataLabels:'value'
+	         	}
+	     	},
+		legend: { show:true, location: 'e' }
+	});
+	graphs[graphs.length] = graph;
+}
+
+
+
