@@ -3,7 +3,6 @@ package com.genie.smartbeat.impl;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -660,7 +659,7 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test 
-	public void testgetShapeIndexHistoryInTimeInterval() throws TimeException {
+	public void testGetShapeIndexHistoryInTimeInterval() throws TimeException {
 		
 		try{
 			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, null, null);
@@ -724,6 +723,9 @@ public class FitnessManagerMySQLImplTest {
 		fitnessShapeIndexBean1.setShapeIndex(130.0);
 		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(nowPastTwoDays));
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
+				
+		shapeIndexBeans = fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, new Timestamp(nowPastOneDay));
+		Assert.assertEquals(2, shapeIndexBeans.size());
 		
 		fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
 		fitnessShapeIndexBean1.setUserid(userid);
@@ -733,12 +735,8 @@ public class FitnessManagerMySQLImplTest {
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
 
 		shapeIndexBeans = fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, endInterval);
-		Assert.assertEquals(3, shapeIndexBeans.size());
-		
-		for (Iterator<FitnessShapeIndexBean> i = shapeIndexBeans.iterator(); i.hasNext();) {
-			FitnessShapeIndexBean shapeIndexBean = i.next();
-			System.out.println(shapeIndexBean.getShapeIndex().toString() + " -> "+ shapeIndexBean.getTimeOfRecord());
-		}
+		Assert.assertEquals(4, shapeIndexBeans.size());
+				
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	}
 

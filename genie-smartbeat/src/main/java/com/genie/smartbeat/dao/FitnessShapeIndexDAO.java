@@ -87,9 +87,10 @@ public class FitnessShapeIndexDAO {
 	}
 	
 	private static final String QUERY_SELECT_TIME_RANGE = 	"SELECT * FROM " + TABLE_FITNESS_SHAPE_INDEX
-															+ " WHERE " + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=?"
-															+ " AND "   + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + ">=?"
-															+ " AND "   + COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + "<=?";
+															+ " WHERE " 	+ COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_USERID] + "=?"
+															+ " AND "   	+ COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + ">=?"
+															+ " AND "   	+ COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + "<=?"
+															+ " ORDER BY " 	+ COLUMNS_FITNESS_SHAPE_INDEX[COLUMN_TIME_OF_RECORD] + " DESC";
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryDuringInterval(String userid, Timestamp startInterval, Timestamp endInterval){
 		List<FitnessShapeIndexBean> shapeIndexBeans = new ArrayList<FitnessShapeIndexBean>();		
 		try{

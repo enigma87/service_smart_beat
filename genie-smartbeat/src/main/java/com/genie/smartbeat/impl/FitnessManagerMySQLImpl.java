@@ -487,7 +487,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		List<FitnessTrainingSessionIdBean> trainingSessionIds = null;
 		if (null != startTimestamp && null != endTimestamp ){
 			if (endTimestamp.getTime() > startTimestamp.getTime()){
-		       trainingSessionIds = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);
+		       trainingSessionIds = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange(userID, startTimestamp, endTimestamp);		       
 			}else{
 				throw new InvalidDurationException();
 			}
@@ -520,10 +520,20 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 	}
 	
 	public List<FitnessShapeIndexBean> getShapeIndexHistoryInTimeInterval(String userid, Timestamp startTime, Timestamp endTime) throws TimeException {
-		List<FitnessShapeIndexBean> FitnessShapeIndexBeanList = null;
+		List<FitnessShapeIndexBean> fitnessShapeIndexBeanList = null;
 		if (null != startTime && null != endTime ){
 		    if (endTime.getTime() > startTime.getTime()){
-			   FitnessShapeIndexBeanList =  fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
+			   fitnessShapeIndexBeanList =  fitnessShapeIndexDAO.getShapeIndexHistoryDuringInterval(userid, startTime, endTime);
+			   FitnessShapeIndexBean recentBean = fitnessShapeIndexBeanList.get(0);
+			   if(endTime.getTime() > recentBean.getTimeOfRecord().getTime()){
+				   double shapeIndex = getShapeIndexAtTime(recentBean.getSessionOfRecord(), endTime);
+				   FitnessShapeIndexBean currentBean = new FitnessShapeIndexBean();
+				   currentBean.setShapeIndex(shapeIndex);
+				   currentBean.setSessionOfRecord(recentBean.getSessionOfRecord());
+				   currentBean.setTimeOfRecord(endTime);
+				   currentBean.setUserid(userid);
+				   fitnessShapeIndexBeanList.add(0, currentBean);
+			   }
 		    }else{
 		    	 throw new InvalidDurationException();
 		    }
@@ -534,7 +544,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				throw new InvalidEndTimestampException();
 			}
 		}
-		return FitnessShapeIndexBeanList;
+		return fitnessShapeIndexBeanList;
 	}
 
 	public List<FitnessHeartrateTestBean> getFitnessHeartrateTestsByTypeInTimeInterval(String userid, Integer heartrateType, Timestamp startTimestamp, Timestamp endTimestamp) throws TimeException {
