@@ -125,20 +125,22 @@ function ShowQuickView(listitem, userid) {
         $("#detail").html(
 			'<div id="accordion">'
 			+ '<h3>Summary</h3>'
-		  	+ '<div id="qvsummary" ><ul class="qvsummary">'
+		  	+ '<div id="qvsummary" >'
+			+ '<div id="qvsummarykeys">'
+			+ '<ul class="qvsummary">'
 			+ '<li id="qvtraineeclassification"> </li>'
 			+ '<li id="qvtimetorecover"> </li>'
 			+ '<li id="qvshapeindex"> </li>'
-			+ '</ul>'
+			+ '</ul></div>'
 			+ '<div id="qvheartratedonut"></div>'
 			+ '</div>'
 			+ '<h3>Training Session History</h3>'
 			+ '<div id="qvtrainingsessionhistory" > </div>'
 			+ '<h3>Shape Index History</h3>'
 			+ '<div id="qvshapeindexhistory" ></div>'
-            + '<h3>Heart Rate Test</h3>'
-            + '<div id="qvheartratetesthistory" ></div>'
-            + '</div>');
+			+ '<h3>Heartrate Test History</h3>'
+			+ '<div id="qvheartratetesthistory" ></div>'
+			+ '</div>');
 
         $("#accordion").accordion({
             animate: 300,
@@ -183,6 +185,7 @@ function QVHeartrateZones(userid) {
 	    DonutGraph("qvheartratedonut", [donutdata], "Heartrate Zones");
 	});
 }
+
 function QVHeartrateTestHistory(userid) {
     // use global access token
     //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")    
@@ -194,20 +197,20 @@ function QVHeartrateTestHistory(userid) {
     var thresholdheartrate;
     var maximalheartrate;
 
-    $("#qvheartratetesthistory").append('<ul style="list-style: none; width:800px;">');
-    $("#qvheartratetesthistory").append('<li><div style="width:500px; text-align:center; float:right;">Orthostatic Heartrate : </div><br/><div id="heartratetesthistorygraph" style="width:500px;float:right;"></div></li>');
+    $("#qvheartratetesthistory").append('<div id="heartratetesthistorykeys"><ul></ul></div>');
+    $("#qvheartratetesthistory").append('<div id="heartratetesthistorygraph"></div>');
 
     //resting
-    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-    .done(function (restingresponse) {
+	$.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+	 .done(function (restingresponse) {
         if (restingresponse.obj.heartrateTests.length > 0) {
             restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
         }
         else {
-            restingheartrate = "NA";
+            restingheartrate = "none yet";
         }
 
-        $("#qvheartratetesthistory").append('<li><br/><div style="width:225px;">Resting Heartrate : ' + restingheartrate + '</div></li>');
+        $("#heartratetesthistorykeys").find("ul").append('<li> Resting Heartrate : ' + restingheartrate + '</li>');
 
         //threshold
         $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
@@ -217,10 +220,10 @@ function QVHeartrateTestHistory(userid) {
                 thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
             }
             else {
-                thresholdheartrate = "NA";
+                thresholdheartrate = "none yet";
             }
 
-            $("#qvheartratetesthistory").append('<li><div style="width:225px;">Threshold Heartrate : ' + thresholdheartrate + '</div></li>');
+            $("#qvheartratetesthistory").find("ul").append('<li>Threshold Heartrate : ' + thresholdheartrate + '</li>');
 
             //maximal
             $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
@@ -229,12 +232,11 @@ function QVHeartrateTestHistory(userid) {
                     maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
                 }
                 else {
-                    maximalheartrate = "NA";
+                    maximalheartrate = "none yet";
                 }
 
-                $("#qvheartratetesthistory").append('<li><div style="width:225px;">Maximal Heartrate : ' + maximalheartrate + '</div></li>');
+                $("#qvheartratetesthistory").find("ul").append('<li>Maximal Heartrate : ' + maximalheartrate + '</li>');
 
-                $("#qvheartratetesthistory").append(' </ul>');
                 //orthostatic
                 $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
                 .done(function (orthostaticresponse) {
@@ -245,7 +247,7 @@ function QVHeartrateTestHistory(userid) {
                         plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
                     }
 
-                    DateGraph("heartratetesthistorygraph", [plotdata]);
+                    DateGraph("heartratetesthistorygraph", [plotdata], "Orthostatic Heartrate");
                 });
             });
         });
@@ -253,80 +255,6 @@ function QVHeartrateTestHistory(userid) {
 
     //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
 }
-
-
-//function QVHeartrateTestHistory(userid) {
-//    // use global access token
-//    //var startTimestamp = moment().subtract('days', 7).format("YYYY-MM-DD HH:mm:ss.SSS")    
-//    var startTimestamp = '2013-10-01 00:00:00.000';
-//    var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS")
-
-//    //HTML for otherhearrate types
-//    var restingheartrate;
-//    var thresholdheartrate;
-//    var maximalheartrate;
-
-//    $("#qvheartratetesthistory").append('<table style="text-align:center;">');
-//    $("#qvheartratetesthistory").append('<tr><td>Orthostatic Heartrate : </td></tr>');
-//    $("#qvheartratetesthistory").append('<tr><td><div id="heartratetesthistorygraph" style="width:500px;"></div></td></tr>');
-
-//    //resting
-//    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-//    .done(function (restingresponse) {
-//        if (restingresponse.obj.heartrateTests.length > 0) {
-//            restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
-//        }
-//        else {
-//            restingheartrate = "NA";
-//        }
-
-//        $("#qvheartratetesthistory").append('<tr><td>Resting Heartrate : ' + restingheartrate + '</td></tr>');
-
-//        //threshold
-//        $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-//        .done(function (thresholdresponse) {
-
-//            if (thresholdresponse.obj.heartrateTests.length > 0) {
-//                thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
-//            }
-//            else {
-//                thresholdheartrate = "NA";
-//            }
-
-//            $("#qvheartratetesthistory").append('<tr><td>threshold Heartrate : ' + thresholdheartrate + '</td></tr>');
-
-//            //maximal
-//            $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-//            .done(function (maximalresponse) {
-//                if (maximalresponse.obj.heartrateTests.length > 0) {
-//                    maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
-//                }
-//                else {
-//                    maximalheartrate = "NA";
-//                }
-
-//                $("#qvheartratetesthistory").append('<tr><td>maximal Heartrate : ' + maximalheartrate + '</td></tr>');
-
-//                $("#qvheartratetesthistory").append('</table>');
-//                //orthostatic
-//                $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-//                .done(function (orthostaticresponse) {
-//                    var plotdata = [];
-
-//                    for (var i = 0; i < orthostaticresponse.obj.heartrateTests.length; i++) {
-//                        var heartrateBean = orthostaticresponse.obj.heartrateTests[i];
-//                        plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
-//                    }
-
-//                    DateGraph("heartratetesthistorygraph", [plotdata]);
-//                });
-//            });
-//        });
-//    });
-
-//    //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
-//}
-
 
 function QVTrainingSessionHistory(userid) {
     // use global access token
