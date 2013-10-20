@@ -36,12 +36,6 @@ body
     display: none;
 }
 
-#footer
-{
-    text-align: center; /*height: 15px;*/
-    background-color: #E6E6E6;
-}
-
 .navigation 
 {
         cursor: pointer;
@@ -97,9 +91,9 @@ img#logout {
 }
 ul { 
         list-style: none;
-        font-size: 13px;
+        font-size: 14.5px;
 }
-ul.qvsummary {
+div#qvsummarykeys {
 	float:left;
 	padding: 0px 1cm 0px 0px;
 
@@ -141,7 +135,7 @@ div.timedistrograph {
         color:#ee8b49;
 }
 div.trainingsessionkeys {
-	padding: 0px 0.5cm 0px 0.5cm;
+	padding: 0px 1cm 0px 0px;
 	float:left;
         text-align:left;
 }
@@ -164,4 +158,14 @@ div#qvheartratedonut{
 	height: 240px;
 	width: 340px;
 }
-
+div#heartratetesthistorykeys {
+	padding: 0px 1cm 0px 0px;
+	float: left;
+	text-align: left;
+}
+div#heartratetesthistorygraph {
+	float: left;
+	padding-left:.5cm;
+	width: 550px;
+	height:300px;
+}
