@@ -26,7 +26,7 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionBean;
 import com.genie.smartbeat.core.errors.HeartrateTestErrors;
 import com.genie.smartbeat.core.errors.TimeErrors;
 import com.genie.smartbeat.core.errors.TrainingSessionErrors;
-import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisIndexModelException;
 import com.genie.smartbeat.core.exceptions.session.TrainingSessionException;
 import com.genie.smartbeat.dao.FitnessHeartrateTestDAO;
 import com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO;
@@ -743,7 +743,7 @@ public class TraineeResourceTest {
 		}
 		
 		@Test
-		public void testGetRecoveryTime() throws JSONException, TrainingSessionException, HomeostasisModelException{
+		public void testGetRecoveryTime() throws JSONException, TrainingSessionException, HomeostasisIndexModelException{
 			
 			String responseString = traineeResource.getRecoveryTime(userid, null, null);
 			JSONObject responseJSON = new JSONObject(responseString);
@@ -869,7 +869,7 @@ public class TraineeResourceTest {
 		}
 		
 		@Test
-		public void testGetHomeostasisIndex() throws JSONException, HomeostasisModelException, TrainingSessionException{
+		public void testGetHomeostasisIndex() throws JSONException, HomeostasisIndexModelException, TrainingSessionException{
 			String responseString = traineeResource.getHomeostasisIndex(userid, null, null);
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));
@@ -936,7 +936,7 @@ public class TraineeResourceTest {
 		}
 		
 		@Test
-		public void testGetTraineeIds() throws JSONException, TrainingSessionException, HomeostasisModelException{
+		public void testGetTraineeIds() throws JSONException, TrainingSessionException, HomeostasisIndexModelException{
 			String responseString = traineeResource.getRecoveryTime(userid, null, null);
 			JSONObject responseJSON = new JSONObject(responseString);
 			Assert.assertEquals("406", responseJSON.getString("status"));

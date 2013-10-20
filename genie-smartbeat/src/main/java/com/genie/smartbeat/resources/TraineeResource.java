@@ -33,12 +33,12 @@ import com.genie.smartbeat.beans.FitnessTrainingSessionIdBean;
 import com.genie.smartbeat.core.FitnessManager;
 import com.genie.smartbeat.core.errors.AccessTokenError;
 import com.genie.smartbeat.core.errors.HeartrateTestErrors;
-import com.genie.smartbeat.core.errors.HomeostasisModelErrors;
+import com.genie.smartbeat.core.errors.HomeostasisIndexModelErrors;
 import com.genie.smartbeat.core.errors.TimeErrors;
 import com.genie.smartbeat.core.errors.TrainingSessionErrors;
 import com.genie.smartbeat.core.errors.UserErrors;
 import com.genie.smartbeat.core.exceptions.homeostasis.AbsenceOfHomeostasisIndexModelException;
-import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisModelException;
+import com.genie.smartbeat.core.exceptions.homeostasis.HomeostasisIndexModelException;
 import com.genie.smartbeat.core.exceptions.session.AbsenceOfTrainingSessionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidSpeedDistributionException;
 import com.genie.smartbeat.core.exceptions.session.InvalidTimeDistributionException;
@@ -763,13 +763,13 @@ public class TraineeResource
 	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.ABSENCE_OF_TRAINING_SESSION.toString());
 			 log.info("User - " + userid + " has failed to get recovery time due to AbsenceOfTrainingSessionException");
 	     }catch(AbsenceOfHomeostasisIndexModelException e){
-	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisIndexModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
 			 log.info("User - " + userid + " has failed to get recovery time due to AbsenceOfHomeostasisIndexsModelException");
 	     }catch(TrainingSessionException e){
 	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TRAINING_SESSION.toString());
 			 log.info("User - " + userid + " has failed to get recovery time due to TrainingSessionException");
-	     }catch(HomeostasisModelException e){
-	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.HOMEOSTASIS_INDEX_MODEL_ERROR.toString());
+	     }catch(HomeostasisIndexModelException e){
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisIndexModelErrors.HOMEOSTASIS_INDEX_MODEL_ERROR.toString());
 			 log.info("User - " + userid + " has failed to get recovery time due to AbsenceOfTrainingSessionException");
 	     }
 	   }else {
@@ -805,10 +805,10 @@ public class TraineeResource
 		  homeostasisIndexResponseJson.setHomeostasisIndex(homeostasisIndex);
 		  gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), homeostasisIndexResponseJson);
 	     }catch(AbsenceOfHomeostasisIndexModelException e){
-	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisIndexModelErrors.ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL.toString());
 			 log.info("User - " + userid + " has failed to get homeostasis index model due to AbsenceOfHomeostasisIndexsModelException");
-	     }catch(HomeostasisModelException e){
-	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisModelErrors.HOMEOSTASIS_INDEX_MODEL_ERROR.toString());
+	     }catch(HomeostasisIndexModelException e){
+	    	 gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), HomeostasisIndexModelErrors.HOMEOSTASIS_INDEX_MODEL_ERROR.toString());
 			 log.info("User - " + userid + " has failed to get homeostasis index model due to AbsenceOfHomeostasisIndexsModelException");
 	     }
 	     }else {

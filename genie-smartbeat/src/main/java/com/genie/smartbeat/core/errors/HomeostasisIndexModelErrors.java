@@ -1,13 +1,13 @@
 package com.genie.smartbeat.core.errors;
 
-public enum HomeostasisModelErrors {
+public enum HomeostasisIndexModelErrors {
 
 	HOMEOSTASIS_INDEX_MODEL_ERROR(0),
 	ABSENCE_OF_HOMEOSTASIS_INDEX_MODEL(1);
 	
 	private int errorCode;
 	
-	private  HomeostasisModelErrors(int errorCode) {
+	private  HomeostasisIndexModelErrors(int errorCode) {
 		this.errorCode = errorCode;
 	}
 	
