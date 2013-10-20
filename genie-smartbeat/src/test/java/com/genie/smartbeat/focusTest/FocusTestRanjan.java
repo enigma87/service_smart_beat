@@ -1,5 +1,6 @@
 package com.genie.smartbeat.focusTest;
 
+import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import javax.ws.rs.core.MediaType;
@@ -7,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.context.ContextLoaderListener;
@@ -68,11 +70,12 @@ public class FocusTestRanjan extends JerseyTest {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
         Timestamp endTimestamp = new Timestamp(cal.getTime().getTime());
-        cal.set(Calendar.YEAR, -1);
+        cal.add(Calendar.YEAR, -1);
         Timestamp startTimestamp = new Timestamp(cal.getTime().getTime());
 		
 		/*Register the User*/
 	    String registerUserUrl = "http://localhost:9998/trainee/register";
+	    String registerUserUrlLiveServer = "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/register";
 		JSONObject inputJsonObj = new JSONObject();
 		inputJsonObj.put("accessToken", ranjan.getAccessToken());
 		inputJsonObj.put("accessTokenType", ranjan.getAccessTokenType() );
@@ -83,13 +86,17 @@ public class FocusTestRanjan extends JerseyTest {
 		JSONObject objRegister = registerResJson.getJSONObject("obj");
 		ranjanId = objRegister.getString("userid");
 		
+		//WebResource registerUserLiveServer = clientRegisterUser.resource(registerUserUrlLiveServer);      
+		//objRegister = registerUserLiveServer.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,inputJsonObj);
+		
+		
 		String saveFitnessTrainingSessionUrl = "http://localhost:9998/trainee/id/"+ranjanId+"/trainingSession/save?accessToken="+accessToken+"&accessTokenType=facebook";
 		Client clientSaveFitnessTrainingSession =  getClient();
 		WebResource saveFitnessTrainingSession = clientSaveFitnessTrainingSession.resource(saveFitnessTrainingSessionUrl);
 		
 		/*Get Training Session for Robert*/
 		//String getTrainingSessionsUrl = "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/register";
-		String getTrainingSessionsUrl = "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/id/"+robertUserId+"/trainingSession/inTimeInterval?startTimeStamp="+startTimestamp+"&endTimeStamp="+endTimestamp+"&accessToken="+accessToken+"&accessTokenType=facebook";
+		String getTrainingSessionsUrl = "http://"+HOST+":"+PORT+"/smartbeat/v1.0/trainee/id/"+robertUserId+"/trainingSession/inTimeInterval?startTimeStamp="+URLEncoder.encode(String.valueOf(startTimestamp), "UTF-8")+"&endTimeStamp="+URLEncoder.encode(String.valueOf(endTimestamp), "UTF-8")+"&accessToken="+accessToken+"&accessTokenType=facebook";
 		Client clientGetTrainingSessions = getClient();
 		WebResource getTrainingSession = clientGetTrainingSessions.resource(getTrainingSessionsUrl);
 		JSONObject getTrainingSessionsRes = getTrainingSession.get(JSONObject.class);
@@ -98,11 +105,13 @@ public class FocusTestRanjan extends JerseyTest {
 		
 
 	
-		for (int i=0; i<trainingSessionsJson.length();i++){
+		for (int i= trainingSessionsJson.length()-1; i>=0;i--){
 	      
 	      JSONObject trainingSessionDataJsonObj = new JSONObject();
 		  trainingSessionDataJsonObj.put("startTime", Timestamp.valueOf(trainingSessionsJson.getJSONObject(i).getString("startTime")));
-		  trainingSessionDataJsonObj.put("endTime",trainingSessionsJson.getJSONObject(i).getString("endTime"));
+		  Timestamp endTime = Timestamp.valueOf(trainingSessionsJson.getJSONObject(i).getString("endTime"));
+		  DateTimeUtils.setCurrentMillisFixed(endTime.getTime());
+		  trainingSessionDataJsonObj.put("endTime", endTime);
 		  trainingSessionDataJsonObj.put("hrz1Time",trainingSessionsJson.getJSONObject(i).getDouble("hrz1Time"));
 		  trainingSessionDataJsonObj.put("hrz2Time",trainingSessionsJson.getJSONObject(i).getDouble("hrz2Time"));
 		  trainingSessionDataJsonObj.put("hrz3Time",trainingSessionsJson.getJSONObject(i).getDouble("hrz3Time"));
@@ -120,10 +129,8 @@ public class FocusTestRanjan extends JerseyTest {
 	      trainingSessionDataJsonObj.put("healthPerceptionIndex",trainingSessionsJson.getJSONObject(i).getInt("healthPerceptionIndex"));
 	      trainingSessionDataJsonObj.put("muscleStatePerceptionIndex",trainingSessionsJson.getJSONObject(i).getInt("muscleStatePerceptionIndex"));
 	      trainingSessionDataJsonObj.put("sessionStressPerceptionIndex",trainingSessionsJson.getJSONObject(i).getInt("sessionStressPerceptionIndex"));
-	      trainingSessionDataJsonObj.put("averageAltitude",trainingSessionsJson.getJSONObject(i).getDouble("averageAltitude"));
-	      trainingSessionDataJsonObj.put("extraLoad",trainingSessionsJson.getJSONObject(i).getDouble("extraLoad"));
 	      saveFitnessTrainingSession.type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(JSONObject.class,trainingSessionDataJsonObj);
-	      DateTimeUtils.setCurrentMillisFixed(cal.getTime().getTime());
+	     
 		}
 		
 		
@@ -136,6 +143,18 @@ public class FocusTestRanjan extends JerseyTest {
 		clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING,Boolean.TRUE);
 		Client client = Client.create(clientConfig);	
 		return client;
+	}
+	
+	
+	@After
+	public void cleanUpAfterClass() throws Exception 
+	{
+		/*Delete Trainee Data*/	
+		String clearUserDataUrl =  "http://localhost:9998/trainee/id/"+ranjanId+"/data/clear"; 
+		ClientConfig clientConfig = new DefaultClientConfig();
+		Client clientClearUserData = Client.create(clientConfig);
+		WebResource clearUserData = clientClearUserData.resource(clearUserDataUrl);
+		clearUserData.delete();
 	}
 	
 }
