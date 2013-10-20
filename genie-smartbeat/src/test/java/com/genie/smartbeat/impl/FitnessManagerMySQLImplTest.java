@@ -595,17 +595,25 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test 
-	public void testGetTrainingSessionIdsInTimeInterval() throws TimeException{
+	public void testGetTrainingSessionIdsInTimeInterval() {
 		
 		try{
 			fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid, null, null);
 		}catch(InvalidStartTimestampException e){
 			Assert.assertTrue(true);
+		} catch (TimeException e) {
+		    Assert.fail("Time Exception");
 		}
 		
 		FitnessTrainingSessionDAO fitnessTrainingSessionDAO = (FitnessTrainingSessionDAO) smartbeatContext.getBean("fitnessTrainingSessionDAO");
 		
-		Assert.assertEquals(0, fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e", Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
+		try {
+			Assert.assertEquals(0, fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e", Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
+		}catch(InvalidStartTimestampException e){
+			Assert.assertTrue(true);
+		} catch (TimeException e) {
+		    Assert.fail("Time Exception");
+		}
 		
 		String [][] dummyValues = {{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","1","2013-07-03 18:23:10","2013-07-03 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
 				{"TEST073a9e7d-9cf2-49a0-8926-f27362fd547e","2","2013-07-04 18:23:10","2013-07-04 18:23:10","1","2","3","4","5","6","1","2","3","4","5","6","1"},
@@ -646,26 +654,36 @@ public class FitnessManagerMySQLImplTest {
 				fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid, Timestamp.valueOf("2013-07-03 18:23:10"), null);
 			}catch(InvalidEndTimestampException e){
 				Assert.assertTrue(true);
+			} catch (TimeException e) {
+			    Assert.fail("Time exception");
 			}
 			
 			try{
 				fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval(userid,  Timestamp.valueOf("2013-08-30 18:23:10"), Timestamp.valueOf("2013-07-03 18:23:10"));
 			}catch(InvalidDurationException e){
 				Assert.assertTrue(true);
+			} catch (TimeException e) {
+				Assert.fail("Time exception");
 			}
 			
-			Assert.assertEquals(9, fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" , Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
+			try {
+				Assert.assertEquals(9, fitnessManagerMySQLImpl.getTrainingSessionIdsInTimeInterval("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" , Timestamp.valueOf("2013-07-03 18:23:10"), Timestamp.valueOf("2013-08-30 18:23:10")).size());
+			} catch (TimeException e) {
+				Assert.fail("Time exception");
+			}
 		
 			fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e");;
 	}
 	
 	@Test 
-	public void testgetShapeIndexHistoryInTimeInterval() throws TimeException {
+	public void testgetShapeIndexHistoryInTimeInterval() {
 		
 		try{
 			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, null, null);
 		}catch(InvalidStartTimestampException e){
 			Assert.assertTrue(true);
+		} catch (TimeException e) {
+			Assert.fail("Time Exception");
 		}
 		
 		Date today = new Date();
@@ -696,12 +714,16 @@ public class FitnessManagerMySQLImplTest {
 			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, null);
 		}catch(InvalidEndTimestampException e){
 			Assert.assertTrue(true);
+		} catch (TimeException e) {
+		    Assert.fail("Time Exception");
 		}
 		
 		try{
 			fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, endInterval, startInterval);
 		}catch(InvalidDurationException e){
 			Assert.assertTrue(true);
+		} catch (TimeException e) {
+			Assert.fail("Time Exception");
 		}
 				
 		FitnessShapeIndexBean  fitnessShapeIndexBean1 = new FitnessShapeIndexBean();
@@ -732,7 +754,11 @@ public class FitnessManagerMySQLImplTest {
 		fitnessShapeIndexBean1.setTimeOfRecord(new Timestamp(nowPastThreeDays));
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
 
-		shapeIndexBeans = fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, endInterval);
+		try {
+			shapeIndexBeans = fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, endInterval);
+		} catch (TimeException e) {
+			Assert.fail("Time Exception");
+		}
 		Assert.assertEquals(3, shapeIndexBeans.size());
 		
 		for (Iterator<FitnessShapeIndexBean> i = shapeIndexBeans.iterator(); i.hasNext();) {
@@ -1575,14 +1601,19 @@ public class FitnessManagerMySQLImplTest {
 	}
 	
 	@Test
-	public void testGetRecoveryTime() throws TrainingSessionException, HomeostasisModelException{
+	public void testGetRecoveryTime() {
 		
 		Timestamp recoveryTime = null;
 		/*To check the null recoveryTime scenario*/
 		try{
 		   recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		   Assert.fail("No AbsenceOfTrainingSessionException");
 		}catch(AbsenceOfTrainingSessionException e){
 			Assert.assertTrue(true);
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}catch(HomeostasisModelException e){
+			Assert.fail("Unexpected HomeostasisModelException");
 		}
 		Assert.assertNull(recoveryTime);
 		
@@ -1638,11 +1669,17 @@ public class FitnessManagerMySQLImplTest {
 		fitnessTrainingSessionBean.setTrainingSessionId("test1");
 		fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
 		
-		try{
-			 recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
-		}catch(AbsenceOfHomeostasisIndexModelException e){
-		     Assert.assertTrue(true);
-		}
+	
+			 try {
+				recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+			}catch(AbsenceOfHomeostasisIndexModelException e){
+			     Assert.assertTrue(true);
+		    }catch (TrainingSessionException e) {
+		    	Assert.fail("Training Session Exception");
+			}catch (HomeostasisModelException e) {
+				Assert.fail("Homeostasis Index Model Exception");
+			}
+
 		
 		FitnessHomeostasisIndexBean fitnessHomeostasisIndexBean = new FitnessHomeostasisIndexBean();
 		fitnessHomeostasisIndexBean.setUserid(userid);
@@ -1687,7 +1724,14 @@ public class FitnessManagerMySQLImplTest {
 		homeostasisIndexDAO.updateHomeostasisIndexModel(fitnessHomeostasisIndexBean);
 		
 		/*Asserting the recovery time*/
-		recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		try {
+			recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
+		} catch (TrainingSessionException e) {
+		  Assert.fail("Training Session Exception");
+		} catch (HomeostasisModelException e) {
+			Assert.fail("Homeostasis Index Model Exception");
+		}
+		
 		cal.add(Calendar.DATE, 3);
 		cal.set(Calendar.HOUR_OF_DAY, 11);
 		cal.set(Calendar.MINUTE, 38);
