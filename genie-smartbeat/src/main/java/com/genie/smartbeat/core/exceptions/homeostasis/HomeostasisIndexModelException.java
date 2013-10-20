@@ -6,11 +6,11 @@ import com.genie.smartbeat.core.exceptions.FitnessManagerException;
  * @author vidhun
  **/
 
-public class HomeostasisModelException extends FitnessManagerException {
+public class HomeostasisIndexModelException extends FitnessManagerException {
 	
 	private static final long serialVersionUID = 773703695688508345L;
 
-	public HomeostasisModelException() {
+	public HomeostasisIndexModelException() {
 		// TODO Auto-generated constructor stub
 	}
 }
