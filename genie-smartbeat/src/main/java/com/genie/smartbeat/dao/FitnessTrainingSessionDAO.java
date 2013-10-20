@@ -111,7 +111,8 @@ public class FitnessTrainingSessionDAO {
 			+ " where " 
 			+ COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_USERID] + "= ?"
 			+ " and " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_START_TIME] + " >= timestamp(?) "
-			+ " and " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + "< timestamp(?)" ;
+			+ " and " + COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_END_TIME] + "< timestamp(?)"
+			+ " ORDER BY " 	+ COLUMNS_FITNESS_TRAINING_SESSION[COLUMN_START_TIME] + " DESC";
 
 	public List<FitnessTrainingSessionBean>  getFitnessTrainingSessionsByTimeRange (String userID, Timestamp startTimestamp, Timestamp endTimestamp) {
 		
