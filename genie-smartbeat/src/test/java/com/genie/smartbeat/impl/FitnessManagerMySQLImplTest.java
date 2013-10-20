@@ -735,7 +735,8 @@ public class FitnessManagerMySQLImplTest {
 		fitnessShapeIndexDAO.createFitnessShapeIndexModel(fitnessShapeIndexBean1);
 
 		shapeIndexBeans = fitnessManagerMySQLImpl.getShapeIndexHistoryInTimeInterval(userid, startInterval, endInterval);
-		Assert.assertEquals(4, shapeIndexBeans.size());
+		Assert.assertEquals(4, shapeIndexBeans.size());		
+		Assert.assertEquals(shapeIndexBeans.get(0).getTimeOfRecord().toString(), endInterval.toString());
 				
 		fitnessShapeIndexDAO.deleteShapeIndexHistoryForUser(userid);
 	}
@@ -1209,8 +1210,16 @@ public class FitnessManagerMySQLImplTest {
 	public void testGetShapeIndexWithNewlyArrivedSession() throws TrainingSessionException, HomeostasisModelException{
 		
 		/*To check the null recoveryTime scenario*/
-		Timestamp recoveryTime = fitnessManagerMySQLImpl.getRecoveryTime(userid);
-		Assert.assertNull(recoveryTime);
+		try{
+			fitnessManagerMySQLImpl.getRecoveryTime(userid);
+			Assert.fail("No AbsenceOfTrainingSessionException");
+		}catch(AbsenceOfTrainingSessionException e){
+			Assert.assertTrue(true);
+		}catch(TrainingSessionException e){
+			Assert.fail("Unexpected TrainingSessionException");
+		}catch(HomeostasisModelException e){
+			Assert.fail("Unexpected HomeostasisModelException");
+		}		
 		
 		/*Valid user bean needed for age and gender*/
 		Calendar cal = Calendar.getInstance();
