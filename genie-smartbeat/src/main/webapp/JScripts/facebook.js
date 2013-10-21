@@ -617,7 +617,7 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
         series: [{
             // Use (open) circlular markers.
             showLine: false,
-            markerOptions: { style: "circle" }
+            markerOptions: { style: "filledCircle" }
         }],
         axes: {
             xaxis: {
