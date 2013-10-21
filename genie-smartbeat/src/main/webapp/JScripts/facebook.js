@@ -140,6 +140,11 @@ function ShowQuickView(listitem, userid) {
 			+ '<div id="qvshapeindexhistory" ></div>'
 			+ '<h3>Heartrate Test History</h3>'
 			+ '<div id="qvheartratetesthistory" ></div>'
+            + '<h3>Health Perception Index, Session Stress Perception Index and Muscle State Perception Index</h3>'
+            + '<div  style="width:1000px; text-align:center;">'
+            + '<div id="qvhealthPerceptionIndex" style="width:500px;"></div>'
+            + '<div id="qvsessionStressPerceptionIndex" style="width:500px;"></div>'
+            + '<br/><div id="qvmuscleStatePerceptionIndex" style="width:500px;"></div>'
 			+ '</div>');
 
         $("#accordion").accordion({
@@ -201,57 +206,57 @@ function QVHeartrateTestHistory(userid) {
     $("#qvheartratetesthistory").append('<div id="heartratetesthistorygraph"></div>');
 
     //resting
-	$.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+    $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/resting/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
 	 .done(function (restingresponse) {
-        if (restingresponse.obj.heartrateTests.length > 0) {
-            restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
-        }
-        else {
-            restingheartrate = "none yet";
-        }
+	     if (restingresponse.obj.heartrateTests.length > 0) {
+	         restingheartrate = restingresponse.obj.heartrateTests[0].heartrate;
+	     }
+	     else {
+	         restingheartrate = "none yet";
+	     }
 
-        $("#heartratetesthistorykeys").find("ul").append('<li> Resting Heartrate : ' + restingheartrate + '</li>');
+	     $("#heartratetesthistorykeys").find("ul").append('<li> Resting Heartrate : ' + restingheartrate + '</li>');
 
-        //threshold
-        $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-        .done(function (thresholdresponse) {
+	     //threshold
+	     $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/threshold/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+         .done(function (thresholdresponse) {
 
-            if (thresholdresponse.obj.heartrateTests.length > 0) {
-                thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
-            }
-            else {
-                thresholdheartrate = "none yet";
-            }
+             if (thresholdresponse.obj.heartrateTests.length > 0) {
+                 thresholdheartrate = thresholdresponse.obj.heartrateTests[0].heartrate;
+             }
+             else {
+                 thresholdheartrate = "none yet";
+             }
 
-            $("#qvheartratetesthistory").find("ul").append('<li>Threshold Heartrate : ' + thresholdheartrate + '</li>');
+             $("#qvheartratetesthistory").find("ul").append('<li>Threshold Heartrate : ' + thresholdheartrate + '</li>');
 
-            //maximal
-            $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-            .done(function (maximalresponse) {
-                if (maximalresponse.obj.heartrateTests.length > 0) {
-                    maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
-                }
-                else {
-                    maximalheartrate = "none yet";
-                }
+             //maximal
+             $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/maximal/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+             .done(function (maximalresponse) {
+                 if (maximalresponse.obj.heartrateTests.length > 0) {
+                     maximalheartrate = maximalresponse.obj.heartrateTests[0].heartrate;
+                 }
+                 else {
+                     maximalheartrate = "none yet";
+                 }
 
-                $("#qvheartratetesthistory").find("ul").append('<li>Maximal Heartrate : ' + maximalheartrate + '</li>');
+                 $("#qvheartratetesthistory").find("ul").append('<li>Maximal Heartrate : ' + maximalheartrate + '</li>');
 
-                //orthostatic
-                $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
-                .done(function (orthostaticresponse) {
-                    var plotdata = [];
+                 //orthostatic
+                 $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp)
+                 .done(function (orthostaticresponse) {
+                     var plotdata = [];
 
-                    for (var i = 0; i < orthostaticresponse.obj.heartrateTests.length; i++) {
-                        var heartrateBean = orthostaticresponse.obj.heartrateTests[i];
-                        plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
-                    }
+                     for (var i = 0; i < orthostaticresponse.obj.heartrateTests.length; i++) {
+                         var heartrateBean = orthostaticresponse.obj.heartrateTests[i];
+                         plotdata[i] = [moment(heartrateBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), heartrateBean.heartrate];
+                     }
 
-                    DateGraph("heartratetesthistorygraph", [plotdata], "Orthostatic Heartrate");
-                });
-            });
-        });
-    });
+                     DateGraph("heartratetesthistorygraph", [plotdata], "Orthostatic Heartrate");
+                 });
+             });
+         });
+	 });
 
     //    $("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/heartrateTest/orthostatic/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
 }
@@ -264,6 +269,11 @@ function QVTrainingSessionHistory(userid) {
     var endTimestamp = moment().format("YYYY-MM-DD HH:mm:ss.SSS");
 
     $.getJSON(HOST_URL + "v1.0/trainee/id/" + userid + "/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp, function (response) {
+        //Arrays used to display Health Perception Index, Session Stress Perception Index and Muscle State Perception Index
+        var arrVdot = [];
+        var arrhealthPerceptionIndex = [];
+        var arrsessionStressPerceptionIndex = [];
+        var arrmuscleStatePerceptionIndex = [];
 
         for (var i = 0; i < response.obj.trainingSessionBeans.length; i++) {
 
@@ -328,9 +338,22 @@ function QVTrainingSessionHistory(userid) {
             if (response.obj.trainingSessionBeans.length > (i + 1)) {
                 $('#qvtrainingsessionhistory').append('</br>');
             }
+
+            //Logic to display Health Perception Index, Session Stress Perception Index and Muscle State Perception Index
+            arrVdot[i] = trainingSessionBean.vdot;
+            arrhealthPerceptionIndex[i] = trainingSessionBean.healthPerceptionIndex;
+            arrsessionStressPerceptionIndex[i] = trainingSessionBean.sessionStressPerceptionIndex;
+            arrmuscleStatePerceptionIndex[i] = trainingSessionBean.muscleStatePerceptionIndex;
         }
 
+        ScatterGraph('qvhealthPerceptionIndex', [arrhealthPerceptionIndex], arrVdot, "Health Perception Index");
+        ScatterGraph('qvsessionStressPerceptionIndex', [arrsessionStressPerceptionIndex], arrVdot, "Stress Perception Index");
+        ScatterGraph('qvmuscleStatePerceptionIndex', [arrmuscleStatePerceptionIndex], arrVdot, "Muscle State Perception Index");
+
     });
+
+    //$("#dv_Test").html($("#dv_Test").html() + "##########" + HOST_URL + "v1.0/trainee/id/" + userid + "/trainingSession/inTimeInterval?accessToken=" + accessToken + "&accessTokenType=facebook&startTimeStamp=" + startTimestamp + "&endTimeStamp=" + endTimestamp);
+
 }
 
 function QVShapeIndexHistory(userid) {
@@ -493,7 +516,6 @@ function DateGraph(divid, plotarrays, graphtitle) {
     graphs[graphs.length] = graph1;
 }
 
-
 function BarGraph(divid, bararrays, xaxisarray, graphtitle) {
 
     if (!(isArray(bararrays)
@@ -577,3 +599,50 @@ function DonutGraph(divid, donutarrays, title) {
     });
     graphs[graphs.length] = graph;
 }
+
+function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
+
+    if (!(isArray(bararrays)
+		&& bararrays[0].length > 0
+		&& isArray(xaxisarray)
+		&& xaxisarray.length > 0)) {
+
+        return;
+    }
+
+    var graph1 = $.jqplot(divid, bararrays, {
+        title: graphtitle,
+        // Series options are specified as an array of objects, one object
+        // for each series.
+        series: [{
+            // Use (open) circlular markers.
+            showLine: false,
+            markerOptions: { style: "circle" }
+        }],
+        axes: {
+            xaxis: {
+                ticks: xaxisarray,
+                renderer: $.jqplot.CategoryAxisRenderer,
+                tickOptions: {
+                    markSize: 0
+                }
+            },
+            yaxis: {
+                tickOptions: {
+                    markSize: 0
+                }
+            }
+        },
+        highlighter: {
+            show: true,
+            sizeAdjust: 7.5
+        },
+        cursor: {
+            show: false
+        }
+    }
+  );
+
+    graphs[graphs.length] = graph1;
+}
+
