@@ -1,20 +1,64 @@
-﻿//On page load
+﻿
 $(document).ready(function () {
-    //Adjust Dimensions
-    adjustPageDimensions();
-    
-    $("#btn_GetUserIDDetails").click(function () {
-        getUserID();
-    });
-    $("#btn_GetShapeIndexDetails").click(function () {
-        getShapeIndex();
-    });
-    $("#a_GetUserID").click(function (event) {
-        event.preventDefault();
-        getUserID();
-        return false;
-    });
+    $("#tabmenu").tabs();
+    getAllUsers();
 });
+
+// Perl Style dump for de-bugging
+function dump(arr, level) {
+    var dumped_text = "";
+    if (!level) level = 0;
+
+    var level_padding = "";
+    for (var j = 0; j < level + 1; j++) level_padding += "    ";
+
+    if (typeof (arr) == 'object') {
+        for (var item in arr) {
+            var value = arr[item];
+            if (typeof (value) == 'object') {
+                dumped_text += level_padding + "'" + item + "'             ...\n";
+                dumped_text += dump(value, level + 1);
+            } else {
+                dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
+            }
+        }
+    } else {
+        dumped_text = "===>" + arr + "<===(" + typeof (arr) + ")";
+    }
+    return dumped_text;
+}
+
+function LogoutSmartbeat() {
+    FB.logout(function (response) { location.reload(); });
+}
+
+function InList(value, array) {
+
+    if (!isArray(array)) {
+        alert('Second argument to InList should be an array');
+        return null;
+    }
+
+    for (var i = 0; i < array.length; i++) {
+        if (value == array[i]) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+function isArray(a) {
+    return isObject(a) && a.constructor == Array;
+}
+
+function isObject(a) {
+    return (typeof a == 'object' && !!a) || isFunction(a);
+}
+
+function isFunction(a) {
+    return typeof a == 'function';
+}
 
 //window.onresize = function () { alert("Resize"); };
 window.onresize = adjustPageDimensions;
@@ -51,47 +95,4 @@ function adjustPageDimensions() {
         //Setting main div dimension
         $("#dv_Main").width(900);
     }
-}
-function subscribe() {
-    $("#dv_dialog").html("You have successfully signed up to our monthly news letters.");
-    $("#dv_dialog").dialog({ title: "Success!" });
-    $("#dv_dialog").dialog("open");
-}
-function openPopUp(url) {
-    window.open(url, '_blank', "");
-}
-
-function getUserID() {
-    $("#img_Loading").show();
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: $("#txt_UserIDURL").val(),
-        success: function (responce) {
-            var returnedData = responce.obj;
-
-            $("#dv_UserID").html(returnedData.userid);
-            $("#dv_FirstName").html(returnedData.firstName);
-            $("#dv_LastName").html(returnedData.lastName);
-            $("#dv_DOB").html(returnedData.dob);
-
-            $("#img_Loading").hide();
-        }
-    });
-}
-function getShapeIndex() {
-    $("#img_Loading").show();
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: $("#txt_ShapeIndexURL").val(),
-        success: function (responce) {
-            var returnedData = responce.obj;
-
-            $("#dv_UserID2").html(returnedData.userid);
-            $("#dv_ShapeIndex").html(returnedData.shapeIndex);
-
-            $("#img_Loading").hide();
-        }
-    });
 }
