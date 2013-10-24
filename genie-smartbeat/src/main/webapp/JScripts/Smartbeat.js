@@ -53,7 +53,7 @@ function ShowQuickView(listitem, userid) {
 			+ '<div id="qvshapeindexhistory" ></div>'
 			+ '<h3>Heartrate Test History</h3>'
 			+ '<div id="qvheartratetesthistory" ></div>'
-            + '<h3>Health Perception Indices, Session Stress Perception Indices and Muscle State Perception Indices</h3>'
+            + '<h3>Health Perception Index, Session Stress Perception Index and Muscle State Perception Index</h3>'
             + '<div  style="width:1000px; text-align:center;">'
             + '<div id="qvhealthPerceptionIndex" style="width:500px;"></div>'
             + '<div id="qvsessionStressPerceptionIndex" style="width:500px;"></div>'
