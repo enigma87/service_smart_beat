@@ -96,3 +96,87 @@ function adjustPageDimensions() {
         $("#dv_Main").width(900);
     }
 }
+
+/*
+export to csv thingy, all clientside!
+*/
+function escapeString(str) {
+
+	var pattern = new RegExp(",");
+
+	if (typeof(str) == 'string') {
+		
+		//document.write('<pre> inside: ' + str + '<pre>');
+		str =  '\\"'+ str + '\\"';	
+	} 
+	return  str;
+}
+
+/*
+given an array of beans, format them into a 2-D array
+
+[
+	[ID, NAME, AGE],
+	[123, KISHORE, 1000]
+]
+
+*/
+function beanArrayToCSVArray(beanArray) {
+	if (beanArray.length <= 0) {
+		return;
+	}
+
+	var csvarray = [];
+	var titles = [];	
+	for (key in beanArray[0]) {
+		titles.push(key);	
+	}
+	csvarray.push(titles);
+	
+	for (var i=0; i < beanArray.length; i++) {
+		var values = [];
+		for (key in beanArray[i]) {
+			values.push(beanArray[i][key]);		
+		}
+		csvarray.push(values);
+	}
+	
+	return csvarray;
+}
+
+/*
+given a 2-D array, converts to input string ready to be converted to CSV
+
+fields separated by comma and rows separated by \r\n
+*/
+function arrayToCSVString(arrayData) {
+	var csvstring = '';
+	for (var i=0; i < arrayData.length; i++) {
+		for (var j = 0; j < arrayData[i].length; j++) {
+			csvstring += escapeString(arrayData[i][j]);
+
+			if (j < (arrayData[i].length -1)) {
+				csvstring += ',';			
+			}		
+		}
+		csvstring += '\\r\\n';
+	}
+
+	return "'" + csvstring + "'";
+}
+
+/*
+given arrayToCSVString's output, attaches a CSV 
+download to the input element
+*/
+function exportDataToCSV(element, csvdata, filename) {
+        var csvDownload = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csvdata);
+
+   $(element)
+            .attr({
+            'download': filename,
+                'href': csvDownload,
+                'target': '_blank'
+        });
+}
+

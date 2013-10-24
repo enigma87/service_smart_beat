@@ -191,6 +191,9 @@ function QVTrainingSessionHistory(userid) {
         var arrhealthPerceptionIndex = [];
         var arrsessionStressPerceptionIndex = [];
         var arrmuscleStatePerceptionIndex = [];
+	var csvdata = arrayToCSVString(beanArrayToCSVArray(response.obj.trainingSessionBeans));
+
+	$('#qvtrainingsessionhistory').append('<div id="exporttrainingsessions"><a href="#" onclick="exportDataToCSV(this,'+ csvdata + ', \'trainingsesisonhistory.csv\')" >export as csv</a></div>');
 
         for (var i = 0; i < response.obj.trainingSessionBeans.length; i++) {
 

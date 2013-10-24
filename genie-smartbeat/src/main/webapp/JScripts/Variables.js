@@ -1,7 +1,7 @@
 // globals, for a session
 
-var HOST_URL = 'http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
-//var HOST_URL = 'http://localhost:8080/smartbeat/';
+//var HOST_URL = 'http://ec2-54-229-146-226.eu-west-1.compute.amazonaws.com:8080/smartbeat/';
+var HOST_URL = 'http://localhost:8080/smartbeat/';
 
 var uid = null;
 var accessToken = null;
