@@ -53,7 +53,7 @@ function ShowQuickView(listitem, userid) {
 			+ '<div id="qvshapeindexhistory" ></div>'
 			+ '<h3>Heartrate Test History</h3>'
 			+ '<div id="qvheartratetesthistory" ></div>'
-            + '<h3>Health Perception Index, Session Stress Perception Index and Muscle State Perception Index</h3>'
+            + '<h3>Perception Indices</h3>'
             + '<div  style="width:1000px; text-align:center;">'
             + '<div id="qvhealthPerceptionIndex" style="width:500px;"></div>'
             + '<div id="qvsessionStressPerceptionIndex" style="width:500px;"></div>'
@@ -263,9 +263,9 @@ function QVTrainingSessionHistory(userid) {
             arrmuscleStatePerceptionIndex[i] = trainingSessionBean.muscleStatePerceptionIndex;
         }
 
-        ScatterGraph('qvhealthPerceptionIndex', [arrhealthPerceptionIndex], arrVdot, "Health Perception Indices");
-        ScatterGraph('qvsessionStressPerceptionIndex', [arrsessionStressPerceptionIndex], arrVdot, "Stress Perception Indices");
-        ScatterGraph('qvmuscleStatePerceptionIndex', [arrmuscleStatePerceptionIndex], arrVdot, "Muscle State Perception Indices");
+        ScatterGraph('qvhealthPerceptionIndex', [arrVdot], arrhealthPerceptionIndex, "Health Perception Index");
+        ScatterGraph('qvsessionStressPerceptionIndex', [arrVdot], arrsessionStressPerceptionIndex, "Stress Perception Index");
+        ScatterGraph('qvmuscleStatePerceptionIndex', [arrVdot], arrmuscleStatePerceptionIndex, "Muscle State Perception Index");
 
     });
 
