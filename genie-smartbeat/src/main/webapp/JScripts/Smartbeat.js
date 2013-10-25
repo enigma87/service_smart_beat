@@ -196,7 +196,7 @@ function QVTrainingSessionHistory(userid) {
 	/*
 		qvtrainingsessionhistory: attach download to the hyperlink
 	*/	
-	$('#qvtrainingsessionhistory').append('<div id="exporttrainingsessions"><a id="exporttrainingsesisonslink" href="#">csv export</a></div>');
+	$('#qvtrainingsessionhistory').append('<div id="exporttrainingsessions"><a id="exporttrainingsesisonslink" href="#">csv export</a></br></div>');
 
 	$('#exporttrainingsesisonslink').bind("click" ,function() {
 		exportDataToCSV(this, csvdata, 'trainingsesisonhistory.csv');	
