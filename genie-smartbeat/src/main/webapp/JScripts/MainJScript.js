@@ -105,9 +105,8 @@ function escapeString(str) {
 	var pattern = new RegExp(",");
 
 	if (typeof(str) == 'string') {
-		
-		//document.write('<pre> inside: ' + str + '<pre>');
-		str =  '\\"'+ str + '\\"';	
+		str.replace(',', '\,');		
+		str =  '\"'+ str + '\"';	
 	} 
 	return  str;
 }
@@ -136,12 +135,33 @@ function beanArrayToCSVArray(beanArray) {
 	for (var i=0; i < beanArray.length; i++) {
 		var values = [];
 		for (key in beanArray[i]) {
-			values.push(beanArray[i][key]);		
+
+			var beanData = beanArray[i][key];
+
+			if (InList(typeof(beanData), ['string', 'number'])) { 
+				values.push(beanData);
+			} else if (typeof(beanData) == 'object') { 
+				values.push(formatValuesToString(beanData));
+			} else if (typeof(beanData) == 'boolean') {
+				values.push(beanData.toString());			
+			}
 		}
 		csvarray.push(values);
 	}
 	
 	return csvarray;
+}
+
+/*
+	if a 1-D array is passed, gives out a comma separated string of values
+*/
+function formatValuesToString(object) {
+	var str='';
+	for(key in object) {
+	   str += object[key].toString() + ','; 
+	}
+	str.replace(/(,+)$/,'');
+	return str;
 }
 
 /*
@@ -159,10 +179,10 @@ function arrayToCSVString(arrayData) {
 				csvstring += ',';			
 			}		
 		}
-		csvstring += '\\r\\n';
+		csvstring += '\r\n';
 	}
 
-	return "'" + csvstring + "'";
+	return csvstring ;
 }
 
 /*
