@@ -149,18 +149,23 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
             showLine: false,
             markerOptions: { style: "filledCircle" }
         }],
+        axesDefaults: {
+            labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+        },
         axes: {
             xaxis: {
                 ticks: xaxisarray,
                 renderer: $.jqplot.CategoryAxisRenderer,
                 tickOptions: {
                     markSize: 0
-                }
+                },
+                label: "vdot"
             },
             yaxis: {
                 tickOptions: {
                     markSize: 0
-                }
+                },
+                label: "Indices"
             }
         },
         highlighter: {
