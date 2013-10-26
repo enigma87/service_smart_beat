@@ -173,3 +173,9 @@ div#exporttrainingsessions {
 	text-align:right;
 	width:100%;
 }
+
+img.download {
+	height: 1cm;
+	width: .8cm;
+}
+

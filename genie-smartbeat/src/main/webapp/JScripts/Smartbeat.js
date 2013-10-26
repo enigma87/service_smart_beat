@@ -196,10 +196,10 @@ function QVTrainingSessionHistory(userid) {
 	/*
 		qvtrainingsessionhistory: attach download to the hyperlink
 	*/	
-	$('#qvtrainingsessionhistory').append('<div id="exporttrainingsessions"><a id="exporttrainingsesisonslink" href="#">csv export</a></br></div>');
+	$('#qvtrainingsessionhistory').append('<a id="exporttrainingsesisonslink" href="#"><img class="download" src="Images/download_icon.png" title="download as csv" /></a>');
 
 	$('#exporttrainingsesisonslink').bind("click" ,function() {
-		exportDataToCSV(this, csvdata, 'trainingsesisonhistory.csv');	
+		exportDataToCSV(this, csvdata,  userid + '_trainingsesisonhistory_' + moment().format("YYYY-MM-DD HH:mm:ss.SSS") + '.csv');	
 	});
 
         for (var i = 0; i < response.obj.trainingSessionBeans.length; i++) {
