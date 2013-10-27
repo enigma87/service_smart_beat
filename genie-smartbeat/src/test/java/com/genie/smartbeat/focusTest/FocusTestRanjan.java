@@ -105,7 +105,7 @@ public class FocusTestRanjan extends JerseyTest {
 		
 
 	
-		for (int i= trainingSessionsJson.length()-1; i>=0;i--){
+		for (int i=trainingSessionsJson.length()-1; i>=0 ;i--){
 	      
 	      JSONObject trainingSessionDataJsonObj = new JSONObject();
 		  trainingSessionDataJsonObj.put("startTime", Timestamp.valueOf(trainingSessionsJson.getJSONObject(i).getString("startTime")));
