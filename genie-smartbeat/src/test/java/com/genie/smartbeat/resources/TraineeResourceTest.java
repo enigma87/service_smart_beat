@@ -395,10 +395,10 @@ public class TraineeResourceTest {
 			JSONObject dataJson = new JSONObject(responseJSON.get("obj").toString());
 			Assert.assertEquals(userid, dataJson.getString("userID"));
 			JSONArray trainingSessionIds = dataJson.getJSONArray("trainingSessionIDs");
-			Assert.assertEquals("test1", trainingSessionIds.getJSONObject(0).get("trainingSessionId"));
+			Assert.assertEquals("test2", trainingSessionIds.getJSONObject(0).get("trainingSessionId"));
 			Assert.assertNotNull(trainingSessionIds.getJSONObject(0).get("startTime"));
 			Assert.assertNotNull(trainingSessionIds.getJSONObject(0).get("endTime"));
-			Assert.assertEquals("test2", trainingSessionIds.getJSONObject(1).get("trainingSessionId"));
+			Assert.assertEquals("test1", trainingSessionIds.getJSONObject(1).get("trainingSessionId"));
 			Assert.assertNotNull(trainingSessionIds.getJSONObject(1).get("startTime"));
 			Assert.assertNotNull(trainingSessionIds.getJSONObject(1).get("endTime"));
 						

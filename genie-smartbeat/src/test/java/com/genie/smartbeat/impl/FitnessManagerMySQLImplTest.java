@@ -1925,25 +1925,8 @@ public class FitnessManagerMySQLImplTest {
 		}
 				
 		Assert.assertEquals(2, fitnessTrainingSessionBeanList.size());
-				
-		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
-		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
-		Assert.assertEquals("test1", responseFitnessTrainingSessionBean.getTrainingSessionId());
-		Assert.assertEquals(4.0, responseFitnessTrainingSessionBean.getHrz1Time());
-		Assert.assertEquals(32.0, responseFitnessTrainingSessionBean.getHrz2Time());
-		Assert.assertEquals(14.0, responseFitnessTrainingSessionBean.getHrz3Time());
-		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz4Time());
-		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Time());
-		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Time());
-		Assert.assertEquals(100.0, responseFitnessTrainingSessionBean.getHrz1Distance());
-		Assert.assertEquals(5920.0, responseFitnessTrainingSessionBean.getHrz2Distance());
-		Assert.assertEquals(2753.33, responseFitnessTrainingSessionBean.getHrz3Distance());
-		Assert.assertEquals(2200.0, responseFitnessTrainingSessionBean.getHrz4Distance());
-		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Distance());
-		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Distance());
-		Assert.assertEquals(new Integer(0), responseFitnessTrainingSessionBean.getSurfaceIndex());
 		
-		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(1);
+		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(0);
 		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
 		Assert.assertEquals("test2", responseFitnessTrainingSessionBean.getTrainingSessionId());
 		Assert.assertEquals(new Timestamp(sessionStartTime), responseFitnessTrainingSessionBean.getStartTime());
@@ -1961,6 +1944,25 @@ public class FitnessManagerMySQLImplTest {
 		Assert.assertEquals(2166.67, responseFitnessTrainingSessionBean.getHrz5Distance());
 		Assert.assertEquals(1410.0, responseFitnessTrainingSessionBean.getHrz6Distance());
 		Assert.assertEquals(new Integer(2), responseFitnessTrainingSessionBean.getSurfaceIndex());
+		
+		responseFitnessTrainingSessionBean = fitnessTrainingSessionBeanList.get(1);
+		Assert.assertEquals(userid, responseFitnessTrainingSessionBean.getUserid());
+		Assert.assertEquals("test1", responseFitnessTrainingSessionBean.getTrainingSessionId());
+		Assert.assertEquals(4.0, responseFitnessTrainingSessionBean.getHrz1Time());
+		Assert.assertEquals(32.0, responseFitnessTrainingSessionBean.getHrz2Time());
+		Assert.assertEquals(14.0, responseFitnessTrainingSessionBean.getHrz3Time());
+		Assert.assertEquals(10.0, responseFitnessTrainingSessionBean.getHrz4Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Time());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Time());
+		Assert.assertEquals(100.0, responseFitnessTrainingSessionBean.getHrz1Distance());
+		Assert.assertEquals(5920.0, responseFitnessTrainingSessionBean.getHrz2Distance());
+		Assert.assertEquals(2753.33, responseFitnessTrainingSessionBean.getHrz3Distance());
+		Assert.assertEquals(2200.0, responseFitnessTrainingSessionBean.getHrz4Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz5Distance());
+		Assert.assertEquals(0.0, responseFitnessTrainingSessionBean.getHrz6Distance());
+		Assert.assertEquals(new Integer(0), responseFitnessTrainingSessionBean.getSurfaceIndex());
+		
+
 		
 		/*Cleaning up*/
 		fitnessTrainingSessionDAO.deleteAllTrainingSessionsForUser(userid);
