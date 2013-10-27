@@ -140,15 +140,20 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
         return;
     }
 
+    var seriesOptions = [];
+
+	for (var i=0; i < bararrays.length; i++) {
+		seriesOptions.push({ showLine: false, markerOptions: { size: 10, style:"x" }  });
+	}
+ 
     var graph1 = $.jqplot(divid, bararrays, {
         title: graphtitle,
+	grid: {
+            borderWidth: 0.0
+        },
         // Series options are specified as an array of objects, one object
         // for each series.
-        series: [{
-            // Use (open) circlular markers.
-            showLine: false,
-            markerOptions: { style: "filledCircle" }
-        }],
+        series: seriesOptions,
         axesDefaults: {
             labelRenderer: $.jqplot.CanvasAxisLabelRenderer
         },
