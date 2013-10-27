@@ -127,11 +127,11 @@ public class FitnessTrainingSessionDAOTest {
 		
 		List<FitnessTrainingSessionIdBean>  sessionIds = fitnessTrainingSessionDAO.getFitnessTrainingSessionIdsByTimeRange("TEST073a9e7d-9cf2-49a0-8926-f27362fd547e" ,Timestamp.valueOf("2013-07-03 00:00:00"), Timestamp.valueOf("2013-08-05 00:00:00"));
 	    Assert.assertEquals(5, sessionIds.size());
-	    Assert.assertEquals("1",sessionIds.get(0).getTrainingSessionId());
-	    Assert.assertEquals("2",sessionIds.get(1).getTrainingSessionId());
+	    Assert.assertEquals("5",sessionIds.get(0).getTrainingSessionId());
+	    Assert.assertEquals("4",sessionIds.get(1).getTrainingSessionId());
 	    Assert.assertEquals("3",sessionIds.get(2).getTrainingSessionId());
-	    Assert.assertEquals("4",sessionIds.get(3).getTrainingSessionId());
-	    Assert.assertEquals("5",sessionIds.get(4).getTrainingSessionId());
+	    Assert.assertEquals("2",sessionIds.get(3).getTrainingSessionId());
+	    Assert.assertEquals("1",sessionIds.get(4).getTrainingSessionId());
 
 	}
 	

@@ -31,7 +31,7 @@ public class FitnessHeartrateTestDAOTest {
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean3;
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean4;
 	private static FitnessHeartrateTestBean fitnessHeartrateTestBean5;
-
+	private static FitnessHeartrateTestBean fitnessHeartrateTestBean6;
 	
 	
 	
@@ -402,6 +402,225 @@ public void testGetNRecentHeartRateTestsForUserByTypeWithOffset(){
 		endTimestamp = new Timestamp(cal.getTimeInMillis());
 		heartrateTests =  fitnessHeartrateTestDAO.getFitnessHeartrateTestsByTypeInTimeInterval("user1", ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC, startTimestamp, endTimestamp);
 		Assert.assertEquals(2, heartrateTests.size());
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+	}
+	
+	@Test
+	public void testGetRestingHeartrateTest(){
+		Calendar cal = Calendar.getInstance();		
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");				
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		
+		cal.add(Calendar.HOUR, -20);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean01 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean01.setUserid("user1");
+		fitnessHeartrateTestBean01.setHeartrateTestId("user1_Test1");
+		fitnessHeartrateTestBean01.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean01.setHeartrate(60.0);
+		fitnessHeartrateTestBean01.setTimeOfRecord(new Timestamp(cal.getTime().getTime()));
+		fitnessHeartrateTestBean01.setDayOfRecord(1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean01);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean02 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean02.setUserid("user1");
+		fitnessHeartrateTestBean02.setHeartrateTestId("user1_Test2");
+		fitnessHeartrateTestBean02.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean02.setHeartrate(60.0);
+		fitnessHeartrateTestBean02.setTimeOfRecord(new Timestamp(twoHoursBefore));
+		fitnessHeartrateTestBean02.setDayOfRecord(3);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean02);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean03 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean03.setUserid("user1");
+		fitnessHeartrateTestBean03.setHeartrateTestId("user1_Test3");
+		fitnessHeartrateTestBean03.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean03.setHeartrate(61.0);
+		fitnessHeartrateTestBean03.setTimeOfRecord(new Timestamp(oneHourBefore));
+		fitnessHeartrateTestBean03.setDayOfRecord(8);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean03);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean04 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean04.setUserid("user1");
+		fitnessHeartrateTestBean04.setHeartrateTestId("user1_Test4");
+		fitnessHeartrateTestBean04.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean04.setHeartrate(59.0);
+		fitnessHeartrateTestBean04.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean04.setDayOfRecord(9);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean04);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean05 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean05.setUserid("user1");
+		fitnessHeartrateTestBean05.setHeartrateTestId("user1_Test5");
+		fitnessHeartrateTestBean05.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean05.setHeartrate(100.0);
+		fitnessHeartrateTestBean05.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean05.setDayOfRecord(10);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean05);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean06 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean06.setUserid("user1");
+		fitnessHeartrateTestBean06.setHeartrateTestId("user1_Test6");
+		fitnessHeartrateTestBean06.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean06.setHeartrate(90.0);
+		fitnessHeartrateTestBean06.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean06.setDayOfRecord(11);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean06);
+		
+		FitnessHeartrateTestBean minFitnessHeartrateTestBean = fitnessHeartrateTestDAO.getRestingHeartrateTest("user1");
+		Assert.assertEquals(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING, minFitnessHeartrateTestBean.getHeartrateType());
+		Assert.assertEquals(60.0, minFitnessHeartrateTestBean.getHeartrate());
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+	}
+	
+	@Test
+	public void testGetThresholdHeartrateTest(){
+		Calendar cal = Calendar.getInstance();		
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");				
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		
+		cal.add(Calendar.HOUR, -20);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean01 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean01.setUserid("user1");
+		fitnessHeartrateTestBean01.setHeartrateTestId("user1_Test1");
+		fitnessHeartrateTestBean01.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean01.setHeartrate(55.0);
+		fitnessHeartrateTestBean01.setTimeOfRecord(new Timestamp(cal.getTime().getTime()));
+		fitnessHeartrateTestBean01.setDayOfRecord(1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean01);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean02 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean02.setUserid("user1");
+		fitnessHeartrateTestBean02.setHeartrateTestId("user1_Test2");
+		fitnessHeartrateTestBean02.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean02.setHeartrate(80.0);
+		fitnessHeartrateTestBean02.setTimeOfRecord(new Timestamp(twoHoursBefore));
+		fitnessHeartrateTestBean02.setDayOfRecord(3);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean02);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean03 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean03.setUserid("user1");
+		fitnessHeartrateTestBean03.setHeartrateTestId("user1_Test3");
+		fitnessHeartrateTestBean03.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean03.setHeartrate(100.0);
+		fitnessHeartrateTestBean03.setTimeOfRecord(new Timestamp(oneHourBefore));
+		fitnessHeartrateTestBean03.setDayOfRecord(8);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean03);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean04 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean04.setUserid("user1");
+		fitnessHeartrateTestBean04.setHeartrateTestId("user1_Test4");
+		fitnessHeartrateTestBean04.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean04.setHeartrate(90.0);
+		fitnessHeartrateTestBean04.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean04.setDayOfRecord(9);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean04);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean05 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean05.setUserid("user1");
+		fitnessHeartrateTestBean05.setHeartrateTestId("user1_Test5");
+		fitnessHeartrateTestBean05.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean05.setHeartrate(100.0);
+		fitnessHeartrateTestBean05.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean05.setDayOfRecord(10);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean05);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean06 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean06.setUserid("user1");
+		fitnessHeartrateTestBean06.setHeartrateTestId("user1_Test6");
+		fitnessHeartrateTestBean06.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean06.setHeartrate(90.0);
+		fitnessHeartrateTestBean06.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean06.setDayOfRecord(11);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean06);
+		
+		FitnessHeartrateTestBean minFitnessHeartrateTestBean = fitnessHeartrateTestDAO.getThresholdHeartrateTest("user1");
+		Assert.assertEquals(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD, minFitnessHeartrateTestBean.getHeartrateType());
+		Assert.assertEquals(90.0, minFitnessHeartrateTestBean.getHeartrate());
+		
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+	}
+	
+	@Test
+	public void testGetMaximalHeartrateTest(){
+		Calendar cal = Calendar.getInstance();		
+		FitnessHeartrateTestDAO fitnessHeartrateTestDAO = (FitnessHeartrateTestDAO)smartbeatContext.getBean("fitnessHeartrateTestDAO");				
+		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
+		
+		cal.add(Calendar.HOUR, -20);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean01 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean01.setUserid("user1");
+		fitnessHeartrateTestBean01.setHeartrateTestId("user1_Test1");
+		fitnessHeartrateTestBean01.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		fitnessHeartrateTestBean01.setHeartrate(55.0);
+		fitnessHeartrateTestBean01.setTimeOfRecord(new Timestamp(cal.getTime().getTime()));
+		fitnessHeartrateTestBean01.setDayOfRecord(1);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean01);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean02 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean02.setUserid("user1");
+		fitnessHeartrateTestBean02.setHeartrateTestId("user1_Test2");
+		fitnessHeartrateTestBean02.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		fitnessHeartrateTestBean02.setHeartrate(80.0);
+		fitnessHeartrateTestBean02.setTimeOfRecord(new Timestamp(twoHoursBefore));
+		fitnessHeartrateTestBean02.setDayOfRecord(3);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean02);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean03 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean03.setUserid("user1");
+		fitnessHeartrateTestBean03.setHeartrateTestId("user1_Test3");
+		fitnessHeartrateTestBean03.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean03.setHeartrate(105.0);
+		fitnessHeartrateTestBean03.setTimeOfRecord(new Timestamp(oneHourBefore));
+		fitnessHeartrateTestBean03.setDayOfRecord(8);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean03);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean04 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean04.setUserid("user1");
+		fitnessHeartrateTestBean04.setHeartrateTestId("user1_Test4");
+		fitnessHeartrateTestBean04.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean04.setHeartrate(95.0);
+		fitnessHeartrateTestBean04.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean04.setDayOfRecord(9);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean04);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean05 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean05.setUserid("user1");
+		fitnessHeartrateTestBean05.setHeartrateTestId("user1_Test5");
+		fitnessHeartrateTestBean05.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		fitnessHeartrateTestBean05.setHeartrate(100.0);
+		fitnessHeartrateTestBean05.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean05.setDayOfRecord(10);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean05);
+		
+		cal.add(Calendar.HOUR, 3);
+		FitnessHeartrateTestBean fitnessHeartrateTestBean06 = new FitnessHeartrateTestBean();
+		fitnessHeartrateTestBean06.setUserid("user1");
+		fitnessHeartrateTestBean06.setHeartrateTestId("user1_Test6");
+		fitnessHeartrateTestBean06.setHeartrateType(ShapeIndexAlgorithm.HEARTRATE_TYPE_STANDING_ORTHOSTATIC);
+		fitnessHeartrateTestBean06.setHeartrate(110.0);
+		fitnessHeartrateTestBean06.setTimeOfRecord(new Timestamp(now));
+		fitnessHeartrateTestBean06.setDayOfRecord(11);
+		fitnessHeartrateTestDAO.createHeartrateTest(fitnessHeartrateTestBean06);
+		
+		FitnessHeartrateTestBean minFitnessHeartrateTestBean = fitnessHeartrateTestDAO.getMaximalHeartrateTest("user1");
+		Assert.assertEquals(ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL, minFitnessHeartrateTestBean.getHeartrateType());
+		Assert.assertEquals(100.0, minFitnessHeartrateTestBean.getHeartrate());
 		
 		fitnessHeartrateTestDAO.deleteAllHeartrateTestsForUser("user1");
 	}

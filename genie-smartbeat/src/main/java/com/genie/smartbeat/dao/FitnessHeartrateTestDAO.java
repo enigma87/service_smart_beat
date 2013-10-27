@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
+import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
 
 /**
@@ -33,7 +34,9 @@ public class FitnessHeartrateTestDAO {
 	private static final int COLUMN_HEARTRATE_TEST_ID 	= 1;
 	private static final int COLUMN_HEARTRATE_TYPE 		= 2;
 	private static final int COLUMN_TIME_OF_RECORD 		= 4;
+	private static final int COLUMN_HEARTRATE 		    = 3;
 
+	private static final int TYPE_RESTING_HEARTRATE = 1;
 	
 	private BasicDataSource dataSource;
 	
@@ -254,6 +257,53 @@ public class FitnessHeartrateTestDAO {
 				userID, heartrateType, startTimestamp.toString(), endTimestamp.toString());
 
 		return heartrateTests;
+	}
+	
+	private static final String QUERY_MIN_HEARTRATE_TEST = QUERY_ALL_TESTS_BY_TYPE  +
+			" ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE] + " ASC" +
+			 " LIMIT " + "1";
+	public FitnessHeartrateTestBean getRestingHeartrateTest(String userid){
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
+		try{
+		fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MIN_HEARTRATE_TEST, 
+		ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),
+		userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		}catch(DataAccessException e){
+			
+		}
+		return fitnessHeartrateTestBean;
+	}
+	
+
+	public FitnessHeartrateTestBean getThresholdHeartrateTest(String userid){
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
+		try{
+		//fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MIN_HEARTRATE_TEST, 
+		//ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		  fitnessHeartrateTestBean = getRecentHeartrateTestForUserByType(userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
+		}catch(DataAccessException e){
+			
+		}
+		return fitnessHeartrateTestBean;
+		
+	}
+	
+	private static final String QUERY_MAX_HEARTRATE_TEST = QUERY_ALL_TESTS_BY_TYPE  +
+			" ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE] + " DESC" +
+			" LIMIT " + "1";
+	public FitnessHeartrateTestBean getMaximalHeartrateTest(String userid){
+		
+		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
+		try{
+		//fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MAX_HEARTRATE_TEST, 
+		//ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		  fitnessHeartrateTestBean = getRecentHeartrateTestForUserByType(userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		}catch(DataAccessException e){
+			
+		}
+		return fitnessHeartrateTestBean;
 	}
 	
 	private static final String DELETE_ALL_TESTS = 	"DELETE FROM " + TABLE_FITNESS_HEARTRATE_TEST + 
