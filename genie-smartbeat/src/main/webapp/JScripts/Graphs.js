@@ -164,13 +164,13 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
                 tickOptions: {
                     markSize: 0
                 },
-                label: "vdot"
+                label: "Indices"
             },
             yaxis: {
                 tickOptions: {
                     markSize: 0
                 },
-                label: "Indices"
+                label: "Vdot"
             }
         },
         highlighter: {
