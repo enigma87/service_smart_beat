@@ -154,7 +154,8 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
         // Series options are specified as an array of objects, one object
         // for each series.
         series: seriesOptions,
-        axesDefaults: {
+	seriesColors: [ '#ee8b49' ] ,        
+	axesDefaults: {
             labelRenderer: $.jqplot.CanvasAxisLabelRenderer
         },
         axes: {
