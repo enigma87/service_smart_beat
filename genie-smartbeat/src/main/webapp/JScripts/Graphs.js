@@ -163,8 +163,9 @@ function ScatterGraph(divid, bararrays, xaxisarray, graphtitle) {
                 ticks: xaxisarray,
                 renderer: $.jqplot.CategoryAxisRenderer,
                 tickOptions: {
+		    showGridline: false,
                     markSize: 0
-                },
+		},
                 label: "Indices"
             },
             yaxis: {
