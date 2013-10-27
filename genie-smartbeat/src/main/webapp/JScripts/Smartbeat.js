@@ -293,36 +293,39 @@ function QVTrainingSessionHistory(userid) {
 
 
 	for (var k = 0; k < how_many_plot_arrays; k++) {
-		for (var l=0; l < 7; l++) {
-			if (healthPerceptionPlotArray[k] == null) {
-				healthPerceptionPlotArray[k] = [];
-			}
+		for (var l=1; l <= 9; l++) {
+			
 			if (arrHealthPerceptionIndex[l] != null && arrHealthPerceptionIndex[l][k] != null) {
-				healthPerceptionPlotArray[k].push(arrHealthPerceptionIndex[l][k]);
+				if (healthPerceptionPlotArray[k] == null) {
+					healthPerceptionPlotArray[k] = [];
+				}
+				healthPerceptionPlotArray[k][l-1] = arrHealthPerceptionIndex[l][k];
 			}
-			if (sessionStressPerceptionPlotArray[k] == null) {
-				sessionStressPerceptionPlotArray[k] = [];
-			}
+			
 			if (arrSessionStressPerceptionIndex[l] != null && arrSessionStressPerceptionIndex[l][k] != null) {
-				sessionStressPerceptionPlotArray[k].push(arrSessionStressPerceptionIndex[l][k]);
+				if (sessionStressPerceptionPlotArray[k] == null) {
+					sessionStressPerceptionPlotArray[k] = [];
+				}				
+				sessionStressPerceptionPlotArray[k][l-1] = arrSessionStressPerceptionIndex[l][k];
 			}
 
-			if (muscleStatePerceptionPlotArray[k] == null) {
-				muscleStatePerceptionPlotArray[k] = [];
-			}
 			if (arrMuscleStatePerceptionIndex[l] != null && arrMuscleStatePerceptionIndex[l][k] != null) {
-				muscleStatePerceptionPlotArray[k].push(arrMuscleStatePerceptionIndex[l][k]);
+				
+				if (muscleStatePerceptionPlotArray[k] == null) {
+					muscleStatePerceptionPlotArray[k] = [];
+				}
+
+				muscleStatePerceptionPlotArray[k][l-1] = arrMuscleStatePerceptionIndex[l][k];
 			}
 
 			
 
 		}
 	}
-	//alert(dump( healthPerceptionPlotArray));
 
-        ScatterGraph('qvhealthPerceptionIndex', healthPerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7], "Health Perception Index");
-        ScatterGraph('qvsessionStressPerceptionIndex', sessionStressPerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7], "Stress Perception Index");
-        ScatterGraph('qvmuscleStatePerceptionIndex',  muscleStatePerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7] , "Muscle State Perception Index");
+        ScatterGraph('qvhealthPerceptionIndex', healthPerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7, 8, 9], "Health Perception Index");
+        ScatterGraph('qvsessionStressPerceptionIndex', sessionStressPerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7, 8, 9], "Stress Perception Index");
+        ScatterGraph('qvmuscleStatePerceptionIndex',  muscleStatePerceptionPlotArray, [1, 2, 3, 4, 5, 6, 7, 8, 9] , "Muscle State Perception Index");
 
     });
 
