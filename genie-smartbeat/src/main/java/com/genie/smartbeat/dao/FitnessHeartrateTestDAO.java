@@ -36,7 +36,7 @@ public class FitnessHeartrateTestDAO {
 	private static final int COLUMN_TIME_OF_RECORD 		= 4;
 	private static final int COLUMN_HEARTRATE 		    = 3;
 
-	private static final int TYPE_RESTING_HEARTRATE = 1;
+
 	
 	private BasicDataSource dataSource;
 	
@@ -262,44 +262,30 @@ public class FitnessHeartrateTestDAO {
 	private static final String QUERY_MIN_HEARTRATE_TEST = QUERY_ALL_TESTS_BY_TYPE  +
 			" ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE] + " ASC" +
 			 " LIMIT " + "1";
-	public FitnessHeartrateTestBean getRestingHeartrateTest(String userid){
+	public FitnessHeartrateTestBean getMinimumValuedHeartrateTestByType(String userid ,Integer heartrateType){
 		
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
 		try{
 		fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MIN_HEARTRATE_TEST, 
 		ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),
-		userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_RESTING);
+		userid,heartrateType);
 		}catch(DataAccessException e){
 			
 		}
 		return fitnessHeartrateTestBean;
 	}
 	
-
-	public FitnessHeartrateTestBean getThresholdHeartrateTest(String userid){
-		
-		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
-		try{
-		//fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MIN_HEARTRATE_TEST, 
-		//ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
-		  fitnessHeartrateTestBean = getRecentHeartrateTestForUserByType(userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_THRESHOLD);
-		}catch(DataAccessException e){
-			
-		}
-		return fitnessHeartrateTestBean;
-		
-	}
 	
 	private static final String QUERY_MAX_HEARTRATE_TEST = QUERY_ALL_TESTS_BY_TYPE  +
 			" ORDER BY " + COLUMNS_FITNESS_HEARTRATE_TEST[COLUMN_HEARTRATE] + " DESC" +
 			" LIMIT " + "1";
-	public FitnessHeartrateTestBean getMaximalHeartrateTest(String userid){
+	public FitnessHeartrateTestBean getMaximumValuedHeartrateTestByType(String userid, Integer heartrateType){
 		
 		FitnessHeartrateTestBean fitnessHeartrateTestBean = null;
 		try{
-		//fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MAX_HEARTRATE_TEST, 
-		//ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
-		  fitnessHeartrateTestBean = getRecentHeartrateTestForUserByType(userid,ShapeIndexAlgorithm.HEARTRATE_TYPE_MAXIMAL);
+		    fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_MAX_HEARTRATE_TEST, 
+		    ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,heartrateType);
+		  
 		}catch(DataAccessException e){
 			
 		}
