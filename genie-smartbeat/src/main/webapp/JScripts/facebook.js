@@ -2,7 +2,7 @@
 window.fbAsyncInit = function () {
 
     FB.init({
-        appId: '333643156765163', // App ID
+        appId: '201913066636280', // App ID
         //channelUrl: 'http://htmlpreview.github.io/?https://github.com/KarunakaranRaju/FacebookLoginHTML/blob/master/HTMLPage.htm', // Channel File
         status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session

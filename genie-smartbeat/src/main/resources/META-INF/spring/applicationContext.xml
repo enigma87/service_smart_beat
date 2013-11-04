@@ -18,6 +18,10 @@
 		<property name="url" value="${genie.database.url}" />
 		<property name="username" value="${genie.database.username}" />
 		<property name="password" value="${genie.database.password}" />
+		<property name="minEvictableIdleTimeMillis" value="${genie.database.minEvictableIdleTimeMillis}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${genie.database.timeBetweenEvictionRunsMillis}" />
+		<property name="testOnBorrow" value="${genie.database.testOnBorrow}" />
+		<property name="validationQuery" value="${genie.database.validationQuery}" />
 	</bean>
 	
 	<bean id="fitnessTrainingSessionDAO" class="com.genie.smartbeat.dao.FitnessTrainingSessionDAO">
