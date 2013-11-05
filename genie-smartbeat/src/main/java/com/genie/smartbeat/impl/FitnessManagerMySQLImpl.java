@@ -257,7 +257,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 		}
 		
 		/*get and set this session's vdot*/
-		double vdot = ShapeIndexAlgorithm.calculateVdot(fitnessTrainingSessionBean.getSpeedDistributionOfHRZ(),
+		double vdot = ShapeIndexAlgorithm.calculateVdot(speedDistributionOfHRZ,
 												surfaceIndex,
 												fitnessTrainingSessionBean.getAsDoubleValueAverageAltitude(),
 												fitnessTrainingSessionBean.getAsDoubleValueExtraLoad(),

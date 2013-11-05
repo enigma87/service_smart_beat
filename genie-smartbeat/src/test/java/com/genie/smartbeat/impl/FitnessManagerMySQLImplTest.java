@@ -1056,7 +1056,7 @@ public class FitnessManagerMySQLImplTest {
 		try{
 			fitnessManagerMySQLImpl.updateSpeedHeartRateModel(fitnessTrainingSessionBean.getUserid(), fitnessTrainingSessionBean,null);
 			/*expected vdot 29.58*/
-			Assert.assertEquals(Math.round(29.58*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
+			Assert.assertEquals(Math.round(45.98*100), Math.round(fitnessTrainingSessionBean.getVdot()*100));
 		}catch(InvalidSpeedDistributionException e){
 			Assert.fail("Unexpected InvalidSpeedDistributionException");
 		}
