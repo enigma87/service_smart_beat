@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import com.genie.smartbeat.beans.FitnessHeartrateTestBean;
-import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.util.SmartbeatIDGenerator;
 
 /**
