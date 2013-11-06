@@ -469,7 +469,7 @@ public class FitnessManagerMySQLImpl implements FitnessManager
 				traineeClassification = new Integer(ShapeIndexAlgorithm.TRAINEE_CLASSIFICATION_UNTRAINED);
 			}
 			UserBean user = userManager.getUserInformation(userid);
-			thresholdHeartrate 	= ShapeIndexAlgorithm.getDefaultThresholdHeartrate(traineeClassification, user.getGender(), maximalHeartrate);
+			thresholdHeartrate 	= ShapeIndexAlgorithm.getDefaultThresholdHeartrate(user.getGender(), maximalHeartrate);
 		}else{
 			thresholdHeartrate 	= thresholdHeartrateTestBean.getHeartrate();
 		}

@@ -514,14 +514,14 @@ public class FitnessManagerMySQLImplTest {
 		
 		double[][] heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(userid);
 		Assert.assertEquals(72.0,  	heartrateZones[1][0]);
-		Assert.assertEquals(87.52,	heartrateZones[1][1]);
-		Assert.assertEquals(87.52, 	heartrateZones[2][0]);
-		Assert.assertEquals(95.28, heartrateZones[2][1]);
-		Assert.assertEquals(95.28, heartrateZones[3][0]);
-		Assert.assertEquals(99.06, heartrateZones[3][1]);
-		Assert.assertEquals(99.06, heartrateZones[4][0]);
-		Assert.assertEquals(105.04, heartrateZones[4][1]);
-		Assert.assertEquals(105.04, heartrateZones[5][0]);
+		Assert.assertEquals(108.99,	heartrateZones[1][1]);
+		Assert.assertEquals(108.99, heartrateZones[2][0]);
+		Assert.assertEquals(127.49, heartrateZones[2][1]);
+		Assert.assertEquals(127.49, heartrateZones[3][0]);
+		Assert.assertEquals(142.0, heartrateZones[3][1]);
+		Assert.assertEquals(142.0, heartrateZones[4][0]);
+		Assert.assertEquals(147.98, heartrateZones[4][1]);
+		Assert.assertEquals(147.98, heartrateZones[5][0]);
 		Assert.assertEquals(165.76, heartrateZones[5][1]);
 		Assert.assertEquals(165.76, heartrateZones[6][0]);
 		Assert.assertEquals(171.75, heartrateZones[6][1]);
@@ -535,14 +535,14 @@ public class FitnessManagerMySQLImplTest {
 		
 		heartrateZones = fitnessManagerMySQLImpl.getHeartrateZones(userid);
 		Assert.assertEquals(72.0,  	heartrateZones[1][0]);
-		Assert.assertEquals(87.52,	heartrateZones[1][1]);
-		Assert.assertEquals(87.52, 	heartrateZones[2][0]);
-		Assert.assertEquals(95.28, heartrateZones[2][1]);
-		Assert.assertEquals(95.28, heartrateZones[3][0]);
-		Assert.assertEquals(99.06, heartrateZones[3][1]);
-		Assert.assertEquals(99.06, heartrateZones[4][0]);
-		Assert.assertEquals(105.04, heartrateZones[4][1]);
-		Assert.assertEquals(105.04, heartrateZones[5][0]);
+		Assert.assertEquals(108.99,	heartrateZones[1][1]);
+		Assert.assertEquals(108.99, heartrateZones[2][0]);
+		Assert.assertEquals(127.49, heartrateZones[2][1]);
+		Assert.assertEquals(127.49, heartrateZones[3][0]);
+		Assert.assertEquals(142.0, heartrateZones[3][1]);
+		Assert.assertEquals(142.0, heartrateZones[4][0]);
+		Assert.assertEquals(147.98, heartrateZones[4][1]);
+		Assert.assertEquals(147.98, heartrateZones[5][0]);
 		Assert.assertEquals(165.76, heartrateZones[5][1]);
 		Assert.assertEquals(165.76, heartrateZones[6][0]);
 		Assert.assertEquals(171.75, heartrateZones[6][1]);
