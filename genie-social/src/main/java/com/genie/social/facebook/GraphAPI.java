@@ -78,8 +78,15 @@ public class GraphAPI {
 	}
 	
 	/*section - oauth*/
+
 	private static final String APP_ID_GENIE 			= "201913066636280";
 	private static final String CLIENT_SECRET_GENIE 	= "1493598debf77f145ab4c3f00451a531";
+
+
+// FOR DEV/TEST
+//	private static final String APP_ID_GENIE = "333643156765163";
+//	private static final String CLIENT_SECRET_GENIE = "bd8fa4961cb1c2a284cbe8486707b73a";
+//
 
 	public static String getAppGenieAccessToken(){
 		FacebookClient facebookClient = new DefaultFacebookClient();
