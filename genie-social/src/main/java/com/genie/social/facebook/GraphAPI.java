@@ -80,7 +80,7 @@ public class GraphAPI {
 	/*section - oauth*/
 	private static final String APP_ID_GENIE 			= "201913066636280";
 	private static final String CLIENT_SECRET_GENIE 	= "1493598debf77f145ab4c3f00451a531";
-
+	
 	public static String getAppGenieAccessToken(){
 		FacebookClient facebookClient = new DefaultFacebookClient();
 		AccessToken appAccessToken = facebookClient.obtainAppAccessToken(APP_ID_GENIE, CLIENT_SECRET_GENIE);

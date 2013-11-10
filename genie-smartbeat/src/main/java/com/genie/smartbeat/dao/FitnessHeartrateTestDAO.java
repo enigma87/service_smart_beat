@@ -164,7 +164,7 @@ public class FitnessHeartrateTestDAO {
 			fitnessHeartrateTestBean =  new JdbcTemplate(dataSource).queryForObject(QUERY_1_RECENT_BY_TYPE, 
 			ParameterizedBeanPropertyRowMapper.newInstance(FitnessHeartrateTestBean.class),userid,heartrateType);
 		}catch(DataAccessException e){
-		
+		  
 		}		
 		return fitnessHeartrateTestBean;
 	}

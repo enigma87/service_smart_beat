@@ -4,6 +4,8 @@
 package com.genie.smartbeat.resources;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -366,10 +368,38 @@ public class TraineeResource
 		
 		if (authStatus.getAuthenticationStatus().equals(AuthenticationStatus.Status.APPROVED)) {
             try{
-				List<FitnessTrainingSessionBean> trainingSessions= fitnessManager.getTrainingSessionsInTimeInterval(userid, startTimeStamp, endTimeStamp);
+				List<FitnessTrainingSessionBean> trainingSessionBeans= fitnessManager.getTrainingSessionsInTimeInterval(userid, startTimeStamp, endTimeStamp);
+				List<TrainingSessionByIdResponseJson> trainingSessions = new ArrayList<TrainingSessionByIdResponseJson>();
 				TrainingSessionsByRangeResponseJson trainingSessionRangeJson = new TrainingSessionsByRangeResponseJson();
 				trainingSessionRangeJson.setUserID(userid);
-				trainingSessionRangeJson.setTrainingSessionBeans(trainingSessions);
+				for (Iterator<FitnessTrainingSessionBean> iter = trainingSessionBeans.iterator(); iter.hasNext();) {
+					FitnessTrainingSessionBean trainingSessionBean=  iter.next();
+					TrainingSessionByIdResponseJson trainingSessionByIdResponseJson = new TrainingSessionByIdResponseJson();
+					trainingSessionByIdResponseJson.setUserid(trainingSessionBean.getUserid());
+					trainingSessionByIdResponseJson.setTrainingSessionId(trainingSessionBean.getTrainingSessionId());
+					trainingSessionByIdResponseJson.setStartTime(trainingSessionBean.getStartTime());
+					trainingSessionByIdResponseJson.setEndTime(trainingSessionBean.getEndTime());
+					trainingSessionByIdResponseJson.setHrz1Time(trainingSessionBean.getHrz1Time());
+					trainingSessionByIdResponseJson.setHrz2Time(trainingSessionBean.getHrz2Time());
+					trainingSessionByIdResponseJson.setHrz3Time(trainingSessionBean.getHrz3Time());
+					trainingSessionByIdResponseJson.setHrz4Time(trainingSessionBean.getHrz4Time());
+					trainingSessionByIdResponseJson.setHrz5Time(trainingSessionBean.getHrz5Time());
+					trainingSessionByIdResponseJson.setHrz6Time(trainingSessionBean.getHrz6Time());
+					trainingSessionByIdResponseJson.setHrz1Distance(trainingSessionBean.getHrz1Distance());
+					trainingSessionByIdResponseJson.setHrz2Distance(trainingSessionBean.getHrz2Distance());
+					trainingSessionByIdResponseJson.setHrz3Distance(trainingSessionBean.getHrz3Distance());
+					trainingSessionByIdResponseJson.setHrz4Distance(trainingSessionBean.getHrz4Distance());
+					trainingSessionByIdResponseJson.setHrz5Distance(trainingSessionBean.getHrz5Distance());
+					trainingSessionByIdResponseJson.setHrz6Distance(trainingSessionBean.getHrz6Distance());
+					trainingSessionByIdResponseJson.setSurfaceIndex(trainingSessionBean.getSurfaceIndex());
+					trainingSessionByIdResponseJson.setMuscleIndex(trainingSessionBean.getMuscleStatePerceptionIndex());
+					trainingSessionByIdResponseJson.setSessionIndex(trainingSessionBean.getSessionStressPerceptionIndex());
+					trainingSessionByIdResponseJson.setHealthIndex(trainingSessionBean.getHealthPerceptionIndex());
+					trainingSessionByIdResponseJson.setAverageAltitude(trainingSessionBean.getAverageAltitude());
+					trainingSessionByIdResponseJson.setExtraLoad(trainingSessionBean.getExtraLoad());
+					trainingSessions.add(trainingSessionByIdResponseJson);
+				}
+				trainingSessionRangeJson.setTrainingSessions(trainingSessions);
 				gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase(), trainingSessionRangeJson);
             }catch(InvalidStartTimestampException e){
             	gro = new GoodResponseObject(Status.NOT_ACCEPTABLE.getStatusCode(), TrainingSessionErrors.INVALID_TIMESTAMP.toString());

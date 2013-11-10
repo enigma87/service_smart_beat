@@ -411,6 +411,149 @@ public class TraineeResourceTest {
 			
 		}
 		
+		
+		@Test
+		public void testGetTrainingSessionsInTimeInterval() throws JSONException{
+			
+			String responseString = traineeResource.getFitnessTrainingSessionsInInterval(userid, null, null,null,null);
+			JSONObject responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+			
+			responseString = traineeResource.getFitnessTrainingSessionsInInterval(null, null, null,null,null);
+			responseJSON = new JSONObject(responseString);
+			Assert.assertEquals("406", responseJSON.getString("status"));
+		
+			Calendar cal = Calendar.getInstance();
+			UserBean user = new UserBean();
+			user.setUserid(userid);
+			user.setAccessToken("accessToken1");
+			user.setAccessTokenType("facebook");
+			user.setFirstName("Chitra");
+			user.setEmail("chitra@acme.com");		
+			cal.add(Calendar.YEAR, -25);
+			user.setDob(new java.sql.Date(cal.getTimeInMillis()));
+			user.setGender(UserManager.GENDER_FEMALE);
+			userDao.createUser(user);
+	
+			cal.setTimeInMillis(DateTimeUtils.currentTimeMillis());
+			cal.set(Calendar.HOUR_OF_DAY, 10);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			Long sessionStartTime = cal.getTime().getTime();
+			cal.add(Calendar.HOUR, 1);
+			Long sessionEndTime = cal.getTime().getTime();
+			DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+					
+			FitnessTrainingSessionBean fitnessTrainingSessionBean = new FitnessTrainingSessionBean();
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+			fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+			fitnessTrainingSessionBean.setHrz1Time(4.0);
+			fitnessTrainingSessionBean.setHrz2Time(32.0);
+			fitnessTrainingSessionBean.setHrz3Time(14.0);
+			fitnessTrainingSessionBean.setHrz4Time(10.0);
+			fitnessTrainingSessionBean.setHrz5Time(0.0);
+			fitnessTrainingSessionBean.setHrz6Time(0.0);
+			fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+			fitnessTrainingSessionBean.setHrz2Distance(5920.0);
+			fitnessTrainingSessionBean.setHrz3Distance(2753.33);
+			fitnessTrainingSessionBean.setHrz4Distance(2200.0);
+			fitnessTrainingSessionBean.setHrz5Distance(0.0);
+			fitnessTrainingSessionBean.setHrz6Distance(0.0);
+			fitnessTrainingSessionBean.setSurfaceIndex(0);
+			fitnessTrainingSessionBean.setTrainingSessionId("test1");
+			
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+			
+		    /*Sandra Session 2*/
+			cal.add(Calendar.DATE, 1);
+			cal.set(Calendar.HOUR_OF_DAY, 19);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			
+			sessionStartTime = cal.getTime().getTime();
+			cal.add(Calendar.MINUTE, 110);
+			sessionEndTime = cal.getTime().getTime();
+			DateTimeUtils.setCurrentMillisFixed(sessionEndTime);
+		
+			fitnessTrainingSessionBean.setUserid(userid);
+			fitnessTrainingSessionBean.setStartTime(new Timestamp(sessionStartTime));
+			fitnessTrainingSessionBean.setEndTime(new Timestamp(sessionEndTime));
+			fitnessTrainingSessionBean.setHrz1Time(4.0);
+			fitnessTrainingSessionBean.setHrz2Time(42.0);
+			fitnessTrainingSessionBean.setHrz3Time(34.0);
+			fitnessTrainingSessionBean.setHrz4Time(10.0);
+			fitnessTrainingSessionBean.setHrz5Time(10.0);
+			fitnessTrainingSessionBean.setHrz6Time(6.0);
+			fitnessTrainingSessionBean.setHrz1Distance(1000.0);
+			fitnessTrainingSessionBean.setHrz2Distance(7420.0);
+			fitnessTrainingSessionBean.setHrz3Distance(6460.0);
+			fitnessTrainingSessionBean.setHrz4Distance(2133.33);
+			fitnessTrainingSessionBean.setHrz5Distance(2166.67);
+			fitnessTrainingSessionBean.setHrz6Distance(1410.0);
+			fitnessTrainingSessionBean.setSurfaceIndex(2);
+			fitnessTrainingSessionBean.setTrainingSessionId("test2");
+						
+			fitnessTrainingSessionDAO.createFitnessTrainingSession(fitnessTrainingSessionBean);
+				
+			/*Get Training Session Ids response*/  
+			cal.add(Calendar.DATE, -2);
+			Long startTime = cal.getTime().getTime();
+			cal.add(Calendar.DATE, 5);
+			Long endTime = cal.getTime().getTime();
+			responseString = traineeResource.getFitnessTrainingSessionsInInterval(userid, new Timestamp(startTime), new Timestamp(endTime),"accessToken1", "facebook");
+			responseJSON = new JSONObject(responseString);
+			JSONObject dataJson = new JSONObject(responseJSON.get("obj").toString());
+			Assert.assertEquals(userid, dataJson.getString("userID"));
+			JSONArray trainingSessionIds = dataJson.getJSONArray("trainingSessions");
+			
+			Assert.assertEquals(userid, trainingSessionIds.getJSONObject(0).get("userid"));
+			Assert.assertEquals("test2", trainingSessionIds.getJSONObject(0).get("trainingSessionId"));
+			Assert.assertNotNull(trainingSessionIds.getJSONObject(0).get("startTime"));
+			Assert.assertNotNull(trainingSessionIds.getJSONObject(0).get("endTime"));
+			Assert.assertEquals(4, trainingSessionIds.getJSONObject(0).get("hrz1Time"));
+			Assert.assertEquals(42, trainingSessionIds.getJSONObject(0).get("hrz2Time"));
+			Assert.assertEquals(34, trainingSessionIds.getJSONObject(0).get("hrz3Time"));
+			Assert.assertEquals(10, trainingSessionIds.getJSONObject(0).get("hrz4Time"));
+			Assert.assertEquals(10, trainingSessionIds.getJSONObject(0).get("hrz5Time"));
+			Assert.assertEquals(6, trainingSessionIds.getJSONObject(0).get("hrz6Time"));
+			Assert.assertEquals(1000, trainingSessionIds.getJSONObject(0).get("hrz1Distance"));
+			Assert.assertEquals(7420, trainingSessionIds.getJSONObject(0).get("hrz2Distance"));
+			Assert.assertEquals(6460, trainingSessionIds.getJSONObject(0).get("hrz3Distance"));
+			Assert.assertEquals(2133.33, trainingSessionIds.getJSONObject(0).get("hrz4Distance"));
+			Assert.assertEquals(2166.67, trainingSessionIds.getJSONObject(0).get("hrz5Distance"));
+			Assert.assertEquals(1410, trainingSessionIds.getJSONObject(0).get("hrz6Distance"));
+			Assert.assertEquals(2, trainingSessionIds.getJSONObject(0).get("surfaceIndex"));
+			
+			Assert.assertEquals(userid, trainingSessionIds.getJSONObject(1).get("userid"));
+			Assert.assertEquals("test1", trainingSessionIds.getJSONObject(1).get("trainingSessionId"));
+			Assert.assertNotNull(trainingSessionIds.getJSONObject(1).get("startTime"));
+			Assert.assertNotNull(trainingSessionIds.getJSONObject(1).get("endTime"));
+			Assert.assertEquals(4, trainingSessionIds.getJSONObject(1).get("hrz1Time"));
+			Assert.assertEquals(32, trainingSessionIds.getJSONObject(1).get("hrz2Time"));
+			Assert.assertEquals(14, trainingSessionIds.getJSONObject(1).get("hrz3Time"));
+			Assert.assertEquals(10, trainingSessionIds.getJSONObject(1).get("hrz4Time"));
+			Assert.assertEquals(0, trainingSessionIds.getJSONObject(1).get("hrz5Time"));
+			Assert.assertEquals(0, trainingSessionIds.getJSONObject(1).get("hrz6Time"));
+			Assert.assertEquals(1000, trainingSessionIds.getJSONObject(1).get("hrz1Distance"));
+			Assert.assertEquals(5920, trainingSessionIds.getJSONObject(1).get("hrz2Distance"));
+			Assert.assertEquals(2753.33, trainingSessionIds.getJSONObject(1).get("hrz3Distance"));
+			Assert.assertEquals(2200, trainingSessionIds.getJSONObject(1).get("hrz4Distance"));
+			Assert.assertEquals(0, trainingSessionIds.getJSONObject(1).get("hrz5Distance"));
+			Assert.assertEquals(0, trainingSessionIds.getJSONObject(1).get("hrz6Distance"));
+			Assert.assertEquals(0, trainingSessionIds.getJSONObject(1).get("surfaceIndex"));
+						
+			/*Validation*/
+			
+						
+			/*clean up*/
+			fitnessManager.clearTraineeData(userid);
+			userDao.deleteUser(userid);
+			
+		}
+		
 		@Test
 		public void testSaveHeartrateTest() throws Exception{
 			SaveHeartrateTestRequestJson saveHeartrateTestRequestJson = new SaveHeartrateTestRequestJson();

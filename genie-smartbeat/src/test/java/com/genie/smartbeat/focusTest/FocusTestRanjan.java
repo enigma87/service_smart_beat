@@ -133,6 +133,23 @@ public class FocusTestRanjan extends JerseyTest {
 	     
 		}
 		
+		Calendar cal1 = Calendar.getInstance();
+		cal1.add(Calendar.MONTH, -6);
+        Timestamp startTime = new Timestamp(cal1.getTime().getTime());
+        Calendar cal2 = Calendar.getInstance();
+		Timestamp endTime = new Timestamp(cal2.getTime().getTime());
+		DateTimeUtils.setCurrentMillisFixed(cal2.getTime().getTime());
+		String getShapeIndexUrl = "http://localhost:9998/trainee/id/"+ranjanId+"/shapeIndex?accessToken="+accessToken+"&accessTokenType=facebook";
+		Client clientGetShapeIndex =  getClient();
+		WebResource getShapeIndex = clientGetShapeIndex.resource(getShapeIndexUrl);	
+		JSONObject getShapeIndexObj0 = getShapeIndex.get(JSONObject.class);
+		System.out.println(getShapeIndexObj0);
+		
+		String getShapeIndexUrlInterval = "http://localhost:9998/trainee/id/"+ranjanId+"/shapeIndex/inTimeInterval?startTimeStamp="+URLEncoder.encode(String.valueOf(startTime),"UTF-8")+"&endTimeStamp="+URLEncoder.encode(String.valueOf(endTime),"UTF-8")+"&accessToken="+accessToken+"&accessTokenType=facebook";
+		Client clientGetShapeIndexInteval =  getClient();
+		WebResource getShapeIndexInterval = clientGetShapeIndexInteval.resource(getShapeIndexUrlInterval);	
+		JSONObject getShapeIndexIntervalObj0 = getShapeIndexInterval.get(JSONObject.class);
+		System.out.println(getShapeIndexIntervalObj0);
 		
 	    }
 	
