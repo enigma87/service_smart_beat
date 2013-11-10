@@ -347,7 +347,7 @@ function QVShapeIndexHistory(userid) {
         var plotdata = [];
         for (var i = 0; i < response.obj.shapeIndexes.length; i++) {
             var shapeIndexBean = response.obj.shapeIndexes[i];
-            plotdata[i] = [moment(shapeIndexBean.timeOfRecord).format("YYYY-MM-DD HH:MMA"), shapeIndexBean.shapeIndex];
+            plotdata[i] = [moment(shapeIndexBean.timeOfRecord).format("YYYY-MM-DD HH:MM"), shapeIndexBean.shapeIndex];
         }
 
         $("#qvshapeindexhistory").append('<div id="shapeindexhistorygraph"></div>');
