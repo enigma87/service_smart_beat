@@ -20,6 +20,7 @@ sudo service mysqld start
 sudo service mysqld restart
 Login to local console- mysql -u root -p
 Set access to client GRANT ALL PRIVILEGES ON *.* TO root@'c83-254-71-240.bredband.comhem.se' IDENTIFIED BY 'abc#123';
+Set access to client GRANT ALL PRIVILEGES ON *.* TO root@'c213-89-45-45.bredband.comhem.se' IDENTIFIED BY 'abc#123';
 
 WinSCP
 ------
