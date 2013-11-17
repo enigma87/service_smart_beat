@@ -3,6 +3,8 @@
  */
 package com.genie.smartbeat.resources;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,6 +25,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -68,6 +73,7 @@ import com.genie.smartbeat.json.TraineeIdsResponseJson;
 import com.genie.smartbeat.json.TrainingSessionByIdResponseJson;
 import com.genie.smartbeat.json.TrainingSessionIdsByRangeResponseJson;
 import com.genie.smartbeat.json.TrainingSessionsByRangeResponseJson;
+import com.genie.smartbeat.json.debug.SaveFitnessTrainingSessionDebugJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.beans.UserIdBean;
 import com.genie.social.core.AuthenticationStatus;
@@ -903,4 +909,52 @@ public class TraineeResource
 			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
 		}
 	}
+	
+	/*debug APIs*/	
+	private static final String DEBUG_DIRECTORY = "/usr/share/tomcat7/logs/";
+	@POST
+	@Path("id/{userid}/trainingSession/{trainingSessionId}/debug/save")
+	@Consumes({MediaType.TEXT_HTML,MediaType.APPLICATION_JSON})
+	@Produces(MediaType.APPLICATION_JSON)
+	public String saveFitnessTrainingSessionDebugInfo(@PathParam("userid") String userid,@PathParam("trainingSessionId") String trainingSessionId,@QueryParam("accessToken") String accessToken, @QueryParam("accessTokenType") String accessTokenType ,SaveFitnessTrainingSessionDebugJson saveFitnessTrainingSessionDebugJson){
+		
+		GoodResponseObject gro = null;
+		
+		File debugDir = new File(DEBUG_DIRECTORY);
+		if(!debugDir.exists()){
+			debugDir.mkdirs();
+		}
+		
+		String userDebugDirPath = DEBUG_DIRECTORY + userid + File.separator;
+		File userDebugDir = new File(userDebugDirPath);
+		if(!userDebugDir.exists()){
+			userDebugDir.mkdirs();
+		}
+		
+		String userDebugFilePath = DEBUG_DIRECTORY + userid + File.separator + trainingSessionId + ".txt";
+		File userDebugFile = new File(userDebugFilePath);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			mapper.writeValue(userDebugFile, saveFitnessTrainingSessionDebugJson);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		gro = new GoodResponseObject(Status.OK.getStatusCode(), Status.OK.getReasonPhrase());
+		try
+		{
+			return Formatter.getAsJson(gro, false);
+		}
+		catch(Exception ex)
+		{
+			throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(ex).build());
+		}
+	}
+
 }

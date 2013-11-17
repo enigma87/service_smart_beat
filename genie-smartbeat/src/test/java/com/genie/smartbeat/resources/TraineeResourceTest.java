@@ -1,8 +1,10 @@
 package com.genie.smartbeat.resources;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import javax.ws.rs.core.Response.Status;
 
@@ -36,6 +38,8 @@ import com.genie.smartbeat.domain.ShapeIndexAlgorithm;
 import com.genie.smartbeat.impl.FitnessManagerMySQLImpl;
 import com.genie.smartbeat.json.SaveFitnessTrainingSessionRequestJson;
 import com.genie.smartbeat.json.SaveHeartrateTestRequestJson;
+import com.genie.smartbeat.json.debug.FitnessTrainingSessionTimePoint;
+import com.genie.smartbeat.json.debug.SaveFitnessTrainingSessionDebugJson;
 import com.genie.social.beans.UserBean;
 import com.genie.social.core.AuthenticationStatus;
 import com.genie.social.core.UserManager;
@@ -1128,6 +1132,43 @@ public class TraineeResourceTest {
 			userDao.deleteUser("33333ccccc");
 			
 			
+		}
+		
+		@Test
+		public void testSaveFitnessTrainingSessionDebugInfo(){
+			List<FitnessTrainingSessionTimePoint> timePoints = new ArrayList<FitnessTrainingSessionTimePoint>();
+			FitnessTrainingSessionTimePoint timePoint = new FitnessTrainingSessionTimePoint();			
+			Calendar cal = Calendar.getInstance();			
+			timePoint.setTime(new Timestamp(cal.getTimeInMillis()));
+			timePoint.setHeartrate(new Double(122));
+			timePoint.setLongitude(new Double(13.418));
+			timePoint.setLatitude(new Double(55.364));
+			timePoint.setAltitude(new Double(10.0));
+			timePoint.setSpeed(new Double(12.0));
+			timePoints.add(timePoint);
+			
+			timePoint = new FitnessTrainingSessionTimePoint();
+			cal.add(Calendar.SECOND, 1);
+			timePoint.setTime(new Timestamp(cal.getTimeInMillis()));
+			timePoint.setHeartrate(new Double(122));
+			timePoint.setLongitude(new Double(13.418));
+			timePoint.setLatitude(new Double(55.364));
+			timePoint.setAltitude(new Double(10.0));
+			timePoint.setSpeed(new Double(12.0));
+			timePoints.add(timePoint);
+			
+			timePoint = new FitnessTrainingSessionTimePoint();
+			cal.add(Calendar.SECOND, 1);
+			timePoint.setTime(new Timestamp(cal.getTimeInMillis()));
+			timePoint.setHeartrate(new Double(122));
+			timePoint.setLongitude(new Double(13.418));
+			timePoint.setLatitude(new Double(55.364));
+			timePoint.setAltitude(new Double(10.0));
+			timePoint.setSpeed(new Double(12.0));
+			timePoints.add(timePoint);
+			SaveFitnessTrainingSessionDebugJson saveFitnessTrainingSessionDebugJson = new SaveFitnessTrainingSessionDebugJson();
+			saveFitnessTrainingSessionDebugJson.setTrainingTimePoints(timePoints);
+			traineeResource.saveFitnessTrainingSessionDebugInfo("user1", "trainingSession1", null, null, saveFitnessTrainingSessionDebugJson);
 		}
 		
 		@Before
