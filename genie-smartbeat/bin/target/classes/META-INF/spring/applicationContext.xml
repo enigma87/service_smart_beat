@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd   http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<!-- Enable annotation configuration -->
+    <context:annotation-config/>
+    
+    <context:component-scan base-package="com.genie.smartbeat"/>
+    
+    <context:property-placeholder location="classpath*:META-INF/spring/genie-smartbeat-mysql.properties"/>
+    
+	<bean class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" id="dataSource">
+		<property name="driverClassName" value="${genie.database.driverClassName}" />
+		<property name="url" value="${genie.database.url}" />
+		<property name="username" value="${genie.database.username}" />
+		<property name="password" value="${genie.database.password}" />
+	</bean>
+	
+	<bean id="fitnessTrainingSessionDAO" class="com.genie.smartbeat.dao.FitnessTrainingSessionDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="fitnessHomeostasisIndexDAO" class="com.genie.smartbeat.dao.FitnessHomeostasisIndexDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	 <bean id="fitnessShapeIndexDAO" class="com.genie.smartbeat.dao.FitnessShapeIndexDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+    <bean id="fitnessSpeedHeartRateDAO" class="com.genie.smartbeat.dao.FitnessSpeedHeartRateDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="fitnessHeartrateTestDAO" class="com.genie.smartbeat.dao.FitnessHeartrateTestDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="fitnessHeartrateZoneDAO" class="com.genie.smartbeat.dao.FitnessHeartrateZoneDAO">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="fitnessManagerMySQLImpl" class="com.genie.smartbeat.impl.FitnessManagerMySQLImpl">
+	    <property name="userManager" ref="userManagerMySQLImpl" />		
+		<property name="fitnessTrainingSessionDAO" ref="fitnessTrainingSessionDAO" />
+		<property name="fitnessHomeostasisIndexDAO" ref="fitnessHomeostasisIndexDAO" />
+	    <property name="fitnessSpeedHeartRateDAO" ref="fitnessSpeedHeartRateDAO" />
+	    <property name="fitnessShapeIndexDAO" ref="fitnessShapeIndexDAO" />
+	    <property name="fitnessHeartrateTestDAO" ref="fitnessHeartrateTestDAO" />
+	    <property name="fitnessHeartrateZoneDAO" ref="fitnessHeartrateZoneDAO" />
+	</bean>
+			
+</beans>

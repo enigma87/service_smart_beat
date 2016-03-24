@@ -1,0 +1,181 @@
+﻿html
+{
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 100%;
+}
+
+body
+{
+    font-family: Calibri;
+    font-size: 100%;
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    background-color: #FEFEFE;
+    text-align: left;
+    vertical-align: top;
+    overflow-x: auto;
+    overflow-y: auto;
+    height: 100%;
+}
+
+#header
+{
+    height: 90px;
+    background-color: #FEFEFE;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+#main
+{
+    padding: 0px 0px 0px 0px;
+    margin:0 auto;        
+    background-color: #FEFEFE;
+    height: 100%;
+    display: none;
+}
+
+.navigation 
+{
+        cursor: pointer;
+        border: none;
+	display:inline-block;
+}
+
+#icon {
+        float:left;        
+        margin: 6px 6px 6px 6px;
+}
+
+#fbcorner 
+{
+        margin: 6px 0px 6px 6px;
+        float:left;
+}
+
+#logout 
+{
+        float:right;
+        cursor: pointer;
+        margin: 6px 6px 6px 6px;
+}
+
+#userlist 
+{
+        width:26%;
+        height: 100%;
+}
+
+#detail
+{
+        float:right;
+        width:72%;
+}
+
+
+.ui-widget-content{
+    border: none;
+}
+.ui-widget-header{
+   border: none;
+}
+img#icon {
+        height: 72px;
+        width: 120px;
+}
+img#logout {
+        height:49px;
+        width: 49px;
+        display: none;
+}
+ul { 
+        list-style: none;
+        font-size: 14.5px;
+}
+div#qvsummarykeys {
+	float:left;
+	padding: 0px 1cm 0px 0px;
+
+}
+
+ul.userlist li{ 
+        margin:0 20px 20px 0; vertical-align:top;
+        font-size: 14.5px;
+}
+
+.selected {
+        border-bottom:solid;
+        border-bottom-width:2px;
+        border-bottom-color:#ee8b49;        
+}
+
+div#qvshapeindexhistory {
+        text-align:center;
+        width:90%;
+	overflow:hidden;
+}
+div#qvtrainingsessionhistory {
+        text-align:left;
+        width:95%;
+}
+div.speeddistrograph {
+	float:left;
+	padding-left:.5cm;
+	width:240px;
+	height:200px;
+}
+div.timedistrograph {
+	float:left;
+	padding-left:.5cm;
+	width:240px;
+	height:200px;
+}
+.jqplot-target {
+        color:#ee8b49;
+}
+div.trainingsessionkeys {
+	padding: 0px 1cm 0px 0px;
+	float:left;
+        text-align:left;
+}
+div.trainingsessionrow {
+	overflow:hidden;
+	border-bottom:solid;
+	border-bottom-width:2px;
+	border-color:#CCCCCC;
+}
+.ui-icon-person {
+	display:inline-block;	
+}
+div#shapeindexhistorygraph {
+	height:300px;
+	width:550px;
+}
+
+div#qvheartratedonut{
+	float: left;
+	height: 240px;
+	width: 340px;
+}
+div#heartratetesthistorykeys {
+	padding: 0px 1cm 0px 0px;
+	float: left;
+	text-align: left;
+}
+div#heartratetesthistorygraph {
+	float: left;
+	padding-left:.5cm;
+	width: 550px;
+	height:300px;
+}
+div#exporttrainingsessions {
+	text-align:right;
+	width:100%;
+}
+
+img.download {
+	height: 1cm;
+	width: .8cm;
+}
+

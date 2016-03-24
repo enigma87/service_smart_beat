@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>smartbeat</title>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="JScripts/MainJScript.js"></script>
+    <link href="Style/StyleSheet.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '333643156765163', // App ID
+                channelUrl: 'http://htmlpreview.github.io/?https://github.com/KarunakaranRaju/FacebookLoginHTML/blob/master/HTMLPage.htm', // Channel File
+                status: true, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true  // parse XFBML
+            });
+
+            FB.Event.subscribe('auth.authResponseChange', function (response) {
+                // Here we specify what we do with the response anytime this event occurs. 
+                if (response.status === 'connected') {
+                    FBgetLoginStatus();
+                } else if (response.status === 'not_authorized') {
+                    FB.login();
+                } else {
+                    FB.login();
+                }
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function (d) {
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
+        }(document));
+        function FBgetLoginStatus() {
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    var uid = response.authResponse.userID;
+                    var accessToken = response.authResponse.accessToken;
+                    var email = response.authResponse.email;
+
+                    $("#a_GetUserID").attr("href", "http://localhost:8080/smartbeat/v1.0/trainee/email/" + email + "?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    $("#txt_UserIDURL").val("http://localhost:8080/smartbeat/v1.0/trainee/email/" + email +?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    //$("#href_Test").attr("href", "http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    //$("#txt_URL").val("http://ec2-54-216-25-199.eu-west-1.compute.amazonaws.com:8080/smartbeat/v1.0/trainee/email/karunagct@gmail.com?accessToken=" + accessToken + "&accessTokenType=facebook");
+
+                    $("#txt_ShapeIndexURL").val("http://localhost:8080/smartbeat/v1.0/trainee/id/" + uid + "/shapeIndex?accessToken=" + accessToken + "&accessTokenType=facebook");
+                    //trainee/{userid}/shapeIndex?accessToken=FBToken&accessTokenType=facebook
+
+
+                } else if (response.status === 'not_authorized') {
+                    FB.login();
+                } else {
+                    FB.login();
+                }
+            });
+        }
+    </script>
+
+    <div id="dv_PageContainer" style="width: 900px;">
+        <div id="dv_Header">
+            <table style="width: 100%; height: 100%; padding: 0px 0px 0px 0px; border-width: 0px; text-align: center;">
+                <tr>
+                    <td>
+                        <span id="spn_Logo1">smart</span><span id="spn_Logo2">beat</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="dv_Navigation">
+            <table style="width: 100%; text-align: center; vertical-align: middle; background-color: #999999; text-shadow: 2px 2px 2px #555;">
+                <tr>
+                    <td style="border-width: 0px; background-color: #999999;"></td>
+                    <td style="width: 115px; border-right: 2px solid #E6E6E6; background-color: #999999;">
+                        <a id="a_GetUserID">Get User ID</a>
+                    </td>
+                    <td style="width: 115px; border-right: 2px solid #E6E6E6; background-color: #999999;">
+                        <a href="SuccessStories.aspx">Get Shape Index</a>
+                    </td>
+                    <td style="width: 150px; border-right: 2px solid #E6E6E6; background-color: #999999;">
+                        <a href="TrainingAndCoaching.aspx">Training & Coaching</a>
+                    </td>
+                    <td style="width: 160px; border-right: 2px solid #E6E6E6; background-color: #999999;">
+                        <a href="ProfessionalTrainers.aspx">Professional Trainers</a>
+                    </td>
+                    <td style="width: 100px; border-right: 2px solid #E6E6E6; background-color: #999999;">
+                        <a href="TrainingBlog.aspx">Training Blog</a>
+                    </td>
+                    <td style="width: 105px; background-color: #999999;">
+                        <a href="CallUsToday.aspx">Call Us Today</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="dv_Main">
+            <img id="img_Loading" src="Images/483.gif" style="left: 50%; top: 50%; display: none; position: absolute" />
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <input id="btn_GetUserIDDetails" type="button" value="Get User ID Details" />
+                    </td>
+                    <td colspan="2">
+                        <input id="btn_GetShapeIndexDetails" type="button" value="Get Shape Index Details" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>User ID</td>
+                    <td>
+                        <div id="dv_UserID"></div>
+                    </td>
+                    <td>User ID</td>
+                    <td>
+                        <div id="dv_UserID2"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>First Name</td>
+                    <td>
+                        <div id="dv_FirstName"></div>
+                    </td>
+                    <td>Shape Index</td>
+                    <td>
+                        <div id="dv_ShapeIndex"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td>
+                        <div id="dv_LastName"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>DOB</td>
+                    <td>
+                        <div id="dv_DOB"></div>
+                    </td>
+                </tr>
+            </table>
+            <input id="txt_UserIDURL" value="Karuna" type="url" />
+            <input id="txt_ShapeIndexURL" value="Karuna" type="url" />
+        </div>
+        <div id="dv_Footer">
+            <table style="width: 100%;">
+                <tr>
+                    <td>© Copyright 2013. All rights reserved.
+                    </td>
+                    <td style="text-align: right; width: 250px">Connect with us through
+                        <img src="Images/SocialIcons/Facebook.png" alt="Facebook" width="20px" height="20px"
+                            onclick=" javascript:openPopUp('https://www.facebook.com/smartbeat')" />
+                        <img src="Images/SocialIcons/IM.png" alt="IM" width="20px" height="20px" />
+                        <img src="Images/SocialIcons/Twitter.png" alt="Twitter" width="20px" height="20px" />
+                        <img src="Images/SocialIcons/Youtube.png" alt="YouTube" width="20px" height="20px" />
+                    </td>
+                    <td style="width: 25px;"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <!-- <div id="dv_dialog" style="display:none;">
+        <div style="text-align: center; vertical-align: middle;">
+            Loading...Please wait..<img src="Images/483.gif" />
+        </div>
+    </div>-->
+</body>
+</html>
